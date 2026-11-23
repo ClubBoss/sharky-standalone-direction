@@ -431,36 +431,88 @@ class _SeatNodeV1 extends StatelessWidget {
     if (activate == null) {
       return node;
     }
-    return Semantics(
-      container: true,
-      explicitChildNodes: true,
-      button: true,
-      focusable: true,
+    return _SeatAnswerButtonV1(
+      seatId: seat.seatId,
       selected:
           seatVisualState == _SeatVisualStateV1.wrongSelected ||
           seatVisualState == _SeatVisualStateV1.confirmedSelected,
       label: identityPolicy == Act0TableIdentityPolicyV1.learnerOnly
           ? 'Select $seatName'
           : 'Select ${seat.seatLabel}',
-      onTap: onTap,
+      onTap: activate,
+      child: node,
+    );
+  }
+}
+
+class _SeatAnswerButtonV1 extends StatefulWidget {
+  const _SeatAnswerButtonV1({
+    required this.seatId,
+    required this.selected,
+    required this.label,
+    required this.onTap,
+    required this.child,
+  });
+
+  final String seatId;
+  final bool selected;
+  final String label;
+  final VoidCallback onTap;
+  final Widget child;
+
+  @override
+  State<_SeatAnswerButtonV1> createState() => _SeatAnswerButtonV1State();
+}
+
+class _SeatAnswerButtonV1State extends State<_SeatAnswerButtonV1> {
+  bool _focused = false;
+  bool _showFocusHighlight = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final showRing = _focused && _showFocusHighlight;
+    final target = DecoratedBox(
+      key: const Key('act0_shell_seat_focus_decoration'),
+      position: DecorationPosition.foreground,
+      decoration: showRing
+          ? BoxDecoration(
+              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
+              border: Border.all(color: Act0ShellTokensV1.text, width: 2),
+            )
+          : const BoxDecoration(),
+      child: Center(child: widget.child),
+    );
+    return Semantics(
+      key: Key('act0_shell_seat_button_${widget.seatId}'),
+      container: true,
+      explicitChildNodes: true,
+      button: true,
+      focusable: true,
+      focused: _focused,
+      selected: widget.selected,
+      label: widget.label,
+      onTap: widget.onTap,
       child: FocusableActionDetector(
         includeFocusSemantics: false,
+        onFocusChange: (focused) => setState(() => _focused = focused),
+        onShowFocusHighlight: (show) =>
+            setState(() => _showFocusHighlight = show),
         actions: {
           ActivateIntent: CallbackAction<ActivateIntent>(
             onInvoke: (_) {
-              activate();
+              widget.onTap();
               return null;
             },
           ),
         },
         child: GestureDetector(
           excludeFromSemantics: true,
-          key: Key('act0_shell_seat_tap_${seat.seatId}'),
+          key: Key('act0_shell_seat_tap_${widget.seatId}'),
           behavior: HitTestBehavior.opaque,
-          onTap: onTap,
+          onTap: widget.onTap,
           child: ConstrainedBox(
             constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-            child: Center(child: node),
+            child: target,
           ),
         ),
       ),

@@ -8,6 +8,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_release_support_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -472,6 +473,21 @@ void main() {
       await tester.ensureVisible(entry);
       await tester.tap(entry);
       await settle();
+      if (act0SupportEmailV1.isEmpty) {
+        expect(
+          find.textContaining(
+            'Open TestFlight, select Sharky, and tap Send Beta Feedback.',
+          ),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining(
+            'Paste the copied diagnostics into the comments field',
+          ),
+          findsOneWidget,
+        );
+        expect(find.text('Copy diagnostics'), findsOneWidget);
+      }
       expect(find.text('Day 2: Returned'), findsOneWidget);
       expect(find.text('Day 7: Still open'), findsOneWidget);
       expect(find.text('Corrected mistakes: 0'), findsOneWidget);

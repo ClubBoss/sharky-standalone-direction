@@ -121,7 +121,10 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
                         : 'Paste a copied summary or diagnostics into your message.',
                   ),
                 ] else ...[
-                  const Text('Support contact unavailable in this build.'),
+                  const Text(
+                    'Open TestFlight, select Sharky, and tap Send Beta Feedback. '
+                    'Paste the copied diagnostics into the comments field, then tap Submit.',
+                  ),
                 ],
                 TextButton(
                   onPressed: () async => _copy(

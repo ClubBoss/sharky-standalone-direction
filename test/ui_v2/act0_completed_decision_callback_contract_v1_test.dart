@@ -1,6 +1,7 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -102,6 +103,76 @@ void main() {
       _expectCurrentEvidenceFromCompletion(completed!);
     },
   );
+
+  testWidgets('Tab focuses seat buttons and Enter submits the focused seat', (
+    tester,
+  ) async {
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+    final semantics = tester.ensureSemantics();
+
+    final task = _task(
+      'world_1',
+      'blinds_order_practice',
+      'blinds_first_actor',
+    );
+    final runner = normalizeAct0SeatTapRunnerV1(
+      task.runner.copyWith(
+        phase: Act0LessonPhaseV1.drill,
+        teachingSteps: const <Act0TeachingStepV1>[],
+      ),
+    );
+    Act0CompletedDecisionV1? completed;
+    await _pumpRunner(
+      tester,
+      runner: runner,
+      worldId: 'world_1',
+      lessonId: 'blinds_order_practice',
+      taskId: task.taskId,
+      onCompletedDecision: (value) => completed = value,
+    );
+    await tester.pumpAndSettle();
+
+    final seatOptions = runner.options.where((option) {
+      return find
+          .byKey(Key('act0_shell_seat_button_${option.seatId}'))
+          .evaluate()
+          .isNotEmpty;
+    }).toList();
+    expect(seatOptions.length, greaterThan(1));
+    final focusedIds = <String>[];
+    for (var presses = 0; presses < 24 && focusedIds.length < 2; presses++) {
+      await tester.sendKeyEvent(LogicalKeyboardKey.tab);
+      await tester.pumpAndSettle();
+      final focused = seatOptions.where((option) {
+        final button = find.byKey(
+          Key('act0_shell_seat_button_${option.seatId}'),
+        );
+        return tester.getSemantics(button).flagsCollection.isFocused;
+      }).toList();
+      if (focused.isEmpty) continue;
+      final option = focused.single;
+      focusedIds.add(option.id);
+      final decoration = find.descendant(
+        of: find.byKey(Key('act0_shell_seat_button_${option.seatId}')),
+        matching: find.byKey(const Key('act0_shell_seat_focus_decoration')),
+      );
+      expect(
+        (tester.widget<DecoratedBox>(decoration).decoration as BoxDecoration)
+            .border,
+        isNotNull,
+      );
+    }
+    expect(focusedIds.toSet(), hasLength(2));
+    expect(completed, isNull);
+    await tester.sendKeyEvent(LogicalKeyboardKey.enter);
+    await tester.pump();
+    expect(completed?.decisionKind, Act0CompletedDecisionKindV1.seat);
+    expect(completed?.selectedId, focusedIds.last);
+    semantics.dispose();
+  });
 
   testWidgets(
     'sizing confirmation resolves its preset option before emitting a completed-decision contract',
