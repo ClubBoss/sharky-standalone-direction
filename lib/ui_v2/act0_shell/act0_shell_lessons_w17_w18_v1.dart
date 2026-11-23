@@ -226,7 +226,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "HJ opened, CO folded, and BTN acts. Compare A♠5♠ and 7♣4♦ as light 3-bet candidates. The stated opener folds some medium hands and can 4-bet AA or AKo.",
+            "HJ opened, CO folded, and BTN acts. Compare your A♠5♠ with the offsuit hand in the choices as light 3-bet candidates. The stated opener folds some medium hands and can 4-bet AA or AKo.",
         question:
             "Which candidate removes more of the specified 4-bet range and retains a flush possibility?",
         teach: "",
@@ -1380,22 +1380,23 @@ final _world17Pilot = _act0PilotWorldV1(
         id: "w17_4_guided_four_bet_bluff_model",
         lesson: "four_bet_and_stack",
         lessonTitle: "Four bet and stack",
-        title: "Which scores best, 4-bet with a fold to the jam or fold now?",
+        title:
+            "Which scores best, 4-bet with a fold to the all-in or fold now?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "CO faces BTN’s 8 BB 3-bet after opening to 2.5 BB. The blinds fold. In 20 equally weighted trial outcomes BTN folds 13 times to a 21 BB 4-bet. In the other seven, BTN jams and CO folds.",
+            "CO faces BTN’s 8 BB 3-bet after opening to 2.5 BB. The blinds fold. In 20 equally weighted trial outcomes BTN folds 13 times to a 21 BB 4-bet. In the other seven, BTN goes all-in and CO folds.",
         question:
-            "Which scores best, 4-bet with a fold to the jam or fold now?",
+            "Which scores best, 4-bet with a fold to the all-in or fold now?",
         teach:
             "The opening raise is sunk. Compare only the 4-bet’s new investment with the current pot.",
         choices: const [
           (
             "answer",
-            "4-bet and fold to the jam",
+            "4-bet and fold to the all-in",
             Act0FeedbackQualityV1.correct,
-            "The thirteen wins of the existing pot cover the seven new investments you lose when BTN jams.",
+            "The thirteen wins of the existing pot cover the seven new investments you lose when BTN goes all-in.",
           ),
           (
             "alternative",
@@ -1407,7 +1408,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "other",
             "Both earn the same",
             Act0FeedbackQualityV1.wrong,
-            "The total won in fold branches exceeds the total risk lost to jams.",
+            "The total won in fold branches exceeds the total risk lost against all-ins.",
           ),
         ],
         table: _day7TableV1(
@@ -3503,7 +3504,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "other",
             "Nobody can have a straight yet",
             Act0FeedbackQualityV1.wrong,
-            "Each player uses two hole cards with the three flop cards.",
+            "You can use both your cards with the three flop cards.",
           ),
         ],
         table: _day7TableV1(
@@ -3906,7 +3907,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a branch where CO starts the flop with only 7.5 BB, BB checks, CO shoves, BTN raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.",
+            "In a branch where CO starts the flop with only 7.5 BB, BB checks, CO goes all-in, BTN raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.",
         question: "What pots exist before future side-pot betting?",
         teach: "",
         choices: const [
@@ -4002,7 +4003,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a hypothetical 8 BB flop pot with CO holding 10 BB behind, the proposed finish is: BB checks, CO shoves 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.",
+            "In a hypothetical 8 BB flop pot with CO holding 10 BB behind, the proposed finish is: BB checks, CO goes all-in for 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.",
         question: "How much stays in the pot from that street?",
         teach: "Remove uncalled excess before assigning pot eligibility.",
         choices: const [
@@ -4337,15 +4338,15 @@ final _world18Pilot = _act0PilotWorldV1(
         id: "w18_5_teach",
         lesson: "reopen_and_limp",
         lessonTitle: "Reopen and limp",
-        title: "What distinguishes overlimping from overcalling a bet?",
+        title: "How does limping behind differ from overcalling a bet?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A qualifier to raise depends on prior action and the full-raise rule. An overlimp calls after one or more limps. An overcall matches after another player calls.",
-        question: "What distinguishes overlimping from overcalling a bet?",
+            "A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.",
+        question: "How does limping behind differ from overcalling a bet?",
         teach:
-            "A qualifier to raise depends on prior action and the full-raise rule. An overlimp calls after one or more limps. An overcall matches after another player calls.",
+            "A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.",
         choices: const [
           (
             "answer",
@@ -4385,7 +4386,7 @@ final _world18Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "An overlimp",
+            "Limp behind",
             Act0FeedbackQualityV1.correct,
             "BTN calls the blind after other players already limped.",
           ),
@@ -4891,7 +4892,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Two deals",
             Act0FeedbackQualityV1.correct,
-            "Only A♣7♣ and A♦7♦ survive. Each player must take a different one, giving two assignments.",
+            "Only two suited combinations remain. Each player must take a different one, giving two assignments.",
           ),
           (
             "alternative",
@@ -4974,7 +4975,7 @@ final _world18Pilot = _act0PilotWorldV1(
         id: "w18_6_guided_value_on_blank",
         lesson: "multiway_checkpoint",
         lessonTitle: "Multiway checkpoint",
-        title: "Which river option has higher EV?",
+        title: "River value against two opponents",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
@@ -5070,7 +5071,7 @@ final _world18Pilot = _act0PilotWorldV1(
         id: "w18_6_checkpoint_two_caller_check",
         lesson: "multiway_checkpoint",
         lessonTitle: "Multiway checkpoint",
-        title: "Which river option has higher EV?",
+        title: "River showdown value",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,

@@ -45,7 +45,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: 3-bet to 8 BB
 
 TASK w17_1_transfer_select_bluff_candidate [drill] Which candidate removes more of the specified 4-bet range and retains a flush possibility?
-CAPTION: HJ opened, CO folded, and BTN acts. Compare A♠5♠ and 7♣4♦ as light 3-bet candidates. The stated opener folds some medium hands and can 4-bet AA or AKo.
+CAPTION: HJ opened, CO folded, and BTN acts. Compare your A♠5♠ with the offsuit hand in the choices as light 3-bet candidates. The stated opener folds some medium hands and can 4-bet AA or AKo.
 Q: Which candidate removes more of the specified 4-bet range and retains a flush possibility?
 HINT [hidden]: (none)
 TABLE: Preflop | You As 5s | Pot 4 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
@@ -238,20 +238,20 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] 13 BB — Look again. That would be a BTN call amount if CO made the 4-bet.
     BETTER ANSWER: 18.5 BB
 
-TASK w17_4_guided_four_bet_bluff_model [drill] Which scores best, 4-bet with a fold to the jam or fold now?
-CAPTION: CO faces BTN’s 8 BB 3-bet after opening to 2.5 BB. The blinds fold. In 20 equally weighted trial outcomes BTN folds 13 times to a 21 BB 4-bet. In the other seven, BTN jams and CO folds.
-TEACH: Which scores best, 4-bet with a fold to the jam or fold now? The opening raise is sunk. Compare only the 4-bet’s new investment with the current pot.
-Q: Which scores best, 4-bet with a fold to the jam or fold now?
+TASK w17_4_guided_four_bet_bluff_model [drill] Which scores best, 4-bet with a fold to the all-in or fold now?
+CAPTION: CO faces BTN’s 8 BB 3-bet after opening to 2.5 BB. The blinds fold. In 20 equally weighted trial outcomes BTN folds 13 times to a 21 BB 4-bet. In the other seven, BTN goes all-in and CO folds.
+TEACH: Which scores best, 4-bet with a fold to the all-in or fold now? The opening raise is sunk. Compare only the 4-bet’s new investment with the current pot.
+Q: Which scores best, 4-bet with a fold to the all-in or fold now?
 HINT [hidden]: (none)
 TABLE: Preflop | You As 5s | Pot 12 BB | To call 5.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
 EFFECTIVE: BTN 100
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 5s stack 97.5 BB raise 2.5 BB | BTN dealer stack 92 BB raise 8 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN raises to 8 BB · preflop: SB folds · preflop: BB folds
-  + [correct] 4-bet and fold to the jam — Correct. The thirteen wins of the existing pot cover the seven new investments you lose when BTN jams.
+  + [correct] 4-bet and fold to the all-in — Correct. The thirteen wins of the existing pot cover the seven new investments you lose when BTN goes all-in.
   - [wrong] Fold now — Look again. Folding has zero future cost, while the stated fold rate gives the 4-bet a positive score.
-    BETTER ANSWER: 4-bet and fold to the jam
-  - [wrong] Both earn the same — Look again. The total won in fold branches exceeds the total risk lost to jams.
-    BETTER ANSWER: 4-bet and fold to the jam
+    BETTER ANSWER: 4-bet and fold to the all-in
+  - [wrong] Both earn the same — Look again. The total won in fold branches exceeds the total risk lost against all-ins.
+    BETTER ANSWER: 4-bet and fold to the all-in
 
 TASK w17_4_transfer_short_three_bet_shove [drill] Call or fold?
 CAPTION: BB bets 12 BB with a legal combo from AQo AJo KQs QJs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.
@@ -615,7 +615,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Only CO — Look again. The listed overpairs add one distinct rank. None supplies 9 and T together.
     BETTER ANSWER: BTN or BB
     FEEDBACK TABLE: Flop | Board 8s 7d 6c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts rainbow, consecutive board
-  - [wrong] Nobody can have a straight yet — Look again. Each player uses two hole cards with the three flop cards.
+  - [wrong] Nobody can have a straight yet — Look again. You can use both your cards with the three flop cards.
     BETTER ANSWER: BTN or BB
     FEEDBACK TABLE: Flop | Board 8s 7d 6c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts rainbow, consecutive board
 
@@ -685,7 +685,7 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: The pot matched at its contribution, including eligible dead money
 
 TASK w18_4_read_side_pot_layers [drill] What pots exist before future side-pot betting?
-CAPTION: In a branch where CO starts the flop with only 7.5 BB, BB checks, CO shoves, BTN raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.
+CAPTION: In a branch where CO starts the flop with only 7.5 BB, BB checks, CO goes all-in, BTN raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.
 Q: What pots exist before future side-pot betting?
 HINT [hidden]: (none)
 TABLE: Flop | You Ah Qh | Board Qs 8d 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
@@ -701,7 +701,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     FEEDBACK TABLE: Flop | You Ah Qh | Board Qs 8d 4c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w18_4_guided_refund_uncalled [drill] How much stays in the pot from that street?
-CAPTION: In a hypothetical 8 BB flop pot with CO holding 10 BB behind, the proposed finish is: BB checks, CO shoves 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.
+CAPTION: In a hypothetical 8 BB flop pot with CO holding 10 BB behind, the proposed finish is: BB checks, CO goes all-in for 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.
 TEACH: How much stays in the pot from that street? Remove uncalled excess before assigning pot eligibility.
 Q: How much stays in the pot from that street?
 HINT [hidden]: (none)
@@ -753,10 +753,10 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 ===== WORLD 18 · LESSON reopen_and_limp · Reopen and limp =====
 
-TASK w18_5_teach [theory] What distinguishes overlimping from overcalling a bet?
-CAPTION: A qualifier to raise depends on prior action and the full-raise rule. An overlimp calls after one or more limps. An overcall matches after another player calls.
-TEACH: What distinguishes overlimping from overcalling a bet? A qualifier to raise depends on prior action and the full-raise rule. An overlimp calls after one or more limps. An overcall matches after another player calls.
-Q: What distinguishes overlimping from overcalling a bet?
+TASK w18_5_teach [theory] How does limping behind differ from overcalling a bet?
+CAPTION: A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.
+TEACH: How does limping behind differ from overcalling a bet? A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.
+Q: How does limping behind differ from overcalling a bet?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Preflop limpers have only matched the blind. Overcalling follows a bet and call. — Correct. Identify whether a raise or bet was already made and which players paid it.
@@ -772,11 +772,11 @@ HINT [hidden]: (none)
 TABLE: Preflop | You 7s 6s | Pot 3.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer 7s 6s stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ calls 1 BB · preflop: CO calls 1 BB
-  + [correct] An overlimp — Correct. BTN calls the blind after other players already limped.
+  + [correct] Limp behind — Correct. BTN calls the blind after other players already limped.
   - [wrong] A squeeze — Look again. A squeeze re-raises an opening raise after a caller. There was no raise here.
-    BETTER ANSWER: An overlimp
+    BETTER ANSWER: Limp behind
   - [wrong] A cold call of a raise — Look again. Nobody has made an opening raise.
-    BETTER ANSWER: An overlimp
+    BETTER ANSWER: Limp behind
 
 TASK w18_5_guided_short_raise_no_reopen [drill] Can CO now re-raise?
 CAPTION: BB checks, CO bets 6 BB and BTN raises all-in to 9 BB. BB calls 9 BB. Use the house rule that a lone short all-in increment below the last full wager does not reopen action for a player who already acted.
@@ -843,7 +843,7 @@ HINT [hidden]: (none)
 TABLE: Flop | Board As 7h 2c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Facts rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN calls 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: CO checks
-  + [correct] Two deals — Correct. Only A♣7♣ and A♦7♦ survive. Each player must take a different one, giving two assignments.
+  + [correct] Two deals — Correct. Only two suited combinations remain. Each player must take a different one, giving two assignments.
     FEEDBACK TABLE: Flop | Board As 7h 2c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts rainbow
   - [wrong] Four deals — Look again. This allows both opponents to hold the same suited hand simultaneously.
     BETTER ANSWER: Two deals
@@ -852,7 +852,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: Two deals
     FEEDBACK TABLE: Flop | Board As 7h 2c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts rainbow
 
-TASK w18_6_guided_value_on_blank [drill] Which river option has higher EV?
+TASK w18_6_guided_value_on_blank [drill] River value against two opponents
 CAPTION: CO holds AKs AKo KK 88 AQs KQs. BB holds A8s A4s KJs 44 22 99. All non-overlapping pairs of legal hands are equally weighted. If BTN bets 5 BB, CO calls AKs AKo KK 88 AQs KQs, and BB calls A8s A4s KJs 44 22, regardless of CO’s choice. Other hands fold. All checked and called branches go to showdown.
 TEACH: Which river option has higher EV? Weight the single-call and double-call branches separately.
 Q: Which river option has higher EV?
@@ -867,7 +867,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: Bet 5 BB
     FEEDBACK TABLE: River | You As Ad | Board Ah 8c 4d Ks 2c | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
 
-TASK w18_6_checkpoint_two_caller_check [drill] Which river option has higher EV?
+TASK w18_6_checkpoint_two_caller_check [drill] River showdown value
 CAPTION: CO holds KJs QJs TT 99 88 T8s. BB holds J9s J7s 99 77 T8s 98s JTs. All non-overlapping pairs of legal hands are equally weighted. If BTN bets 5 BB, CO calls KJs 99 T8s, and BB calls J9s J7s 99 77 T8s, regardless of CO’s choice. Other hands fold. All checked and called branches go to showdown.
 Q: Which river option has higher EV?
 HINT [hidden]: (none)
