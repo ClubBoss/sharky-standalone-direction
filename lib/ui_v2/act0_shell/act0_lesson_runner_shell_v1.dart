@@ -3021,6 +3021,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     );
     await showModalBottomSheet<void>(
       context: context,
+      sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       backgroundColor: Colors.transparent,
       isScrollControlled: false,
       builder: (context) => _TheoryRecallSheetV1(
@@ -3763,6 +3766,14 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         context,
         runner.reviewSelectedLabel,
       ),
+      otherOptions: [
+        for (final option in runner.options)
+          if (option.id != runner.selectedOptionId)
+            act0AcademyW1OptionLabelV1(
+              context,
+              act0RuntimeLocalizedOptionLabelV1(context, option.label),
+            ),
+      ],
       preferredLabel: act0AcademyW1OptionLabelV1(
         context,
         runner.reviewPreferredLabel,

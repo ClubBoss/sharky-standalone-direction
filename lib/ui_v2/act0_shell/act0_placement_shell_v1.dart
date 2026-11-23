@@ -377,7 +377,9 @@ class Act0PlacementShellV1 extends StatelessWidget {
                               const SizedBox(height: Act0ShellTokensV1.gapLg),
                             ],
                             AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 360),
+                              duration: MediaQuery.disableAnimationsOf(context)
+                                  ? Duration.zero
+                                  : const Duration(milliseconds: 360),
                               reverseDuration: const Duration(
                                 milliseconds: 220,
                               ),
@@ -527,7 +529,9 @@ class Act0PlacementShellV1 extends StatelessWidget {
                       ),
                       const SizedBox(height: Act0ShellTokensV1.gapMd),
                       AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 420),
+                        duration: MediaQuery.disableAnimationsOf(context)
+                            ? Duration.zero
+                            : const Duration(milliseconds: 420),
                         switchInCurve: Curves.easeOutCubic,
                         switchOutCurve: Curves.easeInOutCubic,
                         transitionBuilder: (child, animation) {
@@ -913,7 +917,9 @@ class _QuestionOrDiagnosticV1 extends StatelessWidget {
         ? 'Choose what fits'
         : 'Choose one';
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 320),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 320),
       reverseDuration: const Duration(milliseconds: 180),
       switchInCurve: Curves.easeOutCubic,
       switchOutCurve: Curves.easeInOutCubic,

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import 'act0_beta_metrics_v1.dart';
 import 'act0_practice_reminder_v1.dart';
+import 'act0_release_support_v1.dart';
 
 class Act0BetaMetricsDialogV1 extends StatefulWidget {
   const Act0BetaMetricsDialogV1({
@@ -11,7 +12,7 @@ class Act0BetaMetricsDialogV1 extends StatefulWidget {
     required this.nowUtc,
   });
 
-  final Act0BetaLearningMetricsV1 learning;
+  final Act0BetaLearningMetricsV1? learning;
   final DateTime Function() nowUtc;
 
   @override
@@ -20,7 +21,9 @@ class Act0BetaMetricsDialogV1 extends StatefulWidget {
 }
 
 class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
-  late Future<Act0BetaActivityV1?> _activity = Act0BetaMetricsStoreV1.read();
+  late Future<Act0BetaActivityV1?> _activity = widget.learning == null
+      ? Future.value()
+      : Act0BetaMetricsStoreV1.read();
   bool _saving = false;
   String? _copyStatus;
 
@@ -56,19 +59,24 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
       : '${attempts.correct}/${attempts.total} correct';
 
   Future<void> _copySummary(Act0BetaActivityV1 activity) async {
-    final summary = widget.learning.summary(
+    final summary = widget.learning!.summary(
       activity,
       widget.nowUtc(),
       reminderEnabled: Act0PracticeReminderV1.isSupported
           ? Act0PracticeReminderV1.enabled.value
           : null,
     );
+    await _copy(summary.clipboard, 'Summary');
+  }
+
+  Future<void> _copy(String text, String label) async {
+    if (!mounted) return;
     String message;
     try {
-      await Clipboard.setData(ClipboardData(text: summary.clipboard));
-      message = 'Summary copied.';
+      await Clipboard.setData(ClipboardData(text: text));
+      message = '$label copied.';
     } catch (_) {
-      message = 'Summary could not be copied.';
+      message = '$label could not be copied.';
     }
     if (mounted) setState(() => _copyStatus = message);
   }
@@ -83,13 +91,13 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
         final now = widget.nowUtc();
         final decisions = activity == null
             ? null
-            : learning.decisionsSince(activity.firstVisitUtc);
+            : learning?.decisionsSince(activity.firstVisitUtc);
         return AlertDialog(
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Text('Beta activity'),
+              Text(learning == null ? 'Support' : 'Beta activity'),
               if (_copyStatus case final status?)
                 Semantics(
                   liveRegion: true,
@@ -104,51 +112,71 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
             child: ListBody(
               children: [
                 const Text('Saved on this device.'),
-                const SizedBox(height: 12),
-                Text(
-                  'First lesson: ${learning.firstLessonCompleted ? 'Complete' : 'Incomplete'}',
+                if (act0SupportEmailV1.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  const SelectableText('Support: $act0SupportEmailV1'),
+                  Text(
+                    learning == null
+                        ? 'Paste the copied diagnostics into your message.'
+                        : 'Paste a copied summary or diagnostics into your message.',
+                  ),
+                ] else ...[
+                  const Text('Support contact unavailable in this build.'),
+                ],
+                TextButton(
+                  onPressed: () async => _copy(
+                    await Act0ReleaseSupportV1.diagnostics(),
+                    'Diagnostics',
+                  ),
+                  child: const Text('Copy diagnostics'),
                 ),
-                Text(
-                  'World 1: ${learning.worldOneCompleted ? 'Complete' : 'Incomplete'}',
-                ),
-                Text('Corrected mistakes: ${learning.correctedMistakes}'),
-                if (snapshot.connectionState == ConnectionState.waiting &&
-                    activity == null)
-                  const Padding(
-                    padding: EdgeInsets.all(12),
-                    child: Center(child: CircularProgressIndicator()),
-                  )
-                else ...[
-                  Text('Day 2: ${_returnLabel(activity?.day2At(now))}'),
-                  Text('Day 7: ${_returnLabel(activity?.day7At(now))}'),
-                  if (decisions != null) ...[
-                    const SizedBox(height: 12),
-                    const Text('Day 1 first lesson · first answer per spot'),
-                    Text('On your own: ${_scoreLabel(decisions.onYourOwn)}'),
-                    Text('With help: ${_scoreLabel(decisions.withHelp)}'),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Day 7 new review, on your own: ${_scoreLabel(decisions.day7NewReview)}',
-                    ),
-                    const SizedBox(height: 12),
-                    ValueListenableBuilder<bool>(
-                      valueListenable: Act0PracticeReminderV1.enabled,
-                      builder: (_, enabled, _) {
-                        final summary = learning.summary(
-                          activity!,
-                          now,
-                          reminderEnabled: Act0PracticeReminderV1.isSupported
-                              ? enabled
-                              : null,
-                        );
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            for (final line in summary.progress) Text(line),
-                          ],
-                        );
-                      },
-                    ),
+                if (learning != null) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    'First lesson: ${learning.firstLessonCompleted ? 'Complete' : 'Incomplete'}',
+                  ),
+                  Text(
+                    'World 1: ${learning.worldOneCompleted ? 'Complete' : 'Incomplete'}',
+                  ),
+                  Text('Corrected mistakes: ${learning.correctedMistakes}'),
+                  if (snapshot.connectionState == ConnectionState.waiting &&
+                      activity == null)
+                    const Padding(
+                      padding: EdgeInsets.all(12),
+                      child: Center(child: CircularProgressIndicator()),
+                    )
+                  else ...[
+                    Text('Day 2: ${_returnLabel(activity?.day2At(now))}'),
+                    Text('Day 7: ${_returnLabel(activity?.day7At(now))}'),
+                    if (decisions != null) ...[
+                      const SizedBox(height: 12),
+                      const Text('Day 1 first lesson · first answer per spot'),
+                      Text('On your own: ${_scoreLabel(decisions.onYourOwn)}'),
+                      Text('With help: ${_scoreLabel(decisions.withHelp)}'),
+                      const SizedBox(height: 12),
+                      Text(
+                        'Day 7 new review, on your own: ${_scoreLabel(decisions.day7NewReview)}',
+                      ),
+                      const SizedBox(height: 12),
+                      ValueListenableBuilder<bool>(
+                        valueListenable: Act0PracticeReminderV1.enabled,
+                        builder: (_, enabled, _) {
+                          final summary = learning.summary(
+                            activity!,
+                            now,
+                            reminderEnabled: Act0PracticeReminderV1.isSupported
+                                ? enabled
+                                : null,
+                          );
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              for (final line in summary.progress) Text(line),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ],
                 ],
                 if (activity != null) ...[

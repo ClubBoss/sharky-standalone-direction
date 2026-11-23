@@ -1814,7 +1814,7 @@ class _CenterPriorityStatV1 extends StatelessWidget {
       ),
     );
     final keyedStat = KeyedSubtree(key: legacyKey, child: stat);
-    if (!pulse) {
+    if (!pulse || MediaQuery.disableAnimationsOf(context)) {
       return keyedStat;
     }
     return TweenAnimationBuilder<double>(
@@ -1883,7 +1883,7 @@ class _BetChipPlacementV1 extends StatelessWidget {
         compact: visualVariant == Act0ShellTableVisualVariantV1.refinedDev2,
       ),
     );
-    if (!animateMotion) {
+    if (!animateMotion || MediaQuery.disableAnimationsOf(context)) {
       return Positioned(
         left: tableWidth * chipPoint.dx,
         top: tableHeight * chipPoint.dy,

@@ -3,6 +3,7 @@ import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:poker_analyzer/ui/settings/privacy_terms.dart';
 import 'act0_achievement_seed_projection_v1.dart';
 import 'act0_beta_metrics_dialog_v1.dart';
+import 'act0_release_support_v1.dart';
 import 'act0_beta_metrics_v1.dart';
 import 'act0_home_shell_v1.dart';
 import 'act0_play_shell_v1.dart';
@@ -250,6 +251,10 @@ Widget act0AcademyYouRuntimeV1(
                             if (!isCurrent()) return;
                             showDialog<void>(
                               context: routeContext,
+                              animationStyle:
+                                  MediaQuery.disableAnimationsOf(routeContext)
+                                  ? AnimationStyle.noAnimation
+                                  : null,
                               builder: (_) => Act0BetaMetricsDialogV1(
                                 learning: betaLearningMetrics(),
                                 nowUtc: nowUtc,
@@ -296,6 +301,7 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
 class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
   var _loadState = Act0AcademySettingsLoadStateV1.loading;
   bool _savingReminder = false;
+  late final _version = Act0ReleaseSupportV1.version();
   @override
   void initState() {
     super.initState();
@@ -355,6 +361,7 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
         child: Act0AcademySettingsLeafV1(
           input: Act0AcademySettingsLeafInputV1(
             loadState: _loadState,
+            version: _version,
             hapticsEnabled:
                 AppSettingsService.instance.changes.value.hapticsEnabled,
             practiceReminderEnabled: Act0PracticeReminderV1.isSupported
@@ -380,6 +387,18 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
             onOpenBetaMetrics: widget.onOpenBetaMetrics == null
                 ? null
                 : () => widget.onOpenBetaMetrics!(context),
+            onOpenSupport: widget.onOpenBetaMetrics != null
+                ? null
+                : () => showDialog<void>(
+                    context: context,
+                    animationStyle: MediaQuery.disableAnimationsOf(context)
+                        ? AnimationStyle.noAnimation
+                        : null,
+                    builder: (_) => Act0BetaMetricsDialogV1(
+                      learning: null,
+                      nowUtc: DateTime.now,
+                    ),
+                  ),
             onBack: () => Navigator.of(context).pop(),
             onReplayWelcome: widget.onReplayWelcome == null
                 ? null

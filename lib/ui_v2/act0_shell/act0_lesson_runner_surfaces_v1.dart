@@ -969,7 +969,10 @@ class _SizingPresetButtonV1 extends StatelessWidget {
       child: OutlinedButton(
         key: Key('act0_shell_sizing_preset_${preset.id}'),
         onPressed: onPressed,
-        style: Act0ShellTokensV1.quietButtonStyle(height: 40).copyWith(
+        style: Act0ShellTokensV1.quietButtonStyle(height: 44).copyWith(
+          padding: const WidgetStatePropertyAll(
+            EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          ),
           backgroundColor: WidgetStatePropertyAll(backgroundColor),
           side: WidgetStatePropertyAll(
             BorderSide(color: borderColor, width: 1.5),
@@ -983,17 +986,13 @@ class _SizingPresetButtonV1 extends StatelessWidget {
           children: [
             Text(
               preset.displayLabel ?? preset.label,
-              maxLines: 1,
-              overflow: TextOverflow.fade,
-              softWrap: false,
+              textAlign: TextAlign.center,
               style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
             ),
             if ((preset.detailLabel ?? '').isNotEmpty)
               Text(
                 preset.detailLabel!,
-                maxLines: 1,
-                overflow: TextOverflow.fade,
-                softWrap: false,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
@@ -1438,9 +1437,17 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
                   color: Act0ShellTokensV1.info.withValues(alpha: 0.34),
                 ),
                 const SizedBox(height: 2),
-                for (final option in options) ...[
+                for (final (index, option) in options.indexed) ...[
                   Act0SemanticActionV1(
-                    label: option.label,
+                    label: act0AcademyW1OptionLabelV1(
+                      context,
+                      act0RuntimeLocalizedOptionLabelV1(context, option.label),
+                    ),
+                    sortKey: OrdinalSortKey(
+                      index.toDouble(),
+                      name: 'act0_choices',
+                    ),
+                    selected: false,
                     value: option.amountLabel.trim().isEmpty
                         ? null
                         : option.amountLabel,
@@ -1452,16 +1459,23 @@ class _AccessibilityDirectDecisionV1 extends StatelessWidget {
                         key: Key('act0_shell_option_${option.id}'),
                         onTap: () => onChoose(option),
                         borderRadius: BorderRadius.circular(12),
-                        child: SizedBox(
-                          height: 48,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(minHeight: 48),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 14,
+                                vertical: 6,
                               ),
                               child: Text(
-                                option.label,
+                                act0AcademyW1OptionLabelV1(
+                                  context,
+                                  act0RuntimeLocalizedOptionLabelV1(
+                                    context,
+                                    option.label,
+                                  ),
+                                ),
                                 style: Act0ShellTokensV1.body.copyWith(
                                   fontWeight: FontWeight.w800,
                                   height: 1.10,
@@ -1923,7 +1937,9 @@ class _LearningRailSupportDotsV1 extends StatelessWidget {
         for (int i = 0; i < count; i++) ...[
           if (i > 0) const SizedBox(width: 4),
           AnimatedContainer(
-            duration: const Duration(milliseconds: 180),
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 180),
             curve: Curves.easeOutCubic,
             width: i == current ? 10 : 4,
             height: 4,

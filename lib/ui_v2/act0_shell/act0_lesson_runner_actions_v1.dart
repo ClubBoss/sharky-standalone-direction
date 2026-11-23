@@ -778,7 +778,7 @@ class _DecisionCommitMotionV1State extends State<_DecisionCommitMotionV1> {
   }
 }
 
-class _AnswerChoiceRowV1 extends StatelessWidget {
+class _AnswerChoiceRowV1 extends StatefulWidget {
   const _AnswerChoiceRowV1({
     required this.option,
     required this.optionIndex,
@@ -796,7 +796,17 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
   final bool readableCompactHeight;
 
   @override
+  State<_AnswerChoiceRowV1> createState() => _AnswerChoiceRowV1State();
+}
+
+class _AnswerChoiceRowV1State extends State<_AnswerChoiceRowV1> {
+  bool _focused = false;
+
+  @override
   Widget build(BuildContext context) {
+    final option = widget.option;
+    final selected = widget.selected;
+    final compact = widget.compact;
     final actionVisual = _pokerActionChoiceVisualV1(option.label);
     final tone = selected
         ? option.isCorrect
@@ -806,13 +816,17 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
     final markerTone = selected ? tone : Act0ShellTokensV1.info;
     final marker = option.id == 'not_sure_yet'
         ? '?'
-        : String.fromCharCode(65 + optionIndex);
+        : String.fromCharCode(65 + widget.optionIndex);
     return Act0SemanticActionV1(
       label: act0RuntimeLocalizedOptionLabelV1(context, option.label),
       value: option.amountLabel.trim().isEmpty ? null : option.amountLabel,
       selected: selected,
-      sortKey: OrdinalSortKey(optionIndex.toDouble(), name: 'act0_choices'),
-      onTap: () => onChoose(option),
+      sortKey: OrdinalSortKey(
+        widget.optionIndex.toDouble(),
+        name: 'act0_choices',
+      ),
+      focused: _focused,
+      onTap: () => widget.onChoose(option),
       child: KeyedSubtree(
         key: actionVisual == null
             ? null
@@ -840,11 +854,14 @@ class _AnswerChoiceRowV1 extends StatelessWidget {
           ),
           child: InkWell(
             key: Key('act0_shell_option_${option.id}'),
-            onTap: () => onChoose(option),
+            onTap: () => widget.onChoose(option),
+            onFocusChange: (focused) => setState(() => _focused = focused),
             borderRadius: BorderRadius.circular(18),
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: compact ? (readableCompactHeight ? 56 : 48) : 52,
+                minHeight: compact
+                    ? (widget.readableCompactHeight ? 56 : 48)
+                    : 52,
               ),
               child: Padding(
                 padding: EdgeInsets.symmetric(

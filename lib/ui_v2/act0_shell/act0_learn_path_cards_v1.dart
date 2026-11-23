@@ -511,7 +511,7 @@ class _PathCardV1 extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  InkWell(
+                  _LearnButtonV1(
                     key: Key('act0_shell_lesson_${lesson.title}'),
                     borderRadius: cardRadius,
                     onTap: () => onSelectLesson(lesson.lessonId),
@@ -602,9 +602,14 @@ class _PathCardV1 extends StatelessWidget {
                                         padding: const EdgeInsets.only(top: 1),
                                         child: AnimatedRotation(
                                           turns: expanded ? 0.5 : 0.0,
-                                          duration: const Duration(
-                                            milliseconds: 280,
-                                          ),
+                                          duration:
+                                              MediaQuery.disableAnimationsOf(
+                                                context,
+                                              )
+                                              ? Duration.zero
+                                              : const Duration(
+                                                  milliseconds: 280,
+                                                ),
                                           curve: Curves.easeOutCubic,
                                           child: Icon(
                                             Icons.keyboard_arrow_down_rounded,
@@ -633,9 +638,12 @@ class _PathCardV1 extends StatelessWidget {
                                       const Spacer(),
                                       AnimatedRotation(
                                         turns: expanded ? 0.5 : 0.0,
-                                        duration: const Duration(
-                                          milliseconds: 280,
-                                        ),
+                                        duration:
+                                            MediaQuery.disableAnimationsOf(
+                                              context,
+                                            )
+                                            ? Duration.zero
+                                            : const Duration(milliseconds: 280),
                                         curve: Curves.easeOutCubic,
                                         child: Icon(
                                           Icons.keyboard_arrow_down_rounded,
@@ -727,7 +735,9 @@ class _PathCardV1 extends StatelessWidget {
                                   ],
                                 ))
                         : AnimatedSize(
-                            duration: const Duration(milliseconds: 140),
+                            duration: MediaQuery.disableAnimationsOf(context)
+                                ? Duration.zero
+                                : const Duration(milliseconds: 140),
                             reverseDuration: const Duration(milliseconds: 110),
                             curve: Curves.easeInOutCubic,
                             alignment: Alignment.topCenter,

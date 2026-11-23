@@ -13,12 +13,14 @@ class Act0SemanticActionV1 extends StatelessWidget {
     this.value,
     this.selected,
     this.sortKey,
+    this.focused,
   });
 
   final String label;
   final String? value;
   final bool? selected;
   final SemanticsSortKey? sortKey;
+  final bool? focused;
   final VoidCallback? onTap;
   final Widget child;
 
@@ -28,6 +30,8 @@ class Act0SemanticActionV1 extends StatelessWidget {
     button: true,
     enabled: onTap != null,
     selected: selected,
+    focusable: focused == null ? null : onTap != null,
+    focused: focused,
     label: label,
     value: value,
     sortKey: sortKey,
@@ -99,6 +103,7 @@ class Act0ChoiceResultSemanticsV1 extends StatelessWidget {
     required this.selectedLabel,
     required this.reason,
     required this.assisted,
+    this.otherOptions = const [],
     required this.child,
   });
 
@@ -106,6 +111,7 @@ class Act0ChoiceResultSemanticsV1 extends StatelessWidget {
   final String selectedLabel;
   final String reason;
   final bool assisted;
+  final List<String> otherOptions;
   final Widget child;
 
   @override
@@ -114,6 +120,7 @@ class Act0ChoiceResultSemanticsV1 extends StatelessWidget {
     container: true,
     explicitChildNodes: true,
     liveRegion: true,
+    value: otherOptions.map((label) => '$label: not selected').join('. '),
     label: [
       title,
       if (selectedLabel.trim().isNotEmpty) 'Selected: $selectedLabel',

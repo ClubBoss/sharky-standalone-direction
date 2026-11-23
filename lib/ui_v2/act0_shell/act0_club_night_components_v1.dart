@@ -482,6 +482,9 @@ Future<T?> showAct0ClubSheetV1<T>({
 }) {
   return showModalBottomSheet<T>(
     context: context,
+    sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+        ? AnimationStyle.noAnimation
+        : null,
     backgroundColor: _T.raised,
     barrierColor: _T.scrim,
     showDragHandle: true,

@@ -24,11 +24,13 @@ class Act0AcademySettingsLeafInputV1 {
     this.onPracticeReminderChanged,
     this.onRetryLoad,
     this.onOpenBetaMetrics,
+    this.onOpenSupport,
     this.onReplayWelcome,
     this.onRetakePlacement,
     this.onOpenPrivacy,
     this.onOpenTerms,
     this.onBack,
+    this.version,
     this.onRecoveryOptions,
     this.onDeleteLocalData,
   });
@@ -43,11 +45,13 @@ class Act0AcademySettingsLeafInputV1 {
   final ValueChanged<bool>? onPracticeReminderChanged;
   final VoidCallback? onRetryLoad;
   final VoidCallback? onOpenBetaMetrics;
+  final VoidCallback? onOpenSupport;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onRetakePlacement;
   final VoidCallback? onOpenPrivacy;
   final VoidCallback? onOpenTerms;
   final VoidCallback? onBack;
+  final Future<String>? version;
   final VoidCallback? onRecoveryOptions;
   final VoidCallback? onDeleteLocalData;
 }
@@ -108,10 +112,18 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
       if (input.onOpenBetaMetrics != null)
         _row(
           'Beta activity',
-          'See local progress and answer a short survey',
+          'See local progress, give feedback, and copy diagnostics',
           Act0AcademyLeafGlyphKindV1.recall,
           key: const Key('act0_settings_beta_activity'),
           onTap: input.onOpenBetaMetrics,
+        ),
+      if (input.onOpenSupport != null)
+        _row(
+          'Support',
+          'Find the support contact and copy diagnostics',
+          Act0AcademyLeafGlyphKindV1.recall,
+          key: const Key('act0_settings_support'),
+          onTap: input.onOpenSupport,
         ),
       if (input.onRecoveryOptions != null)
         _row(
@@ -217,6 +229,17 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
             'A few choices for a focused learning experience.',
             style: TextStyle(color: _muted, fontSize: 13, height: 1.45),
           ),
+          if (input.version case final version?)
+            FutureBuilder<String>(
+              future: version,
+              builder: (context, snapshot) => Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  snapshot.data ?? 'Reading version and build…',
+                  style: const TextStyle(color: _muted, fontSize: 12),
+                ),
+              ),
+            ),
           if (feel.isNotEmpty) ...[_label('FEEL & FEEDBACK'), _group(feel)],
           if (learning.isNotEmpty) ...[
             _label('YOUR LEARNING'),
@@ -226,6 +249,17 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
             _label('PRIVACY & INFORMATION'),
             _group(legal),
           ],
+          if (input.version case final version?)
+            FutureBuilder<String>(
+              future: version,
+              builder: (context, snapshot) => Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  snapshot.data ?? 'Reading version and build…',
+                  style: const TextStyle(color: _muted, fontSize: 12),
+                ),
+              ),
+            ),
           if (feel.isNotEmpty)
             const Padding(
               padding: EdgeInsets.only(top: 16),

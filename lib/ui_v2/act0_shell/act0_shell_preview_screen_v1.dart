@@ -2223,6 +2223,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (!mounted) return;
     final action = await showDialog<String>(
       context: context,
+      animationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Recovery options'),
         content: Text(
@@ -2261,6 +2264,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (action == 'delete' && copy != null) {
       final consent = await showDialog<bool>(
         context: context,
+        animationStyle: MediaQuery.disableAnimationsOf(context)
+            ? AnimationStyle.noAnimation
+            : null,
         builder: (dialogContext) => AlertDialog(
           title: const Text('Delete recovery copy?'),
           content: const Text(
@@ -2364,6 +2370,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Future<void> _requestDeleteLocalDataV1() async {
     final confirmed = await showModalBottomSheet<bool>(
       context: context,
+      sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       backgroundColor: Act0AcademyLeafPaletteV1.inkRaised,
       useSafeArea: true,
       isScrollControlled: true,
@@ -2466,6 +2475,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   Future<void> _openDevMenu() async {
     await showModalBottomSheet<void>(
       context: context,
+      sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
+          ? AnimationStyle.noAnimation
+          : null,
       backgroundColor: Act0ShellTokensV1.surface,
       builder: (context) {
         final languageController = Provider.of<AppLanguageController?>(

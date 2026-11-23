@@ -427,13 +427,15 @@ class _SeatNodeV1 extends StatelessWidget {
         ),
       ),
     );
-    if (onTap == null) {
+    final activate = onTap;
+    if (activate == null) {
       return node;
     }
     return Semantics(
       container: true,
       explicitChildNodes: true,
       button: true,
+      focusable: true,
       selected:
           seatVisualState == _SeatVisualStateV1.wrongSelected ||
           seatVisualState == _SeatVisualStateV1.confirmedSelected,
@@ -441,14 +443,25 @@ class _SeatNodeV1 extends StatelessWidget {
           ? 'Select $seatName'
           : 'Select ${seat.seatLabel}',
       onTap: onTap,
-      child: GestureDetector(
-        excludeFromSemantics: true,
-        key: Key('act0_shell_seat_tap_${seat.seatId}'),
-        behavior: HitTestBehavior.opaque,
-        onTap: onTap,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
-          child: Center(child: node),
+      child: FocusableActionDetector(
+        includeFocusSemantics: false,
+        actions: {
+          ActivateIntent: CallbackAction<ActivateIntent>(
+            onInvoke: (_) {
+              activate();
+              return null;
+            },
+          ),
+        },
+        child: GestureDetector(
+          excludeFromSemantics: true,
+          key: Key('act0_shell_seat_tap_${seat.seatId}'),
+          behavior: HitTestBehavior.opaque,
+          onTap: onTap,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 44, minHeight: 44),
+            child: Center(child: node),
+          ),
         ),
       ),
     );
