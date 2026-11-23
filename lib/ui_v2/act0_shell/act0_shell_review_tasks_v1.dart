@@ -12,6 +12,12 @@ final act0NewReviewTasksV1 = <_SpacedReviewEntryV1>[
       caption:
           'BB and BTN both checked the flop. On the turn, BB checks again. BTN acts next.',
       question: 'How can BTN see the river without putting in chips?',
+      wrongReasons: const {
+        'fold':
+            'BTN can stay in until the river by checking behind BB. A fold ends BTN’s hand now.',
+        'call':
+            'BB checked the turn, so there is no bet to match. Checking behind takes you to the river.',
+      },
       board: const [
         Act0CardStateV1(rank: 'Q', suit: 'c'),
         Act0CardStateV1(rank: '5', suit: 'd', tone: Act0CardToneV1.red),
@@ -34,6 +40,12 @@ final act0NewReviewTasksV1 = <_SpacedReviewEntryV1>[
       caption:
           'BB and BTN checked the flop and turn. On the river, BB checks. BTN acts next.',
       question: 'Which action gets BTN to showdown without adding chips?',
+      wrongReasons: const {
+        'fold':
+            'BB’s river check leaves you a free showdown. Folding gives up the pot before the cards are compared.',
+        'call':
+            'There is nothing to call on the river. Check behind BB to see which hand wins.',
+      },
       board: const [
         Act0CardStateV1(rank: 'J', suit: 'c'),
         Act0CardStateV1(rank: '6', suit: 's'),
@@ -138,10 +150,14 @@ Act0LessonTaskV1 _noBetReviewTaskV1({
   required String street,
   required String caption,
   required String question,
+  required Map<String, String> wrongReasons,
   required List<Act0CardStateV1> board,
   required List<Act0ActionTrailItemV1> laterActions,
 }) {
-  final source = _act0W01ExplicitFreeCheckContextV1(_checkActionRunner);
+  final source = _act0WithWrongFeedbackReasonsV1(
+    _act0W01ExplicitFreeCheckContextV1(_checkActionRunner),
+    wrongReasons,
+  );
   return Act0LessonTaskV1(
     taskId: id,
     title: 'A ${street.toLowerCase()} decision',
