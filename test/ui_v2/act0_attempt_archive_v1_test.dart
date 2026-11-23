@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -162,6 +163,39 @@ void main() {
       'attempt-1',
     ]);
     expect(missing.selected, isNull);
+  });
+
+  test('an imported hand persists beside linked graded evidence', () {
+    final recorded = _attempt(1);
+    final original = const Act0AttemptArchiveV1.empty()
+        .add(recorded)
+        .select(recorded.id);
+    final raw = File(
+      'test/fixtures/hand_history/pokerstars_nlhe_usd_fold.txt',
+    ).readAsStringSync();
+    final archive = original.importPokerStars(raw);
+    final shared = [recorded.evidence];
+    final payload = archive.toPayload(snapshotRecords: shared);
+    expect(
+      payload['entries'],
+      original.toPayload(snapshotRecords: shared)['entries'],
+    );
+    final restored = Act0AttemptArchiveV1.restore(
+      jsonDecode(jsonEncode(payload)),
+      snapshotRecords: shared,
+    );
+    expect(restored.selected!.evidence, same(recorded.evidence));
+    expect(restored.importedHands.single.potCents, 20);
+    expect(
+      restored.select(null).remove(recorded.id).importedHands,
+      hasLength(1),
+    );
+    expect(
+      restored
+          .removeImportedHand(restored.importedHands.single.sourceKey)
+          .toPayload(),
+      original.toPayload(),
+    );
   });
 
   test(
