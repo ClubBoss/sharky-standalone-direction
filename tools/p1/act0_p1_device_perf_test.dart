@@ -20,6 +20,9 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'first_decision_mark.dart';
+
+const _activationOnly = bool.fromEnvironment('P1_ACTIVATION_ONLY');
 const _lastWorld = int.fromEnvironment('P1_LAST_WORLD', defaultValue: 4);
 
 const _continueKeys = [
@@ -95,7 +98,11 @@ String _kindOf(String key) {
   return 'other';
 }
 
-Future<bool> _tapFirst(WidgetTester t, List<String> keys) async {
+Future<bool> _tapFirst(
+  WidgetTester t,
+  List<String> keys, {
+  void Function()? afterTap,
+}) async {
   for (final k in keys) {
     final f = find.byKey(Key(k));
     if (f.evaluate().isEmpty) continue;
@@ -107,6 +114,7 @@ Future<bool> _tapFirst(WidgetTester t, List<String> keys) async {
     final sw = Stopwatch()..start();
     await t.tap(hit.first, warnIfMissed: false);
     await t.pump();
+    afterTap?.call();
     _actions
         .putIfAbsent('$kind.first_frame', () => [])
         .add(sw.elapsedMilliseconds);
@@ -234,8 +242,10 @@ void main() {
     SchedulerBinding.instance.addTimingsCallback((timings) {
       _frames.putIfAbsent(_bucket, () => []).addAll(timings);
     });
+    final total = Stopwatch()..start();
+    final firstDecision = FirstDecisionMark();
     final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
+    if (!_activationOnly) await prefs.clear();
 
     final worlds = Act0ShellStateV1.sample.worlds
         .where((w) => w.worldNumber >= 1 && w.worldNumber <= _lastWorld)
@@ -255,12 +265,16 @@ void main() {
     final remounted = <int>{};
     final answered = <String>{};
     final entered = <int>{};
-    final total = Stopwatch()..start();
 
     _memory['start'] = _rssMb();
     await _mount(t, firstRun: true);
     expect(await _tapFirst(t, ['act0_shell_w1_start_basics']), isTrue);
     _memory['after_onboarding'] = _rssMb();
+    expect(
+      firstDecision.elapsedMs,
+      isNull,
+      reason: 'onboarding is not a decision',
+    );
 
     var stalls = 0;
     var reachedNext = false;
@@ -288,24 +302,45 @@ void main() {
           final plan = act0TableChoreographyPlanForTableV1(runner.table);
           if (plan != null) await _wait(t, 500 * (plan.beats.length + 1));
           final wrong = runner.options.where((o) => !o.isCorrect).toList();
-          final miss = !missed.contains(world) && wrong.isNotEmpty;
+          final miss =
+              !_activationOnly && !missed.contains(world) && wrong.isNotEmpty;
           final choice = miss
               ? wrong.first
               : runner.options.firstWhere((o) => o.isCorrect);
           if (miss) missed.add(world);
+          void observeSubmission() {
+            final current =
+                runnerFinder.evaluate().firstOrNull?.widget
+                    as Act0LessonRunnerShellV1?;
+            if (current == null ||
+                current.selectedTaskId != taskId ||
+                current.runner.phase != Act0LessonPhaseV1.review) {
+              return;
+            }
+            firstDecision.observe(
+              world: world,
+              previousOption: runner.selectedOptionId,
+              submittedOption: current.runner.selectedOptionId,
+              elapsed: total.elapsedMilliseconds,
+            );
+          }
+
+          final sizing = runner.sizingConfig.isEnabled;
           final ok = await _tapFirst(t, [
-            if (runner.sizingConfig.isEnabled)
-              'act0_shell_sizing_preset_${choice.id}',
+            if (sizing) 'act0_shell_sizing_preset_${choice.id}',
             'act0_shell_option_${choice.id}',
             if (choice.seatId != null) 'act0_shell_seat_tap_${choice.seatId}',
-          ]);
+          ], afterTap: sizing ? null : observeSubmission);
           expect(ok, isTrue, reason: '$taskId: no answer');
-          if (runner.sizingConfig.isEnabled) {
+          if (sizing) {
             expect(
-              await _tapFirst(t, ['act0_shell_sizing_confirm_cta']),
+              await _tapFirst(t, [
+                'act0_shell_sizing_confirm_cta',
+              ], afterTap: observeSubmission),
               isTrue,
             );
           }
+          if (_activationOnly && firstDecision.elapsedMs != null) break;
           if (taskWorld.containsKey(taskId)) answered.add(taskId);
           final done = answered.where((id) => taskWorld[id] == world).length;
           final all = taskWorld.values.where((n) => n == world).length;
@@ -354,6 +389,11 @@ void main() {
       }
     }
     total.stop();
+    if (_activationOnly) {
+      expect(firstDecision.elapsedMs, isNotNull, reason: 'W1 decision missing');
+      binding.reportData = {'first_w1_decision_ms': firstDecision.elapsedMs};
+      return;
+    }
     _memory['end_w$_lastWorld'] = _rssMb();
     await Future<void>.delayed(const Duration(seconds: 3));
     _memory['idle_3s_after'] = _rssMb();
@@ -362,6 +402,7 @@ void main() {
     expect(reachedNext, isTrue, reason: 'route did not pass W$_lastWorld');
     expect(taskWorld.keys.toSet().difference(completed), isEmpty);
     binding.reportData = <String, Object?>{
+      'first_w1_decision_ms': firstDecision.elapsedMs,
       'worlds': _lastWorld,
       'decisions_answered': answered.length,
       'tasks_completed': completed.length,
