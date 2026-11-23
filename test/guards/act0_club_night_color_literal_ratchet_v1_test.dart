@@ -9,8 +9,11 @@ import 'package:flutter_test/flutter_test.dart';
 /// When a screen moves to Club Night, lower its number here (or remove the
 /// line). Never raise a number. The table scene files stay listed until the
 /// table itself is restyled.
-const String _tokensFile =
-    'lib/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
+// Token sources: Club Night tokens and the B32 skin token set (designer slot).
+const Set<String> _tokenFiles = <String>{
+  'lib/ui_v2/act0_shell/act0_club_night_tokens_v1.dart',
+  'lib/ui_v2/act0_shell/skin/act0_skin_tokens_v1.dart',
+};
 
 const Map<String, int> _allowance = <String, int>{
   'lib/ui_v2/act0_shell/academy_leaves/act0_academy_home_leaf_v1.dart': 19,
@@ -48,7 +51,7 @@ void main() {
     for (final entity in dir.listSync(recursive: true)) {
       if (entity is! File || !entity.path.endsWith('.dart')) continue;
       final path = entity.path.replaceAll(r'\', '/');
-      if (path == _tokensFile) continue;
+      if (_tokenFiles.contains(path)) continue;
       final count = literal.allMatches(entity.readAsStringSync()).length;
       final allowed = _allowance[path] ?? 0;
       if (count > allowed) {
