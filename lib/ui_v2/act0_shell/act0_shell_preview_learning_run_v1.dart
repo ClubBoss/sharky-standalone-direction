@@ -811,6 +811,8 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _placementDiagnosticHitSignals.clear();
       _placementDiagnosticMissSignals.clear();
       _profileSkillValues.clear();
+      _learnerGoalV1 = Act0LearnerGoalV1.onlineCash;
+      _goalRoutePlacementV1 = null;
       _recentSkillGains.clear();
       _placementResult = null;
       _resetLessonRunMetrics(forceFreshProvenance: true);

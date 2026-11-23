@@ -90,6 +90,7 @@ Widget act0AcademyHomeRuntimeV1(
   return Act0AcademyHomeLeafV1(
     input: Act0AcademyHomeLeafInputV1(
       courseTitle: courseTitle,
+      goalRoute: legacy.goalRoute,
       streakDays: 0,
       mood: (legacy.sharkyOverride ?? lesson.runner.sharky).preSessionMood,
       earnedLessonCount: earnedLessons,

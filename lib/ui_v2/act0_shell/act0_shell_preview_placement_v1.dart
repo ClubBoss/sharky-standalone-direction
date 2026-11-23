@@ -111,11 +111,38 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     _lessonRunEvidenceStartOrderV1 = boundaryStartOrder;
   }
 
+  Future<void> _restoreGoalRoutePlacementV1(int epoch) async {
+    try {
+      final intake = await ProgressService.getIntakeProfile();
+      if (!mounted || epoch != _recoveryEpochV1) return;
+      final lesson = intake?['recommendedLessonId'];
+      final task = intake?['recommendedTaskId'];
+      _goalRoutePlacementV1 =
+          intake?['version'] == 'act0_placement_v1' &&
+              lesson is String &&
+              lesson.isNotEmpty &&
+              task is String &&
+              task.isNotEmpty
+          ? (worldId: 'world_1', lessonId: lesson, taskId: task)
+          : null;
+    } catch (_) {
+      // Optional intake data must never block the canonical route from loading.
+      if (mounted && epoch == _recoveryEpochV1) _goalRoutePlacementV1 = null;
+    }
+  }
+
   Future<void> _persistPlacementCompletionV1(
     Act0PlacementResultV1 result,
   ) async {
     final epoch = _recoveryEpochV1;
     final score = _placementDiagnosticScore;
+    if (_goalRouteEnabledV1) {
+      _goalRoutePlacementV1 = (
+        worldId: 'world_1',
+        lessonId: result.recommendedLessonId,
+        taskId: result.recommendedTaskId,
+      );
+    }
     await ProgressService.saveIntakeProfile(<String, Object?>{
       'version': 'act0_placement_v1',
       'completedAt': DateTime.now().toUtc().toIso8601String(),

@@ -23,7 +23,7 @@ B23 status: the screen-logic inventory (`docs/plan/SCREEN_LOGIC_INVENTORY_v1.md`
 | **Actions / nav** | Start → Lesson intro W1 L1. Check → Placement. Resume → last lesson. |
 | **NOT here** | Sign-up, account, paywall, goal survey longer than one tap, feature tour, more than ~40 words. |
 | **Designer DoD** | First tap reachable without scroll; ≤ 2 choices above the fold; resume variant drawn. |
-| **Mechanisms first** | `act0_welcome_shell_v1.dart`: welcome view model with `{hasProgress, resumeTarget, storageError}`; telemetry exists (do not add). Optional NEW VI-40 goal tag (owner scope) would add one field `goal`. |
+| **Mechanisms first** | `act0_welcome_shell_v1.dart`: welcome view model with `{hasProgress, resumeTarget, storageError}`; telemetry exists (do not add). |
 
 ## 2. Placement (rules check / J1)
 | | |
@@ -35,6 +35,15 @@ B23 status: the screen-logic inventory (`docs/plan/SCREEN_LOGIC_INVENTORY_v1.md`
 | **NOT here** | Scores as grades, XP, leaderboard, timer pressure. |
 | **Designer DoD** | Draws passed / not passed / skipped results; question view reuses lesson option component. |
 | **Mechanisms first** | `act0_placement_shell_v1.dart` + `act0_shell_preview_placement_v1.dart`: placement state class `{index, total, answers, outcome, landingWorld}`. Returner refresher (NEW VI-39) extends outcome with «refresh list». |
+
+### Welcome / Placement goal question (VI-40)
+
+| State | Data and action | Copy keys |
+|---|---|---|
+| Flag off | Omit the question. | — |
+| First visit or missing choice | One optional choice among `online_cash`, `home_game`, `live_cash`, `mtt`. Continuing without a choice uses `online_cash`. Choice is independent of the placement assessment. | `goalRouteQuestion` (Where do you play poker?), `goalRouteOnlineCash`, `goalRouteHomeGame`, `goalRouteLiveCash`, `goalRouteMtt`, `goalRouteSkip` |
+| Returning or editing | Preselect the stored goal. Use the same four choices and save via `onGoalChanged`. Home and Map get the same `goalRoute` data including ordered worlds, next steps, and emphasis tags. | Same option keys, `goalRouteChange` |
+| Saving or save unconfirmed | Use the existing progress save state and retry action. Works offline. | Existing progress save and retry copy |
 
 ## 3. Home
 | | |

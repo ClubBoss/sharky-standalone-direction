@@ -80,6 +80,39 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
       _progressWorlds(state);
 
+  Act0GoalRouteViewModelV1<Act0WorldCardV1> _goalRouteViewModelV1(
+    List<Act0WorldCardV1> worlds,
+  ) {
+    final goal = _learnerGoalV1;
+    final route = act0GoalRouteV1(
+      goal: goal,
+      placement: _goalRoutePlacementV1,
+      catalog: worlds,
+      w13PlusEnabled: act0CurriculumPilotEnabledV1,
+    );
+    final epoch = _recoveryEpochV1;
+    return Act0GoalRouteViewModelV1(
+      goal: goal,
+      route: route,
+      nextSteps: List.unmodifiable(
+        route.worlds.where(
+          (world) =>
+              world.status != Act0WorldStateV1.completed &&
+              world.status != Act0WorldStateV1.passedByRulesCheck,
+        ),
+      ),
+      onGoalChanged: (next) {
+        if (!_goalRouteEnabledV1 ||
+            !_acceptRecoveryCallbackV1(epoch) ||
+            _learnerGoalV1 == next) {
+          return;
+        }
+        _setStateV1(() => _learnerGoalV1 = next);
+        _persistProgress();
+      },
+    );
+  }
+
   int _dailyCompletedLessonsInWorldCountV1(Act0WorldCardV1 world) => world
       .lessons
       .where((lesson) => _dailyCompletedLessonIds.contains(lesson.lessonId))
