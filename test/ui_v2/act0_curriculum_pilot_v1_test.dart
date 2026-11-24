@@ -22,7 +22,7 @@ void main() {
     expect(enabled.worlds, same(disabled.worlds));
     expect(
       enabled.worlds.last.worldNumber,
-      act0CurriculumPilotEnabledV1 ? 22 : 12,
+      act0CurriculumPilotEnabledV1 ? 24 : 12,
     );
   });
 
@@ -94,7 +94,7 @@ void main() {
             !_b19Lessons.contains(row.lesson.lessonId) &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(243));
+      expect(played, hasLength(291));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
@@ -116,19 +116,19 @@ void main() {
   );
 
   test(
-    'W17–W22 use the accepted C1 pots and call prices',
+    'W17–W24 use the accepted C1 pots and call prices',
     () {
-      const prices = {..._b4Prices, ..._b5Prices, ..._b6Prices};
+      const prices = {..._b4Prices, ..._b5Prices, ..._b6Prices, ..._b7Prices};
       final rows = catalogTasks.where(
-        (row) => row.world.worldNumber >= 17 && row.world.worldNumber <= 22,
+        (row) => row.world.worldNumber >= 17 && row.world.worldNumber <= 24,
       );
-      for (final world in [17, 18, 19, 20, 21, 22]) {
+      for (final world in [17, 18, 19, 20, 21, 22, 23, 24]) {
         expect(
           rows.where((row) => row.world.worldNumber == world),
           hasLength(30),
         );
       }
-      // E39: W21–W22 mechanisms have no catalog enum equivalent.
+      // E39: W21–W24 mechanisms have no catalog enum equivalent.
       expect(
         rows
             .where((row) => row.world.worldNumber >= 21)
@@ -461,4 +461,56 @@ const _b6Prices = <String, (double, double, double?)>{
   'w22_6_guided_compare_branch_plans': (5.5, 0, null),
   'w22_6_checkpoint_audit_pruned_solver_result': (5.5, 0, null),
   'w22_6_day7_read_lead_plan': (5.5, 0, null),
+};
+
+// Accepted W23–W24 values: total pot, call amount, and eligible-pot equity.
+const _b7Prices = <String, (double, double, double?)>{
+  'w23_1_read_utg_medium_hj': (1.5, 1, 40.0),
+  'w23_1_guided_hj_opens_medium': (1.5, 1, 40.0),
+  'w23_1_transfer_co_opens_sevens': (1.5, 1, 40.0),
+  'w23_1_day7_btn_medium_queen': (1.5, 1, 40.0),
+  'w23_2_read_notation_after_blocker': (1.5, 1, 40.0),
+  'w23_2_guided_compare_wheel_and_broadway': (1.5, 1, 40.0),
+  'w23_2_transfer_connectivity_vs_nut_potential': (5.5, 0, null),
+  'w23_2_day7_which_flush_is_nut': (5.5, 0, null),
+  'w23_3_read_bb_minraise': (3.5, 1, 22.2),
+  'w23_3_guided_bb_two_sizes_compare': (4, 1.5, 27.3),
+  'w23_3_transfer_open_size_buys_folds': (1.5, 1, 40.0),
+  'w23_3_day7_different_prices_different_calls': (4.5, 2, 30.8),
+  'w23_4_read_raise_number': (31.5, 14, 30.8),
+  'w23_4_guided_third_seat_facing_reraise': (13.5, 9, 40.0),
+  'w23_4_transfer_five_bet_price_flips': (58.5, 13, 18.2),
+  'w23_4_day7_four_bet_value_response': (12, 5.5, 31.4),
+  'w23_5_read_sb_uncovered': (1.5, 0.5, 25.0),
+  'w23_5_guided_sb_mixed_tree': (1.5, 0.5, 25.0),
+  'w23_5_transfer_depth_changes_available_payoff': (13, 7.5, 36.6),
+  'w23_5_day7_bb_raise_reprices_complete': (5, 3, 37.5),
+  'w23_6_read_blocker_value_four_bet': (13, 7.5, 36.6),
+  'w23_6_guided_build_light_three_bet': (4, 2.5, 38.5),
+  'w23_6_checkpoint_combine_coverage_price_and_depth': (13.5, 9, 40.0),
+  'w23_6_day7_choose_chart_only_matching_line': (4, 2.5, 38.5),
+  'w24_1_read_classify_river_groups': (5.5, 0, null),
+  'w24_1_guided_condensed_bluff_catcher': (19.5, 8, 29.1),
+  'w24_1_transfer_keep_middle_check': (5.5, 0, null),
+  'w24_1_day7_condensed_calls_sized_bluffs': (13.5, 8, 37.2),
+  'w24_2_read_price_vs_alpha': (23, 11.5, 33.3),
+  'w24_2_guided_overbet_mdf': (20, 12, 37.5),
+  'w24_2_transfer_bluff_threshold_overpot': (11.5, 0, null),
+  'w24_2_day7_call_price_vs_range_mdf': (35.5, 15, 29.7),
+  'w24_3_read_ratio_three_quarter': (5.5, 0, null),
+  'w24_3_guided_fractional_bluff_weight': (5.5, 0, null),
+  'w24_3_transfer_indifferent_range_blocks': (11, 5.5, 33.3),
+  'w24_3_day7_ratio_for_double_pot': (5.5, 0, null),
+  'w24_4_read_nut_flush_removal': (5.5, 0, null),
+  'w24_4_guided_overbet_collect_nut_value': (5.5, 0, null),
+  'w24_4_transfer_effective_price_river': (35.5, 9, 20.2),
+  'w24_4_day7_blocker_vs_fold_group': (5.5, 0, null),
+  'w24_5_read_what_thin_raise_costs': (7.5, 2, 21.1),
+  'w24_5_guided_thin_value_raise': (7.5, 2, 21.1),
+  'w24_5_transfer_thin_raise_becomes_call': (7.5, 2, 21.1),
+  'w24_5_day7_check_marginal_showdown': (5.5, 0, null),
+  'w24_6_read_raise_bluff_risk': (15.5, 4, 20.5),
+  'w24_6_guided_raise_blocker_bluff': (15.5, 4, 20.5),
+  'w24_6_checkpoint_value_check_raise': (15.5, 4, 20.5),
+  'w24_6_day7_no_bluff_without_folds': (13.5, 8, 37.2),
 };
