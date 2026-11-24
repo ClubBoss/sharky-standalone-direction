@@ -67,9 +67,13 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
     Act0RoutePracticeStepV1 step,
   ) {
     final active = _routePracticeV1.run;
+    if (active != null &&
+        active.stepId == step.id &&
+        active.answered >= active.taskIds.length) {
+      return null;
+    }
     final tasks = active != null && active.stepId == step.id
         ? active.taskIds
-              .skip(active.answered)
               .map((id) => act0RoutePracticeRepsByIdV1[id]!.task)
               .toList()
         : _routePracticeDeckV1(world).map((rep) => rep.task).toList();

@@ -10,6 +10,7 @@ class Act0LearnPathViewModelV1 {
     required String? detailLessonId,
     required String? worldDetailId,
     required Act0LessonCardV1? requiredPractice,
+    int requiredPracticeAnswered = 0,
     required Set<String> pathClosedTaskIds,
     required Set<String> completedTaskIds,
     required bool showFullPath,
@@ -40,15 +41,16 @@ class Act0LearnPathViewModelV1 {
             orElse: () => lessons.first,
           ),
         );
-    currentMissionTask = currentMissionLesson.courseTaskList.firstWhere(
-      (task) => !pathClosedTaskIds.contains(task.taskId),
-      orElse: () => currentMissionLesson.courseTaskList.first,
+    currentMissionTask = requiredPractice == null
+        ? act0FirstIncompleteLessonTaskV1(
+            currentMissionLesson,
+            pathClosedTaskIds,
+          )
+        : requiredPractice.courseTaskList[requiredPracticeAnswered];
+    currentMissionStepIndex = act0LessonStepIndexV1(
+      currentMissionLesson,
+      currentMissionTask.taskId,
     );
-    currentMissionStepIndex =
-        currentMissionLesson.courseTaskList.indexWhere(
-          (task) => task.taskId == currentMissionTask.taskId,
-        ) +
-        1;
     firstRun =
         currentMissionLesson.lessonId == 'what_poker_is' &&
         currentMissionStepIndex == 1 &&

@@ -1,3 +1,4 @@
+import '../act0_runtime_surface_copy_v1.dart';
 import '../act0_club_night_components_v1.dart';
 import '../skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
@@ -160,9 +161,7 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(12, 6, 12, 14),
               child: Text(
-                done
-                    ? 'Today’s goal complete'
-                    : 'Today’s goal: one lesson or review',
+                act0TodayGoalCopyV1(done),
                 key: const Key('act0_home_today_goal'),
                 style: const TextStyle(
                   color: Act0ClubNightTokensV1.text2,

@@ -3579,8 +3579,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               const ColoredBox(
                 color: Act0SkinTokensV1.surface,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                  child: Act0ShellRouteHeaderV1(title: 'Learn'),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: Act0SkinTokensV1.screenGutter,
+                    vertical: Act0SkinTokensV1.gapSm,
+                  ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text('Learn', style: Act0SkinTokensV1.title),
+                  ),
                 ),
               ),
             if (showTopBar && _tab != Act0ShellTabV1.learn)
@@ -3841,9 +3847,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         nextAction:
                             effectiveLearnDetailLessonId == null &&
                                 _learnDetailWorldId == null &&
-                                !_showWorldMenu
+                                !_showWorldMenu &&
+                                (nextStep == Act0ShellNextStepV1.repair ||
+                                    nextStep == Act0ShellNextStepV1.dueReview)
                             ? dailyHomeAction
                             : null,
+                        dayGoalDone:
+                            _lastShortSessionDayV1 == _todayDateString(),
                         moduleTitle: act0DisplayWorldNameCopyV1(
                           selectedWorld.title,
                         ),
@@ -3877,6 +3887,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         worldDetailId: _learnDetailWorldId,
                         lessons: selectedWorld.lessons,
                         requiredPractice: requiredPracticeMission,
+                        requiredPracticeAnswered:
+                            _routePracticeV1.run?.stepId ==
+                                requiredPracticeMission?.lessonId
+                            ? _routePracticeV1.run?.answered ?? 0
+                            : 0,
                         onStartRequiredPractice: requiredPracticeMission == null
                             ? null
                             : () => setState(() {

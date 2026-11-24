@@ -9,6 +9,7 @@ class Act0W1RulesQuestionV1 {
     required this.choices,
     required this.correctChoice,
     required this.reason,
+    this.hideTable = false,
     this.hero = '',
     this.board = '',
     this.opponent = '',
@@ -24,6 +25,7 @@ class Act0W1RulesQuestionV1 {
   final List<String> choices;
   final int correctChoice;
   final String reason;
+  final bool hideTable;
   final String hero;
   final String board;
   final String opponent;
@@ -49,6 +51,7 @@ class Act0W1RulesQuestionV1 {
       hint: '',
       hintPolicy: Act0HintPolicyV1.hidden,
       question: question,
+      hideTable: hideTable,
       options: [
         for (final (choice, label) in choices.indexed)
           Act0RunnerOptionV1(
@@ -141,6 +144,7 @@ const _sixSeats = ['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'];
 const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   Act0W1RulesQuestionV1(
     id: 'made_hand',
+    hideTable: true,
     lessonId: 'hand_rankings_upper',
     topic: 'Hand rankings',
     question: 'At showdown, which hand wins in Hold’em?',
@@ -189,6 +193,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   ),
   Act0W1RulesQuestionV1(
     id: 'preflop_after_hj',
+    hideTable: true,
     lessonId: 'blinds_action_order',
     topic: 'Preflop order',
     question:
@@ -217,6 +222,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   ),
   Act0W1RulesQuestionV1(
     id: 'forced_bets',
+    hideTable: true,
     lessonId: 'blinds_action_order',
     topic: 'Blinds',
     question:
@@ -246,6 +252,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   ),
   Act0W1RulesQuestionV1(
     id: 'raise_call_price',
+    hideTable: true,
     lessonId: 'fold_check_call_raise',
     topic: 'Price to call',
     question:
@@ -257,6 +264,7 @@ const act0W1RulesQuestionsV1 = <Act0W1RulesQuestionV1>[
   ),
   Act0W1RulesQuestionV1(
     id: 'uncalled_all_in',
+    hideTable: true,
     lessonId: 'what_poker_is_content',
     topic: 'All-in bets',
     question:

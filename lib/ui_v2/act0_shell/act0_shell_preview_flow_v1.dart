@@ -708,15 +708,11 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   Act0LessonTaskV1 _firstIncompleteTaskWithTaskIds(
     Act0LessonCardV1 lesson,
     Set<String> completedTaskIds,
-  ) {
-    final eligible = lesson.courseTaskList.where(
-      (task) => _runnerAllowedByNineSeatGateV1(task.runner),
-    );
-    return eligible.firstWhere(
-      (task) => !completedTaskIds.contains(task.taskId),
-      orElse: () => eligible.firstOrNull ?? lesson.courseTaskList.first,
-    );
-  }
+  ) => act0FirstIncompleteLessonTaskV1(
+    lesson,
+    completedTaskIds,
+    runnerAllowed: _runnerAllowedByNineSeatGateV1,
+  );
 
   bool _taskAvailable(Act0LessonCardV1 lesson, String taskId) {
     if (!lesson.courseTaskList.any(
@@ -759,12 +755,8 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
-  int _taskIndex(Act0LessonCardV1 lesson, String taskId) {
-    final index = lesson.courseTaskList.indexWhere(
-      (task) => task.taskId == taskId,
-    );
-    return index < 0 ? 0 : index;
-  }
+  int _taskIndex(Act0LessonCardV1 lesson, String taskId) =>
+      act0LessonStepIndexV1(lesson, taskId) - 1;
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
     final tasks = lesson.courseTaskList

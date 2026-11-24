@@ -1119,6 +1119,21 @@ String act0AcademyLessonSubtitleV1(
 }
 
 // Academy navigation precedes every attempt, so no current decision exists.
+String act0RunnerQuestionCopyV1(
+  BuildContext context,
+  String? taskId,
+  String authoredQuestion,
+) => act0AcademyW1InstructionTaskV1(taskId)
+    ? act0AcademyW1InstructionV1(context, taskId, authoredQuestion)
+    : act0LocalizedRunnerQuestionAtomByTaskIdV1(
+        taskId,
+        fallback: authoredQuestion,
+        languageCode: act0AcademyLanguageV1(context),
+      );
+
+String act0TodayGoalCopyV1(bool done) =>
+    done ? 'Today’s goal complete' : 'Today’s goal: one lesson or review';
+
 String act0AcademyTaskTitleV1(BuildContext context, Act0LessonTaskV1 task) =>
     act0PrechoiceDisplayTitleV1(
       taskId: task.taskId,

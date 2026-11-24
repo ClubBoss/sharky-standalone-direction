@@ -49,12 +49,25 @@ Future<void> _runCheck(WidgetTester tester, int right) async {
 Future<void> _answerCheck(WidgetTester tester, int right) async {
   for (final (index, question) in act0W1RulesQuestionsV1.indexed) {
     expect(find.text(question.question), findsWidgets);
-    expect(find.text('Step ${index + 1} of 10'), findsOneWidget);
+    expect(find.text('Rules check · ${index + 1} of 10'), findsOneWidget);
+    final runner = tester
+        .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+        .runner;
+    final hasCards =
+        question.hero.isNotEmpty ||
+        question.board.isNotEmpty ||
+        question.opponent.isNotEmpty;
+    expect(runner.hideTable, !hasCards);
+    final table = find.byWidgetPredicate(
+      (widget) => const [
+        Key('act0_shell_table'),
+        Key('act0_integrated_scene_perspective_table'),
+        Key('act0_f7_dynamic_table'),
+      ].contains(widget.key),
+    );
+    expect(table, hasCards ? findsWidgets : findsNothing);
     if (question.id == 'preflop_after_hj' ||
         question.id == 'postflop_two_left') {
-      final runner = tester
-          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-          .runner;
       final seats = runner.table.seats;
       expect(seats.where((seat) => seat.isOccupied), hasLength(6));
       expect(runner.table.highlightedSeatIds, isEmpty);
@@ -211,6 +224,48 @@ void main() {
     ]);
     await _saved(tester);
     await tester.pumpWidget(const SizedBox.shrink());
+  });
+
+  testWidgets('Learn step two agrees with the lesson it opens', (tester) async {
+    usePhone(tester);
+    SharedPreferences.setMockInitialValues({
+      'onboardingCompleted': true,
+      _progressKey: jsonEncode({
+        'schemaVersion': 18,
+        'completedTaskIds': ['what_poker_is_theory'],
+        'completedLessonIds': [],
+        'skippedTaskIds': [],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is',
+        'selectedTaskId': 'what_poker_is_find_hero',
+        'earnedXp': 5,
+      }),
+    });
+    await _mount(tester);
+    await _tapKey(tester, 'act0_shell_nav_learn');
+    final step = tester
+        .widget<Text>(
+          find.byKey(const Key('act0_shell_current_mission_step_band')),
+        )
+        .data;
+    final start = find.byKey(const Key('act0_shell_current_mission_cta'));
+    await tester.ensureVisible(start);
+    expect(
+      find.descendant(of: start, matching: find.text('Continue')),
+      findsOneWidget,
+    );
+    await _tapKey(tester, 'act0_shell_current_mission_cta');
+    final opened = tester.widget<Act0LessonRunnerShellV1>(
+      find.byType(Act0LessonRunnerShellV1),
+    );
+    expect(opened.selectedTaskId, 'what_poker_is_find_hero');
+    expect(opened.runner.beatIndex, 2);
+    expect(opened.runner.question, 'Which cards belong to you alone?');
+    expect(find.text(opened.runner.question), findsWidgets);
+    expect(
+      step,
+      'Current step ${opened.runner.beatIndex} of ${opened.runner.beatCount} · ${opened.runner.question}',
+    );
   });
 
   for (final correct in [9, 10]) {

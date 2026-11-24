@@ -933,6 +933,7 @@ Widget _buildRunnerProgressV1(
   required VoidCallback onBack,
   required bool showGlossary,
   ({int step, int total})? extraPracticeProgress,
+  String? progressLabel,
 }) {
   final progress = extraPracticeProgress;
   final step = progress?.step ?? runner.beatIndex;
@@ -943,7 +944,9 @@ Widget _buildRunnerProgressV1(
     total: total,
     onClose: onBack,
     closeLabel: russian ? 'Назад' : 'Back',
-    progressLabel: russian ? 'Шаг $step/$total' : 'Step $step of $total',
+    progressLabel:
+        progressLabel ??
+        (russian ? 'Шаг $step/$total' : 'Step $step of $total'),
     modeLabel: progress == null
         ? null
         : russian

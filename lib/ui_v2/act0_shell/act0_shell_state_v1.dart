@@ -778,6 +778,30 @@ bool act0RunnerSupportsNineSeatPreviewV1(Act0RunnerStateV1 runner) =>
       (step) => step.table == null || act0TableSeatCountV1(step.table!) <= 9,
     );
 
+Act0LessonTaskV1 act0FirstIncompleteLessonTaskV1(
+  Act0LessonCardV1 lesson,
+  Set<String> pathClosedTaskIds, {
+  bool Function(Act0RunnerStateV1)? runnerAllowed,
+}) {
+  final tasks = lesson.courseTaskList;
+  final allowed =
+      runnerAllowed ??
+      (Act0RunnerStateV1 runner) =>
+          !act0RunnerRequiresNineSeatPreviewV1(runner);
+  final eligible = tasks.where((task) => allowed(task.runner));
+  return eligible.firstWhere(
+    (task) => !pathClosedTaskIds.contains(task.taskId),
+    orElse: () => eligible.firstOrNull ?? tasks.first,
+  );
+}
+
+int act0LessonStepIndexV1(Act0LessonCardV1 lesson, String taskId) {
+  final index = lesson.courseTaskList.indexWhere(
+    (task) => task.taskId == taskId,
+  );
+  return index < 0 ? 1 : index + 1;
+}
+
 class Act0RunnerStateV1 {
   const Act0RunnerStateV1({
     required this.lessonId,
@@ -797,6 +821,7 @@ class Act0RunnerStateV1 {
     required this.nextLessonId,
     required this.returnTarget,
     required this.table,
+    this.hideTable = false,
     this.teachingSteps = const <Act0TeachingStepV1>[],
     this.teachingStepIndex = 0,
     this.hintPolicy = Act0HintPolicyV1.theoryOnly,
@@ -823,6 +848,7 @@ class Act0RunnerStateV1 {
   final String? nextLessonId;
   final String returnTarget;
   final Act0TableStateV1 table;
+  final bool hideTable;
   final List<Act0TeachingStepV1> teachingSteps;
   final int teachingStepIndex;
   final Act0HintPolicyV1 hintPolicy;
@@ -886,6 +912,7 @@ class Act0RunnerStateV1 {
       nextLessonId: nextLessonId ?? this.nextLessonId,
       returnTarget: returnTarget ?? this.returnTarget,
       table: table ?? this.table,
+      hideTable: hideTable,
       teachingSteps: teachingSteps ?? this.teachingSteps,
       teachingStepIndex: teachingStepIndex ?? this.teachingStepIndex,
       hintPolicy: hintPolicy ?? this.hintPolicy,
