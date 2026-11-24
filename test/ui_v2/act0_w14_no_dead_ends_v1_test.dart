@@ -10,6 +10,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_profile_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
@@ -71,6 +72,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +

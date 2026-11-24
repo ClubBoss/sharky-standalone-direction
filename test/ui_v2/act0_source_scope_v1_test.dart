@@ -3,6 +3,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
@@ -299,6 +300,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +
@@ -312,6 +314,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +
@@ -327,6 +330,7 @@ void main() {
         (task) =>
             !wave6CurrentRowsV1.containsKey(task.taskId) &&
             !_asm05NewTaskIds.contains(task.taskId) &&
+            !cur04bSummaryChoicesV1.containsKey(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
@@ -418,6 +422,7 @@ void main() {
       if (expected == Act0TableScopeV1.playedHand) {
         played++;
         if (!_asm05NewTaskIds.contains(task.taskId) &&
+            !cur04bSummaryChoicesV1.containsKey(task.taskId) &&
             !w7AppliedTaskIdsV1.contains(task.taskId) &&
             !w4MinRaiseTaskIdsV1.contains(task.taskId) &&
             !w2Q9TaskIds.contains(task.taskId) &&
@@ -438,7 +443,10 @@ void main() {
             task.taskId != 'cards_ranks_suits_premium_decision')
           legacyPlayed++;
         final replay = act0StreetReplayFromTableV1(table);
-        if (replay?.isConsumerSafe == true) historyConsumers.add(task.taskId);
+        if (replay?.isConsumerSafe == true &&
+            !cur04bSummaryChoicesV1.containsKey(task.taskId)) {
+          historyConsumers.add(task.taskId);
+        }
         if (rangeSignals.containsKey(task.taskId)) {
           expect(task.runner.feedbackSignalId, rangeSignals[task.taskId]);
           expect(table.boardCards, hasLength(4));
@@ -610,6 +618,7 @@ void main() {
     expect(
       played,
       328 +
+          cur04bSummaryChoicesV1.length +
           y5dNewChoicesV1.length -
           y5dHypotheticalTaskIdsV1.length +
           w3BlindVsBlindChoicesV1.length +

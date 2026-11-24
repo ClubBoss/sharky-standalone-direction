@@ -1152,4 +1152,95 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
         preChoiceAssumption:
             'BB bets the last 5 BB. Missed spade draws make up 20% of the bets and sets make up 80%. Your pair wins only against the missed draws.',
       ),
+  "w12_cur04b_call_after_loss": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_call_after_loss",
+    kind: Act0DecisionKindV1.table,
+    principleId: "process_over_outcome",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB goes all-in with missed spades as well as stronger queens and sets. Count each stated hand once.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "You lost the last river call. Here BB bets the rest. Suppose the bet contains these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.",
+    edgeBb: 0.8333333333333334,
+  ),
+  "w12_cur04b_ignore_one_show": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_ignore_one_show",
+    kind: Act0DecisionKindV1.table,
+    principleId: "price_vs_equity",
+    bestAlternativeOptionId: "call_6_bb",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "The bet contains one missed draw, two stronger jacks and two sets under the stated model.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "BB showed one bluff after your last fold. Suppose these equally likely hands make up the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.",
+    edgeBb: 2.3,
+  ),
+  "w12_cur04b_both_opponents": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_both_opponents",
+    kind: Act0DecisionKindV1.table,
+    principleId: "multiway_tighten",
+    bestAlternativeOptionId: "call_3_bb",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "CO bets a set. BTN calls with a lower heart draw, using up two otherwise live hearts.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "Suppose CO has 9s 9c and BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.",
+    edgeBb: 0.7976190476190477,
+  ),
+  "w12_cur04b_log_price_not_result": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_log_price_not_result",
+    kind: Act0DecisionKindV1.table,
+    principleId: "process_over_outcome",
+    bestAlternativeOptionId: "call_log_result",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB goes all-in with two unpaired hands and three hands that beat top pair.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "Your session goal is to review one river call. Suppose BB goes all-in with these equally likely hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.",
+  ),
+  "w12_cur04b_small_steal_reset": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_small_steal_reset",
+    kind: Act0DecisionKindV1.table,
+    principleId: "smallest_size_same_job",
+    bestAlternativeOptionId: "raise_to_5_bb",
+    edgeMechanism: Act0EdgeMechanismV1.cheaperSameResult,
+    opponentRead:
+        "BB folds equally often to both sizes, and any continuation ends in Hero folding.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "You feel like making a big raise after losing the last pot. For this drill BB folds four times in five to either listed raise. Otherwise BB reraises and you fold. Compare only the offered plays.",
+    edgeBb: 0.6,
+  ),
+  "w12_cur04b_stack_capped_value": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_stack_capped_value",
+    kind: Act0DecisionKindV1.table,
+    principleId: "value_vs_worse",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "All four hands call small. Only the set calls the stack-sized bet.",
+    stackMatters: true,
+    preChoiceAssumption:
+        "Suppose BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. If you bet its last 10 BB, BB calls with 6c 6d alone. After a check or call, go to showdown.",
+    stackNote:
+        "BB can match only 10 BB. The two tested sizes use different portions of that effective stack.",
+    edgeBb: 1.5,
+  ),
+  "w12_cur04b_two_ranges_one_call": Act0DecisionReasoningV1(
+    taskId: "w12_cur04b_two_ranges_one_call",
+    kind: Act0DecisionKindV1.table,
+    principleId: "multiway_tighten",
+    bestAlternativeOptionId: "call_vs_co_only",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "One of CO’s three losing hands is paired with a stronger BTN queen.",
+    stackMatters: false,
+    preChoiceAssumption:
+        "The four remaining hand pairs are equally likely. Suppose the CO/BTN pairs are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.",
+  ),
 };

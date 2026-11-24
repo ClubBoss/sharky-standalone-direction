@@ -4,6 +4,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w14_skill_state_v1.dart';
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
@@ -311,6 +312,28 @@ void main() {
       'asm05_new_known_holes_turn_call_10',
       'asm05_new_known_holes_turn_call_40',
     };
+    const summarySkills = <String, Set<String>>{
+      'w12_cur04b_call_after_loss': {'Player adjustment', 'Mental game'},
+      'w12_cur04b_ignore_one_show': {'Player adjustment', 'Mental game'},
+      'w12_cur04b_both_opponents': {
+        'Session routine',
+        'Betting decisions',
+        'Board reading',
+      },
+      'w12_cur04b_log_price_not_result': {
+        'Player adjustment',
+        'Session routine',
+        'Mental game',
+      },
+      'w12_cur04b_small_steal_reset': {'Player adjustment', 'Mental game'},
+      'w12_cur04b_stack_capped_value': {'Player adjustment', 'Stack decisions'},
+      'w12_cur04b_two_ranges_one_call': {
+        'Player adjustment',
+        'Session routine',
+        'Betting decisions',
+      },
+    };
+    expect(summarySkills.keys, cur04bSummaryChoicesV1.keys);
     final taskCounts = <int, int>{};
     for (final (i, source) in _tasks.indexed) {
       final world = source.world.worldNumber;
@@ -322,14 +345,15 @@ void main() {
             .where((state) => state.independentTasks > 0)
             .map((state) => state.label)
             .toSet(),
-        {
-          if (world == 11) 'Session routine',
-          if (world == 12 && !knownHoleCards.contains(id)) 'Mental game',
-          if (pricedSession.contains(id) ||
-              knownHoleCards.contains(id) ||
-              pricedMentalGame.contains(id))
-            'Betting decisions',
-        },
+        summarySkills[id] ??
+            {
+              if (world == 11) 'Session routine',
+              if (world == 12 && !knownHoleCards.contains(id)) 'Mental game',
+              if (pricedSession.contains(id) ||
+                  knownHoleCards.contains(id) ||
+                  pricedMentalGame.contains(id))
+                'Betting decisions',
+            },
         reason: id,
       );
     }
@@ -343,7 +367,8 @@ void main() {
           22 +
           y5dLessonByTaskV1.values.where((row) => row.$1 == 'world_12').length +
           w12Wave4ChoiceContractV1.length +
-          wave6WorldTaskDeltaV1(12),
+          wave6WorldTaskDeltaV1(12) +
+          cur04bSummaryChoicesV1.length,
     });
   });
 

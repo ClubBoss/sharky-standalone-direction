@@ -4004,7 +4004,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   question: "Which size collects most from the stated weaker callers?",
   feedbackTitle: "Pick a flop size",
   feedbackReason:
-      "Bet 3 BB because BB pays that size with weaker kings and sevens. Bet the larger size because 2 BB earns a blind less per call.",
+      "Bet 3 BB because weaker kings and sevens call both 2 BB and 3 BB. Betting 2 BB earns 1 BB less each time they call.",
   teachingSteps: const [],
   options: const [
     Act0RunnerOptionV1(
@@ -4027,7 +4027,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: "Correct.",
       feedbackReason:
-          "Bet 3 BB because BB pays that size with weaker kings and sevens. Bet the larger size because 2 BB earns a blind less per call.",
+          "Bet 3 BB because weaker kings and sevens call both 2 BB and 3 BB. Betting 2 BB earns 1 BB less each time they call.",
     ),
     Act0RunnerOptionV1(
       id: "bet_15_bb",
@@ -4038,7 +4038,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Betting 15 BB risks more chips against strong hands and misses the weaker calls a 3 BB bet gets.",
+          "Bet 3 BB to collect from the stated weaker kings and sevens. Strong hands have called 15 BB, and the read leaves weaker hands’ response to that size open.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -6724,13 +6724,13 @@ final _w11TableTriggerReadsTasksV1 = <Act0LessonTaskV1>[
         'bet_4_bb',
         'Bet 4 BB',
         Act0FeedbackQualityV1.correct,
-        'BTN and BB can call 4 BB with weaker aces and sevens, so bet AK for value. Checking misses those payments and gives both players a free card.',
+        'BTN and BB can call 4 BB with weaker aces and sevens, so bet AK for value. If you check, both opponents see the turn for free only if BTN checks behind.',
       ),
       (
         'check',
         'Check',
         Act0FeedbackQualityV1.suboptimal,
-        'A check keeps the 8 BB pot small. It also gives two loose callers a free card and misses value from weaker aces.',
+        'Checking misses a chance to charge weaker aces and sevens. BTN can still bet. The turn is free only if BTN checks behind.',
       ),
       (
         'bet_20_bb',
@@ -7514,7 +7514,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'call_4_bb',
         'Call 4 BB',
         Act0FeedbackQualityV1.correct,
-        'UTG bets overpairs and AK, and HJ can pay with a small pair. Call 4 BB with your set because raising to 14 BB tends to lose both of those groups.',
+        'Call 4 BB with your set because UTG and HJ can pay a small turn bet after you call. Raising to 14 BB tends to lose those hands. BB still acts, and the read does not say how BB will respond.',
       ),
       (
         'fold',
@@ -9701,7 +9701,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_28_bb',
         'All-in to 28 BB',
         Act0FeedbackQualityV1.wrong,
-        'The UTG range is strong and can call. Going all-in with QJo risks 28 BB into a 4.5 BB pot with little fold pressure.',
+        'Going all-in with QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify going all-in.',
       ),
     ],
     table: _day7TableV1(
@@ -10318,7 +10318,7 @@ final _w12DecisionPriceAndCleanOutsTasksV1 = <Act0LessonTaskV1>[
         'check',
         'Check',
         Act0FeedbackQualityV1.suboptimal,
-        'A check keeps the 14 BB pot. It also misses a 6 BB call from weaker aces and pairs in BB\'s known range.',
+        'Checking takes AJ to showdown for the 14 BB pot, where two pair and sets beat it. It misses 6 BB calls from the stated weaker hands.',
       ),
       (
         'all_in_to_68_25_bb',

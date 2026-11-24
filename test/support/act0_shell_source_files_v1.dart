@@ -14,6 +14,7 @@ const act0ShellStateCatalogSourcePathsV1 = <String>[
   'lib/ui_v2/act0_shell/act0_shell_runners_part2_v1.dart',
   'lib/ui_v2/act0_shell/act0_shell_runners_part3_v1.dart',
   'lib/ui_v2/act0_shell/act0_shell_runners_part4_v1.dart',
+  'lib/ui_v2/act0_shell/act0_shell_w12_summary_v1.dart',
 ];
 
 /// Reads each Act0 catalog source file individually for per-unit AST parsing.

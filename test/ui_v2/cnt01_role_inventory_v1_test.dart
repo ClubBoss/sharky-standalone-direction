@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
 import '../../tools/cnt01_role_inventory_v1.dart';
 
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
@@ -337,7 +338,8 @@ void main() {
               y5dNewChoicesV1.length +
               w11Wave4ChoiceContractV1.length +
               w12Wave4ChoiceContractV1.length +
-              wave6TaskDeltaV1,
+              wave6TaskDeltaV1 +
+              cur04bSummaryChoicesV1.length,
         ),
       );
       expect(

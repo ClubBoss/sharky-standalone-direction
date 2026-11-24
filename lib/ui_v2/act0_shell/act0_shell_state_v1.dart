@@ -33,6 +33,7 @@ part 'act0_shell_day7_content_v1.dart';
 part 'act0_shell_lessons_w1_w4_v1.dart';
 part 'act0_shell_lessons_w5_w8_v1.dart';
 part 'act0_shell_lessons_w9_w12_v1.dart';
+part 'act0_shell_w12_summary_v1.dart';
 part 'act0_shell_lessons_w13_w14_v1.dart';
 part 'act0_shell_lessons_w15_w16_v1.dart';
 part 'act0_shell_lessons_w17_w18_v1.dart';

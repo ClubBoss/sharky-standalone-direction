@@ -16,6 +16,7 @@ import '../support/act0_catalog_poker_facts_v1.dart';
 import '../support/act0_catalog_quality_audit_v1.dart';
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_day7_coverage_v1.dart';
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 
 const _baseline = 'test/fixtures/act0_atlas_dod_baseline_v1.json';
@@ -857,10 +858,27 @@ void main() {
                   )
                   .length
             : 0;
-        final boundedTaskCount = tasks.length - y5dW11Addition;
-        final taskTarget = number == 11
-            ? '27–33 задания + 6 по Y5d; ≥ 1/3 решений'
-            : '27–33 задания; ≥ 1/3 решений';
+        // CUR-04.b requires a separate seven-drill W10–W12 summary in
+        // addition to the original W12 lesson budget. Require its exact IDs.
+        final summaryTasks = tasks
+            .where((row) => row.lesson.lessonId == cur04bSummaryLessonIdV1)
+            .toList();
+        if (number == 12) {
+          expect(
+            summaryTasks.map((row) => row.task.taskId).toSet(),
+            cur04bSummaryChoicesV1.keys.toSet(),
+          );
+          expect(summaryTasks, hasLength(cur04bSummaryChoicesV1.length));
+        } else {
+          expect(summaryTasks, isEmpty);
+        }
+        final boundedTaskCount =
+            tasks.length - y5dW11Addition - summaryTasks.length;
+        final taskTarget = switch (number) {
+          11 => '27–33 задания + 6 по Y5d; ≥ 1/3 решений',
+          12 => '27–33 задания + 7 по CUR-04.b; ≥ 1/3 решений',
+          _ => '27–33 задания; ≥ 1/3 решений',
+        };
         add(
           'S2',
           name,

@@ -20,6 +20,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
@@ -2577,7 +2578,10 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             : w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute
-                      ? 452 + wave6TaskDeltaV1 + y5dNewChoicesV1.length
+                      ? 452 +
+                            wave6TaskDeltaV1 +
+                            y5dNewChoicesV1.length +
+                            cur04bSummaryChoicesV1.length
                       : 297) +
                   w3BlindVsBlindChoicesV1.length +
                   y5bNewChoicesV1.length +
@@ -2596,6 +2600,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
         if (fullRoute && !w7ToW8 && !pilot) {
           expect(completed, contains('w12_checkpoint_full_loop_line'));
           expect(completed, contains('w12_checkpoint_review'));
+          expect(completed, containsAll(cur04bSummaryChoicesV1.keys));
         }
         expect(missedWorlds, expectedWorlds);
         expect(restartedWorlds, expectedWorlds);
