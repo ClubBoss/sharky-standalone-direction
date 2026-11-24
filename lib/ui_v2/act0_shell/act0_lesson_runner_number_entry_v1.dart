@@ -7,10 +7,13 @@ extension _NumberEntryInteractionV1 on _Act0LessonRunnerShellV1State {
     final interaction = _interactionKey(widget.runner);
     final option = await showAct0ClubSheetV1<Act0RunnerOptionV1>(
       context: context,
-      builder: (_) => _NumberEntrySheetV1(
-        entry: entry,
-        onReveal: () =>
-            _exposeDecisionAssistanceV1(Act0DecisionAssistanceV1.quickHint),
+      builder: (context) => _numberEntryInkThemeV1(
+        context,
+        _NumberEntrySheetV1(
+          entry: entry,
+          onReveal: () =>
+              _exposeDecisionAssistanceV1(Act0DecisionAssistanceV1.quickHint),
+        ),
       ),
     );
     if (option != null &&
@@ -21,6 +24,11 @@ extension _NumberEntryInteractionV1 on _Act0LessonRunnerShellV1State {
     }
   }
 }
+
+Theme _numberEntryInkThemeV1(BuildContext context, Widget child) => Theme(
+  data: Theme.of(context).copyWith(splashFactory: InkRipple.splashFactory),
+  child: child,
+);
 
 class _NumberEntryPromptV1 extends StatelessWidget {
   const _NumberEntryPromptV1({required this.question, required this.onOpen});
@@ -36,10 +44,13 @@ class _NumberEntryPromptV1 extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Text(question, style: Act0ClubNightTokensV1.body),
-        Act0ClubButtonsV1.primary(
-          key: const Key('act0_number_entry_open'),
-          label: 'Enter answer',
-          onPressed: onOpen,
+        _numberEntryInkThemeV1(
+          context,
+          Act0ClubButtonsV1.primary(
+            key: const Key('act0_number_entry_open'),
+            label: 'Enter answer',
+            onPressed: onOpen,
+          ),
         ),
       ],
     ),

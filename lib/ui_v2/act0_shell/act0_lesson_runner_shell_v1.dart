@@ -4190,6 +4190,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           usesSharedActiveRunnerAllocation) &&
                       !usesSceneAttachedShelfV1)
                     Expanded(child: buildFeedbackShell())
+                  else if (isNumberEntry)
+                    // The content-sized dock passes unbounded height to
+                    // non-flex children. Give feedback a finite fill budget.
+                    ConstrainedBox(
+                      constraints: BoxConstraints(
+                        maxHeight: math.min(
+                          _runnerRepairFeedbackDockTargetLowerSlotHeightV1,
+                          MediaQuery.sizeOf(context).height * 0.5,
+                        ),
+                      ),
+                      child: buildFeedbackShell(),
+                    )
                   else
                     buildFeedbackShell(),
                   if (!_usesCanonicalIntegratedLearningSceneV1)
