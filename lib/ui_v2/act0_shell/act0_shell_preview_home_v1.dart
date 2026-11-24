@@ -1006,9 +1006,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         _learningEvidenceHistoryV1.records
             .where(
               (record) =>
-                  record.isCorrect &&
-                  !record.isRepaired &&
-                  !record.isAssistedCorrect &&
+                  record.isIndependentCorrect &&
                   !act0RecordIsAuthoredTeachingV1(record) &&
                   !record.isPlacementAssessment &&
                   !record.isDiagnosticLearningEntry,
