@@ -284,7 +284,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
       task.taskId,
       task.runner.question,
     );
-    final neutralTitle = act0PrechoiceNeutralTitleByTaskIdV1[task.taskId];
+    final neutralTitle = act0NeutralNavigationTaskTitleV1(task.taskId);
     final stepTitle = _learnPlayerCopyV1(
       question.isEmpty ? _learnTaskTitleV1(context, task) : question,
     );

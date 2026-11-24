@@ -69,6 +69,8 @@ class Act0LearnPathViewModelV1 {
                   )
                   .length /
               lessons.length;
+    // Up next avoids repeating the mission card. The full catalog and an
+    // explicitly opened detail must retain lesson rows for task-level replay.
     journeyLessonIndexes =
         _missionFirstJourneyPreviewIndexesV5(
               lessons,
@@ -76,6 +78,8 @@ class Act0LearnPathViewModelV1 {
             )
             .where(
               (index) =>
+                  showFullPath ||
+                  lessons[index].lessonId == detailLessonId ||
                   lessons[index].lessonId != currentMissionLesson.lessonId,
             )
             .toList();

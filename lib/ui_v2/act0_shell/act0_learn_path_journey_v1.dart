@@ -102,6 +102,18 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           Text(act0TodayGoalCopyV1(done), style: Act0SkinTokensV1.secondary),
           const SizedBox(height: Act0SkinTokensV1.gapMd),
         ],
+        if (onW1RulesCheck != null) ...[
+          Act0SkinListRowV1(
+            controlKey: const Key('act0_shell_w1_rules_map'),
+            title: 'Check W1 rules',
+            subtitle: 'Pass to unlock W2 and skip the W1 lessons.',
+            expanded: false,
+            dark: true,
+            expandable: false,
+            onTap: onW1RulesCheck,
+          ),
+          const SizedBox(height: Act0SkinTokensV1.gapMd),
+        ],
         _JourneyPreviewV5(
           lessons: lessons,
           journeyLessonIndexes: journeyLessonIndexes,
@@ -120,18 +132,6 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           onSelectLesson: onSelectLesson,
           expandedBodyForLesson: expandedBodyForLesson,
         ),
-        if (onW1RulesCheck != null) ...[
-          const SizedBox(height: Act0SkinTokensV1.gapMd),
-          Act0SkinListRowV1(
-            controlKey: const Key('act0_shell_w1_rules_map'),
-            title: 'Check W1 rules',
-            subtitle: 'Pass to unlock W2 and skip the W1 lessons.',
-            expanded: false,
-            dark: true,
-            expandable: false,
-            onTap: onW1RulesCheck,
-          ),
-        ],
         const SizedBox(
           key: Key('act0_shell_learn_safe_bottom_spacer'),
           height: Act0SkinTokensV1.gapLg,
