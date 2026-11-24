@@ -21,12 +21,11 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
   final Key? labelKey;
   final bool compact;
 
-  @override
-  Widget build(BuildContext context) {
-    return FilledButton(
-      key: controlKey,
-      onPressed: onPressed,
-      style: FilledButton.styleFrom(
+  static final _compactStyle = _buttonStyle(compact: true);
+  static final _regularStyle = _buttonStyle(compact: false);
+
+  static ButtonStyle _buttonStyle({required bool compact}) =>
+      FilledButton.styleFrom(
         backgroundColor: _T.accent,
         foregroundColor: _T.onAccent,
         disabledBackgroundColor: _T.raised,
@@ -41,7 +40,14 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(_T.radiusControl),
         ),
-      ),
+      );
+
+  @override
+  Widget build(BuildContext context) {
+    return FilledButton(
+      key: controlKey,
+      onPressed: onPressed,
+      style: compact ? _compactStyle : _regularStyle,
       child: Text(label, key: labelKey, textAlign: TextAlign.center),
     );
   }
@@ -742,44 +748,10 @@ enum Act0SkinFeedbackGradeV1 {
 
   const Act0SkinFeedbackGradeV1(this.label);
   final String label;
-}
 
-/// The grade slot fits the existing feedback surface without moving the table.
-class Act0SkinFeedbackPanelV1 extends StatelessWidget {
-  const Act0SkinFeedbackPanelV1({
-    super.key,
-    required this.grade,
-    this.label,
-    this.labelKey,
-    this.style,
-    this.child,
-  });
-
-  final Act0SkinFeedbackGradeV1 grade;
-  final String? label;
-  final Key? labelKey;
-  final TextStyle? style;
-  final Widget? child;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = switch (grade) {
-      Act0SkinFeedbackGradeV1.correct => _T.ok,
-      Act0SkinFeedbackGradeV1.wrong => _T.bad,
-      Act0SkinFeedbackGradeV1.repaired ||
-      Act0SkinFeedbackGradeV1.assisted => _T.accent,
-    };
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label ?? grade.label,
-          key: labelKey,
-          style: (style ?? _T.tag).copyWith(color: tone),
-        ),
-        if (child case final content?) content,
-      ],
-    );
-  }
+  Color get tone => switch (this) {
+    correct => _T.ok,
+    wrong => _T.bad,
+    repaired || assisted => _T.accent,
+  };
 }

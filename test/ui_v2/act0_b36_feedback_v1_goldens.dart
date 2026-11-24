@@ -43,8 +43,11 @@ void main() {
         ),
       );
       await tester.pumpAndSettle();
-      expect(find.byType(Act0SkinFeedbackPanelV1), findsOneWidget);
-      expect(find.text(grade.label), findsOneWidget);
+      final verdict = find.byKey(const Key('act0_integrated_scene_purpose'));
+      expect(verdict, findsOneWidget);
+      final label = tester.widget<Text>(verdict);
+      expect(label.data, grade.label);
+      expect(label.style?.color, grade.tone);
       await expectLater(
         find.byKey(captureKey),
         matchesGoldenFile('../../output/b36_feedback/${grade.name}.png'),

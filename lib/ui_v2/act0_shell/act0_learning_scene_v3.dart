@@ -243,31 +243,27 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
               Expanded(
                 child: eyebrow.isEmpty
                     ? const SizedBox.shrink()
-                    : feedbackGrade != null
-                    ? Act0SkinFeedbackPanelV1(
-                        grade: feedbackGrade!,
-                        label: eyebrow,
-                        labelKey: const Key('act0_integrated_scene_purpose'),
-                        style: Act0ShellTokensV1.label.copyWith(
-                          fontSize: showSpokenSurface ? 8.8 : 10.2,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      )
                     : Text(
                         eyebrow,
                         key: const Key('act0_integrated_scene_purpose'),
-                        maxLines: 1,
-                        overflow: TextOverflow.fade,
-                        softWrap: false,
+                        maxLines: feedbackGrade == null ? 1 : null,
+                        overflow: feedbackGrade == null
+                            ? TextOverflow.fade
+                            : null,
+                        softWrap: feedbackGrade == null ? false : null,
                         style: Act0ShellTokensV1.label.copyWith(
                           color:
-                              showSpokenSurface ||
-                                  phase == Act0LearningScenePhaseV3.tableTask
-                              ? Act0ShellTokensV1.textMuted
-                              : tone,
+                              feedbackGrade?.tone ??
+                              (showSpokenSurface ||
+                                      phase ==
+                                          Act0LearningScenePhaseV3.tableTask
+                                  ? Act0ShellTokensV1.textMuted
+                                  : tone),
                           fontSize: showSpokenSurface ? 8.8 : 10.2,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: showSpokenSurface ? 0.35 : 0.65,
+                          letterSpacing: feedbackGrade == null
+                              ? (showSpokenSurface ? 0.35 : 0.65)
+                              : null,
                         ),
                       ),
               ),
