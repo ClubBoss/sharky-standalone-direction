@@ -5115,4 +5115,6 @@ const _act0PilotCheckpointLessonsV1 = {
   'multiway_checkpoint',
   'audit_and_checkpoint',
   'read_calibration_checkpoint',
+  'session_checkpoint',
+  'plans_checkpoint',
 };

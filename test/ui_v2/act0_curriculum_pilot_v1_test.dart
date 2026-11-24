@@ -4,12 +4,28 @@ import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_snapshot_v1.dart';
 import '../support/act0_table_truth_v1.dart';
 
 void main() {
+  test('Live Room is independent of the numbered curriculum pilot', () {
+    final disabled = Act0ShellStateV1.catalog(liveRoomV1: false);
+    final enabled = Act0ShellStateV1.catalog(liveRoomV1: true);
+    expect(disabled.liveRoom, isNull);
+    expect(
+      enabled.liveRoom!.lessons.expand((lesson) => lesson.taskList),
+      hasLength(27),
+    );
+    expect(enabled.worlds, same(disabled.worlds));
+    expect(
+      enabled.worlds.last.worldNumber,
+      act0CurriculumPilotEnabledV1 ? 22 : 12,
+    );
+  });
+
   test(
     'flag off preserves the ordered W1–W12 learner route and XP',
     () {
@@ -78,7 +94,7 @@ void main() {
             !_b19Lessons.contains(row.lesson.lessonId) &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(195));
+      expect(played, hasLength(243));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
@@ -100,18 +116,25 @@ void main() {
   );
 
   test(
-    'W17–W20 use the accepted C1 pots and call prices',
+    'W17–W22 use the accepted C1 pots and call prices',
     () {
-      const prices = {..._b4Prices, ..._b5Prices};
+      const prices = {..._b4Prices, ..._b5Prices, ..._b6Prices};
       final rows = catalogTasks.where(
-        (row) => row.world.worldNumber >= 17 && row.world.worldNumber <= 20,
+        (row) => row.world.worldNumber >= 17 && row.world.worldNumber <= 22,
       );
-      for (final world in [17, 18, 19, 20]) {
+      for (final world in [17, 18, 19, 20, 21, 22]) {
         expect(
           rows.where((row) => row.world.worldNumber == world),
           hasLength(30),
         );
       }
+      // E39: W21–W22 mechanisms have no catalog enum equivalent.
+      expect(
+        rows
+            .where((row) => row.world.worldNumber >= 21)
+            .map((row) => act0DecisionReasoningV1[row.task.taskId]),
+        everyElement(isNull),
+      );
       final played = rows.where(
         (row) => row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
@@ -386,4 +409,56 @@ const _b5Prices = <String, (double, double, double?)>{
   'w20_6_guided_short_price_with_read': (32.5, 12, 27.0),
   'w20_6_checkpoint_filter_then_call': (19.5, 8, 29.1),
   'w20_6_day7_late_sizing_update': (19.5, 8, 29.1),
+};
+
+// Accepted W21–W22 values: total pot, call amount, and eligible-pot equity.
+const _b6Prices = <String, (double, double, double?)>{
+  'w21_1_read_variance_vs_process': (5.5, 0, null),
+  'w21_1_guided_follow_pause_protocol': (5.5, 0, null),
+  'w21_1_transfer_loss_with_sound_process': (5.5, 0, null),
+  'w21_1_day7_win_checks_still_apply': (5.5, 0, null),
+  'w21_2_read_time_vs_condition': (5.5, 0, null),
+  'w21_2_guided_warmup_play_review': (5.5, 0, null),
+  'w21_2_transfer_stop_win_based_on_behavior': (5.5, 0, null),
+  'w21_2_day7_leave_when_time_expires': (5.5, 0, null),
+  'w21_3_read_seat_change_current_game': (5.5, 0, null),
+  'w21_3_guided_find_own_leak': (5.5, 0, null),
+  'w21_3_transfer_switch_table_when_behind': (5.5, 0, null),
+  'w21_3_day7_better_table_not_enough': (5.5, 0, null),
+  'w21_4_read_slowplay_cost': (5.5, 0, null),
+  'w21_4_guided_simple_value_over_disguise': (5.5, 0, null),
+  'w21_4_transfer_short_stack_limits_call': (32.5, 12, 27.0),
+  'w21_4_day7_take_worse_pair_payment': (5.5, 0, null),
+  'w21_5_read_useful_tag': (5.5, 0, null),
+  'w21_5_guided_choose_review_priority': (5.5, 0, null),
+  'w21_5_transfer_review_without_result': (10.5, 5, 32.3),
+  'w21_5_day7_filter_by_same_opportunity': (5.5, 0, null),
+  'w21_6_read_outcome_not_repair': (5.5, 0, null),
+  'w21_6_guided_plan_if_then': (5.5, 0, null),
+  'w21_6_checkpoint_select_end_and_tag': (5.5, 0, null),
+  'w21_6_day7_reset_next_block': (5.5, 0, null),
+  'w22_1_read_actions_in_order': (5.5, 0, null),
+  'w22_1_guided_count_tree_leaves': (5.5, 0, null),
+  'w22_1_transfer_river_no_chance_node': (9.5, 4, 29.6),
+  'w22_1_day7_turn_chance_node': (5.5, 0, null),
+  'w22_2_read_one_matrix_cell': (5.5, 0, null),
+  'w22_2_guided_indifference_mix': (5.5, 0, null),
+  'w22_2_transfer_best_response_not_equilibrium': (5.5, 0, null),
+  'w22_2_day7_equilibrium_deviation_test': (5.5, 0, null),
+  'w22_3_read_hand_vs_range': (5.5, 0, null),
+  'w22_3_guided_compute_regret': (5.5, 0, null),
+  'w22_3_transfer_sample_frequency_not_quota': (5.5, 0, null),
+  'w22_3_day7_regret_for_check': (5.5, 0, null),
+  'w22_4_read_pruned_action': (5.5, 0, null),
+  'w22_4_guided_compress_only_like_states': (5.5, 0, null),
+  'w22_4_transfer_short_tree_price': (32.5, 12, 27.0),
+  'w22_4_day7_change_input_requires_new_query': (5.5, 0, null),
+  'w22_5_read_output_as_scope': (5.5, 0, null),
+  'w22_5_guided_heuristic_tolerance': (5.5, 0, null),
+  'w22_5_transfer_population_query': (5.5, 0, null),
+  'w22_5_day7_simplification_does_not_transfer': (5.5, 0, null),
+  'w22_6_read_plan_gaps': (5.5, 0, null),
+  'w22_6_guided_compare_branch_plans': (5.5, 0, null),
+  'w22_6_checkpoint_audit_pruned_solver_result': (5.5, 0, null),
+  'w22_6_day7_read_lead_plan': (5.5, 0, null),
 };

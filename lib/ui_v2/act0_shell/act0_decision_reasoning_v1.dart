@@ -4,6 +4,7 @@ import 'act0_decision_reasoning_w13_w14_v1.dart';
 import 'act0_decision_reasoning_w15_w16_v1.dart';
 import 'act0_decision_reasoning_w17_w18_v1.dart';
 import 'act0_decision_reasoning_w19_w20_v1.dart';
+import 'act0_decision_reasoning_w21_w22_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -131,6 +132,18 @@ const act0PrinciplesV1 = <String, int>{
     "isolate_with_plan": 20,
     "ethical_metagame": 20,
     "calibrated_action_choice": 20,
+    "decision_quality_signals": 21,
+    "precommit_stop_conditions": 21,
+    "assess_current_edge": 21,
+    "compare_simple_line": 21,
+    "tag_for_retrieval": 21,
+    "session_plan_under_pressure": 21,
+    "tree_node_actions": 22,
+    "read_payoff_matrix": 22,
+    "frequency_and_regret": 22,
+    "solver_input_contract": 22,
+    "test_heuristic_scope": 22,
+    "future_branches_before_bet": 22,
   },
 };
 
@@ -144,6 +157,7 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
     ...act0DecisionReasoningW15W16V1,
     ...act0DecisionReasoningW17W18V1,
     ...act0DecisionReasoningW19W20V1,
+    ...act0DecisionReasoningW21W22V1,
     ...act0DecisionReasoningB19V1,
   },
 };

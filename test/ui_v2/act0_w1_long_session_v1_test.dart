@@ -2331,7 +2331,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             .map((task) => task.taskId)
             .toSet();
         final expectedCount = pilot
-            ? 273
+            ? 333
             : w7ToW8
             ? 43 + y5cTasksInWorldV1(7) + y5cTasksInWorldV1(8)
             : (fullRoute

@@ -36,6 +36,7 @@ part 'act0_shell_lessons_w13_w14_v1.dart';
 part 'act0_shell_lessons_w15_w16_v1.dart';
 part 'act0_shell_lessons_w17_w18_v1.dart';
 part 'act0_shell_lessons_w19_w20_v1.dart';
+part 'act0_shell_lessons_w21_w22_v1.dart';
 part 'act0_shell_lessons_b19_v1.dart';
 part 'act0_shell_lessons_live_room_v1.dart';
 part 'act0_shell_runners_part1_v1.dart';
@@ -2116,5 +2117,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     _world18Pilot,
     _world19Pilot,
     _world20Pilot,
+    _world21Pilot,
+    _world22Pilot,
   ],
 ];
