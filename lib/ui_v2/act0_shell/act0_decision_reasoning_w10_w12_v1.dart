@@ -66,7 +66,8 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "bet_2_bb",
     edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
     stackMatters: false,
-    preChoiceAssumption: "BB calls 2 BB and 3 BB with weak kings and sevens.",
+    preChoiceAssumption:
+        "BB always calls 2 or 3 BB with weak kings and sevens. At 15 BB, weaker hands fold; only strong hands call.",
     suboptimalKinds: {"bet_2_bb": Act0SuboptimalKindV1.clearlyWorse},
   ),
   "w10_vs_sticky_defender_tighten_steals": Act0DecisionReasoningV1(
@@ -683,7 +684,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "raise_to_14_bb",
     edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
     opponentRead:
-        "Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Both tend to fold these hands to a raise to 14, but pay a small turn bet after a flop call.",
+        "Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Each folds to 14 BB 90% of the time and otherwise calls. Both pay 4 BB on a blank turn after a flop call. BB has 6x or 77-88, calls 4 BB without raising, and folds to 14 BB.",
     stackMatters: false,
     suboptimalKinds: {"raise_to_14_bb": Act0SuboptimalKindV1.clearlyWorse},
   ),
@@ -938,7 +939,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "call_3_bb_to_win_chips_back",
     edgeMechanism: Act0EdgeMechanismV1.avoidsDomination,
     opponentRead:
-        "UTG raises to 3 with QQ+/AK. You have QJo in CO and 28 BB; BTN and both blinds act after you, and UTG can still respond to a raise.",
+        "UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. BTN, SB and BB fold to your call or all-in. UTG always calls your all-in. After a call, no further bets. No fee is taken from the pot.",
     stackMatters: true,
     stackNote:
         "With 28 BB behind, going all-in against UTG risks the entire stack. Folding saves that stack and the 3 BB call.",
@@ -1069,10 +1070,10 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
     edgeBb: 3.545454545,
     opponentRead:
-        "BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12. If you call, both check the river. No rake.",
+        "BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12 and always calls a raise to 20 BB. After a call or raise, both check the river. No rake.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12. If you call, both check the river. No rake.",
+        "BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12 and always calls a raise to 20 BB. After a call or raise, both check the river. No rake.",
   ),
   "w12_day7_river_underbluff": Act0DecisionReasoningV1(
     taskId: "w12_day7_river_underbluff",

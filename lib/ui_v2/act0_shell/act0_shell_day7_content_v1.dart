@@ -6435,7 +6435,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
       step: Act0LessonStepKindV1.practice,
       xp: 0,
       caption:
-          'BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12. If you call, both check the river. No rake.',
+          'BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12 and always calls a raise to 20 BB. After a call or raise, both check the river. No rake.',
       question: 'Call or fold?',
       teach: '',
       choices: const [
@@ -6455,7 +6455,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'raise_to_20_bb',
           'Raise to 20 BB',
           Act0FeedbackQualityV1.wrong,
-          'Seven winning hearts make the 8 BB call lose about 3.55 BB on average. The exercise compares call and fold. To judge a raise to 20 BB, you would also need to know how BB responds.',
+          'BB always calls a raise to 20 BB. With seven winning hearts out of 44 unseen cards, raising loses about 11.73 BB on average (7/44 × 52 − 20). Fold instead.',
         ),
       ],
       table: _day7TableV1(

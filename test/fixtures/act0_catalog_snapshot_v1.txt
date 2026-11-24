@@ -6344,12 +6344,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds
     BETTER ANSWER: Raise to 2 BB
 
 TASK w10_vs_caller_value_heavier [drill] Pick a flop size
-CAPTION: BB calls 2 BB and 3 BB with weak kings and sevens. Past hands show that BB calls 15 BB with strong hands.
+CAPTION: BB always calls 2 or 3 BB with weak kings and sevens. At 15 BB, weaker hands fold; only strong hands call.
 Q: Which size collects most from the stated weaker callers?
 HINT [theoryOnly]: (none)
 TABLE: Flop | You Kc Qd | Board Ks 7c 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 52.5
-REASONING: principle value_vs_worse · alt bet_2_bb · edge moreValueFromWorse · stack_matters false · assumption BB calls 2 BB and 3 BB with weak kings and sevens.
+REASONING: principle value_vs_worse · alt bet_2_bb · edge moreValueFromWorse · stack_matters false · assumption BB always calls 2 or 3 BB with weak kings and sevens. At 15 BB, weaker hands fold; only strong hands call.
 SEATS: UTG folded stack 68 BB | HJ Kc Qd stack 52.5 BB | CO folded stack 61 BB | BTN folded dealer stack 48 BB | SB folded stack 51.5 BB | BB stack 57.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 2.5 BB · Flop: BB checks
 SIZES: 3 BB 0.5454545454545454 | 2 BB 0.36363636363636365 | 15 BB 2.727272727272727
@@ -6358,7 +6358,7 @@ SIZES: 3 BB 0.5454545454545454 | 2 BB 0.36363636363636365 | 15 BB 2.727272727272
     FEEDBACK TABLE: Flop | You Kc Qd | Board Ks 7c 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   + [correct] Bet 3 BB — Correct. Bet 3 BB because weaker kings and sevens call both 2 BB and 3 BB. Betting 2 BB earns 1 BB less each time they call.
     FEEDBACK TABLE: Flop | You Kc Qd | Board Ks 7c 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Bet 15 BB — Look again. Bet 3 BB to collect from the stated weaker kings and sevens. Strong hands have called 15 BB, and the read leaves weaker hands’ response to that size open.
+  - [wrong] Bet 15 BB — Look again. Bet 3 BB to collect from weaker kings and sevens. They fold to 15 BB, so that size collects nothing from them.
     BETTER ANSWER: Bet 3 BB
     FEEDBACK TABLE: Flop | You Kc Qd | Board Ks 7c 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
@@ -7238,7 +7238,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Call 4 BB — Correct. BTN bets 4 BB and has shown weak hands on this line. Calling for 4 BB keeps those weaker hands in. Raising to 12 BB can make them fold.
 
 TASK w11_checkpoint_review_line [drill] Review line
-CAPTION: Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Both tend to fold these hands to a raise to 14, but pay a small turn bet after a flop call.
+CAPTION: Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Each folds to 14 BB 90% of the time and otherwise calls. Both pay 4 BB on a blank turn after a flop call. BB has 6x or 77-88, calls 4 BB without raising, and folds to 14 BB.
 Q: Call or raise?
 HINT [hidden]: (none)
 TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts set, pocket pair, rainbow
@@ -7246,10 +7246,10 @@ EFFECTIVE: UTG 62.5 · HJ 62.5 · BB 59.5
 REASONING: principle multiway_tighten · alt raise_to_14_bb · edge keepsWorseIn · stack_matters false · assumption none
 SEATS: UTG stack 63.5 BB bet 4 BB | HJ stack 61.5 BB call 4 BB | CO 9h 9d stack 62.5 BB | BTN folded dealer stack 60 BB | SB folded stack 54.5 BB | BB stack 59.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 2.5 BB · HJ calls 2.5 BB · CO calls 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · UTG bets 4 BB · HJ calls 4 BB
-  - [suboptimal] Raise to 14 BB — Look again. A raise can win value from AA, but the read says weak hands fold. It may lose later calls from AK and HJ small pairs.
+  - [suboptimal] Raise to 14 BB — Look again. A raise can win value from AA, but UTG and HJ usually fold to it. BB always folds, so raising loses calls that a smaller line keeps.
     BETTER ANSWER: Call 4 BB
     FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
-  + [correct] Call 4 BB — Correct. Call 4 BB with your set because UTG and HJ can pay a small turn bet after you call. Raising to 14 BB tends to lose those hands. BB still acts, and the read does not say how BB will respond.
+  + [correct] Call 4 BB — Correct. Call 4 BB with your set. BB calls too without raising, and UTG and HJ can pay a small turn bet. Raising to 14 BB usually loses those hands and always loses BB.
     FEEDBACK TABLE: Flop | You 9h 9d | Board 9s 6h 2c | Pot 18.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts set, pocket pair, rainbow
   - [wrong] Fold — Look again. A set of nines is far ahead of AK and 77-88 on 9-6-2. Folding gives up a large value chance in a four-way pot.
     BETTER ANSWER: Call 4 BB
@@ -7827,7 +7827,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
   + [correct] Call 7 BB — Correct. BB bets 7 BB with missed AJ or KT 40% of the time. Call with 77 because the 25% price means you gain 4.2 BB over folding.
 
 TASK w12_checkpoint_reset_line [drill] Reset line
-CAPTION: You lost two large pots and want to get even. New hand: UTG raises to 3 with QQ+/AK. You have QJo in CO and 28 BB; BTN and both blinds act after you, and UTG can still respond to a raise.
+CAPTION: You lost two large pots and want to get even. UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. BTN, SB and BB fold to your call or all-in. UTG always calls your all-in. After a call, no further bets. No fee is taken from the pot.
 Q: What should you do?
 HINT [hidden]: (none)
 TABLE: Preflop | You Qs Jd | Pot 4.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
@@ -7835,10 +7835,10 @@ EFFECTIVE: UTG 28 · BTN 28 · SB 28 · BB 28
 REASONING: principle tilt_reset · alt call_3_bb_to_win_chips_back · edge avoidsDomination · stack_matters true · assumption none
 SEATS: UTG stack 37 BB raise 3 BB | HJ folded stack 45 BB | CO Qs Jd stack 28 BB | BTN dealer stack 36 BB | SB stack 31.5 BB post 0.5 BB | BB stack 37 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds
-  + [correct] Fold — Correct. UTG raises with QQ or better and AK. Fold QJo because calling 3 BB puts QJ in a pot with stronger hands and three seats still to act.
+  + [correct] Fold — Correct. UTG raises with QQ+/AK, so fold QJo. Calling 3 BB needs 40% equity even with the other seats folding and no more bets. QJo has less.
   - [wrong] Call 3 BB to win chips back — Look again. Calling 3 BB risks facing stronger hands with QJ against QQ or better and AK. Folding avoids spending chips to chase a past loss.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 28 BB — Look again. Going all-in with QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify going all-in.
+  - [wrong] All-in to 28 BB — Look again. UTG always calls a 28 BB all-in with QQ+/AK. You cannot make UTG fold, and QJo has too little equity. Fold to save your stack.
     BETTER ANSWER: Fold
 
 TASK w12_checkpoint_discipline_line [drill] Discipline line
@@ -11323,18 +11323,18 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK w12_day7_clean_outs_two_pair [drill] Review decision
 DAY 7 FAMILY: board_cards
-CAPTION: BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12. If you call, both check the river. No rake.
+CAPTION: BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12 and always calls a raise to 20 BB. After a call or raise, both check the river. No rake.
 Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: Turn | You Kh Jh | Board 5h 8h Qs 4d | Pot 20 BB | To call 8 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 62.25
-REASONING: principle price_vs_equity · alt call_8_bb · edge equityBelowPrice 3.54545455 BB · stack_matters false · assumption BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12. If you call, both check the river. No rake.
+REASONING: principle price_vs_equity · alt call_8_bb · edge equityBelowPrice 3.54545455 BB · stack_matters false · assumption BB shows Qc 4c: two pair. You hold Kh Jh on 5h-8h-Qs-4d. BB bets 8 into 12 and always calls a raise to 20 BB. After a call or raise, both check the river. No rake.
 SEATS: UTG folded stack 70 BB | HJ folded stack 65 BB | CO Kh Jh stack 62.25 BB | BTN folded dealer stack 63 BB | SB folded stack 59.5 BB | BB Qc 4c stack 56.25 BB bet 8 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN folds · SB folds · BB calls 2 BB more · Flop: BB bets 2.75 BB · CO calls 2.75 BB · Turn: BB bets 8 BB
   + [correct] Fold — Correct. BB bets 8 BB with two pair. If the river is Qh or 4h, BB makes a full house. Fold because seven winning hearts give 15.9%, below the 28.6% needed to call.
   - [wrong] Call 8 BB — Look again. Calling 8 BB into 20 needs 28.6%. The seven hearts that beat two pair give 15.9%, so folding saves that losing call.
     BETTER ANSWER: Fold
-  - [wrong] Raise to 20 BB — Look again. Seven winning hearts make the 8 BB call lose about 3.55 BB on average. The exercise compares call and fold. To judge a raise to 20 BB, you would also need to know how BB responds.
+  - [wrong] Raise to 20 BB — Look again. BB always calls a raise to 20 BB. With seven winning hearts out of 44 unseen cards, raising loses about 11.73 BB on average (7/44 × 52 − 20). Fold instead.
     BETTER ANSWER: Fold
 
 ===== WORLD 12 · LESSON confidence_river_discipline · River discipline =====
