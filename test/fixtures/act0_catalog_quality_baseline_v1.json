@@ -28,7 +28,9 @@
     "w7_river_one_bluff_of_six|choice_2": 50,
     "w11_review_loop_intro|bb_called_8_into_18_versus_a_tight_turn_range": 54
   },
-  "findings": [],
+  "findings": [
+    "16.extreme_wrong_option|w12_cur04b_log_price_not_result|call_log_result"
+  ],
   "reasoning_v1": {
     "findings_by_world": {
       "world_1": {},
@@ -162,6 +164,11 @@
         "w12_assertive_not_ego",
         "w12_checkpoint_full_loop_line",
         "w12_checkpoint_reset_line",
+        "w12_cur04b_call_after_loss",
+        "w12_cur04b_ignore_one_show",
+        "w12_cur04b_log_price_not_result",
+        "w12_cur04b_stack_capped_value",
+        "w12_cur04b_two_ranges_one_call",
         "w12_day7_tilt_after_error",
         "w12_day7_tilt_badbeat",
         "w12_revenge_raise_trap",
@@ -217,6 +224,7 @@
       "world_12": [
         "spaced_review_w12_confidence_river_discipline_pot_to_call_v1",
         "w12_checkpoint_reset_line",
+        "w12_cur04b_stack_capped_value",
         "w12_y5d_range_read_transfer"
       ]
     }

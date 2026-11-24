@@ -5550,7 +5550,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           '3_bet_to_9_bb',
           '3-bet to 9 BB',
           Act0FeedbackQualityV1.correct,
-          'CO calls 3-bets with dominated aces and KQ. Raise AKs to 9 BB for value while BB tends to fold. Calling 2 BB keeps BB in at a lower price.',
+          'Raise AKs to 9 BB for value against AQ, AJ and KQ. BB tends to fold to a 3-bet. If you call 2 BB, BB can come along for 1.5 BB more.',
         ),
         (
           'call_2_bb',
@@ -6164,11 +6164,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ],
     correct: 0,
     wrongReasons: const {
-      1: 'Stack size is a different note. HJ\'s 2 BB flop bet is the price you wanted to save.',
+      1: 'Average stack size does not tell you the price. HJ bet 2 BB, so the price is 2 BB out of the 9.5 BB pot after your call, or about 21.1%.',
       2: 'The button tells you order. It will not tell you what the 2 BB call cost.',
     },
     reason:
-        'Use HJ’s decision as a chance to log this call price. That matches the goal you set before you sat.',
+        'Log the price you faced in BB after HJ bet. A 2 BB call into 7.5 BB needs about 21.1% equity because the final pot would be 9.5 BB.',
   ),
   _day7ExampleV1(
     11,
@@ -6455,7 +6455,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'raise_to_20_bb',
           'Raise to 20 BB',
           Act0FeedbackQualityV1.wrong,
-          'Raising risks extra chips against two pair. The seven winning hearts cannot pay for the cheaper call, so fold.',
+          'Seven winning hearts make the 8 BB call lose about 3.55 BB on average. The exercise compares call and fold. To judge a raise to 20 BB, you would also need to know how BB responds.',
         ),
       ],
       table: _day7TableV1(
@@ -6863,7 +6863,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           'check_to_avoid_bb',
           'Check to avoid BB',
           Act0FeedbackQualityV1.suboptimal,
-          'Checking keeps the 18 BB pot safe, but misses a 6 BB call from BB\'s weaker aces.',
+          'Checking takes AQ to showdown for the 18 BB pot, where two pair and sets beat it. It misses 6 BB calls from the stated weaker hands.',
         ),
         (
           'all_in_to_56_25_bb',

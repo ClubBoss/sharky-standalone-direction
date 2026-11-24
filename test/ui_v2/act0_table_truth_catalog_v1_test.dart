@@ -15,6 +15,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
@@ -971,6 +972,7 @@ void main() {
         (id, _) =>
             y5dNewChoicesV1.containsKey(id) ||
             admittedAdditions.contains(id) ||
+            cur04bSummaryChoicesV1.containsKey(id) ||
             (id.startsWith('w9_') && !y5cNewChoicesV1.containsKey(id)) ||
             id.startsWith('w10_'),
       )
@@ -2207,6 +2209,16 @@ void main() {
           w3Option(choice, seat: choice, correct: choice == 'bb'),
       ],
     };
+    for (final entry in cur04bSummaryChoicesV1.entries) {
+      expect(contract[entry.key], {
+        'rewardXp': 0,
+        'family': 'decision',
+        'options': [
+          for (final (id, _, correct) in entry.value)
+            w3Option(id, correct: correct),
+        ],
+      }, reason: entry.key);
+    }
     expect(
       historicalComparison,
       expectedComparison,

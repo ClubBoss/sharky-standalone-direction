@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'act0_catalog_decision_v1.dart';
@@ -140,6 +141,23 @@ String classifyCatalogScoredFormatV1(Act0LessonTaskV1 task) {
   }
   if (r.sizingConfig.isEnabled) {
     return 'betSize';
+  }
+  if (act0DecisionReasoningV1[task.taskId]?.edgeMechanism ==
+      Act0EdgeMechanismV1.processRule) {
+    final correct = options
+        .where(act0RunnerOptionIsAuthoredCorrectV1)
+        .singleOrNull;
+    final action = correct == null ? null : catalogActionV1(correct.label);
+    if (action != null &&
+        options.any(
+          (option) =>
+              !option.isCorrect &&
+              catalogActionV1(option.label) == action &&
+              option.amountLabel.isEmpty &&
+              !RegExp(r'[0-9]').hasMatch('${correct!.label} ${option.label}'),
+        )) {
+      return 'statement';
+    }
   }
   if (options.every(
     (o) =>

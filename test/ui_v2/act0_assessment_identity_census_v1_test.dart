@@ -6,6 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_wave6_contract_v1.dart';
 import '../support/act0_y5b_catalog_contract_v1.dart';
@@ -46,6 +47,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +
@@ -59,6 +61,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +
@@ -166,12 +169,33 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +
             y5dNewChoicesV1.length,
       ),
     );
+    final summaryEntries = entries
+        .where((row) => cur04bSummaryChoicesV1.containsKey(row[2]))
+        .toList();
+    expect(summaryEntries, hasLength(cur04bSummaryChoicesV1.length));
+    for (final row in summaryEntries) {
+      final id = row[2] as String;
+      expect(row.take(5), [
+        'world_12',
+        cur04bSummaryLessonIdV1,
+        id,
+        'drill',
+        'practice',
+      ]);
+      expect(
+        (row[5] as List).map((choice) => (choice[0], choice[1], choice[2])),
+        cur04bSummaryChoicesV1[id],
+        reason: id,
+      );
+    }
+    entries.removeWhere(summaryEntries.contains);
     final y5dLateEntries = entries
         .where(
           (row) =>
@@ -2529,6 +2553,7 @@ void main() {
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
             wave6TaskDeltaV1 +
+            cur04bSummaryChoicesV1.length +
             w3BlindVsBlindChoicesV1.length +
             y5bNewChoicesV1.length +
             y5cNewChoicesV1.length +

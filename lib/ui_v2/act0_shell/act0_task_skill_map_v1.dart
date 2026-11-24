@@ -143,6 +143,25 @@ const _skillOverridesByTaskId = <String, List<String>>{
   'w12_checkpoint_process_line': ['Mental game', 'Betting decisions'],
   'w12_checkpoint_discipline_line': ['Mental game', 'Betting decisions'],
   'w12_checkpoint_full_loop_line': ['Mental game', 'Betting decisions'],
+  'w12_cur04b_call_after_loss': ['Player adjustment', 'Mental game'],
+  'w12_cur04b_ignore_one_show': ['Player adjustment', 'Mental game'],
+  'w12_cur04b_both_opponents': [
+    'Session routine',
+    'Betting decisions',
+    'Board reading',
+  ],
+  'w12_cur04b_log_price_not_result': [
+    'Player adjustment',
+    'Session routine',
+    'Mental game',
+  ],
+  'w12_cur04b_small_steal_reset': ['Player adjustment', 'Mental game'],
+  'w12_cur04b_stack_capped_value': ['Player adjustment', 'Stack decisions'],
+  'w12_cur04b_two_ranges_one_call': [
+    'Player adjustment',
+    'Session routine',
+    'Betting decisions',
+  ],
 };
 
 List<String> act0SkillsForTaskV1(
