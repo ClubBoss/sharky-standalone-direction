@@ -5084,10 +5084,11 @@ Act0WorldCardV1 _act0PilotWorldV1(
 Act0LessonCardV1 _act0PilotLessonV1(
   String id,
   String title,
-  List<Act0LessonTaskV1> tasks,
-) => Act0LessonCardV1(
+  List<Act0LessonTaskV1> tasks, {
+  String? routeId,
+}) => Act0LessonCardV1(
   // W4 and W8 already own these IDs in globally keyed route progress.
-  lessonId: _act0PilotLessonIdOverridesV1[id] ?? id,
+  lessonId: routeId ?? _act0PilotLessonIdOverridesV1[id] ?? id,
   authoredLessonId: id,
   title: title,
   subtitle: tasks.first.runner.caption,

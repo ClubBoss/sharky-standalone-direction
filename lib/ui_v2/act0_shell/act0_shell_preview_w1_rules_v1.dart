@@ -2,7 +2,7 @@ part of 'act0_shell_preview_screen_v1.dart';
 
 extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   bool get _canTakeW1RulesCheckV1 => !_progressWorlds(
-    widget.state ?? Act0ShellStateV1.sample,
+    _catalogStateV1,
   ).any((world) => world.worldId == 'world_2' && world.isSelectable);
 
   void _beginW1RulesCheckV1() {
@@ -78,10 +78,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   }
 
   void _selectRulesStartWorldV1(String worldId) {
-    final world = _worldById(
-      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
-      worldId,
-    );
+    final world = _worldById(_progressWorlds(_catalogStateV1), worldId);
     final lesson = _firstPlayableLesson(world);
     _selectedWorldId = world.worldId;
     _selectedLessonId = lesson.lessonId;
@@ -102,10 +99,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
       _showPlacement = false;
       _showWelcome = false;
       _selectRulesStartWorldV1(worldId);
-      final world = _worldById(
-        _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
-        worldId,
-      );
+      final world = _worldById(_progressWorlds(_catalogStateV1), worldId);
       _startTaskByIds(world, _selectedLessonId, _selectedTaskId);
     });
   }

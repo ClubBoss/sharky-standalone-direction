@@ -192,8 +192,7 @@ class TableGeometryV1 {
   ];
 }
 
-/// Opt-in wrapper for debug fixtures or imported runners. Learner routes do
-/// not install this scope, even in builds with the define enabled.
+/// Debug opt-in shared by the authored catalog and the F2 table preview.
 class Act0NineSeatDebugScopeV1 extends InheritedWidget {
   const Act0NineSeatDebugScopeV1({
     super.key,
@@ -201,7 +200,7 @@ class Act0NineSeatDebugScopeV1 extends InheritedWidget {
     required super.child,
   });
 
-  static const tableNineSeatV1 = bool.fromEnvironment('tableNineSeatV1');
+  static const tableNineSeatV1 = act0NineSeatDebugEnabledV1;
   final bool enabled;
 
   static bool enabledOf(BuildContext context) =>
@@ -209,7 +208,7 @@ class Act0NineSeatDebugScopeV1 extends InheritedWidget {
       (context
               .dependOnInheritedWidgetOfExactType<Act0NineSeatDebugScopeV1>()
               ?.enabled ??
-          false);
+          tableNineSeatV1);
 
   @override
   bool updateShouldNotify(Act0NineSeatDebugScopeV1 oldWidget) =>

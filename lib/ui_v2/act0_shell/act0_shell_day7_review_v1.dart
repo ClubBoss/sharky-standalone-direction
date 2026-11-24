@@ -319,28 +319,30 @@ Act0TableStateV1 _day7TableV1({
   List<Act0CardStateV1> board = const [],
   Map<String, List<Act0CardStateV1>> shown = const {},
   Map<String, double> stacks = const {},
+  Act0TableFormatV1 format = Act0TableFormatV1.sixMax,
 }) {
   final heroCards = hand.isEmpty
       ? const <Act0CardStateV1>[]
       : _act0LessonCardsV1(hand);
+  final seatIds = format == Act0TableFormatV1.sixMax
+      ? _day7SeatsV1
+      : act0CanonicalSeatOrderForFormatV1(
+          format,
+        ).map((position) => position.toLowerCase()).toList();
   final startingStacks = {
-    for (final seat in _day7SeatsV1)
-      seat: stacks[seat] ?? _day7DefaultStackBbV1,
+    for (final seat in seatIds) seat: stacks[seat] ?? _day7DefaultStackBbV1,
   };
   final ledger = Act0HandContributionsV1(
     throughStreet: street,
     startingStackBbBySeat: startingStacks,
     entries: entries,
   );
-  final amounts = ledger.amounts(
-    seatIds: _day7SeatsV1.toSet(),
-    actorSeatId: actor,
-  );
+  final amounts = ledger.amounts(seatIds: seatIds.toSet(), actorSeatId: actor);
   final price = amounts.toCallBb ?? 0;
   return Act0TableStateV1(
     scope: Act0TableScopeV1.playedHand,
-    tableFormat: Act0TableFormatV1.sixMax,
-    playerCount: 6,
+    tableFormat: format,
+    playerCount: seatIds.length,
     heroSeatId: hero,
     activeSeatId: actor,
     decisionSeatId: actor,
@@ -356,7 +358,7 @@ Act0TableStateV1 _day7TableV1({
     highlightedSeatIds: const [],
     highlightedCardIds: const [],
     seats: [
-      for (final seat in _day7SeatsV1)
+      for (final seat in seatIds)
         Act0SeatStateV1(
           seatId: seat,
           seatLabel: seat.toUpperCase(),
@@ -447,6 +449,7 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
   Act0TaskFamilyV1? family,
   String? signal,
   String? explanation,
+  bool repairOnly = false,
 }) {
   final answers = _wave6AuthoredChoicesV1(choices);
   return Act0LessonTaskV1(
@@ -456,8 +459,9 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
     rewardXp: xp,
     stepKind: step,
     taskFamily: family,
+    repairOnly: repairOnly,
     runner: Act0RunnerStateV1(
-      lessonId: xp == 0 ? lesson : id,
+      lessonId: xp == 0 && !repairOnly ? lesson : id,
       lessonTitle: lessonTitle,
       lessonSubtitle: '',
       beatIndex: 1,

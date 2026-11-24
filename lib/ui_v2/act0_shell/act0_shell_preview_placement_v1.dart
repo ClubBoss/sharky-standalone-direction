@@ -344,9 +344,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     if (retake) {
       // Never relaunch earned work, or a lesson that is still locked without
       // the skips a first-install placement would have recorded.
-      final refreshed = _progressWorlds(
-        widget.state ?? Act0ShellStateV1.sample,
-      );
+      final refreshed = _progressWorlds(_catalogStateV1);
       final refreshedWorld = _worldById(refreshed, world.worldId);
       final refreshedFocus = _lessonById(
         refreshedWorld.lessons,
@@ -473,7 +471,7 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
           _beginPlacementRecommendedLessonRunV1();
         } else {
           _tab = Act0ShellTabV1.home;
-          final baseState = widget.state ?? Act0ShellStateV1.sample;
+          final baseState = _catalogStateV1;
           final worlds = _progressWorlds(baseState);
           final selectedWorld = _worldById(worlds, _selectedWorldId);
           final firstLesson = _firstPlayableLesson(selectedWorld);

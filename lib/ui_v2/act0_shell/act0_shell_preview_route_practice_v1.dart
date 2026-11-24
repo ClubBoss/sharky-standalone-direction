@@ -18,7 +18,7 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
   }
 
   List<Act0RoutePracticeRepV1> _routePracticeDeckV1(Act0WorldCardV1 owner) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final eligibleLessons = act0RoutePracticeEligibleLessonIdsV1(
       state.worlds,
       _pathClosedTaskIds,

@@ -6,6 +6,9 @@ import 'package:crypto/crypto.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/l10n/app_localizations.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -132,6 +135,179 @@ Act0LessonTaskV1 _nineSeatCatalogTask(
 }
 
 void main() {
+  final preview = Act0ShellStateV1.learnerCatalog(nineSeatPreview: true);
+  final nineSeatWorlds = [
+    for (final world in preview.worlds)
+      if ({4, 8, 9}.contains(world.worldNumber))
+        world.copyWith(
+          lessons: [
+            for (final lesson in world.lessons)
+              if (act0RunnerRequiresNineSeatPreviewV1(lesson.runner)) lesson,
+          ],
+        ),
+  ];
+
+  test(
+    'B15 only adds the authored nine-seat lessons under the preview gate',
+    () {
+      final regular = Act0ShellStateV1.learnerCatalog(nineSeatPreview: false);
+      expect(
+        nineSeatWorlds.map((world) => world.lessons.single.taskList.length),
+        [5, 6, 7],
+      );
+      for (final (index, world) in preview.worlds.indexed) {
+        final original = regular.worlds[index];
+        expect(world.worldId, original.worldId);
+        expect(
+          world.lessons.where(
+            (lesson) => !act0RunnerRequiresNineSeatPreviewV1(lesson.runner),
+          ),
+          original.lessons,
+        );
+      }
+      expect(identical(preview.liveRoom, regular.liveRoom), isTrue);
+      final rows = [
+        for (final world in preview.worlds)
+          for (final (index, lesson) in world.lessons.indexed)
+            if (act0RunnerRequiresNineSeatPreviewV1(lesson.runner))
+              for (final task in lesson.taskList)
+                (world: world, lesson: lesson, task: task, lessonIndex: index),
+      ];
+      expect(
+        renderCatalogTaskSectionV1(rows).join('\n'),
+        File(
+          'test/fixtures/act0_catalog_snapshot_ninemax_v1.txt',
+        ).readAsStringSync(),
+      );
+      expect(runCatalogAudit(rows: rows).findings, isEmpty);
+    },
+  );
+
+  test('B15 nine-seat frames pass the contribution and roster checks', () {
+    final rows = auditTableTruth(worlds: nineSeatWorlds);
+    const exceptions = <String, (double, double, double, double)>{
+      'w04_9m_already_raised': (1.5, 4, 2.5, 38.5),
+      'w09_9m_cover_map': (1.5, 3.5, 2, 36.4),
+      'w09_9m_individual_ante': (2.4, 2.4, 1, 29.4),
+      'w09_9m_bubble_call': (11.5, 36, 24.5, 40.5),
+      'w09_9m_transfer_orbit': (2.4, 2.4, 1, 29.4),
+    };
+    for (final world in nineSeatWorlds) {
+      for (final task in world.lessons.single.taskList) {
+        final (potBeforeWager, pot, toCall, pricePct) =
+            exceptions[task.taskId] ?? (1.5, 1.5, 1.0, 40.0);
+        final table = task.runner.table;
+        final ledger = table.handContributions!;
+        final amounts = ledger.amounts(
+          seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+          actorSeatId: table.heroSeatId,
+        );
+        final currentWager = ledger.entries
+            .where(
+              (entry) =>
+                  entry.street == ledger.throughStreet &&
+                  entry.kind == Act0ContributionKindV1.wager,
+            )
+            .lastOrNull;
+        expect(
+          amounts.potBb - (currentWager?.amountBb ?? 0),
+          closeTo(potBeforeWager, 1e-9),
+          reason: task.taskId,
+        );
+        expect(amounts.potBb, closeTo(pot, 1e-9), reason: task.taskId);
+        expect(amounts.toCallBb, toCall, reason: task.taskId);
+        expect(
+          (1000 * amounts.toCallBb! / (amounts.potBb + amounts.toCallBb!))
+                  .round() /
+              10,
+          pricePct,
+          reason: task.taskId,
+        );
+        final checks = rows.where((row) => row.taskId == task.taskId);
+        expect(
+          checks.map((row) => row.invariant),
+          containsAll([
+            'D2.pot_feasibility',
+            'D3.to_call_completeness',
+            'D6.nine_max_roster',
+            'D6.history_support',
+          ]),
+        );
+        expect(
+          checks.where((row) => row.result != 'PASS').map((row) => row.key),
+          isEmpty,
+        );
+      }
+    }
+  });
+
+  for (final world in nineSeatWorlds) {
+    testWidgets(
+      'B15 W${world.worldNumber} renders nine seats and grades a miss',
+      (tester) async {
+        tester.view.physicalSize = const Size(393, 852);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        final lesson = world.lessons.single;
+        final task = lesson.taskList.first;
+        var runner = task.runner;
+        final answers = <Act0CompletedDecisionV1>[];
+        await tester.pumpWidget(
+          MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: Act0NineSeatDebugScopeV1(
+              enabled: true,
+              child: Scaffold(
+                body: StatefulBuilder(
+                  builder: (context, setState) => Act0LessonRunnerShellV1(
+                    runner: runner,
+                    worldNumber: world.worldNumber,
+                    selectedWorldId: world.worldId,
+                    selectedLessonId: lesson.lessonId,
+                    selectedTaskId: task.taskId,
+                    selectedTaskFamily: task.resolvedTaskFamily,
+                    evidenceRunId: task.taskId,
+                    tableChoreographyMode: Act0TableChoreographyModeV1.settled,
+                    onBack: () {},
+                    onContinueTheory: () {},
+                    onContinueReview: () {},
+                    onChooseOption: (option) => setState(() {
+                      runner = runner.copyWith(
+                        phase: Act0LessonPhaseV1.review,
+                        selectedOptionId: option.id,
+                      );
+                    }),
+                    onCompletedDecision: answers.add,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.byKey(const Key('act0_nine_seat_debug_table')),
+          findsOneWidget,
+        );
+        final centers = {
+          for (final seat in runner.table.seats)
+            tester.getCenter(
+              find.byKey(Key('act0_shell_seat_node_${seat.seatId}')),
+            ),
+        };
+        expect(centers, hasLength(9));
+        final wrong = find.byKey(const Key('act0_shell_option_alternative'));
+        await tester.ensureVisible(wrong);
+        await tester.tap(wrong);
+        await tester.pumpAndSettle();
+        expect(answers.single.selectedId, 'alternative');
+        expect(answers.single.expectedId, 'answer');
+        expect(answers.single.resultKind, 'incorrect');
+      },
+    );
+  }
+
   test('nine-seat source passes Table Truth and G1 position checks', () {
     final world = Act0ShellStateV1.authoredCatalog.worldById('world_8');
     final source = world.lessons.first;
@@ -217,12 +393,15 @@ void main() {
     final next = original.courseTaskList.first;
     await tester.pumpWidget(
       MaterialApp(
-        home: Act0ShellPreviewScreenV1(
-          state: catalog,
-          initialTab: Act0ShellTabV1.play,
-          initialPhase: next.entryPhase,
-          showPlacementOnStart: false,
-          enableBetaMetrics: false,
+        home: Act0NineSeatDebugScopeV1(
+          enabled: false,
+          child: Act0ShellPreviewScreenV1(
+            state: catalog,
+            initialTab: Act0ShellTabV1.play,
+            initialPhase: next.entryPhase,
+            showPlacementOnStart: false,
+            enableBetaMetrics: false,
+          ),
         ),
       ),
     );

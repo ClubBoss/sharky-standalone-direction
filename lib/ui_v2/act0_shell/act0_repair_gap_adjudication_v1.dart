@@ -841,6 +841,8 @@ class Act0RepairGoalContractV1 {
       'Compare a suited hand with a pocket pair',
     'visible_cards_reduce_combos' => 'How visible cards narrow the range',
     'smaller_effective_stack' => 'Find the smaller stack',
+    'full_ring_ajs_opening_threshold' => 'Count who can respond to an AJs open',
+    'full_ring_orbit_cost_and_m' => 'Calculate M from the orbit cost',
     'first_position_by_table_size' => 'Count the players left to act',
     _ =>
       goalId.startsWith(_exerciseGoalPrefix)
@@ -1698,7 +1700,10 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
   String diagnosticVariantId = '',
 }) {
   final fallback = diagnosticVariantId.isEmpty
-      ? _foundationRepairDefaults[(worldId, lessonId, taskId, choiceId)]
+      ? _foundationRepairDefaults[(worldId, lessonId, taskId, choiceId)] ??
+            (act0IsNineSeatLessonV1(lessonId)
+                ? _nineSeatRepairDefaults[(worldId, lessonId, taskId, choiceId)]
+                : null)
       : null;
   for (final row in act0RepairGoalContractsV1) {
     if (row.sourceWorldId == worldId &&
@@ -1768,6 +1773,15 @@ const _foundationSharedRepairGoals = <String, String>{
   'w7_effective_stack_100bb': 'smaller_effective_stack',
   'w7_6max_wider': 'first_position_by_table_size',
   'w7_fullring_tighter': 'first_position_by_table_size',
+  'w04_9m_first_in_mp': 'full_ring_ajs_opening_threshold',
+  'w04_9m_first_in_hj': 'full_ring_ajs_opening_threshold',
+  'w08_9m_utg_ajs': 'full_ring_ajs_opening_threshold',
+  'w08_9m_lj_ajs': 'full_ring_ajs_opening_threshold',
+  'w08_9m_utg1_boundary': 'full_ring_ajs_opening_threshold',
+  'w09_9m_no_ante': 'full_ring_orbit_cost_and_m',
+  'w09_9m_individual_ante': 'full_ring_orbit_cost_and_m',
+  'w09_9m_transfer_orbit': 'full_ring_orbit_cost_and_m',
+  'w09_9m_orbit_cost_repair': 'full_ring_orbit_cost_and_m',
   'w9_cash_vs_tournament': 'tournament_elimination_vs_reload',
   'w9_survival_stack_tradeoff': 'tournament_elimination_vs_reload',
   'w9_short_stack_survival': 'short_stack_action_window',
@@ -1809,21 +1823,31 @@ typedef _FoundationRepairExercise = ({
   String fingerprint,
 });
 
-final _foundationRepairDefaults = _buildFoundationRepairDefaults();
+final _foundationRepairDefaults = _buildFoundationRepairDefaults(
+  Act0ShellStateV1.learnerCatalog(nineSeatPreview: false),
+);
+final _nineSeatRepairDefaults = _buildFoundationRepairDefaults(
+  Act0ShellStateV1.learnerCatalog(nineSeatPreview: true),
+  nineSeatLessons: true,
+);
 
 Map<(String, String, String, String), Act0RepairGoalContractV1>
-_buildFoundationRepairDefaults() {
+_buildFoundationRepairDefaults(
+  Act0ShellStateV1 catalog, {
+  bool nineSeatLessons = false,
+}) {
   final earliest = <String, _FoundationRepairExercise>{};
   final contracts =
       <(String, String, String, String), Act0RepairGoalContractV1>{};
-  for (final world in Act0ShellStateV1.sample.worlds.take(
-    act0SameGoalReplayThroughWorldV1,
-  )) {
+  for (final world in catalog.worlds.take(act0SameGoalReplayThroughWorldV1)) {
     final requireEarlierExercise = world.worldNumber >= 5;
     for (final lesson in world.lessons) {
+      if (act0IsNineSeatLessonV1(lesson.lessonId) != nineSeatLessons) continue;
+      final repairTargets = <String, _FoundationRepairExercise>{};
       final sameLesson = <String, _FoundationRepairExercise>{};
       final exercises = <_FoundationRepairExercise>[];
-      for (final task in lesson.courseTaskList) {
+      for (final task
+          in nineSeatLessons ? lesson.taskList : lesson.courseTaskList) {
         final correct = task.runner.options.where(
           world.worldNumber > 12
               ? act0RunnerOptionIsPreferredV1
@@ -1841,6 +1865,11 @@ _buildFoundationRepairDefaults() {
             task: task,
           )!,
         );
+        if (task.repairOnly) {
+          repairTargets[act0FoundationRepairGoalForTaskV1(task.taskId)] =
+              exercise;
+          continue;
+        }
         exercises.add(exercise);
         // Prefer the first choice in this lesson. For theory or a summary
         // with choices, use its own frame unless there is a drill to launch.
@@ -1852,9 +1881,11 @@ _buildFoundationRepairDefaults() {
       for (final source in exercises) {
         final task = source.task;
         final goal = act0FoundationRepairGoalForTaskV1(task.taskId);
-        final target = requireEarlierExercise
-            ? earliest[goal] ?? source
-            : sameLesson[goal] ?? earliest[goal] ?? source;
+        final target =
+            repairTargets[goal] ??
+            (requireEarlierExercise
+                ? earliest[goal] ?? source
+                : sameLesson[goal] ?? earliest[goal] ?? source);
         final exact = identical(target.task, task);
         for (final choice in task.runner.options.where(
           (choice) => !choice.isCorrect,

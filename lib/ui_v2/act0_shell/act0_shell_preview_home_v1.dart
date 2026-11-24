@@ -590,9 +590,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       );
     }
 
-    final dailyDeckEntry = _nextDailyDeckEntry(
-      state: widget.state ?? Act0ShellStateV1.sample,
-    );
+    final dailyDeckEntry = _nextDailyDeckEntry(state: _catalogStateV1);
     if (preferPracticeAfterThreeLessons &&
         _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
         _dailyCompletedRepCount < 3 &&
@@ -702,7 +700,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     }
 
     final categoryPracticeTarget = _topicPackLaunchTarget(
-      widget.state ?? Act0ShellStateV1.sample,
+      _catalogStateV1,
       _topicPackSpecsV1.first,
     );
     if (categoryPracticeTarget == null) {
@@ -792,7 +790,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     if (_placementHandoffActive) {
       return _copyV1(en: 'Start here', ru: 'Начни здесь');
     }
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -929,7 +927,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     return _nextUsefulHandReasonReceiptV1(
       recommendation: recommendation,
       selectedWorld: selectedWorld,
-      state: widget.state ?? Act0ShellStateV1.sample,
+      state: _catalogStateV1,
     );
   }
 
@@ -1041,9 +1039,8 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
-  String? _homePersonalizedReturnReasonLine() => _personalizedNextStepV1(
-    _reviewState((widget.state ?? Act0ShellStateV1.sample).review),
-  ).copyLine;
+  String? _homePersonalizedReturnReasonLine() =>
+      _personalizedNextStepV1(_reviewState(_catalogStateV1.review)).copyLine;
 
   void _schedulePersonalizedNextStepExposureV1(
     Act0PersonalizedReturnReasonV1 nextStep, {
@@ -1564,7 +1561,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final receipt = _nextUsefulHandReasonReceiptV1(
       recommendation: recommendation,
       selectedWorld: selectedWorld,
-      state: widget.state ?? Act0ShellStateV1.sample,
+      state: _catalogStateV1,
     );
     if (receipt.source != 'repair_intent') {
       return null;
@@ -1667,7 +1664,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Act0SharkyCueV1? _homeSharkyOverride() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
 
     // Daily done after successful repair — celebrate saved streak effort
     if (_streakSaveEarned()) {
@@ -1771,7 +1768,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       teachingStepIndex: _teachingStepIndex,
       selectedOptionId: _selectedOptionId,
     );
-    final worlds = (widget.state ?? Act0ShellStateV1.sample).worlds;
+    final worlds = _catalogStateV1.worlds;
     if (_validLessonResumeV1(
       resume,
       worlds,
@@ -1832,7 +1829,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
 
   void _resumeHomeLessonV1(_Act0LessonResumeV1 resume) {
     if (_lessonResumeV1 != resume) return;
-    final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
+    final worlds = _progressWorlds(_catalogStateV1);
     if (!_validLessonResumeV1(resume, worlds, _pathClosedTaskIds)) return;
     final world = _worldById(worlds, resume.worldId);
     if (!_startTaskByIds(

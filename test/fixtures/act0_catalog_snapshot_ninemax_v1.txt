@@ -1,0 +1,234 @@
+===== WORLD 4 · LESSON full_ring_transfer · Full ring transfer =====
+
+TASK w04_9m_premium_early [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. This subset of the teaching chart opens KK for 2.5 BB first in at every non-blind seat. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ks Kd | Pot 1.5 BB | To call 1 BB | Seat UTG+1 | Active utg+1 | Decision utg+1 | Facts pocket pair
+EFFECTIVE: MP 100 · LJ 100 · HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | UTG+1 Ks Kd stack 100 BB | MP stack 100 BB | LJ stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds
+  + [correct] Raise to 2.5 BB — Correct. KK belongs to the stated opening rule here. Any first-in raise can win the posted blinds when all remaining players fold.
+  - [wrong] Fold — Look again. The rule includes KK here. Folding passes up the opening opportunity.
+    BETTER ANSWER: Raise to 2.5 BB
+
+TASK w04_9m_first_in_mp [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. At 100 BB, this course drill opens A-J suited for 2.5 BB first in when at most five players are behind. With more players behind, fold it. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ac Jc | Pot 1.5 BB | To call 1 BB | Seat MP | Active mp | Decision mp | Facts no applicable hand facts
+EFFECTIVE: LJ 100 · HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP Ac Jc stack 100 BB | LJ stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds
+  + [correct] Fold — Correct. AJs is outside the stated opening rule here. A raise exposes chips with 6 players still able to respond.
+  - [wrong] Raise to 2.5 BB — Look again. The stated rule excludes AJs here. A raise exposes chips with 6 players still able to respond.
+    BETTER ANSWER: Fold
+
+TASK w04_9m_already_raised [drill] Which decision are you facing in CO?
+CAPTION: Blinds are 0.5/1 BB. No ante. UTG opens. UTG+1, MP, LJ and HJ fold. The first-in chart is only for unopened pots.
+Q: Which decision are you facing in CO?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah Jh | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
+SEATS: UTG stack 97.5 BB raise 2.5 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ folded stack 100 BB | HJ folded stack 100 BB | CO Ah Jh stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG raises to 2.5 BB · preflop: UTG+1 folds · preflop: MP folds · preflop: LJ folds · preflop: HJ folds
+  + [correct] A response to a raise — Correct. A call matches UTG’s price. A raise is a three-bet.
+  - [wrong] A first-in open — Look again. UTG has already raised.
+    BETTER ANSWER: A response to a raise
+  - [wrong] A free check — Look again. You still face UTG’s wager.
+    BETTER ANSWER: A response to a raise
+
+TASK w04_9m_first_in_hj [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. At 100 BB, this course drill opens A-J suited for 2.5 BB first in when at most five players are behind. With more players behind, fold it. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You As Js | Pot 1.5 BB | To call 1 BB | Seat HJ | Active hj | Decision hj | Facts no applicable hand facts
+EFFECTIVE: CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ folded stack 100 BB | HJ As Js stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds · preflop: LJ folds
+  + [correct] Raise to 2.5 BB — Correct. AJs belongs to the stated opening rule here. Any first-in raise can win the posted blinds when all remaining players fold.
+  - [wrong] Fold — Look again. The rule includes AJs here. Folding passes up the opening opportunity.
+    BETTER ANSWER: Raise to 2.5 BB
+
+TASK w04_9m_button_defenders [review] Which seats can still respond if you open from BTN?
+ENTRY: drill
+CAPTION: Blinds are 0.5/1 BB. No ante. All seats through CO fold.
+Q: Which seats can still respond if you open from BTN?
+HINT [hidden]: (none)
+TABLE: Preflop | You Qh Js | Pot 1.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Js stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds · preflop: LJ folds · preflop: HJ folds · preflop: CO folds
+  + [correct] SB and BB — Correct. Both blinds have yet to act on your raise.
+  - [wrong] CO, SB and BB — Look again. CO has already folded.
+    BETTER ANSWER: SB and BB
+  - [wrong] BB only — Look again. SB still has a decision.
+    BETTER ANSWER: SB and BB
+
+===== WORLD 8 · LESSON full_ring_transfer · Full ring transfer =====
+
+TASK w08_9m_utg_aa [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. This course drill opens AA from every seat before the blinds when the pot is unopened. The open size is 2.5 BB. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You As Ah | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts pocket pair
+EFFECTIVE: UTG+1 100 · MP 100 · LJ 100 · HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG As Ah stack 100 BB | UTG+1 stack 100 BB | MP stack 100 BB | LJ stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] Raise to 2.5 BB — Correct. AA belongs to the stated opening rule here. Any first-in raise can win the posted blinds when all remaining players fold.
+  - [wrong] Fold — Look again. The rule includes AA here. Folding passes up the opening opportunity.
+    BETTER ANSWER: Raise to 2.5 BB
+
+TASK w08_9m_utg_ajs [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. At 100 BB, this course drill opens A-J suited for 2.5 BB first in when at most five players are behind. With more players behind, fold it. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad Jd | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+EFFECTIVE: UTG+1 100 · MP 100 · LJ 100 · HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG Ad Jd stack 100 BB | UTG+1 stack 100 BB | MP stack 100 BB | LJ stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] Fold — Correct. AJs is outside the stated opening rule here. A raise exposes chips with 8 players still able to respond.
+  - [wrong] Raise to 2.5 BB — Look again. The stated rule excludes AJs here. A raise exposes chips with 8 players still able to respond.
+    BETTER ANSWER: Fold
+
+TASK w08_9m_match_sixmax_utg [drill] Which full-ring seat matches six-max UTG on that count?
+CAPTION: Blinds are 0.5/1 BB. No ante. At a six-max table UTG acts before HJ, CO, BTN, SB and BB. Match the number of players still to act at this nine-seat table.
+Q: Which full-ring seat matches six-max UTG on that count?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ac Jc | Pot 1.5 BB | To call 1 BB | Seat LJ | Active lj | Decision lj | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ Ac Jc stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds
+  + [correct] LJ — Correct. HJ, CO, BTN and both blinds still act after LJ.
+  - [wrong] UTG — Look again. Full-ring UTG still has eight players behind.
+    BETTER ANSWER: LJ
+  - [wrong] HJ — Look again. HJ has four players behind.
+    BETTER ANSWER: LJ
+
+TASK w08_9m_lj_ajs [drill] Which action follows the opening rule?
+CAPTION: Blinds are 0.5/1 BB. No ante. At 100 BB, this course drill opens A-J suited for 2.5 BB first in when at most five players are behind. With more players behind, fold it. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah Jh | Pot 1.5 BB | To call 1 BB | Seat LJ | Active lj | Decision lj | Facts no applicable hand facts
+EFFECTIVE: HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ Ah Jh stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds
+  + [correct] Raise to 2.5 BB — Correct. AJs belongs to the stated opening rule here. Any first-in raise can win the posted blinds when all remaining players fold.
+  - [wrong] Fold — Look again. The rule includes AJs here. Folding passes up the opening opportunity.
+    BETTER ANSWER: Raise to 2.5 BB
+
+TASK w08_9m_effective_stack [drill] Which pair of effective stacks is correct, BTN then BB?
+CAPTION: Blinds are 0.5/1 BB. No ante. You begin with 100 BB in the CO. BTN has 25 BB and BB has 80 BB. Compare your maximum total matched contribution against each of those players if you end up heads-up with them.
+Q: Which pair of effective stacks is correct, BTN then BB?
+HINT [hidden]: (none)
+TABLE: Preflop | You 8s 7s | Pot 1.5 BB | To call 1 BB | Seat CO | Active co | Decision co | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | UTG+1 folded stack 100 BB | MP folded stack 100 BB | LJ folded stack 100 BB | HJ folded stack 100 BB | CO 8s 7s stack 100 BB | BTN dealer stack 25 BB | SB stack 99.5 BB | BB stack 79 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds · preflop: LJ folds · preflop: HJ folds
+  + [correct] 25 BB and 80 BB — Correct. Compare your stack separately to each opponent’s stack.
+  - [wrong] 25 BB and 25 BB — Look again. The short BTN does not cap a separate heads-up pot against BB.
+    BETTER ANSWER: 25 BB and 80 BB
+  - [wrong] 100 BB and 100 BB — Look again. You cannot win a matched contribution an opponent cannot make.
+    BETTER ANSWER: 25 BB and 80 BB
+
+TASK w08_9m_utg1_boundary [review] Which action follows the opening rule?
+ENTRY: drill
+CAPTION: Blinds are 0.5/1 BB. No ante. At 100 BB, this course drill opens A-J suited for 2.5 BB first in when at most five players are behind. With more players behind, fold it. Apply this first-in teaching rule only. Everyone starts with 100 BB and there is no straddle or rake.
+Q: Which action follows the opening rule?
+HINT [hidden]: (none)
+TABLE: Preflop | You As Js | Pot 1.5 BB | To call 1 BB | Seat UTG+1 | Active utg+1 | Decision utg+1 | Facts no applicable hand facts
+EFFECTIVE: MP 100 · LJ 100 · HJ 100 · CO 100 · BTN 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | UTG+1 As Js stack 100 BB | MP stack 100 BB | LJ stack 100 BB | HJ stack 100 BB | CO stack 100 BB | BTN dealer stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds
+  + [correct] Fold — Correct. AJs is outside the stated opening rule here. A raise exposes chips with 7 players still able to respond.
+  - [wrong] Raise to 2.5 BB — Look again. The stated rule excludes AJs here. A raise exposes chips with 7 players still able to respond.
+    BETTER ANSWER: Fold
+
+===== WORLD 9 · LESSON full_ring_transfer · Full ring transfer =====
+
+TASK w09_9m_no_ante [drill] What is your starting M and zone?
+CAPTION: Blinds are 0.5/1 BB. No ante. You start the hand with 18 BB. M is your starting stack divided by one complete orbit’s forced cost at the current level. Use course zones: green ≥ 20, yellow ≥ 10 and < 20, red < 10.
+Q: What is your starting M and zone?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG Ad 8d stack 18 BB | UTG+1 stack 18 BB | MP stack 18 BB | LJ stack 18 BB | HJ stack 18 BB | CO stack 18 BB | BTN dealer stack 18 BB | SB stack 17.5 BB | BB stack 17 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] 12, yellow — Correct. Your orbit costs 1.5 BB. Divide your starting stack by that cost.
+  - [wrong] 18, yellow — Look again. Divide by both blind posts, not just the big blind.
+    BETTER ANSWER: 12, yellow
+  - [wrong] 7.5, red — Look again. There are no antes in this hand.
+    BETTER ANSWER: 12, yellow
+
+TASK w09_9m_cover_map [drill] Which of these two opponents can eliminate you on this hand?
+CAPTION: Blinds are 0.5/1 BB. No ante. Nine remain and eight get paid. UTG starts with 32 BB and opens. Hero starts with 18 BB. BB starts with 6 BB. Compare an all-in lost heads-up against each of them with no other contributions by Hero.
+Q: Which of these two opponents can eliminate you on this hand?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah Qh | Pot 3.5 BB | To call 2 BB | Seat UTG+1 | Active utg+1 | Decision utg+1 | Facts no applicable hand facts
+SEATS: UTG stack 30 BB raise 2 BB | UTG+1 Ah Qh stack 18 BB | MP stack 18 BB | LJ stack 18 BB | HJ stack 18 BB | CO stack 18 BB | BTN dealer stack 18 BB | SB stack 17.5 BB | BB stack 5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG raises to 2 BB
+  + [correct] Only UTG — Correct. UTG covers you. BB can match up to 6 BB.
+  - [wrong] Both — Look again. A 6 BB opponent cannot take your whole 18 BB stack.
+    BETTER ANSWER: Only UTG
+  - [wrong] Only BB — Look again. The seat with the larger forced blind need not have the larger stack.
+    BETTER ANSWER: Only UTG
+
+TASK w09_9m_individual_ante [drill] What is your starting M and zone?
+CAPTION: Blinds are 0.5/1 BB. Each of the nine seats posts 0.1 BB ante. You start the hand with 18 BB. M is your starting stack divided by one complete orbit’s forced cost at the current level. Use course zones: green ≥ 20, yellow ≥ 10 and < 20, red < 10.
+Q: What is your starting M and zone?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad 8d | Pot 2.4 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG Ad 8d stack 17.9 BB | UTG+1 stack 17.9 BB | MP stack 17.9 BB | LJ stack 17.9 BB | HJ stack 17.9 BB | CO stack 17.9 BB | BTN dealer stack 17.9 BB | SB stack 17.4 BB | BB stack 16.9 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] 7.5, red — Correct. Your orbit costs 2.4 BB. Divide your starting stack by that cost.
+  - [wrong] 12, yellow — Look again. This ignores individual antes.
+    BETTER ANSWER: 7.5, red
+  - [wrong] 8.571, red — Look again. That uses six individual ante posts per orbit.
+    BETTER ANSWER: 7.5, red
+
+TASK w09_9m_bubble_call [drill] Which response has higher modeled prize EV?
+CAPTION: Blinds are 0.5/1 BB. No ante. Nine players remain at the final table. The top eight receive 10 prize units each; ninth receives zero. BB shoves and covers BTN. The table shows only the effective wager. For this exercise BB holds one equally likely legal combo of 99, 44, JTs or 76s. Maximize static ICM prize EV using all nine starting stacks and the recorded contributions. Ignore future hands and deals.
+Q: Which response has higher modeled prize EV?
+HINT [hidden]: (none)
+TABLE: River | You Kh Qd | Board Ks 9c 4h 3d 2s | Pot 36 BB | To call 24.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 24.5
+SEATS: UTG folded stack 4 BB | UTG+1 folded stack 5 BB | MP folded stack 7 BB | LJ folded stack 12 BB | HJ folded stack 16 BB | CO folded stack 20 BB | BTN dealer Kh Qd stack 24.5 BB | SB folded stack 4.5 BB | BB stack 45 BB bet 24.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds · preflop: MP folds · preflop: LJ folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB bets 24.5 BB
+  + [correct] Fold — Correct. Folding preserves more prize equity across the payout branches.
+  - [wrong] Call 24.5 BB — Look again. Your call gains chips on average, but the elimination branch reduces expected prize value.
+    BETTER ANSWER: Fold
+
+TASK w09_9m_m_does_not_choose [drill] What does the red zone establish?
+CAPTION: Blinds are 0.5/1 BB. No ante. You start UTG with 12 BB at a full table. The course red zone begins below M = 10. Use M to read urgency. No calling ranges, payout schedule or shove chart are supplied.
+Q: What does the red zone establish?
+HINT [hidden]: (none)
+TABLE: Preflop | You 7c 2d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG 7c 2d stack 12 BB | UTG+1 stack 12 BB | MP stack 12 BB | LJ stack 12 BB | HJ stack 12 BB | CO stack 12 BB | BTN dealer stack 12 BB | SB stack 11.5 BB | BB stack 11 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] Your stack is under blind pressure — Correct. A shove still depends on the hand, seats behind and how they respond.
+  - [wrong] Shove every hand — Look again. Eight players still act, and M supplies no calling ranges.
+    BETTER ANSWER: Your stack is under blind pressure
+  - [wrong] Wait exactly eight orbits — Look again. Blind levels and game actions can change before then.
+    BETTER ANSWER: Your stack is under blind pressure
+
+TASK w09_9m_transfer_orbit [review] What is your starting M and zone?
+ENTRY: drill
+CAPTION: Blinds are 0.5/1 BB. Each of the nine seats posts 0.1 BB ante. You start the hand with 24 BB. M is your starting stack divided by one complete orbit’s forced cost at the current level. Use course zones: green ≥ 20, yellow ≥ 10 and < 20, red < 10.
+Q: What is your starting M and zone?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad 8d | Pot 2.4 BB | To call 1 BB | Seat MP | Active mp | Decision mp | Facts no applicable hand facts
+SEATS: UTG folded stack 23.9 BB | UTG+1 folded stack 23.9 BB | MP Ad 8d stack 23.9 BB | LJ stack 23.9 BB | HJ stack 23.9 BB | CO stack 23.9 BB | BTN dealer stack 23.9 BB | SB stack 23.4 BB | BB stack 22.9 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: UTG+1 folds
+  + [correct] 10, yellow — Correct. Your orbit costs 2.4 BB. Divide your starting stack by that cost.
+  - [wrong] 16, yellow — Look again. This omits the individual antes.
+    BETTER ANSWER: 10, yellow
+  - [wrong] 11.429, yellow — Look again. This counts only six seats in the orbit.
+    BETTER ANSWER: 10, yellow
+
+TASK w09_9m_orbit_cost_repair [drill] What is M with 15 BB and no ante?
+CAPTION: Blinds are 0.5/1 BB. No ante. You start with 15 BB. Count each forced payment you make over one orbit, then divide your stack by that cost.
+Q: What is M with 15 BB and no ante?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG Ad 8d stack 15 BB | UTG+1 stack 15 BB | MP stack 15 BB | LJ stack 15 BB | HJ stack 15 BB | CO stack 15 BB | BTN dealer stack 15 BB | SB stack 14.5 BB | BB stack 14 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] 10 — Correct. Divide 15 BB by the 1.5 BB orbit cost.
+  - [wrong] 15 — Look again. Include your small blind as well as your big blind.
+    BETTER ANSWER: 10
+  - [wrong] 6.25 — Look again. There are no antes in this hand.
+    BETTER ANSWER: 10

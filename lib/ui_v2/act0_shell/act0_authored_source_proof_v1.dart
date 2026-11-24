@@ -437,7 +437,10 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
 }
 
 Act0LessonTaskV1? _resolveTask(String worldId, String lessonId, String taskId) {
-  final worlds = Act0ShellStateV1.sample.worlds
+  final catalog = act0IsNineSeatLessonV1(lessonId)
+      ? Act0ShellStateV1.learnerCatalog(nineSeatPreview: true)
+      : Act0ShellStateV1.sample;
+  final worlds = catalog.worlds
       .where((world) => world.worldId == worldId)
       .toList();
   if (worlds.length != 1) return null;

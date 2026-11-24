@@ -113,14 +113,16 @@ Iterable<String> renderCatalogTaskSectionV1(
   Iterable<CatalogTask> rows, {
   bool showPotBeforeDecision = false,
 }) sync* {
-  String? lessonId;
+  (int, String)? lessonKey;
   for (final row in rows) {
     final task = row.task;
     final runner = task.runner;
     final table = runner.table;
     final tableLine = catalogTableLine(table);
-    if (lessonId != row.lesson.authoredLessonId) {
-      lessonId = row.lesson.authoredLessonId;
+    final lessonId = row.lesson.authoredLessonId;
+    final key = (row.world.worldNumber, lessonId);
+    if (lessonKey != key) {
+      lessonKey = key;
       yield '===== WORLD ' +
           row.world.worldNumber.toString() +
           ' · LESSON $lessonId · ' +
@@ -259,7 +261,9 @@ String renderCatalogSnapshot({Set<int>? worlds, bool excludePilot = false}) {
   Iterable<CatalogTask> include(Iterable<CatalogTask> rows) => worlds == null
       ? rows.where((row) => !excludePilot || row.world.worldNumber <= 12)
       : rows.where((row) => worlds.contains(row.world.worldNumber));
-  final course = include(catalogTasks).toList();
+  final course = include(catalogTasks)
+      .where((row) => !act0RunnerRequiresNineSeatPreviewV1(row.task.runner))
+      .toList();
   final worldNames = worlds == null
       ? 'W1–W${course.last.world.worldNumber}'
       : (worlds.toList()..sort()).map((world) => 'W$world').join(', ');

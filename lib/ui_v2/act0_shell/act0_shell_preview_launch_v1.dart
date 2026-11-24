@@ -7,7 +7,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
       return false;
     }
     final launchWorld = _worldById(
-      _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+      _progressedWorlds(_catalogStateV1),
       target.worldId,
     );
     final launchLesson = _lessonById(launchWorld.lessons, target.lessonId);
@@ -68,7 +68,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (adjudication?.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap) {
       return null;
     }
-    final worlds = (state ?? widget.state ?? Act0ShellStateV1.sample).worlds;
+    final worlds = (state ?? _catalogStateV1).worlds;
     if (adjudication?.outcome ==
         Act0RepairGapOutcomeV1.intentionalExactReplay) {
       return _sameSignalRepTargetIfLaunchableV1(
@@ -219,7 +219,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (!_hasValidatedRepairTargetV1(intent)) {
       return null;
     }
-    final worlds = (state ?? widget.state ?? Act0ShellStateV1.sample).worlds;
+    final worlds = (state ?? _catalogStateV1).worlds;
     final mappedTarget = _repairIntentTargetByIdsIfLaunchableV1(
       worlds,
       worldId: intent.targetWorldId,
@@ -597,7 +597,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     _ensureDailyCountDayV1();
     final taskId = _dailyPracticeQueue.nextTaskId;
     if (taskId == null) return false;
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final entries = _dailyDeckEntries(
       state,
     ).where((entry) => entry.taskId == taskId);
@@ -679,9 +679,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     }
     if (group.groupId == 'daily') {
       _ensureDailyCountDayV1();
-      final entries = _dailyDeckEntries(
-        widget.state ?? Act0ShellStateV1.sample,
-      );
+      final entries = _dailyDeckEntries(_catalogStateV1);
       final eligible = entries.map((entry) => entry.taskId).toSet();
       if (!_dailyPracticeQueue.isValidFor(eligible) ||
           _dailyPracticeQueue.nextTaskId == null) {
@@ -729,7 +727,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     var launchWorld = selectedWorld;
     final targetWorldId = group.targetWorldId;
     if (targetWorldId != null) {
-      final baseState = widget.state ?? Act0ShellStateV1.sample;
+      final baseState = _catalogStateV1;
       launchWorld = _worldById(_progressedWorlds(baseState), targetWorldId);
     }
     _startTaskByIds(
@@ -774,7 +772,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (_learningRunV1 != null && !preserveRepairBridge) {
       _closeLearningRunForLearnExitV1();
     }
-    final baseState = widget.state ?? Act0ShellStateV1.sample;
+    final baseState = _catalogStateV1;
     final launchWorld = _worldById(
       _progressedWorlds(baseState),
       request.targetWorldId,
@@ -895,10 +893,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     final launchWorldId = repairIntentTarget?.target.worldId ?? mistake.worldId;
     final launchWorld = launchWorldId.trim().isEmpty
         ? selectedWorld
-        : _worldById(
-            _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-            launchWorldId,
-          );
+        : _worldById(_progressedWorlds(_catalogStateV1), launchWorldId);
     final launchLesson = _lessonById(
       launchWorld.lessons,
       repairTarget.lessonId,
@@ -1092,10 +1087,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     }
     final sourceWorld = record.worldId.trim().isEmpty
         ? selectedWorld
-        : _worldById(
-            _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
-            record.worldId,
-          );
+        : _worldById(_progressedWorlds(_catalogStateV1), record.worldId);
     final sourceLesson = _lessonById(sourceWorld.lessons, record.lessonId);
     final sourceTask = _taskById(sourceLesson, sourceTaskId);
     if (sourceTask.phase != Act0LessonPhaseV1.drill) {
@@ -1260,7 +1252,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     }
     if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDrill) {
       _ensureDailyCountDayV1();
-      final state = widget.state ?? Act0ShellStateV1.sample;
+      final state = _catalogStateV1;
       final eligible = _dailyDeckEntries(state).map((e) => e.taskId).toSet();
       if (eligible.isNotEmpty) {
         if (!_dailyPracticeQueue.isValidFor(eligible) ||

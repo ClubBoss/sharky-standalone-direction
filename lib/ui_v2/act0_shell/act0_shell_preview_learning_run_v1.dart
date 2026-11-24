@@ -606,7 +606,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   // A directed repair may rehearse a locked future-world task. Returning to
   // Learn must restore an actionable curriculum focus, not that repair target.
   void _restoreSelectableLearnFocusV1() {
-    final worlds = _progressedWorlds(widget.state ?? Act0ShellStateV1.sample);
+    final worlds = _progressedWorlds(_catalogStateV1);
     final selected = _worldById(worlds, _selectedWorldId);
     final world = selected.isSelectable
         ? selected
@@ -637,7 +637,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   /// existing source-owned drill. It deliberately fails closed to Home rather
   /// than inventing a route for ambiguous or non-drill content.
   bool _startLearningRunPayoffFocusV1(Act0LearningRunOutcomeV1? focus) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final route = Act0LearningRunPayoffFocusResolverV1.resolve(
       state: state,
       focus: focus,
@@ -686,7 +686,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   }) {
     _diagnosticLearningEntryV1 = null;
     _diagnosticLearningReturnV1 = null;
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final zeroProgressWorlds = _progressWorldsWithTaskIds(state, <String>{});
     final zeroWorld = zeroProgressWorlds.firstWhere(
       (world) => world.status == Act0WorldStateV1.current && world.isSelectable,
@@ -843,7 +843,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
   }
 
   void _openDevSurface({required Act0ShellTabV1 tab, bool showPlayHub = true}) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final worlds = _progressWorlds(state);
     _normalizeSelection(worlds);
     final selectedWorld = _worldById(worlds, _selectedWorldId);
