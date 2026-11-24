@@ -158,20 +158,55 @@ void _verifyBaseline(CatalogAudit audit, String prefix, String reportName) {
   );
 }
 
+// B21 decisions whose tables omit authored starting stacks. Keep these visible
+// in G1 until the source facts are available.
+const _w1W4HistoryGaps = {
+  'hand_discipline_buckets_trash',
+  'fold_discipline_early_fold',
+  'weak_ace_warning_w3_dominated_intro',
+  'continue_or_let_go_medium_open',
+  'discipline_checkpoint_checkpoint_table_discipline',
+  'button_advantage_button_open',
+  'early_vs_late_late_info_choice',
+  'same_hand_different_seat_w3_same_hand_open',
+  'same_hand_different_seat_same_hand_early_fold',
+  'same_hand_different_seat_same_hand_late_open',
+  'position_apply_btn_open',
+  'position_apply_late_open',
+  'position_apply_recap',
+  'position_checkpoint_position_checkpoint_late_open',
+  'position_checkpoint_position_checkpoint_early_fold',
+  'position_checkpoint_position_checkpoint_table_notice',
+  'position_checkpoint_position_checkpoint_review',
+  'w4_purpose_intro',
+  'w4_bad_bluff',
+  'w4_protection_intro',
+  'w4_protection_bet',
+  'w4_checkpoint_value',
+  'w4_checkpoint_table_purpose_price',
+};
+
 void main() {
   test(
     'G1·51 history gaps and complete timelines agree with authored truth',
     () {
       final covered = <String, Act0HandHistoryCoverageV1>{};
+      final observedGaps = <String>{};
       for (final row in [...catalogTasks, ...day7CatalogTasks]) {
         final task = row.task;
         final table = task.runner.table;
         final timeline = table.handTimelinePrefix;
+        final isW1W4 =
+            row.world.worldNumber <= 4 &&
+            catalogTasks.any((entry) => identical(entry.task, task));
+        if (isW1W4 && table.actionTrail.isNotEmpty && timeline == null) {
+          observedGaps.add(task.taskId);
+        }
         if (timeline == null) {
           expect(table.handHistoryCoverage, Act0HandHistoryCoverageV1.missing);
           continue;
         }
-        covered[task.taskId] = timeline.coverage;
+        if (!isW1W4) covered[task.taskId] = timeline.coverage;
         final reason = 'History gap in ${task.taskId}';
         final summary = Act0StreetSummaryV1(timeline);
         expect(summary.heroSeat, table.heroSeatId ?? table.heroSeat.seatId);
@@ -194,7 +229,8 @@ void main() {
           expect(summary.amountsAtDecision(), isNull, reason: reason);
           expect(
             summary.streets.every(
-              (row) => row.actions.isEmpty && row.potAfterBb == null,
+              (row) =>
+                  row.potAfterBb == null && (isW1W4 || row.actions.isEmpty),
             ),
             isTrue,
             reason: reason,
@@ -206,7 +242,7 @@ void main() {
           );
           continue;
         }
-        final actor = table.decisionSeatId!;
+        final actor = (table.decisionSeatId ?? table.activeSeatId)!;
         expect(timeline.decisionError(actor), isNull, reason: reason);
         final contributions = timeline.contributions;
         final authored = table.handContributions!;
@@ -238,18 +274,59 @@ void main() {
           ),
           reason: reason,
         );
-        expect(
-          contributions.startingStackBbBySeat,
-          authored.startingStackBbBySeat,
-          reason: reason,
-        );
-        expect(
-          contributions.entries.map(
-            (e) => (e.street, e.seatId, e.kind, e.amountBb),
-          ),
-          authored.entries.map((e) => (e.street, e.seatId, e.kind, e.amountBb)),
-          reason: reason,
-        );
+        if (isW1W4) {
+          Map<(PokerStreet, String, Act0ContributionKindV1), double> bySeat(
+            Act0HandContributionsV1 ledger,
+          ) {
+            final totals =
+                <(PokerStreet, String, Act0ContributionKindV1), double>{};
+            for (final entry in ledger.entries) {
+              final key = (entry.street, entry.seatId, entry.kind);
+              totals.update(
+                key,
+                (amount) => amount + entry.amountBb,
+                ifAbsent: () => entry.amountBb,
+              );
+            }
+            return totals;
+          }
+
+          expect(bySeat(contributions), bySeat(authored), reason: reason);
+          for (final entry in authored.startingStackBbBySeat.entries) {
+            expect(
+              contributions.startingStackBbBySeat[entry.key],
+              entry.value,
+              reason: reason,
+            );
+          }
+          for (final seat in table.seats) {
+            final stack = seat.stackLabel;
+            if (stack == null) continue;
+            final paid = contributions.entries
+                .where((e) => e.seatId == seat.seatId)
+                .fold(0.0, (sum, entry) => sum + entry.amountBb);
+            expect(
+              contributions.startingStackBbBySeat[seat.seatId]! - paid,
+              closeTo(labelAmount(stack), 1e-9),
+              reason: reason,
+            );
+          }
+        } else {
+          expect(
+            contributions.startingStackBbBySeat,
+            authored.startingStackBbBySeat,
+            reason: reason,
+          );
+          expect(
+            contributions.entries.map(
+              (e) => (e.street, e.seatId, e.kind, e.amountBb),
+            ),
+            authored.entries.map(
+              (e) => (e.street, e.seatId, e.kind, e.amountBb),
+            ),
+            reason: reason,
+          );
+        }
         expect(
           timeline.events
               .whereType<Act0HandActionV1>()
@@ -263,12 +340,61 @@ void main() {
           reason: reason,
         );
       }
+      expect(observedGaps, _w1W4HistoryGaps);
       expect(covered, {
         'w11_trigger_bad_price_fold': Act0HandHistoryCoverageV1.complete,
         'w12_river_draw_missed': Act0HandHistoryCoverageV1.complete,
         'spaced_review_w8_effective_stack_fold_v1':
             Act0HandHistoryCoverageV1.partialDrill,
       });
+    },
+  );
+
+  testWidgets(
+    'W4 turn decision retains the authored price and answer options',
+    (tester) async {
+      final row = catalogTasks.singleWhere(
+        (row) => row.task.taskId == 'w4_good_price_call',
+      );
+      final task = row.task;
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Act0LessonRunnerShellV1(
+              runner: task.runner.copyWith(
+                phase: task.entryPhase,
+                teachingStepIndex: task.runner.teachingSteps.length,
+              ),
+              worldNumber: 4,
+              selectedWorldId: row.world.worldId,
+              selectedLessonId: row.lesson.lessonId,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (_) {},
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      );
+      final runner = tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .runner;
+      expect(
+        runner.table.handHistoryCoverage,
+        Act0HandHistoryCoverageV1.complete,
+      );
+      expect(runner.table.toCallLabel, 'To call 1 BB');
+      expect(runner.options, task.runner.options);
+      expect(tester.takeException(), isNull);
     },
   );
 

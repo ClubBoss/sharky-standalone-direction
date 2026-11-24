@@ -76,6 +76,7 @@ class Act0HandTimelineV1 {
     required int bigBlind,
     required List<String> board,
     required List<Act0HandDeltaV1> actions,
+    Set<int> explicitAllInActions = const {},
     String? heroSeat,
   }) {
     final events = <Act0HandEventV1>[];
@@ -103,7 +104,8 @@ class Act0HandTimelineV1 {
       }
     }
 
-    for (final (:street, :seat, :verb, :chipsAdded) in actions) {
+    for (final (index, (:street, :seat, :verb, :chipsAdded))
+        in actions.indexed) {
       dealThrough(street.index);
       final key = (street, seat);
       final total =
@@ -118,9 +120,10 @@ class Act0HandTimelineV1 {
           chipsAdded,
           streetTotal: total,
           allIn:
-              coverage == Act0HandHistoryCoverageV1.complete &&
-              chipsAdded > 0 &&
-              paid[seat] == startingStacks[seat],
+              explicitAllInActions.contains(index) ||
+              (coverage == Act0HandHistoryCoverageV1.complete &&
+                  chipsAdded > 0 &&
+                  paid[seat] == startingStacks[seat]),
         ),
       );
     }
@@ -158,7 +161,7 @@ class Act0HandTimelinePrefixV1 {
 
   final Act0HandHistoryCoverageV1 coverage;
 
-  /// In clockwise seat order, starting at any occupied seat.
+  /// In clockwise seat order. Zero means unknown for a partial drill only.
   final Map<String, int> startingStacks;
   final String button;
   final String? heroSeat;
@@ -224,7 +227,11 @@ class Act0HandTimelinePrefixV1 {
         startingStacks.length > 9 ||
         !startingStacks.containsKey(button) ||
         startingStacks.entries.any(
-          (row) => row.key.isEmpty || row.value <= 0,
+          (row) =>
+              row.key.isEmpty ||
+              row.value < 0 ||
+              (row.value == 0 &&
+                  coverage == Act0HandHistoryCoverageV1.complete),
         ) ||
         coverage == Act0HandHistoryCoverageV1.missing ||
         events.length > 154) {
@@ -270,7 +277,7 @@ class Act0HandTimelinePrefixV1 {
               total < 0 ||
               streetTotal != total ||
               paid < 0 ||
-              paid > stack ||
+              (stack > 0 && paid > stack) ||
               (chipsAdded > 0 &&
                   coverage == Act0HandHistoryCoverageV1.complete &&
                   allIn != (paid == stack)) ||

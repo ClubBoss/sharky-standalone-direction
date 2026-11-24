@@ -912,8 +912,15 @@ List<Act0LessonCardV1> _foundationLessonsV1(List<Act0LessonCardV1> lessons) => [
     lesson.copyWith(tasks: lesson.taskList.map(_foundationTaskV1).toList()),
 ];
 
-Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
+Act0RunnerStateV1 _withFoundationHistoryV1(Act0LessonTaskV1 task) {
   final runner = task.runner;
+  final history = _w1W4HistoryV1(task.taskId);
+  if (history == null) return runner;
+  return runner.copyWith(table: runner.table._withAuthoredHistoryV1(history));
+}
+
+Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
+  final runner = _withFoundationHistoryV1(task);
   final correct = runner.options
       .where(act0RunnerOptionIsAuthoredCorrectV1)
       .firstOrNull;
@@ -939,7 +946,11 @@ Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
         (step) =>
             step.focusLabels.any((label) => label.toLowerCase() == answerLabel),
       );
-  if (!seatCue && !inheritedReason && !hideEmptyBoardLabel && !hasAnswerFocus) {
+  if (identical(runner, task.runner) &&
+      !seatCue &&
+      !inheritedReason &&
+      !hideEmptyBoardLabel &&
+      !hasAnswerFocus) {
     return task;
   }
   return Act0LessonTaskV1(
@@ -979,6 +990,7 @@ Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
     taskFamily: task.taskFamily,
     tablePresentation: task.tablePresentation,
     repairOnly: task.repairOnly,
+    guidedDecision: task.guidedDecision,
     summary: task.summary,
     lockedSummary: task.lockedSummary,
   );

@@ -26,6 +26,7 @@ part 'act0_daily_deal_pilot_v1.dart';
 part 'act0_multi_street_v1.dart';
 part 'act0_shell_day7_review_v1.dart';
 part 'act0_shell_hand_timelines_v1.dart';
+part 'act0_shell_hand_timelines_w1_w4_v1.dart';
 part 'act0_shell_day7_content_v1.dart';
 part 'act0_shell_lessons_w1_w4_v1.dart';
 part 'act0_shell_lessons_w5_w8_v1.dart';
