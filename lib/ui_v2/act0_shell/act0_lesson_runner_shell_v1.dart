@@ -1266,6 +1266,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.isRepairAttempt = false,
+    this.isLessonRetryFeedback = false,
     this.isRestoredRepairFeedback = false,
     this.localizeW1Ctas = false,
     this.preserveSourceOwnedQuestion = false,
@@ -1345,6 +1346,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool isRepairAttempt;
+  final bool isLessonRetryFeedback;
   final bool isRestoredRepairFeedback;
   final bool localizeW1Ctas;
   // Placement quick-check reuses one task ID for three authored questions.
@@ -3940,6 +3942,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       completionSummary: null,
       isAssistedDecision: widget.isAssistedDecision,
       isRepairedFeedback: isRepairedFeedback,
+      isLessonRetryFeedback: widget.isLessonRetryFeedback,
       localizeW1Ctas: act0AcademyW1InstructionTaskV1(widget.selectedTaskId),
       firstValueReceiptLine: widget.firstValueReceiptLine,
       repairReasonLine: widget.repairReasonLine,
@@ -4292,7 +4295,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(
+                _buildRunnerProgressV1(
+                  context,
                   runner: runner,
                   extraPracticeProgress: widget.extraPracticeProgress,
                   onBack: _handleRunnerBackV1,
@@ -4438,6 +4442,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           table: table,
           isReview: isReview,
           isRepaired: isRepairedFeedback,
+          isLessonRetryFeedback: widget.isLessonRetryFeedback,
           question: question,
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
@@ -4476,7 +4481,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final purpose = isTheory || isTeaching
           ? ''
           : isRepairedFeedback
-          ? _fixedFeedbackLabelV1(context)
+          ? _fixedFeedbackLabelV1(
+              context,
+              lessonRetry: widget.isLessonRetryFeedback,
+            )
           : isReview
           ? switch (runner.reviewQuality) {
               Act0FeedbackQualityV1.wrong =>
@@ -4755,7 +4763,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               (isTheory || isDrill || isReview))
-            _RunnerProgressV1(
+            _buildRunnerProgressV1(
+              context,
               runner: runner,
               extraPracticeProgress: widget.extraPracticeProgress,
               onBack: _handleRunnerBackV1,

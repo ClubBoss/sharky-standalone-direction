@@ -927,44 +927,35 @@ List<String> _trimmedUniqueStringsV1(Iterable<String> values) {
   return result;
 }
 
-class _RunnerProgressV1 extends StatelessWidget {
-  const _RunnerProgressV1({
-    required this.runner,
-    required this.onBack,
-    required this.showGlossary,
-    this.extraPracticeProgress,
-  });
-
-  final Act0RunnerStateV1 runner;
-  final VoidCallback onBack;
-  final bool showGlossary;
-  final ({int step, int total})? extraPracticeProgress;
-
-  @override
-  Widget build(BuildContext context) {
-    final progress = extraPracticeProgress;
-    final step = progress?.step ?? runner.beatIndex;
-    final total = progress?.total ?? runner.beatCount;
-    final russian = act0AcademyLanguageV1(context) == 'ru';
-    return Act0SkinTaskHeaderV1(
-      step: step,
-      total: total,
-      onClose: onBack,
-      closeLabel: russian ? 'Закрыть' : 'Close',
-      progressLabel: russian ? '$step из $total' : null,
-      modeLabel: progress == null
-          ? null
-          : russian
-          ? 'Ещё практика'
-          : 'Extra practice',
-      onHelp: showGlossary
-          ? () => showAct0GlossarySheetV1(
-              context,
-              taskText: act0GlossaryTaskTextV1(runner),
-            )
-          : null,
-    );
-  }
+Widget _buildRunnerProgressV1(
+  BuildContext context, {
+  required Act0RunnerStateV1 runner,
+  required VoidCallback onBack,
+  required bool showGlossary,
+  ({int step, int total})? extraPracticeProgress,
+}) {
+  final progress = extraPracticeProgress;
+  final step = progress?.step ?? runner.beatIndex;
+  final total = progress?.total ?? runner.beatCount;
+  final russian = act0AcademyLanguageV1(context) == 'ru';
+  return Act0SkinTaskHeaderV1(
+    step: step,
+    total: total,
+    onClose: onBack,
+    closeLabel: russian ? 'Назад' : 'Back',
+    progressLabel: russian ? 'Шаг $step/$total' : 'Step $step of $total',
+    modeLabel: progress == null
+        ? null
+        : russian
+        ? 'Ещё практика'
+        : 'Extra practice',
+    onHelp: showGlossary
+        ? () => showAct0GlossarySheetV1(
+            context,
+            taskText: act0GlossaryTaskTextV1(runner),
+          )
+        : null,
+  );
 }
 
 class _SeatTapPromptV1 extends StatelessWidget {

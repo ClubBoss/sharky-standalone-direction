@@ -3054,9 +3054,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _diagnosticLearningEntryV1 == null &&
         !openedAsSpacedReview &&
         _activeSameSignalRecheckTaskId != playSelectedTask.taskId;
+    final isLessonRetry =
+        canShowRepairFeedback && _isExactLessonRetryV1(playSelectedTask);
     final isRepairAttempt =
         canShowRepairFeedback &&
-        (_isExactLessonRetryV1(playSelectedTask) ||
+        (isLessonRetry ||
             _activeLessonWrapUpTaskId == playSelectedTask.taskId ||
             _activeRepairTaskId == playSelectedTask.taskId ||
             _practiceQueueRepairRequestForTaskV1(playSelectedTask.taskId) !=
@@ -4222,6 +4224,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 completionSummary: completionSummary,
                                 isAssistedDecision: _choiceWasAssistedV1,
                                 isRepairAttempt: isRepairAttempt,
+                                isLessonRetryFeedback: isLessonRetry,
                                 isRestoredRepairFeedback:
                                     restoredRepairFeedback,
                                 firstValueReceiptLine:

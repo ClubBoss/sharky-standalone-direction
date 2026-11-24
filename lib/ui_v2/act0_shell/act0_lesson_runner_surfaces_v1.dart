@@ -9,6 +9,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.table,
     required this.isReview,
     required this.isRepaired,
+    required this.isLessonRetryFeedback,
     required this.question,
     required this.onBack,
     required this.onChooseOption,
@@ -28,6 +29,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final Act0TableStateV1 table;
   final bool isReview;
   final bool isRepaired;
+  final bool isLessonRetryFeedback;
   final String question;
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
@@ -101,7 +103,10 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                             children: [
                               Text(
                                 isRepaired
-                                    ? _fixedFeedbackLabelV1(context)
+                                    ? _fixedFeedbackLabelV1(
+                                        context,
+                                        lessonRetry: isLessonRetryFeedback,
+                                      )
                                     : actionPayoff?.type ==
                                           Act0ActionPayoffTypeV1
                                               .recoveredSuccess

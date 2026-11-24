@@ -23,6 +23,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.isRepairedFeedback = false,
+    this.isLessonRetryFeedback = false,
     this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -66,6 +67,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool isRepairedFeedback;
+  final bool isLessonRetryFeedback;
   final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -90,7 +92,9 @@ class Act0FeedbackShellV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
-    title: isRepairedFeedback ? _fixedFeedbackLabelV1(context) : title,
+    title: isRepairedFeedback
+        ? _fixedFeedbackLabelV1(context, lessonRetry: isLessonRetryFeedback)
+        : title,
     selectedLabel: selectedLabel,
     otherOptions: otherOptions,
     reason: reason,
@@ -175,7 +179,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? Act0ShellTokensV1.gold
         : Act0ShellTokensV1.primary;
     final resolvedTitle = isRepairedFeedback
-        ? _fixedFeedbackLabelV1(context)
+        ? _fixedFeedbackLabelV1(context, lessonRetry: isLessonRetryFeedback)
         : isAssistedDecision && !isWrong
         ? act0AcademyLanguageV1(context) == 'ru'
               ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
@@ -199,7 +203,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       taskFamily: taskFamily,
     );
     final primaryResultLabel = isRepairedFeedback
-        ? _fixedFeedbackLabelV1(context)
+        ? _fixedFeedbackLabelV1(context, lessonRetry: isLessonRetryFeedback)
         : _feedbackPrimaryResultLabelV1(
             context,
             quality: quality,
@@ -485,7 +489,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         ? const Key('act0_shell_feedback_sharky_slot_wrong')
         : const Key('act0_shell_feedback_sharky_slot_proof');
     final companionRoleLabel = isRepairedFeedback
-        ? _fixedFeedbackLabelV1(context)
+        ? _fixedFeedbackLabelV1(context, lessonRetry: isLessonRetryFeedback)
         : hasProofEarnedState
         ? isRecoveredSourceRecheck
               ? 'Original read proven'
@@ -1807,8 +1811,10 @@ String _humanizedFeedbackProofLineV1(String proofLine) {
   return cleaned;
 }
 
-String _fixedFeedbackLabelV1(BuildContext context) =>
-    act0AcademyLanguageV1(context) == 'ru' ? 'Исправлено' : 'Fixed';
+String _fixedFeedbackLabelV1(BuildContext context, {bool lessonRetry = false}) {
+  if (act0AcademyLanguageV1(context) == 'ru') return 'Исправлено';
+  return lessonRetry ? Act0SkinFeedbackGradeV1.repaired.label : 'Fixed';
+}
 
 String _feedbackPrimaryResultLabelV1(
   BuildContext context, {

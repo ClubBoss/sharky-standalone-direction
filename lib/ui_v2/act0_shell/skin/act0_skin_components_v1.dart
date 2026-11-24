@@ -643,49 +643,56 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final count = progressLabel ?? '$step of $total';
-    return SizedBox(
-      height: 48,
-      child: Row(
-        children: [
-          SizedBox(
-            width: 48,
-            child: IconButton(
-              key: const Key('act0_shell_runner_back'),
-              tooltip: closeLabel,
-              onPressed: onClose,
-              icon: const Icon(Icons.close_rounded),
+    return Row(
+      children: [
+        SizedBox(
+          width: 48,
+          height: 48,
+          child: IconButton(
+            key: const Key('act0_shell_runner_back'),
+            tooltip: closeLabel,
+            onPressed: onClose,
+            icon: const Icon(Icons.close_rounded),
+          ),
+        ),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(_T.courseProgressRadius),
+            child: LinearProgressIndicator(
+              value: total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
+              minHeight: _T.courseProgressHeight,
+              semanticsLabel: 'Lesson progress',
+              semanticsValue: count,
+              backgroundColor: _T.courseProgressTrack,
+              color: _T.courseProgressFill,
             ),
           ),
-          Expanded(
-            child: Act0SkinProgressBarV1(
-              ratio: total > 0 ? (step / total).clamp(0.0, 1.0) : null,
-              label: 'Lesson progress',
-              valueLabel: count,
-            ),
-          ),
-          const SizedBox(width: _T.gapMd),
+        ),
+        const SizedBox(width: _T.gapMd),
+        if (modeLabel case final mode?)
           Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(count, style: _T.captionStyle),
-              if (modeLabel case final mode?)
-                Text(mode, style: _T.tag.copyWith(color: _T.accent)),
+              Text(mode, style: _T.tag.copyWith(color: _T.accent)),
             ],
-          ),
+          )
+        else
+          Text(count, style: _T.captionStyle),
+        if (onHelp != null)
           SizedBox(
             width: 48,
-            child: onHelp == null
-                ? null
-                : IconButton(
-                    key: const Key('act0_shell_runner_glossary'),
-                    tooltip: 'Glossary',
-                    onPressed: onHelp,
-                    icon: const Icon(Icons.menu_book_rounded, size: 22),
-                  ),
-          ),
-        ],
-      ),
+            height: 48,
+            child: IconButton(
+              key: const Key('act0_shell_runner_glossary'),
+              tooltip: 'Glossary',
+              onPressed: onHelp,
+              icon: const Icon(Icons.menu_book_rounded, size: 22),
+            ),
+          )
+        else
+          const SizedBox(width: 48),
+      ],
     );
   }
 }

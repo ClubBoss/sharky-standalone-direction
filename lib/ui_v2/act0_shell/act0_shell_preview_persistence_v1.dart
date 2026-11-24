@@ -1273,34 +1273,47 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         !_progressRestoredV1) {
       return false; // Coalesced requests have no durable acknowledgement.
     }
-    final noticeDelay = Timer(const Duration(seconds: 2), () {
-      _setProgressSaveStatusV1(
-        _Act0ProgressSaveStatusV1.saving,
-        generation,
-        store,
-        epoch,
-      );
-    });
-    final bool acknowledged;
-    try {
-      acknowledged = await store.save(snapshot);
-    } finally {
-      noticeDelay.cancel();
-    }
+    Timer? noticeDelay;
+    final acknowledged = await store.save(
+      snapshot,
+      onWriteStarted: () {
+        // A queued snapshot gets its own delay when its write starts.
+        if (_progressSaveStatusV1.value == _Act0ProgressSaveStatusV1.saving) {
+          _setProgressSaveStatusV1(
+            _Act0ProgressSaveStatusV1.idle,
+            generation,
+            store,
+            epoch,
+          );
+        }
+        noticeDelay = Timer(const Duration(seconds: 2), () {
+          _setProgressSaveStatusV1(
+            _Act0ProgressSaveStatusV1.saving,
+            generation,
+            store,
+            epoch,
+          );
+        });
+      },
+      onWriteFinished: (saved) {
+        noticeDelay?.cancel();
+        // Publish the ACK before flush() and the next queued write can finish.
+        _setProgressSaveStatusV1(
+          saved && store.isWriteLeaseCurrent
+              ? _Act0ProgressSaveStatusV1.idle
+              : _Act0ProgressSaveStatusV1.unconfirmed,
+          generation,
+          store,
+          epoch,
+        );
+      },
+    );
     // False is indeterminate, never proof of data loss or an OS-level cause.
     _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
       ...diagnosticContext,
       'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
     });
     final currentAcknowledgement = acknowledged && store.isWriteLeaseCurrent;
-    _setProgressSaveStatusV1(
-      currentAcknowledgement
-          ? _Act0ProgressSaveStatusV1.idle
-          : _Act0ProgressSaveStatusV1.unconfirmed,
-      generation,
-      store,
-      epoch,
-    );
     return currentAcknowledgement &&
         generation == _progressPersistGeneration &&
         epoch == _recoveryEpochV1 &&
