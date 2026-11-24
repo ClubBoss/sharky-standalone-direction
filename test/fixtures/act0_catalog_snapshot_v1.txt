@@ -11614,7 +11614,7 @@ CAPTION: HJ bets 3 BB on the river. You lost the last pot.
 Q: Which note would help you judge the new call later?
 HINT [hidden]: (none)
 TABLE: River | You Qh 9c | Board Qs 8d 4s 2h 3c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
-SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded stack 100 BB | SB folded stack 99.5 BB | BB Qh 9c stack 97.5 BB
+SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB Qh 9c stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 3 BB
   - [wrong] The size of the last loss — Look again. The past loss gives no information about the new 3 BB price. Save the current bet and the hands it might contain.
     BETTER ANSWER: The price and the share of bets you beat
