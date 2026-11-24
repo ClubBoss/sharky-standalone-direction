@@ -15,65 +15,66 @@ final _rows = [
       for (final t in l.taskList) (world: w, lesson: l, task: t),
 ];
 
+// Start the transition on a frame, then advance past the modal or tile motion.
+Future<void> _pumpTransition(WidgetTester tester) async {
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 400));
+}
+
+Future<void> _checkNumericTools(WidgetTester tester, Finder sheet) async {
+  Future<void> tapTool(String title) async {
+    final header = find.descendant(of: sheet, matching: find.text(title));
+    await tester.ensureVisible(header);
+    await tester.pump();
+    expect(header.hitTestable(), findsOneWidget);
+    await tester.tap(header);
+    await _pumpTransition(tester);
+  }
+
+  Future<void> enterVisibleText(Finder field, String value) async {
+    await tester.ensureVisible(field);
+    await tester.pump();
+    await tester.enterText(field, value);
+    await tester.pump();
+  }
+
+  await tapTool('Price Bar and pot odds');
+  final pot = find.byKey(const Key('act0_tool_pot'));
+  final call = find.byKey(const Key('act0_tool_call'));
+  await enterVisibleText(pot, '30');
+  await enterVisibleText(call, '10');
+  expect(
+    find.text('Pot after call 40.00 · Break-even equity 25.00%'),
+    findsOneWidget,
+  );
+  expect(find.text('Pot odds 3.00 to 1'), findsOneWidget);
+  await enterVisibleText(call, '31');
+  expect(
+    find.text('Enter a positive pot and a valid call amount.'),
+    findsOneWidget,
+  );
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tapTool('Price Bar and pot odds');
+
+  await tapTool('BB and chips');
+  await enterVisibleText(
+    find.byKey(const Key('act0_tool_blind_amount')),
+    '2.5',
+  );
+  await enterVisibleText(find.byKey(const Key('act0_tool_blind_rate')), '20');
+  expect(find.text('50.00 chips'), findsOneWidget);
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tapTool('BB and chips');
+
+  await tapTool('Outs to percentage');
+  await enterVisibleText(find.byKey(const Key('act0_tool_outs')), '9');
+  expect(find.text('Next card 19.15%'), findsOneWidget);
+  expect(find.text('By the river 34.97%'), findsOneWidget);
+  FocusManager.instance.primaryFocus?.unfocus();
+  await tapTool('Outs to percentage');
+}
+
 void main() {
-  testWidgets('opens the numeric tools from the lesson glossary', (
-    tester,
-  ) async {
-    await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Builder(
-            builder: (context) => TextButton(
-              onPressed: () => showAct0GlossarySheetV1(context, taskText: ''),
-              child: const Text('Open glossary'),
-            ),
-          ),
-        ),
-      ),
-    );
-    await tester.tap(find.text('Open glossary'));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Price Bar and pot odds'));
-    await tester.pumpAndSettle();
-    final pot = find.byKey(const Key('act0_tool_pot'));
-    final call = find.byKey(const Key('act0_tool_call'));
-    await tester.enterText(pot, '30');
-    await tester.enterText(call, '10');
-    await tester.pump();
-    expect(
-      find.text('Pot after call 40.00 · Break-even equity 25.00%'),
-      findsOneWidget,
-    );
-    expect(find.text('Pot odds 3.00 to 1'), findsOneWidget);
-    await tester.enterText(call, '31');
-    await tester.pump();
-    expect(
-      find.text('Enter a positive pot and a valid call amount.'),
-      findsOneWidget,
-    );
-    await tester.tap(find.text('Price Bar and pot odds'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('BB and chips'));
-    await tester.pumpAndSettle();
-    await tester.enterText(
-      find.byKey(const Key('act0_tool_blind_amount')),
-      '2.5',
-    );
-    await tester.enterText(find.byKey(const Key('act0_tool_blind_rate')), '20');
-    await tester.pump();
-    expect(find.text('50.00 chips'), findsOneWidget);
-    await tester.tap(find.text('BB and chips'));
-    await tester.pumpAndSettle();
-
-    await tester.tap(find.text('Outs to percentage'));
-    await tester.pumpAndSettle();
-    await tester.enterText(find.byKey(const Key('act0_tool_outs')), '9');
-    await tester.pump();
-    expect(find.text('Next card 19.15%'), findsOneWidget);
-    expect(find.text('By the river 34.97%'), findsOneWidget);
-  });
-
   test('every term the glossary shows for a W1–W12 task is defined', () {
     final names = act0GlossaryTermsV1.map((t) => t.name).toList();
     expect(names.toSet().length, names.length, reason: 'duplicate terms');
@@ -122,7 +123,7 @@ void main() {
   });
 
   testWidgets(
-    'the glossary opens in theory and feedback without choosing an answer',
+    'lesson glossary shows shared definitions and opens all three numeric tools',
     (tester) async {
       final row = _rows.firstWhere(
         (r) =>
@@ -174,34 +175,33 @@ void main() {
       );
       final glossary = find.byKey(const Key('act0_shell_runner_glossary'));
       await mount(Act0LessonPhaseV1.drill);
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       expect(glossary, findsNothing);
 
       await mount(Act0LessonPhaseV1.theory);
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       expect(glossary, findsOneWidget);
 
       await mount(Act0LessonPhaseV1.drill, teaching: true);
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       await tester.tap(glossary);
-      await tester.pumpAndSettle();
-      expect(find.byKey(const Key('act0_glossary_sheet')), findsOneWidget);
-      expect(find.byKey(const Key('act0_glossary_in_task')), findsOneWidget);
+      await _pumpTransition(tester);
+      final sheet = find.byKey(const Key('act0_glossary_sheet'));
+      expect(sheet, findsOneWidget);
 
       String slug(String s) =>
           s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]+'), '_');
-      final sheet = find.byKey(const Key('act0_glossary_sheet'));
+      final scrollable = find
+          .descendant(of: sheet, matching: find.byType(Scrollable))
+          .first;
+      final inTask = find.byKey(const Key('act0_glossary_in_task'));
+      await tester.scrollUntilVisible(inTask, 200, scrollable: scrollable);
+      expect(inTask.hitTestable(), findsOneWidget);
       for (final t in act0GlossaryTermsInV1(
         act0GlossaryTaskTextV1(task.runner),
       )) {
         final entry = find.byKey(Key('act0_glossary_term_${slug(t.name)}'));
-        await tester.scrollUntilVisible(
-          entry,
-          200,
-          scrollable: find
-              .descendant(of: sheet, matching: find.byType(Scrollable))
-              .first,
-        );
+        await tester.scrollUntilVisible(entry, 200, scrollable: scrollable);
         expect(
           find.descendant(of: entry, matching: find.text(t.definition)),
           findsOneWidget,
@@ -209,29 +209,28 @@ void main() {
         );
       }
       final firstRank = find.byKey(const Key('act0_glossary_rank_royal_flush'));
-      await tester.scrollUntilVisible(
-        firstRank,
-        200,
-        scrollable: find
-            .descendant(of: sheet, matching: find.byType(Scrollable))
-            .first,
-      );
+      await tester.scrollUntilVisible(firstRank, 200, scrollable: scrollable);
       expect(firstRank, findsOneWidget);
 
+      tester.state<ScrollableState>(scrollable).position.jumpTo(0);
+      await tester.pump();
+      await _checkNumericTools(tester, sheet);
+
       await tester.tap(find.byKey(const Key('act0_glossary_close')));
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       expect(find.byKey(const Key('act0_glossary_sheet')), findsNothing);
 
       await mount(
         Act0LessonPhaseV1.review,
         selectedOptionId: task.runner.options.firstWhere((o) => o.isCorrect).id,
       );
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       await tester.tap(glossary);
-      await tester.pumpAndSettle();
+      await _pumpTransition(tester);
       expect(sheet, findsOneWidget);
       expect(chosen, isEmpty);
       expect(assistance, 0);
+      await tester.pumpWidget(const SizedBox.shrink());
     },
   );
 }
