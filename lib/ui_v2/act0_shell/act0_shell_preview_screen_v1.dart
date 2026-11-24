@@ -4198,8 +4198,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : null,
                                 preserveSourceOwnedQuestion:
                                     _placementDiagnosticActive ||
-                                    multiStreet != null ||
-                                    useNumberEntry,
+                                    multiStreet != null,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
                                 selectedLessonId: selectedLesson.lessonId,

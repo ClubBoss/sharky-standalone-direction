@@ -3351,7 +3351,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             fallback: shouldShowRunnerHint ? runner.hint : '',
             languageCode: act0AcademyLanguageV1(context),
           );
-    final question = widget.preserveSourceOwnedQuestion
+    final isNumberEntry = widget.numberEntry != null;
+    final question = isNumberEntry
+        ? widget.numberEntry!.spec.question
+        : widget.preserveSourceOwnedQuestion
         ? runner.question
         : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
         ? act0AcademyW1InstructionV1(
@@ -3954,7 +3957,9 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
+      // Keep the submitted number and its explanation in the result dock.
       sceneOwnsFeedbackExplanation:
+          !isNumberEntry &&
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation,
       coachVoiceSeed:
@@ -4670,7 +4675,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final dockIntegratedFeedbackGuide =
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation &&
-          (isReview || (dockSourceSeatGuide && registeredScene));
+          ((isReview && !isNumberEntry) ||
+              (dockSourceSeatGuide && registeredScene));
 
       Widget buildIntegratedLowerSurface() {
         final actionDock = buildRunnerActionDock(
@@ -4793,7 +4799,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               usesSharedActiveRunnerAllocation &&
               !dockIntegratedFeedbackGuide &&
-              (isTheory || isDrill || isReview)) ...[
+              (isTheory || isDrill || (isReview && !isNumberEntry))) ...[
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             // Seat decisions use a passive guide here. Let taps in its
             // overlapping painted area reach the physical seats underneath.

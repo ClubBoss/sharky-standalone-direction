@@ -122,6 +122,7 @@ class _NumberEntrySheetV1State extends State<_NumberEntrySheetV1> {
               ],
             ),
           Semantics(
+            container: true,
             liveRegion: true,
             label: 'Answer in ${_form.spokenLabel}',
             value: _input.isEmpty ? 'Empty' : _input,

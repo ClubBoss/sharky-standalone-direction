@@ -1112,6 +1112,9 @@ class Act0TableStateV1 {
   bool get usesCanonicalPlayerCount =>
       playerCount == act0ExpectedPlayerCountForFormatV1(tableFormat);
 
+  /// The observed player can be different from Hero.
+  String get decisionActorSeatId => decisionSeatId ?? heroSeat.seatId;
+
   Act0SeatStateV1 get heroSeat => seats.firstWhere((seat) => seat.isHero);
 
   Act0TableStateV1 copyWith({

@@ -14,11 +14,13 @@ class Act0NumberEntryRunnerV1 {
   ) {
     final spec = act0W4NumberEntriesV1[taskId];
     final source = table.handContributions;
-    final actor = table.decisionSeatId ?? table.heroSeatId;
-    if (spec == null || source == null || actor == null) return null;
+    if (spec == null || source == null) return null;
     final amounts = source.amounts(
-      actorSeatId: actor,
-      seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+      actorSeatId: table.decisionActorSeatId,
+      seatIds: {
+        for (final seat in table.seats)
+          if (seat.isOccupied) seat.seatId,
+      },
     );
     final price = amounts.toCallBb;
     if (price == null || price <= 0 || amounts.potBb <= 0) return null;

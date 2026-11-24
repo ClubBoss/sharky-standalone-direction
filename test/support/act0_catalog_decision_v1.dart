@@ -130,7 +130,7 @@ class CatalogDecisionLedgerV1 {
       ledger
           ?.amounts(
             seatIds: occupiedSeatIds,
-            actorSeatId: table.heroSeat.seatId,
+            actorSeatId: table.decisionActorSeatId,
           )
           .toCallBb ??
       potTruthBbV1(table.toCallLabel.replaceFirst('To call ', ''));
@@ -140,7 +140,7 @@ class CatalogDecisionLedgerV1 {
             (entry) =>
                 entry.street == ledger!.throughStreet &&
                 entry.kind == Act0ContributionKindV1.wager &&
-                entry.seatId != table.heroSeat.seatId,
+                entry.seatId != table.decisionActorSeatId,
           ) ==
           true;
 
