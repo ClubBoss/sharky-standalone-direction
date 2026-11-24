@@ -3998,7 +3998,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Pick a flop size",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "BB calls 2 BB and 3 BB with weak kings and sevens. Past hands show that BB calls 15 BB with strong hands.",
+      "BB always calls 2 BB and 3 BB with weak kings and sevens, but folds them to 15 BB. BB calls 15 BB only with strong hands.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which size collects most from the stated weaker callers?",
@@ -4038,7 +4038,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "Bet 3 BB to collect from the stated weaker kings and sevens. Strong hands have called 15 BB, and the read leaves weaker hands’ response to that size open.",
+          "Bet 3 BB to collect from weaker kings and sevens. They fold to 15 BB, so that size collects nothing from them.",
     ),
   ],
   sizingConfig: const Act0SizingConfigV1(
@@ -7500,7 +7500,7 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
     xp: 10,
     family: Act0TaskFamilyV1.transfer,
     caption:
-        'Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Both tend to fold these hands to a raise to 14, but pay a small turn bet after a flop call.',
+        'Four players see 9-6-2. You have a set of nines. UTG bets AA, KK and AK. HJ has 6x or 77-88. Each folds to 14 BB 90% of the time and otherwise calls. Both pay 4 BB on a blank turn after a flop call. BB has 6x or 77-88, calls 4 BB without raising, and folds to 14 BB.',
     question: 'Call or raise?',
     teach: '',
     choices: const [
@@ -7508,13 +7508,13 @@ final _w11RealPlayTransferCheckpointTasksV1 = <Act0LessonTaskV1>[
         'raise_to_14_bb',
         'Raise to 14 BB',
         Act0FeedbackQualityV1.suboptimal,
-        'A raise can win value from AA, but the read says weak hands fold. It may lose later calls from AK and HJ small pairs.',
+        'A raise can win value from AA, but UTG and HJ usually fold to it. BB always folds, so raising loses calls that a smaller line keeps.',
       ),
       (
         'call_4_bb',
         'Call 4 BB',
         Act0FeedbackQualityV1.correct,
-        'Call 4 BB with your set because UTG and HJ can pay a small turn bet after you call. Raising to 14 BB tends to lose those hands. BB still acts, and the read does not say how BB will respond.',
+        'Call 4 BB with your set. BB calls too without raising, and UTG and HJ can pay a small turn bet. Raising to 14 BB usually loses those hands and always loses BB.',
       ),
       (
         'fold',
@@ -9681,7 +9681,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'You lost two large pots and want to get even. New hand: UTG raises to 3 with QQ+/AK. You have QJo in CO and 28 BB; BTN and both blinds act after you, and UTG can still respond to a raise.',
+        'You lost two large pots and want to get even. New hand: UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. Assume BTN and both blinds fold to either a call or shove. UTG always calls a shove with this range. If you call, assume no more bets. No rake.',
     question: 'What should you do?',
     teach: '',
     choices: const [
@@ -9689,7 +9689,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'UTG raises with QQ or better and AK. Fold QJo because calling 3 BB puts QJ in a pot with stronger hands and three seats still to act.',
+        'Fold QJo against QQ+/AK. Even if the other seats fold and no more bets go in, QJo has less than the 40% equity needed to call 3 BB.',
       ),
       (
         'call_3_bb_to_win_chips_back',
@@ -9701,7 +9701,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_28_bb',
         'All-in to 28 BB',
         Act0FeedbackQualityV1.wrong,
-        'Going all-in with QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify going all-in.',
+        'Going all-in risks 28 BB. UTG always calls with QQ+/AK, so there is no chance to win the pot by folds. QJo has too little equity against this range.',
       ),
     ],
     table: _day7TableV1(
