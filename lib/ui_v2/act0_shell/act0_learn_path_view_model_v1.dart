@@ -97,16 +97,22 @@ class Act0LearnPathViewModelV1 {
   late final List<int> journeyLessonIndexes;
   late final int deferredLockedCount;
 
-  Act0WorldCardV1 get currentWorld => worlds.firstWhere(
+  List<Act0WorldCardV1> get numberedWorlds =>
+      worlds.where((world) => world.worldId != act0LiveRoomModuleIdV1).toList();
+
+  Act0WorldCardV1 get currentWorld => numberedWorlds.firstWhere(
     (world) => world.status == Act0WorldStateV1.current,
-    orElse: () => selectedWorld,
+    orElse: () => selectedWorld.worldId == act0LiveRoomModuleIdV1
+        ? numberedWorlds.last
+        : selectedWorld,
   );
-  Act0WorldCardV1? get nextWorld => _nextWorldAfterV1(worlds, currentWorld);
+  Act0WorldCardV1? get nextWorld =>
+      _nextWorldAfterV1(numberedWorlds, currentWorld);
 
   bool get worldDone => selectedWorld.status == Act0WorldStateV1.completed;
   bool get allDone =>
       worlds.isNotEmpty &&
-      worlds.every(
+      numberedWorlds.every(
         (world) =>
             world.status == Act0WorldStateV1.completed ||
             world.status == Act0WorldStateV1.passedByRulesCheck,

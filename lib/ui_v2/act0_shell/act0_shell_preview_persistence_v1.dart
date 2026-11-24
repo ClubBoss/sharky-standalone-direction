@@ -94,16 +94,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     }
     final state = widget.state ?? Act0ShellStateV1.sample;
     final validTaskIds = <String>{
-      for (final world in state.worlds)
+      for (final world in state.learningSections)
         for (final lesson in world.lessons)
           for (final task in lesson.taskList) task.taskId,
     };
     final validLessonIds = <String>{
-      for (final world in state.worlds)
+      for (final world in state.learningSections)
         for (final lesson in world.lessons) lesson.lessonId,
     };
     final validWorldIds = <String>{
-      for (final world in state.worlds) world.worldId,
+      for (final world in state.learningSections) world.worldId,
     };
     final completedTaskIds = parsed.completedTaskIds
         .where(validTaskIds.contains)
@@ -226,7 +226,9 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           ? parsed.selectedWorldId
           : state.selectedWorldId,
     );
-    final selectedWorld = persistedWorld.status == Act0WorldStateV1.current
+    final selectedWorld =
+        persistedWorld.worldId == act0LiveRoomModuleIdV1 ||
+            persistedWorld.status == Act0WorldStateV1.current
         ? persistedWorld
         : worldsAfterProgress.firstWhere(
             (world) =>
@@ -673,7 +675,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
               intent.targetTaskId == intent.sourceTaskId)) {
         continue;
       }
-      final world = state.worlds.cast<Act0WorldCardV1?>().firstWhere(
+      final world = state.learningSections.cast<Act0WorldCardV1?>().firstWhere(
         (candidate) => candidate?.worldId == intent.sourceWorldId,
         orElse: () => null,
       );
