@@ -294,9 +294,12 @@ class Act0AttemptArchiveV1 {
     importedHands,
   );
 
+  /// Compatibility entry point used by the existing import screen.
+  Act0AttemptArchiveV1 importPokerStars(String text) => importHandHistory(text);
+
   /// A source hand never enters the graded attempt or learning evidence lists.
-  Act0AttemptArchiveV1 importPokerStars(String text) {
-    final hand = Act0ImportedHandV1.parsePokerStars(text);
+  Act0AttemptArchiveV1 importHandHistory(String text) {
+    final hand = Act0ImportedHandV1.parseHandHistory(text);
     for (final saved in importedHands) {
       if (saved.sourceKey != hand.sourceKey) continue;
       if (saved.hasSameRecord(hand)) return this;

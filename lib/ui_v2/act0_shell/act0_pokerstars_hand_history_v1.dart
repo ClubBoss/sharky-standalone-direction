@@ -42,8 +42,8 @@ final _summaryMuck = RegExp(r'^mucked(?: \[([^\]]+)\]| hand)?$');
 
 typedef _SourceLine = ({int number, String text});
 
-class _PokerStarsParser {
-  _PokerStarsParser(String text) {
+class _SinglePotCashParser {
+  _SinglePotCashParser(String text) {
     if (text.length > 120000) {
       throw const Act0HandImportExceptionV1(
         Act0HandImportErrorV1.malformedHand,
@@ -69,6 +69,7 @@ class _PokerStarsParser {
   List<String> _board = const [];
   late final Act0HandBettingLedgerV1 _ledger;
   bool _showdown = false;
+  bool _sawShowdownMarker = false;
   bool _declinedShow = false;
 
   String get _line => _index < _lines.length ? _lines[_index].text : '';
@@ -106,12 +107,25 @@ class _PokerStarsParser {
     _actions.add(action);
   }
 
-  Act0ImportedHandV1 parse() {
-    final header =
-        _header.firstMatch(_line) ??
-        _fail(Act0HandImportErrorV1.unsupportedFormat);
-    final timestamp = _eastern.firstMatch(header[4]!)?[1] ?? header[4]!;
+  String get room => 'pokerstars';
+  String get showdownMarker => '*** SHOW DOWN ***';
+  bool get allowsFoldOutMarker => false;
+  RegExp get totalPattern => _total;
+  RegExp get summaryCollection => _summaryCollection;
+
+  RegExpMatch readHeader() =>
+      _header.firstMatch(_line) ??
+      _fail(Act0HandImportErrorV1.unsupportedFormat);
+
+  String readTimestamp(String value) {
+    final timestamp = _eastern.firstMatch(value)?[1] ?? value;
     if (!_validEt(timestamp)) _fail();
+    return timestamp;
+  }
+
+  Act0ImportedHandV1 parse() {
+    final header = readHeader();
+    final timestamp = readTimestamp(header[4]!);
     _index++;
     final table = _table.firstMatch(_line) ?? _fail();
     final tableSize = int.parse(table[1]!);
@@ -174,7 +188,7 @@ class _PokerStarsParser {
       _index++;
     }
     _index++;
-    final summary = _total.firstMatch(_line) ?? _fail();
+    final summary = totalPattern.firstMatch(_line) ?? _fail();
     final pot = _cents(summary[1]!);
     final rake = _cents(summary[2]!);
     _index++;
@@ -204,8 +218,9 @@ class _PokerStarsParser {
 
     final hand = Act0ImportedHandV1._(
       sourceKey: sha256
-          .convert(utf8.encode('pokerstars-hand:${header[1]}'))
+          .convert(utf8.encode('$room-hand:${header[1]}'))
           .toString(),
+      room: room,
       timeEt: timestamp,
       tableSize: tableSize,
       buttonSeat: buttonSeat,
@@ -259,14 +274,20 @@ class _PokerStarsParser {
           _fail();
         }
       } else {
+        if (_sawShowdownMarker) _fail();
         _decision(seat, action);
       }
       return;
     }
-    if (_paid.isNotEmpty || _showdown) _fail();
-    if (_line == '*** SHOW DOWN ***') {
-      if (_ledger.street != PokerStreet.river || !_ledger.complete) _fail();
-      _showdown = true;
+    if (_paid.isNotEmpty || _sawShowdownMarker) _fail();
+    if (_line == showdownMarker) {
+      final foldOut = allowsFoldOutMarker && _ledger.liveSeats.length == 1;
+      if (!_ledger.complete ||
+          (!foldOut && _ledger.street != PokerStreet.river)) {
+        _fail();
+      }
+      _sawShowdownMarker = true;
+      _showdown = !foldOut;
       return;
     }
     if (_streetLine.firstMatch(_line) case final next?) {
@@ -353,7 +374,7 @@ class _PokerStarsParser {
       return;
     }
     if (!_showdown) {
-      final collected = _summaryCollection.firstMatch(description) ?? _fail();
+      final collected = summaryCollection.firstMatch(description) ?? _fail();
       if (_paid[seat] != _cents(collected[1]!)) _fail();
       return;
     }

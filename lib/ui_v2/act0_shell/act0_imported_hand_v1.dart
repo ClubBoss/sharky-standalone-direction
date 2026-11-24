@@ -10,6 +10,7 @@ import 'act0_hand_betting_ledger_v1.dart' show Act0HandBettingLedgerV1;
 import 'act0_hand_contributions_v1.dart';
 import 'act0_hand_timeline_v1.dart';
 
+part 'act0_ggpoker_hand_history_v1.dart';
 part 'act0_pokerstars_hand_history_v1.dart';
 part 'act0_imported_hand_ledger_v1.dart';
 
@@ -27,14 +28,16 @@ const act0OwnHandSidePotMessageV1 =
     'Side pots are unsupported. A short all-in call must leave one pot.';
 
 class Act0HandImportExceptionV1 implements Exception {
-  const Act0HandImportExceptionV1(this.code, {this.line});
+  const Act0HandImportExceptionV1(this.code, {this.line, this.reason});
 
   final Act0HandImportErrorV1 code;
   final int? line;
+  final String? reason;
 
   @override
   String toString() =>
-      'Hand history import: ${code.name}${line == null ? '' : ' at line $line'}';
+      'Hand history import: ${code.name}${line == null ? '' : ' at line $line'}'
+      '${reason == null ? '' : ' ($reason)'}';
 }
 
 enum Act0ImportedActionKindV1 {
@@ -60,11 +63,12 @@ typedef Act0ImportedActionV1 = ({
 });
 
 /// A private, ungraded source hand. Seats are numeric aliases, and all money
-/// is in integer USD cents. The source's Eastern time is preserved verbatim.
+/// is in integer USD cents. Timestamps retain the room's source notation.
 class Act0ImportedHandV1 {
   Act0ImportedHandV1._({
     required this.sourceKey,
     this.isManual = false,
+    required this.room,
     required this.timeEt,
     required this.tableSize,
     required this.buttonSeat,
@@ -91,8 +95,10 @@ class Act0ImportedHandV1 {
        payouts = Map.unmodifiable(payouts);
 
   static const format = 'pokerstars-usd-nlhe-v1';
+  static const ggPokerFormat = 'ggpoker-usd-nlhe-v1';
   static const manualFormat = 'manual-usd-nlhe-v1';
   final bool isManual;
+  final String? room;
   final String sourceKey;
 
   static Act0ImportedHandV1 manual({
@@ -121,6 +127,7 @@ class Act0ImportedHandV1 {
               .convert(List.generate(32, (_) => random.nextInt(256)))
               .toString(),
       isManual: true,
+      room: null,
       timeEt: '',
       tableSize: tableSize,
       buttonSeat: buttonSeat,
@@ -236,6 +243,8 @@ class Act0ImportedHandV1 {
     return null;
   }
 
+  /// Legacy timestamp field. PokerStars values carry ET. GGPoker values
+  /// preserve the export's unqualified clock time.
   final String timeEt;
   final int tableSize, buttonSeat, heroSeat, smallBlindCents, bigBlindCents;
   final List<Act0ImportedSeatV1> seats;
@@ -250,10 +259,23 @@ class Act0ImportedHandV1 {
   /// supports the single-pot two-blind format for 2–9 seats, including
   /// fold-outs and showdowns. Unsupported source variants fail without returning a hand.
   static Act0ImportedHandV1 parsePokerStars(String text) =>
-      _PokerStarsParser(text).parse();
+      _SinglePotCashParser(text).parse();
+
+  static Act0ImportedHandV1 parseHandHistory(String text) {
+    final source = text.startsWith('\uFEFF') ? text.substring(1) : text;
+    final header = LineSplitter.split(source.trimLeft()).firstOrNull;
+    if (header != null && _ggHeaderPrefix.hasMatch(header)) {
+      return _GGPokerParser(text).parse();
+    }
+    return parsePokerStars(text);
+  }
 
   Map<String, Object?> toPayload() => {
-    'format': isManual ? manualFormat : format,
+    'format': switch (room) {
+      null => manualFormat,
+      'ggpoker' => ggPokerFormat,
+      _ => format,
+    },
     'sourceKey': sourceKey,
     'timeEt': timeEt,
     'tableSize': tableSize,
@@ -311,9 +333,19 @@ class Act0ImportedHandV1 {
       'rakeCents': final int rake,
     }) {
       final isManual = sourceFormat == manualFormat;
-      if ((sourceFormat != format && !isManual) ||
+      final room = switch (sourceFormat) {
+        format => 'pokerstars',
+        ggPokerFormat => 'ggpoker',
+        _ => null,
+      };
+      final validTime = switch (room) {
+        'pokerstars' => _validEt(timeEt),
+        'ggpoker' => _validSourceTime(timeEt),
+        _ => timeEt.isEmpty,
+      };
+      if ((room == null && !isManual) ||
           !_sourceKey.hasMatch(sourceKey) ||
-          (isManual ? timeEt.isNotEmpty : !_validEt(timeEt)) ||
+          !validTime ||
           rawSeats.length > 9 ||
           rawBoard.length > 5 ||
           rawActions.length > _maxHandActions ||
@@ -374,6 +406,7 @@ class Act0ImportedHandV1 {
       final hand = Act0ImportedHandV1._(
         sourceKey: sourceKey,
         isManual: isManual,
+        room: room,
         timeEt: timeEt,
         tableSize: tableSize,
         buttonSeat: buttonSeat,
@@ -408,7 +441,7 @@ class Act0ImportedHandV1 {
 const _maxHandActions = 150;
 final _sourceKey = RegExp(r'^[a-f0-9]{64}$');
 final _card = RegExp(r'^[2-9TJQKA][cdhs]$');
-final _timestamp = RegExp(r'^(\d{4})/(\d\d)/(\d\d) (\d\d):(\d\d):(\d\d) ET$');
+final _timestamp = RegExp(r'^(\d{4})/(\d\d)/(\d\d) (\d\d):(\d\d):(\d\d)$');
 
 List<String>? _readCards(List<Object?> tokens, int count) {
   if (tokens.length != count ||
@@ -418,7 +451,11 @@ List<String>? _readCards(List<Object?> tokens, int count) {
   return tokens.cast<String>();
 }
 
-bool _validEt(String value) {
+bool _validEt(String value) =>
+    value.endsWith(' ET') &&
+    _validSourceTime(value.substring(0, value.length - 3));
+
+bool _validSourceTime(String value) {
   final match = _timestamp.firstMatch(value);
   if (match == null) return false;
   final [year, month, day, hour, minute, second] = [
