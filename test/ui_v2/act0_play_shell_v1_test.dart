@@ -8,6 +8,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_repair_queue_proje
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_widget_test_theme_v1.dart';
+
 void main() {
   Future<void> pumpPractice(
     WidgetTester tester, {
@@ -22,6 +24,7 @@ void main() {
   }) async {
     await tester.pumpWidget(
       MaterialApp(
+        theme: act0WidgetTestThemeV1,
         home: MediaQuery(
           data: MediaQueryData(textScaler: TextScaler.linear(textScale)),
           child: Scaffold(
@@ -215,6 +218,7 @@ void main() {
     final started = <String>[];
     await tester.pumpWidget(
       MaterialApp(
+        theme: act0WidgetTestThemeV1,
         home: Scaffold(
           body: Act0PlayShellV1(
             groups: const <Act0PracticeGroupV1>[
@@ -736,6 +740,7 @@ void main() {
       final started = <String>[];
       await tester.pumpWidget(
         MaterialApp(
+          theme: act0WidgetTestThemeV1,
           home: Scaffold(
             body: Act0PlayShellV1(
               groups: const <Act0PracticeGroupV1>[

@@ -29,6 +29,8 @@ import '../support/act0_source_choreography_test_wait_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 
+import '../support/act0_widget_test_theme_v1.dart';
+
 // Long session through the real app shell on iPhone 14 Pro: a fresh learner
 // goes through Worlds 1–7 by default, or 1–12 with
 // --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true. The app is
@@ -45,18 +47,14 @@ const _continueKeys = [
   'act0_academy_home_leaf_cta',
 ];
 
-// Material 3 defaults to InkSparkle, whose shader asset is not bundled for
-// `flutter test`; its load error fails the test and the long session hangs.
-// Production keeps the platform default; the harness uses InkRipple.
-final ThemeData longSessionTestThemeV1 = ThemeData(
-  splashFactory: InkRipple.splashFactory,
-);
+const _maxRouteAttempts = 40;
 
 Future<void> _settle(
   WidgetTester t,
   String action, {
   Duration interval = const Duration(milliseconds: 100),
 }) async {
+  expect(t.takeException(), isNull, reason: 'Before settling after $action');
   try {
     await t.pumpAndSettle(
       interval,
@@ -65,11 +63,30 @@ Future<void> _settle(
     );
   } on FlutterError catch (error) {
     if (error.message != 'pumpAndSettle timed out') rethrow;
+    final shell = t
+        .widgetList<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        )
+        .firstOrNull;
     fail(
-      'Frames did not settle after $action. '
+      'Frames did not settle after $action. ${_routeLocation(t, shell)}. '
       'Recent route taps: ${_tapLog.reversed.take(12).toList()}',
     );
   }
+  expect(t.takeException(), isNull, reason: 'After $action');
+}
+
+String _routeLocation(WidgetTester t, Act0LessonRunnerShellV1? shell) {
+  final runner = shell?.runner;
+  final visibleTexts = t
+      .widgetList<Text>(find.byType(Text))
+      .map((text) => text.data ?? text.textSpan?.toPlainText())
+      .whereType<String>()
+      .take(25)
+      .join(' | ');
+  return 'Task ${shell?.selectedTaskId ?? '<no active task>'}, '
+      'phase ${runner?.phase}, teaching step ${runner?.teachingStepIndex}; '
+      'visible texts: $visibleTexts';
 }
 
 Future<void> _mount(
@@ -80,7 +97,7 @@ Future<void> _mount(
 }) async {
   await t.pumpWidget(
     MaterialApp(
-      theme: longSessionTestThemeV1,
+      theme: act0WidgetTestThemeV1,
       locale: const Locale('en'),
       builder: textScale == null
           ? null
@@ -278,8 +295,7 @@ Future<void> _finishTeaching(
   WidgetTester t,
   Act0LessonRunnerShellV1 Function() shell,
 ) async {
-  const limit = 40;
-  for (var tap = 0; tap < limit; tap++) {
+  for (var tap = 0; tap < _maxRouteAttempts; tap++) {
     final current = shell();
     final teaching = current.runner.activeTeachingStep;
     if (teaching == null) return;
@@ -294,12 +310,12 @@ Future<void> _finishTeaching(
     );
   }
   final current = shell();
-  expect(
-    current.runner.activeTeachingStep,
-    isNull,
-    reason:
-        '${current.selectedTaskId}: teaching did not finish after $limit taps',
-  );
+  if (current.runner.activeTeachingStep != null) {
+    fail(
+      'Teaching did not finish after $_maxRouteAttempts taps. '
+      '${_routeLocation(t, current)}',
+    );
+  }
 }
 
 const _preSplitIntroTasks = <String>{
@@ -317,6 +333,43 @@ void main() {
 }
 
 void _registerFocusedCases() {
+  testWidgets('harness Material buttons can paint pressed ink', (t) async {
+    var presses = 0;
+    await t.pumpWidget(
+      MaterialApp(
+        theme: act0WidgetTestThemeV1,
+        home: Scaffold(
+          body: Column(
+            children: [
+              FilledButton(
+                onPressed: () => presses++,
+                child: const Text('Filled'),
+              ),
+              ElevatedButton(
+                onPressed: () => presses++,
+                child: const Text('Elevated'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+    expect(t.takeException(), isNull);
+    expect(
+      t
+          .widgetList<InkWell>(find.byType(InkWell))
+          .map((ink) => ink.splashFactory),
+      [InkRipple.splashFactory, InkRipple.splashFactory],
+    );
+    for (final label in ['Filled', 'Elevated']) {
+      final gesture = await t.startGesture(t.getCenter(find.text(label)));
+      await t.pump(const Duration(milliseconds: 150));
+      await gesture.up();
+      await _settle(t, 'pressing $label');
+    }
+    expect(presses, 2);
+  });
+
   test(
     'H5 is absent from the standard route and validates every pilot point',
     () {
@@ -553,15 +606,14 @@ void _registerFocusedCases() {
     expect(find.textContaining('You entered 90%'), findsWidgets);
     await tapKey('act0_shell_feedback_continue_cta');
     final visited = <String>{};
-    var reachedSummary = false;
-    for (var step = 0; step < 36; step++) {
-      if (find
-          .byKey(const Key('act0_shell_block_summary_continue_cta'))
-          .evaluate()
-          .isNotEmpty) {
-        reachedSummary = true;
-        break;
-      }
+    final summary = find.byKey(
+      const Key('act0_shell_block_summary_continue_cta'),
+    );
+    for (
+      var step = 0;
+      step < _maxRouteAttempts && summary.evaluate().isEmpty;
+      step++
+    ) {
       final runner = t.widget<Act0LessonRunnerShellV1>(shell);
       if (runner.runner.phase == Act0LessonPhaseV1.review) {
         await tapKey('act0_shell_feedback_continue_cta');
@@ -596,7 +648,13 @@ void _registerFocusedCases() {
         );
       }
     }
-    expect(reachedSummary, isTrue);
+    if (summary.evaluate().isEmpty) {
+      fail(
+        'Number-entry lesson did not reach its summary after '
+        '$_maxRouteAttempts steps. '
+        '${_routeLocation(t, t.widgetList<Act0LessonRunnerShellV1>(shell).firstOrNull)}',
+      );
+    }
     expect(
       visited,
       containsAll([
@@ -774,7 +832,7 @@ void _registerFocusedCases() {
     await t.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 50));
     });
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       await _tapFirst(
         t,
@@ -838,7 +896,7 @@ void _registerFocusedCases() {
     await t.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 50));
     });
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       await _tapFirst(
         t,
@@ -901,7 +959,7 @@ void _registerFocusedCases() {
     await t.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 50));
     });
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       await _tapFirst(
         t,
@@ -1006,7 +1064,7 @@ void _registerFocusedCases() {
     await tester.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 50));
     });
-    await tester.pumpAndSettle();
+    await _settle(tester, 'screen transition');
     expect(
       await _tapFirst(
         tester,
@@ -1058,7 +1116,7 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
       MaterialApp(
-        theme: longSessionTestThemeV1,
+        theme: act0WidgetTestThemeV1,
         locale: const Locale('en'),
         home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
@@ -1073,7 +1131,7 @@ void _registerFocusedCases() {
         ),
       ),
     );
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
     );
@@ -1103,7 +1161,7 @@ void _registerFocusedCases() {
     final answer = find.byKey(Key('act0_shell_option_${correct.id}'));
     expect(answer.hitTestable(), findsOneWidget);
     await t.tap(answer);
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
       findsOneWidget,
@@ -1119,7 +1177,7 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
       MaterialApp(
-        theme: longSessionTestThemeV1,
+        theme: act0WidgetTestThemeV1,
         locale: const Locale('en'),
         home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
@@ -1134,7 +1192,7 @@ void _registerFocusedCases() {
         ),
       ),
     );
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     final runner = t.widget<Act0LessonRunnerShellV1>(
       find.byType(Act0LessonRunnerShellV1),
     );
@@ -1164,7 +1222,7 @@ void _registerFocusedCases() {
     final answer = find.byKey(Key('act0_shell_option_${correct.id}'));
     expect(answer.hitTestable(), findsOneWidget);
     await t.tap(answer);
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       find.byKey(const Key('act0_shell_feedback_continue_cta')),
       findsOneWidget,
@@ -1363,7 +1421,7 @@ void _registerFocusedCases() {
       await openArchive(t);
       expect(find.text('No saved attempts yet.'), findsOneWidget);
       expect(await t.binding.handlePopRoute(), isTrue);
-      await t.pumpAndSettle();
+      await _settle(t, 'screen transition');
       expect(
         find.byKey(const Key('act0_review_open_attempts')),
         findsOneWidget,
@@ -1609,15 +1667,15 @@ void _registerFocusedCases() {
       await openArchive(t);
       final search = find.byKey(const Key('act0_attempt_archive_search'));
       await t.enterText(search, 'no matching attempt');
-      await t.pumpAndSettle();
+      await _settle(t, 'screen transition');
       expect(find.text('No matching attempts.'), findsOneWidget);
       expect(find.byKey(key), findsNothing);
       await t.enterText(search, '  VISIBLE_KING  ');
-      await t.pumpAndSettle();
+      await _settle(t, 'screen transition');
       expect(find.byKey(key), findsOneWidget);
       await t.enterText(search, '');
       await t.testTextInput.receiveAction(TextInputAction.done);
-      await t.pumpAndSettle();
+      await _settle(t, 'screen transition');
       expect(await _tapFirst(t, [find.byKey(key)]), isTrue);
       expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
       expect(find.text('Help: none'), findsOneWidget);
@@ -1643,7 +1701,7 @@ void _registerFocusedCases() {
         findsOneWidget,
       );
       expect(await t.binding.handlePopRoute(), isTrue);
-      await t.pumpAndSettle();
+      await _settle(t, 'screen transition');
       expect(find.text('Your choice: ${entry['choiceLabel']}'), findsOneWidget);
       final selected = await _saved(t);
       expect(
@@ -1896,7 +1954,7 @@ void _registerFocusedCases() {
     await t.runAsync(() async {
       await Future<void>.delayed(const Duration(milliseconds: 50));
     });
-    await t.pumpAndSettle();
+    await _settle(t, 'screen transition');
     expect(
       await _tapFirst(
         t,
@@ -2084,11 +2142,32 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           await _onboard(t, useRulesCheck: useRulesCheck);
         }
 
-        for (
-          var step = 0;
-          step < (fullRoute ? 5200 : 3600) && !complete;
-          step++
-        ) {
+        final attemptsByTask = <String, int>{};
+        var navigationAttempts = 0;
+        final runnerFinder = find.byType(Act0LessonRunnerShellV1);
+        final routeStepLimit = fullRoute ? 5200 : 3600;
+        var step = 0;
+        for (; step < routeStepLimit && !complete; step++) {
+          expect(t.takeException(), isNull, reason: 'At route step $step');
+          final activeShell = t
+              .widgetList<Act0LessonRunnerShellV1>(runnerFinder)
+              .firstOrNull;
+          final activeTask = activeShell?.selectedTaskId;
+          final attempts = activeTask == null
+              ? ++navigationAttempts
+              : attemptsByTask.update(
+                  activeTask,
+                  (count) => count + 1,
+                  ifAbsent: () => 1,
+                );
+          if (activeTask != null) navigationAttempts = 0;
+          if (attempts > _maxRouteAttempts) {
+            fail(
+              'Route exceeded $_maxRouteAttempts attempts at step $step. '
+              '${_routeLocation(t, activeShell)}. '
+              'Recent taps: ${_tapLog.reversed.take(12).toList()}',
+            );
+          }
           Map<String, dynamic>? routeSnapshot;
           if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
             final runner = t
@@ -2109,9 +2188,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             }
             continue;
           }
-          final runnerFinder = find.byType(Act0LessonRunnerShellV1);
-          if (runnerFinder.evaluate().isNotEmpty) {
-            final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
+          if (activeShell case final shell?) {
             final runner = shell.runner;
             final taskId = shell.selectedTaskId ?? '';
             final atNextWorld = taskId == nextWorldTaskId;
@@ -2339,19 +2416,17 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             }
             moved = await _tapFirst(t, [mission]);
           }
-          final visible = moved
-              ? ''
-              : t
-                    .widgetList<Text>(find.byType(Text))
-                    .map((widget) => widget.data)
-                    .whereType<String>()
-                    .take(18)
-                    .join(' | ');
-          expect(
-            moved,
-            isTrue,
-            reason:
-                'Step $step stalled; recent taps: ${_tapLog.reversed.take(12).toList()}; visible: $visible',
+          if (!moved) {
+            fail(
+              'Route stalled at step $step. ${_routeLocation(t, activeShell)}. '
+              'Recent taps: ${_tapLog.reversed.take(12).toList()}',
+            );
+          }
+        }
+        if (!complete && step == routeStepLimit) {
+          fail(
+            'Route reached its $routeStepLimit-step limit. '
+            '${_routeLocation(t, t.widgetList<Act0LessonRunnerShellV1>(runnerFinder).firstOrNull)}',
           );
         }
         final snapshot = await _saved(t);

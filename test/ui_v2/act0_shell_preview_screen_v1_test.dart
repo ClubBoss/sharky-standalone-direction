@@ -14,6 +14,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
+import '../support/act0_widget_test_theme_v1.dart';
+
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues(<String, Object>{});
@@ -48,6 +50,7 @@ void main() {
     Locale locale = const Locale('en'),
   }) {
     return MaterialApp(
+      theme: act0WidgetTestThemeV1,
       locale: locale,
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -124,6 +127,7 @@ void main() {
 
   Widget wave2SurfaceHost(Act0ControlledDemoCaptureSurfaceV1 surface) {
     return MaterialApp(
+      theme: act0WidgetTestThemeV1,
       supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         GlobalMaterialLocalizations.delegate,
@@ -385,6 +389,7 @@ void main() {
     await pumpCompact(
       tester,
       MaterialApp(
+        theme: act0WidgetTestThemeV1,
         home: Scaffold(
           body: Act0HomeShellV1(
             state: Act0ShellStateV1.sample,
@@ -735,6 +740,7 @@ void main() {
       await pumpCompact(
         tester,
         MaterialApp(
+          theme: act0WidgetTestThemeV1,
           supportedLocales: const <Locale>[Locale('en'), Locale('ru')],
           localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
             GlobalMaterialLocalizations.delegate,
