@@ -43,6 +43,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.forceCompactPhoneFeedback = false,
     this.ensureFullCtaGeometry = false,
     this.sceneOwnsFeedbackExplanation = false,
+    this.alwaysShowAnswerReason = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -87,6 +88,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool forceCompactPhoneFeedback;
   final bool ensureFullCtaGeometry;
   final bool sceneOwnsFeedbackExplanation;
+  final bool alwaysShowAnswerReason;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
@@ -450,7 +452,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       );
     }
 
-    final showReason = !rapidMode && !hasRepairTeachingBlock;
+    final showReason =
+        alwaysShowAnswerReason || (!rapidMode && !hasRepairTeachingBlock);
     final foldsNextClueIntoExplanation =
         pinsF1FeedbackCta &&
         showReason &&

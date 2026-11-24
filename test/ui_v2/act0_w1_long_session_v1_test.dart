@@ -470,7 +470,7 @@ void _registerFocusedCases() {
     );
     final shell = find.byType(Act0LessonRunnerShellV1);
     Future<void> tapKey(String key) async {
-      expect(await _tapFirst(t, [find.byKey(Key(key))]), isTrue);
+      expect(await _tapFirst(t, [find.byKey(Key(key))]), isTrue, reason: key);
     }
 
     Future<void> enter(String value) async {
@@ -490,6 +490,7 @@ void _registerFocusedCases() {
         .cast<Map>()
         .lastWhere((row) => row['taskId'] == taskId);
     expect(miss['isCorrect'], isFalse);
+    expect(miss['choiceId'], 'number_entry:percent:90');
 
     await _mount(t, numberEntryV1: true, textScale: 1.3);
     final after = await _saved(t);
@@ -564,6 +565,7 @@ void _registerFocusedCases() {
       history.any(
         (row) =>
             row['taskId'] == 'w4_bad_price_fold' &&
+            row['isCorrect'] == true &&
             row['assistanceKind'] == 'quickHint',
       ),
       isTrue,

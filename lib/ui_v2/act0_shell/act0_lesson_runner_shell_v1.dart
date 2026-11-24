@@ -3957,7 +3957,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
-      // Keep the submitted number and its explanation in the result dock.
+      // Keep the submitted number visible alongside any repair guidance.
+      alwaysShowAnswerReason: isNumberEntry,
       sceneOwnsFeedbackExplanation:
           !isNumberEntry &&
           _usesCanonicalIntegratedLearningSceneV1 &&
