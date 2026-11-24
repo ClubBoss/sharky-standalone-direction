@@ -135,7 +135,13 @@ void main() {
           .input;
       expect(you.completedTaskCount, 0);
       expect(you.earnedMoments, isEmpty);
-      expect(you.onRecoveryOptions, isNull);
+      expect(
+        find.descendant(
+          of: find.byType(Act0AcademyYouLeafV1),
+          matching: find.text('Recovery options'),
+        ),
+        findsNothing,
+      );
       await _tab(tester, 'Home');
       expect(
         tester
@@ -183,9 +189,18 @@ void main() {
       expect(input.onRecoveryOptions, isNotNull);
       expect(input.onSoundChanged, isNull);
       final before = input.hapticsEnabled;
-      await tester.tap(
-        find.byKey(const Key('act0_academy_settings_leaf_haptics')),
+      final haptics = find.byKey(
+        const Key('act0_academy_settings_leaf_haptics'),
       );
+      await tester.scrollUntilVisible(
+        haptics,
+        100,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_academy_settings_leaf_scroll')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await tester.tap(haptics);
       await tester.pumpAndSettle();
       final prefs = await SharedPreferences.getInstance();
       expect(prefs.getBool('haptics_enabled'), !before);

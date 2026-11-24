@@ -12,8 +12,8 @@ abstract final class Act0PracticeReminderV1 {
   static bool get isSupported =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
-  // Serialize permission prompts, lifecycle refreshes and privacy deletion.
-  static Future<void> _pending = Future<void>.value();
+  // Serialize scheduler calls. Keep a queue tail only while work is in flight.
+  static Future<void>? _pending;
   static final enabled = ValueNotifier(false);
   static var _schedule = Act0PracticeReminderScheduleV1.none;
 
@@ -32,7 +32,8 @@ abstract final class Act0PracticeReminderV1 {
 
   static Future<bool> _request(String method, [bool? argument]) {
     if (!isSupported) return Future<bool>.value(false);
-    final next = _pending.then((_) async {
+    final pending = _pending;
+    Future<bool> invoke() async {
       final value =
           await _channel.invokeMethod<bool>(method, {
             'enabled': argument,
@@ -41,8 +42,19 @@ abstract final class Act0PracticeReminderV1 {
           false;
       enabled.value = value;
       return value;
-    });
-    _pending = next.then<void>((_) {}, onError: (Object _, StackTrace _) {});
+    }
+
+    final next = pending == null ? invoke() : pending.then((_) => invoke());
+    late final Future<void> tail;
+    void release() {
+      if (identical(_pending, tail)) _pending = null;
+    }
+
+    tail = next.then<void>(
+      (_) => release(),
+      onError: (Object _, StackTrace _) => release(),
+    );
+    _pending = tail;
     return next;
   }
 }

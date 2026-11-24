@@ -185,33 +185,7 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                           ),
                         ),
                     ]),
-                  if (input.skills.isNotEmpty)
-                    _progressDetails(
-                      'Skills · W1–W$act0SkillMapLastWorldV1',
-                      [
-                        if (input.checkedW1Topics.isNotEmpty)
-                          Text(
-                            'Topics checked in the W1 rules check: ${input.checkedW1Topics.join(' · ')}',
-                            style: Act0SkinTokensV1.secondary,
-                          ),
-                        for (final skill in input.skills)
-                          ListTile(
-                            key: Key('act0_w14_skill_${skill.label}'),
-                            title: Text(
-                              skill.label,
-                              style: Act0SkinTokensV1.body,
-                            ),
-                            subtitle: Text(
-                              '${skill.stateLabel} · ${skill.explanation}',
-                              style: Act0SkinTokensV1.secondary,
-                            ),
-                          ),
-                      ],
-                      key: const Key('act0_w14_skills'),
-                      subtitle: input.checkedW1Topics.isNotEmpty
-                          ? 'W1 skipped by rules check'
-                          : 'Saved answers, not a mastery score.',
-                    ),
+                  if (input.skills.isNotEmpty) _skillsDetails(),
                   Act0SkinStatTileV1(
                     label: 'Recent saved decisions',
                     compact: true,
@@ -233,6 +207,8 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
                 ],
               ),
             ),
+          if (fresh && input.skills.isNotEmpty)
+            Act0SkinCardV1(child: _skillsDetails()),
           if (activity.isNotEmpty) ...[
             const SizedBox(height: Act0SkinTokensV1.gapMd),
             Text(
@@ -302,6 +278,42 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
       ),
     );
   }
+
+  Widget _skillsDetails() => _progressDetails(
+    'Skills · W1–W$act0SkillMapLastWorldV1',
+    [
+      if (input.checkedW1Topics.isNotEmpty) ...[
+        const Text(
+          'Topics checked in the W1 rules check',
+          style: Act0SkinTokensV1.body,
+        ),
+        Text(
+          input.checkedW1Topics.join(' · '),
+          style: Act0SkinTokensV1.secondary,
+        ),
+      ],
+      for (final skill in input.skills)
+        ListTile(
+          key: Key('act0_w14_skill_${skill.label}'),
+          title: Text(skill.label, style: Act0SkinTokensV1.body),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(skill.stateLabel, style: Act0SkinTokensV1.secondary),
+              Text(skill.explanation, style: Act0SkinTokensV1.secondary),
+              Text(
+                '${skill.lessonCount} ${_plural(skill.lessonCount, 'lesson', 'lessons')} · ${skill.taskCount} tasks',
+                style: Act0SkinTokensV1.captionStyle,
+              ),
+            ],
+          ),
+        ),
+    ],
+    key: const Key('act0_w14_skills'),
+    subtitle: input.checkedW1Topics.isNotEmpty
+        ? 'W1 skipped by rules check'
+        : 'Saved answers, not a mastery score.',
+  );
 
   Widget _progressDetails(
     String title,

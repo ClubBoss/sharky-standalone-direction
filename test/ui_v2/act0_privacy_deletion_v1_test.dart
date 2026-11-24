@@ -333,61 +333,61 @@ void main() {
     },
   );
 
-  testWidgets('Settings refreshes the iOS denial banner when the app resumes', (
-    tester,
-  ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-    addTearDown(() => debugDefaultTargetPlatformOverride = null);
-    const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
-    final messenger =
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
-    var denied = false;
-    var promptCount = 0;
-    messenger.setMockMethodCallHandler(channel, (call) async {
-      switch (call.method) {
-        case 'permissionDenied':
-          return denied;
-        case 'setEnabled':
-          promptCount++;
-          denied = true;
-          return false;
-        default:
-          return false;
-      }
-    });
-    addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
-    SharedPreferences.setMockInitialValues({
-      'onboardingCompleted': true,
-      'act0_welcome_completed_v1': true,
-    });
-    await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_shell_nav_profile')));
-    await tester.pumpAndSettle();
-    await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'Settings refreshes the iOS denial banner when the app resumes',
+    (tester) async {
+      const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      var denied = false;
+      var promptCount = 0;
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        switch (call.method) {
+          case 'permissionDenied':
+            return denied;
+          case 'setEnabled':
+            promptCount++;
+            denied = true;
+            return false;
+          default:
+            return false;
+        }
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      SharedPreferences.setMockInitialValues({
+        'onboardingCompleted': true,
+        'act0_welcome_completed_v1': true,
+      });
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_shell_nav_profile')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+      await tester.pumpAndSettle();
 
-    final reminder = find.byKey(
-      const Key('act0_academy_settings_practice_reminder'),
-    );
-    final banner = find.text(
-      'Allow Sharky Poker notifications in iPhone Settings.',
-    );
-    expect(banner, findsNothing);
-    expect(promptCount, 0);
-    await tester.tap(reminder);
-    await tester.pumpAndSettle();
-    expect(promptCount, 1);
-    expect(banner, findsOneWidget);
-    expect(tester.widget<Switch>(reminder).value, isFalse);
+      final reminder = find.byKey(
+        const Key('act0_academy_settings_practice_reminder'),
+      );
+      final banner = find.text(
+        'Allow Sharky Poker notifications in iPhone Settings.',
+      );
+      expect(banner, findsNothing);
+      expect(promptCount, 0);
+      await tester.tap(reminder);
+      await tester.pumpAndSettle();
+      expect(promptCount, 1);
+      expect(banner, findsOneWidget);
+      expect(tester.widget<Switch>(reminder).value, isFalse);
 
-    denied = false;
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
-    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
-    await tester.pumpAndSettle();
-    expect(banner, findsNothing);
-    expect(promptCount, 1);
-  });
+      denied = false;
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.inactive);
+      tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+      await tester.pumpAndSettle();
+      expect(banner, findsNothing);
+      expect(promptCount, 1);
+    },
+    variant: const TargetPlatformVariant.only(TargetPlatform.iOS),
+  );
 
   test('reminders need explicit opt-in and deletion disables them', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
