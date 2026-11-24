@@ -52,6 +52,26 @@ final ThemeData longSessionTestThemeV1 = ThemeData(
   splashFactory: InkRipple.splashFactory,
 );
 
+Future<void> _settle(
+  WidgetTester t,
+  String action, {
+  Duration interval = const Duration(milliseconds: 100),
+}) async {
+  try {
+    await t.pumpAndSettle(
+      interval,
+      EnginePhase.sendSemanticsUpdate,
+      const Duration(seconds: 5),
+    );
+  } on FlutterError catch (error) {
+    if (error.message != 'pumpAndSettle timed out') rethrow;
+    fail(
+      'Frames did not settle after $action. '
+      'Recent route taps: ${_tapLog.reversed.take(12).toList()}',
+    );
+  }
+}
+
 Future<void> _mount(
   WidgetTester t, {
   bool firstRun = false,
@@ -78,7 +98,7 @@ Future<void> _mount(
       ),
     ),
   );
-  await t.pumpAndSettle();
+  await _settle(t, 'mount');
 }
 
 final _tapLog = <String>[];
@@ -87,7 +107,7 @@ Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
   for (final f in finders) {
     if (f.evaluate().isEmpty) continue;
     await t.ensureVisible(f.first);
-    await t.pumpAndSettle();
+    await _settle(t, 'scrolling to $f');
     final hit = f.hitTestable();
     if (hit.evaluate().isEmpty) continue;
     _tapLog.add(RegExp(r"'([a-z0-9_]+)'").firstMatch('$f')?.group(1) ?? '?');
@@ -95,7 +115,7 @@ Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
     await t.pump(const Duration(milliseconds: 800));
     // Route assertions use the settled screen. Sample fewer intermediate
     // animation frames while preserving the real navigation and dwell timers.
-    await t.pumpAndSettle(const Duration(milliseconds: 250));
+    await _settle(t, 'tapping $f', interval: const Duration(milliseconds: 250));
     return true;
   }
   return false;
@@ -106,7 +126,7 @@ Future<void> _onboard(WidgetTester t, {required bool useRulesCheck}) async {
     final button = find.byKey(Key(key)).hitTestable();
     expect(button, findsOneWidget);
     await t.tap(button);
-    await t.pumpAndSettle();
+    await _settle(t, 'onboarding tap $key');
   }
 
   if (useRulesCheck) {
@@ -226,7 +246,7 @@ Future<int> _openSavedCourseTask(
   await t.runAsync(() async {
     await Future<void>.delayed(const Duration(milliseconds: 50));
   });
-  await t.pumpAndSettle();
+  await _settle(t, 'restoring $taskId');
   if (!restoreActive) await _tapFirst(t, [find.text('Learn')]);
   expect(
     await _tapFirst(t, [
@@ -244,22 +264,42 @@ Future<int> _openSavedCourseTask(
   );
   final shell = find.byType(Act0LessonRunnerShellV1);
   expect(t.widget<Act0LessonRunnerShellV1>(shell).selectedTaskId, taskId);
-  while (finishTeaching &&
-      t.widget<Act0LessonRunnerShellV1>(shell).runner.activeTeachingStep !=
-          null) {
-    expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_theory_continue_cta')),
-        find.byKey(const Key('act0_shell_continue_cta')),
-      ]),
-      isTrue,
-    );
+  if (finishTeaching) {
+    await _finishTeaching(t, () => t.widget<Act0LessonRunnerShellV1>(shell));
   }
   await pumpSourceChoreographyToDecisionV1(
     t,
     t.widget<Act0LessonRunnerShellV1>(shell).runner.table,
   );
   return xp;
+}
+
+Future<void> _finishTeaching(
+  WidgetTester t,
+  Act0LessonRunnerShellV1 Function() shell,
+) async {
+  const limit = 40;
+  for (var tap = 0; tap < limit; tap++) {
+    final current = shell();
+    final teaching = current.runner.activeTeachingStep;
+    if (teaching == null) return;
+    expect(
+      await _tapFirst(t, [
+        find.byKey(const Key('act0_shell_theory_continue_cta')),
+        find.byKey(const Key('act0_shell_continue_cta')),
+      ]),
+      isTrue,
+      reason:
+          '${current.selectedTaskId}: no teaching CTA for ${teaching.ctaLabel}',
+    );
+  }
+  final current = shell();
+  expect(
+    current.runner.activeTeachingStep,
+    isNull,
+    reason:
+        '${current.selectedTaskId}: teaching did not finish after $limit taps',
+  );
 }
 
 const _preSplitIntroTasks = <String>{
@@ -1267,16 +1307,7 @@ void _registerFocusedCases() {
       expect(find.text('Review: Private and shared cards'), findsOneWidget);
       await tap(find.byKey(const Key('act0_academy_review_leaf_repair_cta')));
       expect(runner().selectedTaskId, repairId);
-      while (runner().runner.activeTeachingStep != null) {
-        expect(
-          await _tapFirst(t, [
-            find.byKey(const Key('act0_shell_theory_continue_cta')),
-            find.byKey(const Key('act0_shell_continue_cta')),
-          ]),
-          isTrue,
-          reason: 'The Review repair intro must lead to the decision.',
-        );
-      }
+      await _finishTeaching(t, runner);
       expect(runner().selectedTaskId, repairId);
       final correct = runner().runner.options.singleWhere((o) => o.isCorrect);
       await answer(correct.id);
@@ -1982,6 +2013,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
     testWidgets(
       'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       (t) async {
+        _tapLog.clear();
         SharedPreferences.setMockInitialValues(<String, Object>{});
         t.view.physicalSize = const Size(393, 852);
         t.view.devicePixelRatio = 1;
@@ -2233,11 +2265,30 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             complete = !checkNextWorld && completed.containsAll(taskWorld.keys);
             if (complete) break;
           }
-          // The summary can promote a saved review above the course route.
-          // This traversal follows the map once the in-lesson retry is done.
+          // The course traversal uses Learn to pick up required practice and
+          // the next unfinished task after a lesson Result.
+          final resultClose = find.descendant(
+            of: find.byKey(const Key('act0_shell_result_close')),
+            matching: find.byType(IconButton),
+          );
+          if (resultClose.evaluate().isNotEmpty) {
+            expect(
+              await _tapFirst(t, [resultClose]),
+              isTrue,
+              reason: 'Step $step: Result close control is unreachable',
+            );
+            expect(
+              resultClose,
+              findsNothing,
+              reason: 'Step $step: Result stayed open after tapping close',
+            );
+            final home = find.byKey(const Key('act0_academy_home_leaf'));
+            if (home.evaluate().isNotEmpty) {
+              expect(await _tapFirst(t, [find.text('Learn').last]), isTrue);
+            }
+            continue;
+          }
           var moved = await _tapFirst(t, [
-            if (find.text('Practice this clue').evaluate().isNotEmpty)
-              find.byKey(const Key('act0_shell_block_summary_map_cta')),
             find.byKey(const Key('act0_shell_theory_continue_cta')),
             for (final key in _continueKeys) find.byKey(Key(key)),
           ]);

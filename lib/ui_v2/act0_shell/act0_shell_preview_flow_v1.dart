@@ -302,6 +302,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     final history = _learningEvidenceHistoryV1.provenanceRecords;
     final firstByTask = <String, Act0LearningEvidenceRecordV1>{};
     final wrongAssessedTaskIds = <String>{};
+    final repairedTaskIds = <String>{};
     var evidenceComplete = boundary != null && assessedTaskIds.isNotEmpty;
     if (boundary != null) {
       if (recentHistory.isNotEmpty &&
@@ -318,6 +319,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
         }
         firstByTask.putIfAbsent(record.taskId, () => record);
         if (!record.isCorrect) wrongAssessedTaskIds.add(record.taskId);
+        if (record.isRepaired) repairedTaskIds.add(record.taskId);
         switch (record.assistanceKind) {
           case Act0DecisionAssistanceV1.quickHint:
           case Act0DecisionAssistanceV1.theoryRecall:
@@ -346,6 +348,13 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       xpEarned: _lessonRunXp,
       errorCount: assessedErrorCount,
       assistedCount: lessonAssistedCount,
+      independentCount: firstByTask.values
+          .where((record) => record.isIndependentCorrect)
+          .length,
+      assistedCorrectCount: firstByTask.values
+          .where((record) => record.isAssistedCorrect)
+          .length,
+      repairedCount: repairedTaskIds.length,
       independentProvenanceKnown: evidenceComplete,
       taskCount: assessedTaskIds.length,
       correctCount: assessedCorrectCount,

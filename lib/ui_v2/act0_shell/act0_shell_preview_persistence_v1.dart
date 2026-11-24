@@ -1276,27 +1276,47 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         !_progressRestoredV1) {
       return false; // Coalesced requests have no durable acknowledgement.
     }
-    _setProgressSaveStatusV1(
-      _Act0ProgressSaveStatusV1.saving,
-      generation,
-      store,
-      epoch,
+    Timer? noticeDelay;
+    final acknowledged = await store.save(
+      snapshot,
+      onWriteStarted: () {
+        // A queued snapshot gets its own delay when its write starts.
+        if (_progressSaveStatusV1.value == _Act0ProgressSaveStatusV1.saving) {
+          _setProgressSaveStatusV1(
+            _Act0ProgressSaveStatusV1.idle,
+            generation,
+            store,
+            epoch,
+          );
+        }
+        noticeDelay = Timer(const Duration(seconds: 2), () {
+          _setProgressSaveStatusV1(
+            _Act0ProgressSaveStatusV1.saving,
+            generation,
+            store,
+            epoch,
+          );
+        });
+      },
+      onWriteFinished: (saved) {
+        noticeDelay?.cancel();
+        // Publish the ACK before flush() and the next queued write can finish.
+        _setProgressSaveStatusV1(
+          saved && store.isWriteLeaseCurrent
+              ? _Act0ProgressSaveStatusV1.idle
+              : _Act0ProgressSaveStatusV1.unconfirmed,
+          generation,
+          store,
+          epoch,
+        );
+      },
     );
-    final acknowledged = await store.save(snapshot);
     // False is indeterminate, never proof of data loss or an OS-level cause.
     _recordTelemetryEventV1('progress_persist_result', <String, Object?>{
       ...diagnosticContext,
       'outcome': acknowledged ? 'acknowledged' : 'indeterminate',
     });
     final currentAcknowledgement = acknowledged && store.isWriteLeaseCurrent;
-    _setProgressSaveStatusV1(
-      currentAcknowledgement
-          ? _Act0ProgressSaveStatusV1.idle
-          : _Act0ProgressSaveStatusV1.unconfirmed,
-      generation,
-      store,
-      epoch,
-    );
     return currentAcknowledgement &&
         generation == _progressPersistGeneration &&
         epoch == _recoveryEpochV1 &&
@@ -1331,39 +1351,19 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           return const SizedBox.shrink();
         }
         final saving = status == _Act0ProgressSaveStatusV1.saving;
-        return Material(
+        return Act0SkinBannerV1(
           key: const Key('act0_progress_save_notice'),
-          color: Theme.of(context).colorScheme.surface,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Semantics(
-                    liveRegion: true,
-                    child: Text(
-                      saving
-                          ? 'Saving progress. Keep Sharky open.'
-                          : 'Progress save not confirmed. Keep Sharky open and retry.',
-                    ),
-                  ),
-                ),
-                if (!saving)
-                  TextButton(
-                    key: const Key('act0_progress_save_retry'),
-                    // Rebuild the full current snapshot. Never replay an old
-                    // answer, completion or cached failed payload.
-                    onPressed: () {
-                      if (_acceptRecoveryCallbackV1(epoch) &&
-                          identical(store, _progressStore)) {
-                        _persistProgress();
-                      }
-                    },
-                    child: const Text('Retry save'),
-                  ),
-              ],
-            ),
-          ),
+          message: saving
+              ? 'Saving…'
+              : 'Progress save not confirmed. Keep Sharky open and retry.',
+          actionLabel: saving ? null : 'Retry save',
+          actionKey: const Key('act0_progress_save_retry'),
+          onAction: () {
+            if (_acceptRecoveryCallbackV1(epoch) &&
+                identical(store, _progressStore)) {
+              _persistProgress();
+            }
+          },
         );
       },
     );

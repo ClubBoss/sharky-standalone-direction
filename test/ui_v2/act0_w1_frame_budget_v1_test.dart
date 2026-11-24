@@ -18,7 +18,8 @@ const _baseline = <String, _Sample>{
   'showFeedback': (frames: 152, widgets: 894, runner: 2, peakMicros: 120000),
   // ACC-03 keyboard focus nodes (+6)
   'openRepair': (frames: 19, widgets: 744, runner: 2, peakMicros: 120000),
-  'showRecheck': (frames: 152, widgets: 835, runner: 2, peakMicros: 110000),
+  // B36 task chrome adds 2 widgets on recheck.
+  'showRecheck': (frames: 152, widgets: 837, runner: 2, peakMicros: 110000),
 };
 
 class _FrameBinding extends AutomatedTestWidgetsFlutterBinding {

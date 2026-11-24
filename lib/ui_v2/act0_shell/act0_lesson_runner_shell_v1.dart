@@ -8,7 +8,8 @@ import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_glossary_sheet_v1.dart';
 import 'act0_growth_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
 import 'dart:async';
 import 'dart:developer' as developer;
 import 'act0_predecision_card_focus_v1.dart';
@@ -276,6 +277,9 @@ class Act0BlockCompletionSummaryV1 {
     required this.xpEarned,
     required this.errorCount,
     this.assistedCount = 0,
+    this.independentCount,
+    this.assistedCorrectCount = 0,
+    this.repairedCount = 0,
     this.independentProvenanceKnown = true,
     this.curriculumCompleted = false,
     required this.taskCount,
@@ -314,6 +318,9 @@ class Act0BlockCompletionSummaryV1 {
   /// Count of tasks where the learner used Quick Hint or Theory Recall.
   /// Accuracy remains answer correctness; independent proof is distinct.
   final int assistedCount;
+  final int? independentCount;
+  final int assistedCorrectCount;
+  final int repairedCount;
   final bool independentProvenanceKnown;
   final int taskCount;
   final int correctCount;
@@ -1265,6 +1272,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.isRepairAttempt = false,
+    this.isLessonRetryFeedback = false,
+    this.isRestoredRepairFeedback = false,
     this.localizeW1Ctas = false,
     this.preserveSourceOwnedQuestion = false,
     this.showDecisionCoach = true,
@@ -1344,6 +1353,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool isRepairAttempt;
+  final bool isLessonRetryFeedback;
+  final bool isRestoredRepairFeedback;
   final bool localizeW1Ctas;
   // Placement quick-check reuses one task ID for three authored questions.
   final bool preserveSourceOwnedQuestion;
@@ -3634,12 +3645,17 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     final showTopInstructionCard = !isRefinedDev2;
     final pageX = isRefinedDev2 ? 8.0 : Act0ShellTokensV1.runnerPageX;
     final compactTableStageTopInset = 0.0;
+    final isRepairedFeedback =
+        isReview &&
+        runner.selectedOption?.isCorrect == true &&
+        (widget.isRepairAttempt || widget.isRestoredRepairFeedback);
     final showCompletionToast =
         isRefinedDev2 &&
         isReview &&
         runner.reviewQuality != Act0FeedbackQualityV1.wrong &&
         widget.completionSummary != null &&
-        !widget.isAssistedDecision;
+        !widget.isAssistedDecision &&
+        !isRepairedFeedback;
     final interactionKey = _interactionKey(runner);
     if (_showdownInteractionKey != interactionKey) {
       _actionTrailFocusedIndex = null;
@@ -3938,7 +3954,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       refined: isRefinedDev2,
       completionSummary: null,
       isAssistedDecision: widget.isAssistedDecision,
-      isRepaired: widget.isRepairAttempt && runner.reviewQuality.passes,
+      isRepairedFeedback: isRepairedFeedback,
+      isLessonRetryFeedback: widget.isLessonRetryFeedback,
       localizeW1Ctas: act0AcademyW1InstructionTaskV1(widget.selectedTaskId),
       firstValueReceiptLine: widget.firstValueReceiptLine,
       repairReasonLine: widget.repairReasonLine,
@@ -4066,22 +4083,18 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                     _usesCanonicalIntegratedLearningSceneV1,
               )
             : isTeaching
-            ? FilledButton(
-                key: const Key('act0_shell_continue_cta'),
+            ? Act0SkinPrimaryButtonV1(
+                compact: true,
+                controlKey: const Key('act0_shell_continue_cta'),
                 onPressed: widget.onContinueTheory,
-                style: Act0ShellTokensV1.primaryButtonStyle(
-                  height: Act0ShellTokensV1.compactCtaHeight,
-                ),
-                child: Text(teachingStep!.ctaLabel),
+                label: teachingStep!.ctaLabel,
               )
             : isTheory
-            ? FilledButton(
-                key: const Key('act0_shell_continue_cta'),
+            ? Act0SkinPrimaryButtonV1(
+                compact: true,
+                controlKey: const Key('act0_shell_continue_cta'),
                 onPressed: widget.onContinueTheory,
-                style: Act0ShellTokensV1.primaryButtonStyle(
-                  height: Act0ShellTokensV1.compactCtaHeight,
-                ),
-                child: Text(runner.primaryCtaLabel),
+                label: runner.primaryCtaLabel,
               )
             : isDrill
             ? runner.options.any((option) => option.seatId != null)
@@ -4315,7 +4328,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               if (!_usesCanonicalIntegratedLearningSceneV1)
-                _RunnerProgressV1(
+                _buildRunnerProgressV1(
+                  context,
                   runner: runner,
                   extraPracticeProgress: widget.extraPracticeProgress,
                   onBack: _handleRunnerBackV1,
@@ -4461,7 +4475,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           runner: runner,
           table: table,
           isReview: isReview,
-          isRepaired: widget.isRepairAttempt && runner.reviewQuality.passes,
+          isRepaired: isRepairedFeedback,
+          isLessonRetryFeedback: widget.isLessonRetryFeedback,
           question: question,
           onBack: _handleRunnerBackV1,
           onChooseOption: _handleChooseOptionTelemetry,
@@ -4499,30 +4514,33 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           : Act0LearningScenePhaseV3.tableTask;
       final purpose = isTheory || isTeaching
           ? ''
+          : isRepairedFeedback
+          ? _fixedFeedbackLabelV1(
+              context,
+              lessonRetry: widget.isLessonRetryFeedback,
+            )
           : isReview
-          ? widget.isRepairAttempt && runner.reviewQuality.passes
-                ? (isRu ? 'ИСПРАВЛЕНО' : 'FIXED')
-                : switch (runner.reviewQuality) {
-                    Act0FeedbackQualityV1.wrong =>
-                      isRu
-                          ? '\u041F\u0420\u041E\u041F\u0423\u0429\u0415\u041D\u041D\u0410\u042F \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0410'
-                          : 'MISSED CLUE',
-                    Act0FeedbackQualityV1.suboptimal =>
-                      isRu
-                          ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
-                          : "LET'S CHECK THE CLUE",
-                    Act0FeedbackQualityV1.acceptable =>
-                      isRu ? 'ТОЖЕ МОЖНО' : 'ALSO PLAYABLE',
-                    Act0FeedbackQualityV1.correct ||
-                    Act0FeedbackQualityV1.coCorrect =>
-                      widget.isAssistedDecision
-                          ? (isRu
-                                ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
-                                : 'CORRECT WITH HELP')
-                          : (isRu
-                                ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
-                                : 'CORRECT READ'),
-                  }
+          ? switch (runner.reviewQuality) {
+              Act0FeedbackQualityV1.wrong =>
+                isRu
+                    ? '\u041F\u0420\u041E\u041F\u0423\u0429\u0415\u041D\u041D\u0410\u042F \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0410'
+                    : 'MISSED CLUE',
+              Act0FeedbackQualityV1.suboptimal =>
+                isRu
+                    ? '\u0420\u0410\u0417\u0411\u0415\u0420\u0401\u041C \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u0423'
+                    : "LET'S CHECK THE CLUE",
+              Act0FeedbackQualityV1.acceptable =>
+                isRu ? 'ТОЖЕ МОЖНО' : 'ALSO PLAYABLE',
+              Act0FeedbackQualityV1.correct ||
+              Act0FeedbackQualityV1.coCorrect =>
+                widget.isAssistedDecision
+                    ? (isRu
+                          ? '\u0412\u0415\u0420\u041d\u041e \u0421 \u041F\u041E\u0414\u0421\u041A\u0410\u0417\u041A\u041E\u0419'
+                          : 'CORRECT WITH HELP')
+                    : (isRu
+                          ? '\u0412\u0415\u0420\u041D\u041E\u0415 \u0427\u0422\u0415\u041D\u0418\u0415'
+                          : 'CORRECT READ'),
+            }
           : (isRu ? '\u0412\u0410\u0428 \u0425\u041E\u0414' : 'YOUR MOVE');
       final feedbackAction =
           (runner.reviewQuality == Act0FeedbackQualityV1.wrong ||
@@ -4530,14 +4548,24 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   ? runner.reviewBetterLabel
                   : runner.reviewPreferredLabel)
               .trim();
-      final feedbackActionIsSentence =
-          feedbackAction.endsWith('.') ||
-          feedbackAction.endsWith('!') ||
-          feedbackAction.endsWith('?');
+      final feedbackGrade = !isReview
+          ? null
+          : isRepairedFeedback
+          ? Act0SkinFeedbackGradeV1.repaired
+          : switch (runner.reviewQuality) {
+              Act0FeedbackQualityV1.correct ||
+              Act0FeedbackQualityV1.coCorrect =>
+                widget.isAssistedDecision
+                    ? Act0SkinFeedbackGradeV1.assisted
+                    : Act0SkinFeedbackGradeV1.correct,
+              Act0FeedbackQualityV1.wrong => Act0SkinFeedbackGradeV1.wrong,
+              _ => null,
+            };
+      final selectedLabel = runner.selectedOption?.label.trim() ?? '';
       final repairReceipt = widget.repairResultReceiptLine?.trim() ?? '';
       final headline = isTheory || isTeaching
           ? prompt
-          : isReview && widget.isRepairAttempt && runner.reviewQuality.passes
+          : isRepairedFeedback
           ? (repairReceipt.isNotEmpty ? repairReceipt : feedbackAction)
           : isReview && runner.reviewQuality == Act0FeedbackQualityV1.acceptable
           ? (isRu ? 'Тоже можно' : 'Also playable')
@@ -4565,15 +4593,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                             : "Let's check the table clue and improve the read.")
                 : feedbackAction.isEmpty
                 ? runner.reviewTitle
-                : feedbackActionIsSentence
-                ? feedbackAction
-                : runner.reviewQuality == Act0FeedbackQualityV1.wrong
-                ? '$feedbackAction was the better play.'
-                : widget.isAssistedDecision
-                ? (isRu
-                      ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439: $feedbackAction.'
-                      : '$feedbackAction was right with help.')
-                : '$feedbackAction was right.'
+                : runner.reviewQuality == Act0FeedbackQualityV1.wrong &&
+                      selectedLabel.isNotEmpty
+                ? 'Not this one: $selectedLabel\nRight answer: $feedbackAction'
+                : 'Right answer: $feedbackAction'
           : question;
       // This authored model's premises are task information, not answer help.
       // Keep the disclosure scoped to the two admitted, unsubmitted ASM05 tasks.
@@ -4647,6 +4670,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         phase: phase,
         sharkyState: sharkyState,
         isAssistedFeedback: widget.isAssistedDecision,
+        feedbackGrade: feedbackGrade,
         eyebrow: purpose,
         headline: headline,
         support: support,
@@ -4774,7 +4798,8 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             ),
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               (isTheory || isDrill || isReview))
-            _RunnerProgressV1(
+            _buildRunnerProgressV1(
+              context,
               runner: runner,
               extraPracticeProgress: widget.extraPracticeProgress,
               onBack: _handleRunnerBackV1,
