@@ -52,18 +52,32 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
         full_route = "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart"
         self.assertIn(full_route, min(assigned, key=len))
 
-    def test_full_course_budget_is_scoped_and_larger_overrides_still_apply(self):
-        course = next(c for c in run_lane_v1.TIER_A_COMMANDS
-                      if "test/ui_v2/act0_w1_long_session_v1_test.dart" in c["cmd"])
+    def test_long_session_budgets_are_scoped_and_larger_overrides_still_apply(self):
+        names = (
+            "Long-session focused save and replay cases",
+            "W1-W3 long session across restarts",
+            "W4-W7 long session across restarts",
+        )
+        courses = [c for c in run_lane_v1.TIER_A_COMMANDS if c["name"] in names]
+        self.assertEqual([c["name"] for c in courses], list(names))
+        self.assertIn("--dart-define=ACT0_LONG_SESSION_FOCUSED_ONLY=true", courses[0]["cmd"])
+        shards = [
+            [c["name"] for c in run_lane_v1._tier_a_shard(run_lane_v1.TIER_A_COMMANDS, index, 3)]
+            for index in range(3)
+        ]
+        early, late = (next(index for index, shard in enumerate(shards) if name in shard)
+                       for name in names[1:])
+        self.assertNotEqual(early, late)
+
         ordinary = {"name": "fixture ordinary command", "cmd": ["fixture"]}
-        for requested, expected in ((120, [120, 480]), (600, [600, 600])):
+        for requested, expected in ((120, [120, 180, 420, 420]), (600, [600] * 4)):
             with self.subTest(requested=requested), \
                  mock.patch.dict(os.environ, {"TEST_AUTHORITY_SHARD": ""}), \
-                 mock.patch.object(run_lane_v1, "TIER_A_COMMANDS", [ordinary, course]), \
+                 mock.patch.object(run_lane_v1, "TIER_A_COMMANDS", [ordinary, *courses]), \
                  mock.patch.object(run_lane_v1, "_run_command", return_value={"status": "pass"}) as command:
                 results = run_lane_v1._run_tier_a(requested, False)
                 self.assertEqual([call.args[2] for call in command.call_args_list], expected)
-                self.assertEqual(len(results), 2)
+                self.assertEqual(len(results), 4)
 
     def python(self, code):
         return [sys.executable, "-c", code]

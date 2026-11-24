@@ -85,14 +85,36 @@ TIER_A_COMMANDS = [
         "cmd": ["flutter", "test", "test/ui_v2/act0_telemetry_sink_v1_test.dart", "-r", "compact"],
     },
     {
-        "name": "W1-W4 long session across restarts",
-        # One invocation runs several AppRoot journeys, including the full course.
-        # The previous 360s watchdog expired on CI after Y5c extended that route.
-        "min_timeout_seconds": 480,
+        "name": "Long-session focused save and replay cases",
+        "min_timeout_seconds": 180,
         "cmd": [
             "flutter",
             "test",
             "test/ui_v2/act0_w1_long_session_v1_test.dart",
+            "--dart-define=ACT0_LONG_SESSION_FOCUSED_ONLY=true",
+            "-r",
+            "compact",
+        ],
+    },
+    {
+        "name": "W1-W3 long session across restarts",
+        # The combined W1-W7 traversal and focused cases hit 480s in CI.
+        "min_timeout_seconds": 420,
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_w1_w3_long_session_v1_test.dart",
+            "-r",
+            "compact",
+        ],
+    },
+    {
+        "name": "W4-W7 long session across restarts",
+        "min_timeout_seconds": 420,
+        "cmd": [
+            "flutter",
+            "test",
+            "test/ui_v2/act0_w4_w7_long_session_v1_test.dart",
             "-r",
             "compact",
         ],
@@ -355,7 +377,9 @@ TIER_A_WEIGHTS = {
     "Wave 5 telemetry": 38,
     "Academy Placement Review widget-host remount default OFF": 29,
     "repair intent": 35,
-    "W1-W4 long session across restarts": 120,
+    "Long-session focused save and replay cases": 75,
+    "W1-W3 long session across restarts": 290,
+    "W4-W7 long session across restarts": 250,
     "poker W4 closed-flop actor and historical compatibility": 15,
     "source scope, showdown disclosure and replay chronology (Q0)": 13,
     "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,
