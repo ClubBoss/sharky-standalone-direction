@@ -1,0 +1,896 @@
+SHARKY POKER — EN learning content, 60 tasks · W19, W20
+Canonical catalog order. Options tagged +/−; repair-only tasks follow the route.
+Teaching and feedback table variants use the Runner projections. Board facts are deterministic.
+
+===== WORLD 19 · LESSON equilibrium_and_information · Equilibrium and information =====
+
+TASK w19_1_teach [theory] Which claim does an equilibrium justify?
+CAPTION: At equilibrium of a specified game, neither player can improve by changing strategy alone. A best response is a counter to a particular strategy. The Fundamental Theorem of Poker uses full information as a heads-up benchmark. Hidden cards limit which response you can choose.
+TEACH: Which claim does an equilibrium justify? At equilibrium of a specified game, neither player can improve by changing strategy alone. A best response is a counter to a particular strategy. The Fundamental Theorem of Poker uses full information as a heads-up benchmark. Hidden cards limit which response you can choose.
+Q: Which claim does an equilibrium justify?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Against the equilibrium opponent, a unilateral change cannot improve expected payoff — Correct. Both strategies must belong to the same game and payoff model.
+  - [wrong] The equilibrium maximizes profit against every actual opponent — Look again. A player who differs from the equilibrium can permit a more profitable targeted counter.
+    BETTER ANSWER: Against the equilibrium opponent, a unilateral change cannot improve expected payoff
+  - [wrong] Knowing the equilibrium reveals the opponent’s cards — Look again. A strategy predicts distributions and actions. Hole cards remain hidden.
+    BETTER ANSWER: Against the equilibrium opponent, a unilateral change cannot improve expected payoff
+
+TASK w19_1_read_information_value [drill] What action can that full-information benchmark separate?
+CAPTION: In a heads-up exercise two possible river hands are K♣J♣ and 9♠9♦. BB uses the same river bet with either. You may compare one hidden-card policy with an oracle allowed to know which of the two is present.
+Q: What action can that full-information benchmark separate?
+HINT [hidden]: (none)
+TABLE: River | You Ah Qd | Board Qs 9c 6h 3d 2s | Pot 9.5 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 93.5 BB bet 4 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 4 BB
+  + [correct] Call against the miss and fold against the set — Correct. The oracle uses information unavailable in a real decision. The learner still needs weights and price.
+  - [wrong] Call in both branches because the bet was the same — Look again. Identical actions do not make the two possible showdown outcomes alike.
+    BETTER ANSWER: Call against the miss and fold against the set
+  - [wrong] The oracle must also guess which card group is present — Look again. The premise grants full information to the benchmark.
+    BETTER ANSWER: Call against the miss and fold against the set
+
+TASK w19_1_guided_respond_to_extra_bluffs [drill] Call or fold?
+CAPTION: BB bets 5 BB with a legal combo from KQo QJs 88 44, equally weighted. Compare calling with folding. A call closes the betting for this model.
+TEACH: Call or fold? Recount the value and bluff hands after the board and your cards are removed.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Ac Td | Board Ts 8c 4h 3d 2s | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
+  + [correct] Call 5 BB — Correct. Call. Your 72.7% equity against this BB range clears the 32.3% price.
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 6.27 BB.
+    BETTER ANSWER: Call 5 BB
+
+TASK w19_1_transfer_pick_baseline_when_uncertain [drill] Which strategy selection is justified?
+CAPTION: You have no comparable samples for a new anonymous river bettor. A baseline policy from comparable games is available. The only current clue is one quick bet.
+Q: Which strategy selection is justified?
+HINT [hidden]: (none)
+TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 91.5 BB bet 6 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 6 BB
+  + [correct] Start from the documented baseline — Correct. A quick bet alone does not quantify a deviation. New matched samples can justify an adjustment.
+    FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Assume the quick bet is always a bluff — Look again. Timing has several causes and one event does not establish the relevant breakdown.
+    BETTER ANSWER: Start from the documented baseline
+    FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Assume that opponent uses every equilibrium frequency — Look again. A baseline guides your decision under uncertainty. It does not determine an unknown opponent’s exact strategy.
+    BETTER ANSWER: Start from the documented baseline
+    FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w19_1_day7_counter_changes_with_strategy [review] Which adjustment follows?
+ENTRY: drill
+CAPTION: Two otherwise comparable opponents use the same bet size. Their terminal betting ranges have identical value coverage. Player A adds enough misses that this bluff catcher clears the price. Player B adds no hands it beats.
+Q: Which adjustment follows?
+HINT [hidden]: (none)
+TABLE: River | You Ac Jd | Board Ah 7s 4c 2d 2h | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
+  + [correct] Call A and fold B — Correct. The price stays fixed. Each opponent’s proportion of hands you beat changes the payoff.
+  - [wrong] Call both because the price is identical — Look again. A shared price does not create shared equity.
+    BETTER ANSWER: Call A and fold B
+  - [wrong] Fold both because the same sizing hides the cards — Look again. Different modeled distributions still produce different estimates without revealing a hole card.
+    BETTER ANSWER: Call A and fold B
+
+===== WORLD 19 · LESSON population_response · Population response =====
+
+TASK w19_2_teach [theory] Where should a pool tendency be applied first?
+CAPTION: A pool read is an estimate for a specific game, stake, stack depth and line size. A population can overfold one node and underfold another.
+TEACH: Where should a pool tendency be applied first? A pool read is an estimate for a specific game, stake, stack depth and line size. A population can overfold one node and underfold another.
+Q: Where should a pool tendency be applied first?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] To the same line, size and pool that produced it — Correct. Segment the observations before transferring the policy.
+  - [wrong] To every street for players on that site — Look again. A fold to a preflop raise does not imply a fold to a river overbet.
+    BETTER ANSWER: To the same line, size and pool that produced it
+  - [wrong] To every individual at that stake — Look again. An average does not erase variation across individuals.
+    BETTER ANSWER: To the same line, size and pool that produced it
+
+TASK w19_2_read_overfold_denominator [drill] Which sample belongs to this decision?
+CAPTION: An audit log has 8 folds in 10 comparable river overbet opportunities and 20 folds in 80 small river bet opportunities. The current line matches the overbet filter.
+Q: Which sample belongs to this decision?
+HINT [hidden]: (none)
+TABLE: River | You Qs Js | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Js stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] 8 folds in 10 overbet opportunities — Correct. It matches the requested size bucket. Keep its limited sample size visible.
+    FEEDBACK TABLE: River | You Qs Js | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] 28 folds in 90 pooled opportunities — Look again. Pooling makes the larger samples from the other size obscure the relevant behavior.
+    BETTER ANSWER: 8 folds in 10 overbet opportunities
+    FEEDBACK TABLE: River | You Qs Js | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] 20 folds in 80 small bets — Look again. Those events describe a different price and could contain different ranges.
+    BETTER ANSWER: 8 folds in 10 overbet opportunities
+    FEEDBACK TABLE: River | You Qs Js | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_2_guided_bluff_pool_overfold [drill] What scores higher under the specified read?
+CAPTION: At this river size, BB folds in 15 of 20 equally weighted, comparable response events. In this model your hand always loses if checked or called.
+TEACH: What scores higher under the specified read? Compare the fold estimate with the pure-bluff threshold.
+Q: What scores higher under the specified read?
+HINT [hidden]: (none)
+TABLE: River | You Js Ts | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Ts stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Bet 7 BB — Correct. Bet 7 BB. The 15 all-fold outcomes pay for the 5 called losses under this comparison.
+    FEEDBACK TABLE: River | You Js Ts | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Check — Look again. Checking has no showdown value in this model. It passes up a bluff with positive modeled EV.
+    BETTER ANSWER: Bet 7 BB
+    FEEDBACK TABLE: River | You Js Ts | Board Kh 9d 4c 2h 3s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_2_transfer_pool_underfold [drill] What scores higher under the specified read?
+CAPTION: At this river size, BB folds in 6 of 20 equally weighted, comparable response events. In this model your hand always loses if checked or called.
+Q: What scores higher under the specified read?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jh | Board Ks 9s 6d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jh stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Check — Correct. Check. The observed fold bucket is too small for this risk under the stated zero-recovery model.
+    FEEDBACK TABLE: River | You Qh Jh | Board Ks 9s 6d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Bet 6 BB — Look again. This size loses 2.55 BB on average with the given folds and no showdown recovery.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Qh Jh | Board Ks 9s 6d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_2_day7_pool_overbluffs_size [review] Call or fold?
+ENTRY: drill
+CAPTION: BB bets 8 BB with a legal combo from 88 55 99 KQo QTs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You As Jh | Board Jd 9h 5s 3d 2s | Pot 18.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 95
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jh stack 95 BB | SB folded stack 99.5 BB | BB stack 87 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 2.5 BB · flop: BB calls 2.5 BB · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] Call 8 BB — Correct. Call. Your 78.6% equity against this BB range clears the 30.2% price.
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 12.82 BB.
+    BETTER ANSWER: Call 8 BB
+
+===== WORLD 19 · LESSON sample_and_segmentation · Sample and segmentation =====
+
+TASK w19_3_teach [theory] Which sample best informs a 200 BB river spot against a regular?
+CAPTION: Use stake, site, format, opponent type, depth and action history to filter a read. Small new samples should update a prior with uncertainty.
+TEACH: Which sample best informs a 200 BB river spot against a regular? Use stake, site, format, opponent type, depth and action history to filter a read. Small new samples should update a prior with uncertainty.
+Q: Which sample best informs a 200 BB river spot against a regular?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Comparable deep river spots from the same site and player type — Correct. Stack depth and player pool can change which hands reach the line and how they pay.
+  - [wrong] A bigger list of 30 BB river spots from other sites — Look again. More mismatched observations still answer a different question.
+    BETTER ANSWER: Comparable deep river spots from the same site and player type
+  - [wrong] All preflop hands that the regular played — Look again. Most do not reach the relevant river decision.
+    BETTER ANSWER: Comparable deep river spots from the same site and player type
+
+TASK w19_3_read_site_and_type [drill] Which group is a starting prior for a regular here?
+CAPTION: Data A records cash regulars at this site in the same river line. Data B records recreational players from a different site, with similar sample volume.
+Q: Which group is a starting prior for a regular here?
+HINT [hidden]: (none)
+TABLE: River | You Ad Qc | Board Qs 8c 4s 2d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Data A — Correct. Its site and opponent type match the current spot. Keep checking size and depth within it.
+    FEEDBACK TABLE: River | You Ad Qc | Board Qs 8c 4s 2d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Data B — Look again. This group differs on two dimensions relevant to the read.
+    BETTER ANSWER: Data A
+    FEEDBACK TABLE: River | You Ad Qc | Board Qs 8c 4s 2d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Both must have the same response — Look again. The samples do not establish equal player behavior.
+    BETTER ANSWER: Data A
+    FEEDBACK TABLE: River | You Ad Qc | Board Qs 8c 4s 2d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w19_3_guided_depth_split [drill] What is the relevant observed fold rate?
+CAPTION: The same site and line has 14 folds in 20 deep-stack opportunities and 9 folds in 30 short-stack opportunities. This spot belongs to the deep bucket. Treat the roster as a finite comparison, not exact population frequencies.
+TEACH: What is the relevant observed fold rate? Keep tied observations in the same site, line and depth bucket.
+Q: What is the relevant observed fold rate?
+HINT [hidden]: (none)
+TABLE: River | You Ac Td | Board Th 8c 3d 2s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] 70.0% — Correct. Fourteen folds out of twenty matched deep outcomes is the estimate for this slice.
+    FEEDBACK TABLE: River | You Ac Td | Board Th 8c 3d 2s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
+  - [wrong] 30.0% — Look again. Nine out of thirty describes the shorter stack slice.
+    BETTER ANSWER: 70.0%
+    FEEDBACK TABLE: River | You Ac Td | Board Th 8c 3d 2s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
+  - [wrong] 46.0% — Look again. Pooling gives 23/50. That blends two depth groups with different responses.
+    BETTER ANSWER: 70.0%
+    FEEDBACK TABLE: River | You Ac Td | Board Th 8c 3d 2s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
+
+TASK w19_3_transfer_overcalls_draws [drill] Which first model change should test this read?
+CAPTION: In ten comparable turn showdowns, a pool sample contains several speculative callers of the half-pot size. The current group is matched in site, depth and line. The observed tendency is excessive calls with draws.
+Q: Which first model change should test this read?
+HINT [hidden]: (none)
+TABLE: Turn | You Ad Qd | Board Qs 9s 4c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks
+  + [correct] Widen the turn call group to include the extra draw types — Correct. Price bets using the hands actually paying them in this spot.
+    FEEDBACK TABLE: Turn | You Ad Qd | Board Qs 9s 4c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] Replace the river bluff range with zero bluffs — Look again. The data addresses turn calls, not river betting.
+    BETTER ANSWER: Widen the turn call group to include the extra draw types
+    FEEDBACK TABLE: Turn | You Ad Qd | Board Qs 9s 4c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+  - [wrong] Change all preflop opening charts — Look again. This information describes a particular postflop response.
+    BETTER ANSWER: Widen the turn call group to include the extra draw types
+    FEEDBACK TABLE: Turn | You Ad Qd | Board Qs 9s 4c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
+
+TASK w19_3_day7_anonymous_fastfold [review] Which input remains usable?
+ENTRY: drill
+CAPTION: The room is anonymous after each hand. A player-specific read from a named cash table is unavailable. A sizeable matched population sample for this exact format and size exists.
+Q: Which input remains usable?
+HINT [hidden]: (none)
+TABLE: River | You Qh Qd | Board Jh 8d 4c 2s 2h | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, pocket pair, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
+  + [correct] A format-matched baseline or pool estimate — Correct. Anonymity limits individual history. Aggregated, comparable opportunities can still inform your choice.
+  - [wrong] The betting pattern of the named player from another table — Look again. Identity is unavailable, so the history cannot be assigned to this opponent.
+    BETTER ANSWER: A format-matched baseline or pool estimate
+  - [wrong] No evidence of any kind — Look again. Format, line, size and depth can still be observed without identifying each player.
+    BETTER ANSWER: A format-matched baseline or pool estimate
+
+===== WORLD 19 · LESSON opponent_adjusts · Opponent adjusts =====
+
+TASK w19_4_teach [theory] What should make you retire an old exploit?
+CAPTION: An exploit can lose its edge when the response changes. Mixed strategies can keep a line from identifying a single hand category.
+TEACH: What should make you retire an old exploit? An exploit can lose its edge when the response changes. Mixed strategies can keep a line from identifying a single hand category.
+Q: What should make you retire an old exploit?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Matched current observations that show the opponent defending more — Correct. A previous best response depends on a previous strategy. Re-estimate before repeating it.
+  - [wrong] A single bluff lost at showdown — Look again. A positive-EV bluff still sometimes loses. The event is evidence, not a complete new distribution.
+    BETTER ANSWER: Matched current observations that show the opponent defending more
+  - [wrong] A winning showdown against their strongest hand — Look again. One result does not determine whether their fold or call frequency changed.
+    BETTER ANSWER: Matched current observations that show the opponent defending more
+
+TASK w19_4_read_predictable_single_size [drill] What can this opponent exploit?
+CAPTION: In a practice pool you use your largest river size only with missed draws. An opponent has observed that entire policy and has a hand beating every miss.
+Q: What can this opponent exploit?
+HINT [hidden]: (none)
+TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Qs stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Call that size with any hand beating the miss group — Correct. The size identifies a range that their hand always beats.
+    FEEDBACK TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Fold more often to the large size — Look again. The bet supplies a positive terminal call when their hand always wins.
+    BETTER ANSWER: Call that size with any hand beating the miss group
+    FEEDBACK TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Switch only their preflop open size — Look again. The predictable response is at the river decision.
+    BETTER ANSWER: Call that size with any hand beating the miss group
+    FEEDBACK TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w19_4_guided_adaptation_before [drill] What scores higher under the specified read?
+CAPTION: At this river size, BB folds in 10 of 15 equally weighted, comparable response events. In this model your hand always loses if checked or called.
+TEACH: What scores higher under the specified read? Update the same action’s EV before deciding if a former exploit remains profitable.
+Q: What scores higher under the specified read?
+HINT [hidden]: (none)
+TABLE: River | You Jh Th | Board Ks 9c 4s 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jh Th stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Bet 5 BB — Correct. Bet 5 BB. The 10 all-fold outcomes pay for the 5 called losses under this comparison.
+    FEEDBACK TABLE: River | You Jh Th | Board Ks 9c 4s 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Check — Look again. Checking has no showdown value in this model. It passes up a bluff with positive modeled EV.
+    BETTER ANSWER: Bet 5 BB
+    FEEDBACK TABLE: River | You Jh Th | Board Ks 9c 4s 3h 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_4_transfer_adaptation_after [drill] What scores higher under the specified read?
+CAPTION: At this river size, BB folds in 4 of 15 equally weighted, comparable response events. In this model your hand always loses if checked or called.
+Q: What scores higher under the specified read?
+HINT [hidden]: (none)
+TABLE: River | You Jc Tc | Board Kh 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jc Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Check — Correct. Check. The observed fold bucket is too small for this risk under the stated zero-recovery model.
+    FEEDBACK TABLE: River | You Jc Tc | Board Kh 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Bet 5 BB — Look again. This size loses 2.20 BB on average with the given folds and no showdown recovery.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Jc Tc | Board Kh 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_4_day7_simplify_mix [review] What can you conclude for this hand in this model?
+ENTRY: drill
+CAPTION: In a teaching matrix one hand class has exactly equal EV for check and a small bet against the given policy. All range-level frequencies are being tracked separately.
+Q: What can you conclude for this hand in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ac Qc | Board Qh 9s 4d 3c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Either action ties against this fixed policy — Correct. Mixing or picking one gives the same hand EV against the stated responses. The full range can still become predictable after simplification.
+    FEEDBACK TABLE: River | You Ac Qc | Board Qh 9s 4d 3c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Checking loses because the solver mixes — Look again. The exercise gives equal payoff for the two actions.
+    BETTER ANSWER: Either action ties against this fixed policy
+    FEEDBACK TABLE: River | You Ac Qc | Board Qh 9s 4d 3c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] A pure action is unexploitable against every response — Look again. Equal payoff against one fixed opponent does not protect you against new responses.
+    BETTER ANSWER: Either action ties against this fixed policy
+    FEEDBACK TABLE: River | You Ac Qc | Board Qh 9s 4d 3c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+===== WORLD 19 · LESSON capped_and_polar · Capped and polar =====
+
+TASK w19_5_teach [theory] When is a cap established for a modeled river range?
+CAPTION: A range is capped only when the model excludes its strongest relevant hands. Checkbacks alone can retain traps and river improvements.
+TEACH: When is a cap established for a modeled river range? A range is capped only when the model excludes its strongest relevant hands. Checkbacks alone can retain traps and river improvements.
+Q: When is a cap established for a modeled river range?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] The stated prior actions and response rules exclude the strongest available hands — Correct. Check blockers and improvements on this board before treating the range as capped.
+  - [wrong] Any amount of checking occurred — Look again. A check may keep very strong hands. It can also precede improvement.
+    BETTER ANSWER: The stated prior actions and response rules exclude the strongest available hands
+  - [wrong] The opponent is the caller preflop — Look again. Some strongest board combinations can be concentrated in the caller’s range.
+    BETTER ANSWER: The stated prior actions and response rules exclude the strongest available hands
+
+TASK w19_5_read_cap_can_vanish [drill] Can a previous check exclude strong made straights now?
+CAPTION: The flop check-back group can contain JTs. That group contained no made straight on Q-9-4. A turn 8 and river 7 complete the board.
+Q: Can a previous check exclude strong made straights now?
+HINT [hidden]: (none)
+TABLE: River | You Ac Qd | Board Qs 9h 4c 8s 7d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] No. J-T can now make a queen-high straight — Correct. The check happened on a different board. The retained group can improve into strong value.
+    FEEDBACK TABLE: River | You Ac Qd | Board Qs 9h 4c 8s 7d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Yes. No checked hand can make the nuts later — Look again. Runouts can change which holdings make the strongest combination.
+    BETTER ANSWER: No. J-T can now make a queen-high straight
+    FEEDBACK TABLE: River | You Ac Qd | Board Qs 9h 4c 8s 7d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Yes. J-T still misses without a jack on board — Look again. The ten and jack are in the hole cards. They fit between the board’s nine and queen.
+    BETTER ANSWER: No. J-T can now make a queen-high straight
+    FEEDBACK TABLE: River | You Ac Qd | Board Qs 9h 4c 8s 7d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w19_5_guided_attack_a_proven_cap [drill] Which option earns the most here?
+CAPTION: BB holds a legal combo from QJs QTs Q9s 88 44 99 77 66 55, equally weighted. At 2 BB, BB calls QJs QTs Q9s 88 44 99 77 66 55 and folds the remainder. At 7 BB, BB calls QJs QTs 88 44 and folds the remainder. If you check or get called, there is no further betting.
+TEACH: Which option earns the most here? Use the actual caller subset to price the bluff. A cap does not mean all hands fold.
+Q: Which option earns the most here?
+HINT [hidden]: (none)
+TABLE: River | You Js Td | Board Qh 8d 4c 2s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, paired board
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Js Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Bet 7 BB — Correct. Bet 7 BB. This range still includes full houses, but specifically releases enough hands below a full house to make the large bluff earn money.
+    FEEDBACK TABLE: River | You Js Td | Board Qh 8d 4c 2s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] Check — Look again. J-high loses to the listed range. Checking leaves no profitable showdown.
+    BETTER ANSWER: Bet 7 BB
+    FEEDBACK TABLE: River | You Js Td | Board Qh 8d 4c 2s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] Bet 2 BB — Look again. All listed pairs continue for 2 BB. This bluff buys no folds.
+    BETTER ANSWER: Bet 7 BB
+    FEEDBACK TABLE: River | You Js Td | Board Qh 8d 4c 2s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+
+TASK w19_5_transfer_no_attack_into_traps [drill] What do those retained combinations rule out?
+CAPTION: CO checked on the flop as the preflop raiser. The explicitly retained group includes QQ 88 and some missed hands. BTN sees a blank river after CO checks.
+Q: What do those retained combinations rule out?
+HINT [hidden]: (none)
+TABLE: River | You Kd Jc | Board Qs 8h 4d 2c 2h | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB | BTN dealer Kd Jc stack 97.5 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN calls 2.5 BB · preflop: SB folds · preflop: BB folds · flop: CO checks · flop: BTN checks · turn: CO checks · turn: BTN checks · river: CO checks
+  + [correct] Calling CO’s range capped below the strongest full houses — Correct. QQ and 88 are full houses here and still possible after the check.
+    FEEDBACK TABLE: River | You Kd Jc | Board Qs 8h 4d 2c 2h | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] CO holding any missed hands — Look again. The model also retains misses. Strong value does not exclude them.
+    BETTER ANSWER: Calling CO’s range capped below the strongest full houses
+    FEEDBACK TABLE: River | You Kd Jc | Board Qs 8h 4d 2c 2h | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+  - [wrong] BTN ever making a value bet — Look again. Some BTN hands could still win payments. The premise only prevents treating the whole range as weak.
+    BETTER ANSWER: Calling CO’s range capped below the strongest full houses
+    FEEDBACK TABLE: River | You Kd Jc | Board Qs 8h 4d 2c 2h | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, paired board
+
+TASK w19_5_day7_runout_nuts_after_check [review] What does the 22 class do to a claim that the caller has no nuts?
+ENTRY: drill
+CAPTION: The caller’s range after the turn check includes 22. The last card pairs the two. No hero cards are shown.
+Q: What does the 22 class do to a claim that the caller has no nuts?
+HINT [hidden]: (none)
+TABLE: River | Board As 9d 6c 2h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] It disproves it with one legal quads combo — Correct. Two board deuces leave two more. Both in the caller’s hand make the best hand possible on this board.
+    FEEDBACK TABLE: River | Board As 9d 6c 2h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts paired board
+  - [wrong] It proves it because double deuces cannot improve — Look again. A pocket pair of deuces added to two board deuces gives four of a kind.
+    BETTER ANSWER: It disproves it with one legal quads combo
+    FEEDBACK TABLE: River | Board As 9d 6c 2h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts paired board
+  - [wrong] It creates six possible quads combos — Look again. Only two deuces remain, and there is one pair you can make with them.
+    BETTER ANSWER: It disproves it with one legal quads combo
+    FEEDBACK TABLE: River | Board As 9d 6c 2h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts paired board
+
+===== WORLD 19 · LESSON audit_and_checkpoint · Audit and checkpoint =====
+
+TASK w19_6_teach [theory] What is the useful denominator for an audit of river overfolding?
+CAPTION: Audit your own frequencies at one matched node. Ask how an informed opponent maximizes return against what you usually do.
+TEACH: What is the useful denominator for an audit of river overfolding? Audit your own frequencies at one matched node. Ask how an informed opponent maximizes return against what you usually do.
+Q: What is the useful denominator for an audit of river overfolding?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Comparable opportunities facing that river size and line — Correct. Count eligible calls and folds out of attempts at the same decision.
+  - [wrong] All hands dealt in the session — Look again. Most hands never face the target river decision.
+    BETTER ANSWER: Comparable opportunities facing that river size and line
+  - [wrong] Only the hands you called and lost — Look again. This excludes folds and winning calls, distorting the decision frequency.
+    BETTER ANSWER: Comparable opportunities facing that river size and line
+
+TASK w19_6_read_self_audit_ratio [drill] What fraction of this roster defended?
+CAPTION: Your review log contains 12 folds and 4 calls against matched pot-sized river bets. You exclude unrelated lines and document no raises at this node.
+Q: What fraction of this roster defended?
+HINT [hidden]: (none)
+TABLE: River | You Kh Qh | Board Ks 8c 4d 3s 3h | Pot 11 BB | To call 5.5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Qh stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92 BB bet 5.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5.5 BB
+  + [correct] 25.0% — Correct. Four of sixteen eligible opportunities were calls. There were no raises.
+  - [wrong] 33.3% — Look again. Dividing the four calls by only the twelve folds gives a ratio of counts, not a fraction of opportunities.
+    BETTER ANSWER: 25.0%
+  - [wrong] 75.0% — Look again. That is the observed fold share, not the defense share.
+    BETTER ANSWER: 25.0%
+
+TASK w19_6_guided_depth_changes_counter [drill] Call or fold?
+CAPTION: BB bets 12 BB with a legal combo from AQo AKo KQs QJs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.
+TEACH: Call or fold? Distinguish a response change from a price change. The range does not change in this exercise.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You As Jc | Board Ah 9d 5c 2s 2h | Pot 32.5 BB | To call 12 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+EFFECTIVE: BB 12
+POTS: main 44.5 (BB, BTN)
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jc stack 12 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 12 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 12 BB
+  + [correct] Call 12 BB — Correct. Call. Your 36.8% equity against this BB range clears the 27.0% price.
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 4.39 BB.
+    BETTER ANSWER: Call 12 BB
+
+TASK w19_6_checkpoint_which_data_controls [drill] Which choice follows from the evidence and model?
+CAPTION: One matched group is a transparent 20-event size bucket with 14 folds. A conflicting 60-event dataset pools all river bet sizes. Your pure bluff risks 6 BB in an 8.5 BB pot and loses at showdown.
+Q: Which choice follows from the evidence and model?
+HINT [hidden]: (none)
+TABLE: River | You Td 9d | Board Jh 8c 5s 3d 2c | Pot 8.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+EFFECTIVE: BB 96
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Td 9d stack 96 BB | SB folded stack 99.5 BB | BB stack 96 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 1.5 BB · flop: BB calls 1.5 BB · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Bet 6 BB using the matched bucket — Correct. Fourteen outcomes win 8.5 BB each and six lose 6 BB each. Treat the positive estimate as scoped to the matched sample.
+    FEEDBACK TABLE: River | You Td 9d | Board Jh 8c 5s 3d 2c | Pot 8.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Fold the live hand immediately — Look again. No bet is pending. The check benchmark is zero in this model.
+    BETTER ANSWER: Bet 6 BB using the matched bucket
+    FEEDBACK TABLE: River | You Td 9d | Board Jh 8c 5s 3d 2c | Pot 8.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Check based on the pooled size report — Look again. The pooled report mixes different prices and response ranges. It does not give the fold count for the proposed bet.
+    BETTER ANSWER: Bet 6 BB using the matched bucket
+    FEEDBACK TABLE: River | You Td 9d | Board Jh 8c 5s 3d 2c | Pot 8.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w19_6_day7_audit_which_hands_fold [review] What conclusion is justified?
+ENTRY: drill
+CAPTION: You defend less often than the pure-bluff MDF in a river node. Matched evidence says the bettor almost never bluffs there. Your review asks whether the defense gap proves a leak.
+Q: What conclusion is justified?
+HINT [hidden]: (none)
+TABLE: River | You Kc Qs | Board Kh 9h 4c 3d 2h | Pot 13.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kc Qs stack 97.5 BB | SB folded stack 99.5 BB | BB stack 89.5 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] Reprice calls against the observed value-heavy range — Correct. The defense gap shows how a hypothetical pure bluff could profit. Your actual calls depend on how often that bluff is present.
+  - [wrong] Call all marginal pairs until the count reaches MDF — Look again. The range target is not itself a reason to pay with low-equity hands.
+    BETTER ANSWER: Reprice calls against the observed value-heavy range
+  - [wrong] Discard the evidence because MDF is below 100% — Look again. MDF serves a specific opponent model. Keep the actual priced decision separate.
+    BETTER ANSWER: Reprice calls against the observed value-heavy range
+
+===== WORLD 20 · LESSON timing_and_live_tells · Timing and live tells =====
+
+TASK w20_1_teach [theory] Which evidence gives a timing tell more weight?
+CAPTION: Timing, gestures and speech can change a range estimate after you establish a baseline. Connection delays, a different action and table conditions create alternative explanations.
+TEACH: Which evidence gives a timing tell more weight? Timing, gestures and speech can change a range estimate after you establish a baseline. Connection delays, a different action and table conditions create alternative explanations.
+Q: Which evidence gives a timing tell more weight?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Repeated matched situations with an observed difference in hand groups — Correct. Compare the same line and size, and check which cases were visible.
+  - [wrong] One dramatic long pause — Look again. One pause can have several causes. It cannot establish a class-specific response.
+    BETTER ANSWER: Repeated matched situations with an observed difference in hand groups
+  - [wrong] A universal claim about fast calls — Look again. Players use time differently. Identify what this player does relative to their own baseline.
+    BETTER ANSWER: Repeated matched situations with an observed difference in hand groups
+
+TASK w20_1_read_time_bank_context [drill] What can that observation establish by itself?
+CAPTION: An unfamiliar online player uses almost all their time bank once before a river bet. There are no known comparable hands for this player.
+Q: What can that observation establish by itself?
+HINT [hidden]: (none)
+TABLE: River | You Kh Qd | Board Ks 8d 5s 3c 2h | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kh Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
+  + [correct] The decision took time — Correct. It provides a timing observation. The cause and the player’s bluff frequency remain uncertain.
+  - [wrong] The player holds a marginal pair — Look again. A long delay could reflect many decisions or a distraction.
+    BETTER ANSWER: The decision took time
+  - [wrong] The river bet is almost always a bluff — Look again. One elapsed time cannot establish a betting distribution.
+    BETTER ANSWER: The decision took time
+
+TASK w20_1_guided_compare_matched_timing [drill] Which comparison is supported by these visible cases?
+CAPTION: Of 12 visible hands from this player in the same river size bucket, six were quick bets and five of those were value. Six were delayed bets and three were value. Unshown hands are outside this sample.
+TEACH: Which comparison is supported by these visible cases? Compare samples inside the same line. Keep unshown cases out of the numerator and denominator.
+Q: Which comparison is supported by these visible cases?
+HINT [hidden]: (none)
+TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] 5/6 quick bets were value, versus 3/6 delayed — Correct. Use each timing group’s own denominator. The unshown hands still leave selection uncertainty.
+    FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] The player is 83.3% value whenever acting quickly — Look again. That generalizes the result beyond the visible cases in the matched node.
+    BETTER ANSWER: 5/6 quick bets were value, versus 3/6 delayed
+    FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Quick bets are 5/12 value — Look again. Twelve contains delayed bets too. Only six quick bets belong in the denominator.
+    BETTER ANSWER: 5/6 quick bets were value, versus 3/6 delayed
+    FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_1_transfer_live_baseline_break [drill] How should the quiet affect your read?
+CAPTION: A player normally speaks on every street. This river they go quiet once as a conversation ends, then bet. You have no linked showdown from this line.
+Q: How should the quiet affect your read?
+HINT [hidden]: (none)
+TABLE: River | You Qh Qd | Board Js 8h 4d 3s 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, overpair, pocket pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 91.5 BB bet 6 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 6 BB
+  + [correct] Keep it as an observation and rely on the range and price for now — Correct. Their habitual talk rate and the ended conversation give other reasons for the change.
+    FEEDBACK TABLE: River | You Qh Qd | Board Js 8h 4d 3s 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, overpair, pocket pair
+  - [wrong] Replace the entire betting range with the nuts — Look again. The observed behavior is not enough to eliminate bluffs or thinner value.
+    BETTER ANSWER: Keep it as an observation and rely on the range and price for now
+    FEEDBACK TABLE: River | You Qh Qd | Board Js 8h 4d 3s 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, overpair, pocket pair
+  - [wrong] Ignore every live behavior forever — Look again. Repeated, comparable observations can matter once they track a meaningful distinction.
+    BETTER ANSWER: Keep it as an observation and rely on the range and price for now
+    FEEDBACK TABLE: River | You Qh Qd | Board Js 8h 4d 3s 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, overpair, pocket pair
+
+TASK w20_1_day7_distracted_online_sample [review] Which read can you transfer to this river?
+ENTRY: drill
+CAPTION: In a live-streamed online practice game an opponent snap-calls two small flop bets while using a hotkey. You now face an unusually slow river bet.
+Q: Which read can you transfer to this river?
+HINT [hidden]: (none)
+TABLE: River | You As Td | Board Ah 9c 5s 2d 2h | Pot 13.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 89.5 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] No calibrated bluff split from those observations — Correct. The earlier events were small flop calls with automation. They do not measure slow river bets.
+  - [wrong] A slow river bet always has strong value — Look again. The speed changed along with street and action, so strength was not isolated.
+    BETTER ANSWER: No calibrated bluff split from those observations
+  - [wrong] A flop snap-call proves a later bluff — Look again. The given events do not connect flop speed with this river range.
+    BETTER ANSWER: No calibrated bluff split from those observations
+
+===== WORLD 20 · LESSON sizing_and_filtering · Sizing and filtering =====
+
+TASK w20_2_teach [theory] What should a validated river sizing read change?
+CAPTION: Start with a preflop range, then update through each action. Weights can shift without deleting an entire category. A size tell applies only to matching lines.
+TEACH: What should a validated river sizing read change? Start with a preflop range, then update through each action. Weights can shift without deleting an entire category. A size tell applies only to matching lines.
+Q: What should a validated river sizing read change?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] The mixture of holdings you assign to that size and line — Correct. Then reprice your response using the updated betting range.
+  - [wrong] The legal rules of showdown — Look again. Your read changes which hands are likely. It does not change which hands win.
+    BETTER ANSWER: The mixture of holdings you assign to that size and line
+  - [wrong] The price independently of the wager — Look again. The actual chip amounts already determine price. The read changes your equity estimate.
+    BETTER ANSWER: The mixture of holdings you assign to that size and line
+
+TASK w20_2_read_filter_action_chain [drill] Which class supplies the bluffs here?
+CAPTION: For this model BB starts with KQs QJs 99 44 JTs. After calling the turn, BB can still hold all except KQs. The river betting policy uses 99, 44 and JTs.
+Q: Which class supplies the bluffs here?
+HINT [hidden]: (none)
+TABLE: River | Board Qh 9d 4s 2h 2c | Pot 15.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts paired board
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 95.5 BB | SB folded stack 99.5 BB | BB stack 89.5 BB bet 6 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: BTN checks · river: BB bets 6 BB
+  + [correct] JTs — Correct. It survives the prior filter and misses the straight. The two pocket pairs make full houses.
+  - [wrong] KQs — Look again. The turn action already removed it from this model.
+    BETTER ANSWER: JTs
+  - [wrong] QJs — Look again. This class survived the turn. The stated river policy excludes it from this size.
+    BETTER ANSWER: JTs
+
+TASK w20_2_guided_value_heavy_size [drill] Call or fold?
+CAPTION: BB bets 8 BB with a legal combo from 99 44 33 22 43s Q9s KQs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+TEACH: Call or fold? Count the filtered value and weaker bets after removal instead of treating a size as strength.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Ac Qd | Board Qs 9c 4h 3d 2s | Pot 17.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 95.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Qd stack 95.5 BB | SB folded stack 99.5 BB | BB stack 87.5 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] Fold — Correct. Fold. Your 11.8% equity against this BB range falls below the 31.4% price.
+  - [wrong] Call 8 BB — Look again. Calling buys a showdown whose counted share leaves a loss of 5.00 BB.
+    BETTER ANSWER: Fold
+
+TASK w20_2_transfer_large_size_polar [drill] Call or fold?
+CAPTION: BB bets 9 BB with a legal combo from 99 66 87s T8s QTs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Ad Js | Board Jc 9h 6s 3c 2d | Pot 20.5 BB | To call 9 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 94.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Js stack 94.5 BB | SB folded stack 99.5 BB | BB stack 85.5 BB bet 9 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB · turn: BB checks · turn: BTN checks · river: BB bets 9 BB
+  + [correct] Call 9 BB — Correct. Call. Your 66.7% equity against this BB range clears the 30.5% price.
+    FEEDBACK TABLE: River | You Ad Js | Board Jc 9h 6s 3c 2d | Pot 20.5 BB | To call 9 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 10.67 BB.
+    BETTER ANSWER: Call 9 BB
+    FEEDBACK TABLE: River | You Ad Js | Board Jc 9h 6s 3c 2d | Pot 20.5 BB | To call 9 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_2_day7_unfamiliar_size_fold [review] Call or fold?
+ENTRY: drill
+CAPTION: BB bets 12 BB with a legal combo from AQo KQo 88 55 JTs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jd | Board Qs 8s 5c 3d 2h | Pot 23.5 BB | To call 12 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 94.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jd stack 94.5 BB | SB folded stack 99.5 BB | BB stack 82.5 BB bet 12 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB · turn: BB checks · turn: BTN checks · river: BB bets 12 BB
+  + [correct] Fold — Correct. Fold. Your 14.3% equity against this BB range falls below the 33.8% price.
+  - [wrong] Call 12 BB — Look again. Calling buys a showdown whose counted share leaves a loss of 6.93 BB.
+    BETTER ANSWER: Fold
+
+===== WORLD 20 · LESSON opponent_profiles · Opponent profiles =====
+
+TASK w20_3_teach [theory] Which observation supports a sticky label for one node?
+CAPTION: Use labels as summaries of observed behavior. A regular plays often, a crusher shows strong decisions, a sticky player calls often, an overbluffer bets too many misses, and a table captain drives the action. A player uncomfortable with the stakes may avoid large risks. Reprice the relevant action.
+TEACH: Which observation supports a sticky label for one node? Use labels as summaries of observed behavior. A regular plays often, a crusher shows strong decisions, a sticky player calls often, an overbluffer bets too many misses, and a table captain drives the action. A player uncomfortable with the stakes may avoid large risks. Reprice the relevant action.
+Q: Which observation supports a sticky label for one node?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Many comparable calls with weak bluff catchers at that price — Correct. The evidence describes calls in a specific target bucket and supports a value-sizing test.
+  - [wrong] The player plays at the same time every day — Look again. That may suggest a regular. It does not establish how they defend.
+    BETTER ANSWER: Many comparable calls with weak bluff catchers at that price
+  - [wrong] A loud win celebration — Look again. It does not tell you what hands they call with.
+    BETTER ANSWER: Many comparable calls with weak bluff catchers at that price
+
+TASK w20_3_read_reg_vs_crusher [drill] Which profile claims have support?
+CAPTION: Two players are regulars. Player A’s reviewed examples show disciplined folds and well-chosen value and bluffs across a range of matched spots. Player B plays many hours but has no comparable showdown record available.
+Q: Which profile claims have support?
+HINT [hidden]: (none)
+TABLE: Flop | You As Qd | Board Qc 7d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks
+  + [correct] Both are regulars. A has stronger decision evidence. — Correct. Frequency of participation supports the first label. Quality of choices in reviewed spots supports the second inference.
+    FEEDBACK TABLE: Flop | You As Qd | Board Qc 7d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] Both are proven crushers — Look again. Playing often does not establish decision quality.
+    BETTER ANSWER: Both are regulars. A has stronger decision evidence.
+    FEEDBACK TABLE: Flop | You As Qd | Board Qc 7d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+  - [wrong] B is a sticky caller — Look again. No matched call behavior is given for B.
+    BETTER ANSWER: Both are regulars. A has stronger decision evidence.
+    FEEDBACK TABLE: Flop | You As Qd | Board Qc 7d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
+
+TASK w20_3_guided_raise_larger_inelastic [drill] Which river size or check earns most?
+CAPTION: BB holds a legal combo from AKs AKo AQs AQo 99 55 A9s 88 77, equally weighted. At 3 BB, BB calls AKs AKo AQs AQo 99 55 A9s and folds the remainder. At 8 BB, BB calls AKs AKo AQs AQo 99 55 A9s and folds the remainder. If you check or get called, there is no further betting.
+TEACH: Which river size or check earns most? Count whether a larger value size changes the legally continuing group.
+Q: Which river size or check earns most?
+HINT [hidden]: (none)
+TABLE: River | You As Ad | Board Ah 9c 5d 3s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts set, pocket pair
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Ad stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Bet 8 BB — Correct. Bet 8 BB. The listed weaker aces, two pair and sets pay both sizes, so the larger price earns more.
+    FEEDBACK TABLE: River | You As Ad | Board Ah 9c 5d 3s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
+  - [wrong] Bet 3 BB — Look again. The small bet wins extra chips. In this size interval it retains exactly the same caller group as 8 BB.
+    BETTER ANSWER: Bet 8 BB
+    FEEDBACK TABLE: River | You As Ad | Board Ah 9c 5d 3s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
+  - [wrong] Check — Look again. Checking lets weaker made hands see showdown without paying.
+    BETTER ANSWER: Bet 8 BB
+    FEEDBACK TABLE: River | You As Ad | Board Ah 9c 5d 3s 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
+
+TASK w20_3_transfer_stakes_discomfort_caveat [drill] What is the strongest defensible conclusion?
+CAPTION: An opponent said they are uncomfortable with the stakes and then folded once to a large river bet. You have a missed draw. No eligible hands were exposed.
+Q: What is the strongest defensible conclusion?
+HINT [hidden]: (none)
+TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jc Tc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Treat risk aversion as a hypothesis and keep the existing priced baseline — Correct. One fold could have been an obvious miss. A matched series of folds with other evidence could strengthen the hypothesis.
+    FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] Every large river bluff now wins — Look again. The premise gives no fold frequency and no information about the folded hand.
+    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the existing priced baseline
+    FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+  - [wrong] The player definitely cannot afford the game — Look again. You cannot infer a private financial situation from one remark and action.
+    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the existing priced baseline
+    FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
+
+TASK w20_3_day7_table_captain_vs_overbluffer [review] Whose evidence first suggests more calls with an appropriate river bluff catcher?
+ENTRY: drill
+CAPTION: Player A opens many limps and initiates table action. Player B has far more missed hands than expected in a matched river betting sample. Neither label tells you the other behavior.
+Q: Whose evidence first suggests more calls with an appropriate river bluff catcher?
+HINT [hidden]: (none)
+TABLE: River | You Ac Td | Board Th 8s 4d 3h 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 91.5 BB bet 6 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 6 BB
+  + [correct] Player B’s matched river evidence — Correct. It supports extra bluffs at the river node. Check the call price before acting.
+  - [wrong] Player A’s frequent opening raises alone — Look again. Those actions are preflop. They do not show what the river bet contains.
+    BETTER ANSWER: Player B’s matched river evidence
+  - [wrong] Both for the same reason — Look again. Activity and observed river bluff frequency describe different actions.
+    BETTER ANSWER: Player B’s matched river evidence
+
+===== WORLD 20 · LESSON isolation_and_inelasticity · Isolation and inelasticity =====
+
+TASK w20_4_teach [theory] Which evidence supports an isolation raise?
+CAPTION: Isolation is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.
+TEACH: Which evidence supports an isolation raise? Isolation is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.
+Q: Which evidence supports an isolation raise?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] The target calls with weaker hands and players behind usually release — Correct. You can often attain the desired heads-up position and keep a useful edge against the target.
+  - [wrong] All players behind call every raise size — Look again. The raise may inflate a multiway pot and miss the isolation goal.
+    BETTER ANSWER: The target calls with weaker hands and players behind usually release
+  - [wrong] The target is the loudest person — Look again. Volume of speech does not describe the fold or call response.
+    BETTER ANSWER: The target calls with weaker hands and players behind usually release
+
+TASK w20_4_read_more_limpers_change_price [drill] Which other players matter for ending heads-up with CO?
+CAPTION: HJ and CO limp for 1 BB each. BTN can raise. Your selected opponent is CO. Both blinds are still behind.
+Q: Which other players matter for ending heads-up with CO?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ah Jd | Pot 3.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
+SEATS: UTG folded stack 100 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer Ah Jd stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ calls 1 BB · preflop: CO calls 1 BB
+  + [correct] HJ, SB and BB — Correct. HJ has already limped and can continue again, and both blinds still act.
+  - [wrong] Only the limper you target — Look again. The other live players can make the pot multiway.
+    BETTER ANSWER: HJ, SB and BB
+  - [wrong] Only the larger blind — Look again. Both blinds and the other limper matter.
+    BETTER ANSWER: HJ, SB and BB
+
+TASK w20_4_guided_isolation_two_sizes [drill] Which size meets that stated objective?
+CAPTION: HJ and CO limp. In ten equal-weight response paths per size, your 4 BB raise gets heads-up in position with CO three times, and 6 BB does so seven times. The goal is to maximize isolation frequency within these two affordable sizes.
+TEACH: Which size meets that stated objective? Keep the target’s call and the folds of everyone else in the same branch.
+Q: Which size meets that stated objective?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ac Qd | Pot 3.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
+EFFECTIVE: HJ 100 · CO 100 · SB 100 · BB 100
+SEATS: UTG folded stack 100 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer Ac Qd stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ calls 1 BB · preflop: CO calls 1 BB
+  + [correct] Raise to 6 BB — Correct. Seven matching branches exceed three. That identifies the higher isolation rate under this roster.
+  - [wrong] Raise to 4 BB — Look again. Its cost is lower, but this exercise asks which branch reaches heads-up more often.
+    BETTER ANSWER: Raise to 6 BB
+  - [wrong] Limp behind — Look again. Limping gives neither earlier limper a reason to leave before a later raise.
+    BETTER ANSWER: Raise to 6 BB
+
+TASK w20_4_transfer_skip_marginal_isolation [drill] Which available action sees the flop without paying extra?
+CAPTION: HJ, CO and BTN limped, and SB completed. CO and BTN have regularly re-raised loose isolation attempts. You are BB and have the closing preflop action at the current 1 BB price.
+Q: Which available action sees the flop without paying extra?
+HINT [hidden]: (none)
+TABLE: Preflop | You 7c 6c | Pot 5 BB | Seat BB | Active bb | Decision bb | Facts no applicable hand facts
+EFFECTIVE: HJ 100 · CO 100 · BTN 100 · SB 100
+SEATS: UTG folded stack 100 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer stack 99 BB | SB stack 99 BB | BB 7c 6c stack 99 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ calls 1 BB · preflop: CO calls 1 BB · preflop: BTN calls 1 BB · preflop: SB calls 0.5 BB
+  + [correct] Check the big blind — Correct. All live opponents matched 1 BB. Checking closes preflop at no extra price.
+  - [wrong] Raise to isolate HJ — Look again. Raising uses new chips, can attract multiple responses and risks a re-raise.
+    BETTER ANSWER: Check the big blind
+  - [wrong] Fold while the option is free — Look again. Folding gives up the hand. The current target already equals your posted blind.
+    BETTER ANSWER: Check the big blind
+
+TASK w20_4_day7_value_adjust_to_sticky [review] Which action earns the most against this response?
+ENTRY: drill
+CAPTION: BB leads 2 BB with all legal KJs KJo KTs KTo 99 55, weighted equally. At raises to either 7 BB or 12 BB, BB calls every listed combo and never re-raises.
+Q: Which action earns the most against this response?
+HINT [hidden]: (none)
+TABLE: River | You Kd Qd | Board Ks 9h 5c 3h 2s | Pot 7.5 BB | To call 2 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 97.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 95.5 BB bet 2 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 2 BB
+  + [correct] Raise to 12 BB — Correct. The same weaker kings pay for both raises. Their extra payments more than cover the extra losses against the sets.
+  - [wrong] Raise to 7 BB — Look again. The response group stays the same at 12 BB, so the smaller raise collects less.
+    BETTER ANSWER: Raise to 12 BB
+  - [wrong] Call 2 BB — Look again. A call has positive value. It misses the larger payments from weaker kings.
+    BETTER ANSWER: Raise to 12 BB
+
+===== WORLD 20 · LESSON image_and_ecology · Image and ecology =====
+
+TASK w20_5_teach [theory] What supports an adjustment after showing a bluff?
+CAPTION: Image changes through actions opponents saw and remembered. Consider observable adjustments. Keep the table respectful and avoid coaching, shaming or angle shooting.
+TEACH: What supports an adjustment after showing a bluff? Image changes through actions opponents saw and remembered. Consider observable adjustments. Keep the table respectful and avoid coaching, shaming or angle shooting.
+Q: What supports an adjustment after showing a bluff?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] The opponent saw it and subsequently defended comparable bets more often — Correct. Shared history can alter response. Look for a change at the same node before changing your own range.
+  - [wrong] You remember your bluff, even if nobody else saw it — Look again. Private information cannot directly change the opponent’s beliefs.
+    BETTER ANSWER: The opponent saw it and subsequently defended comparable bets more often
+  - [wrong] It permanently makes every future value bet profitable — Look again. Different opponents and sizes still have different call ranges.
+    BETTER ANSWER: The opponent saw it and subsequently defended comparable bets more often
+
+TASK w20_5_read_third_level [drill] Which question uses the third level of thinking?
+CAPTION: A regular watched your large river bluff reach showdown. You now face the same regular at another similar river after using the same previous actions.
+Q: Which question uses the third level of thinking?
+HINT [hidden]: (none)
+TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qs Jc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] What range does the regular assign me after seeing that bluff? — Correct. You are modeling the other player’s belief about your range.
+    FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] What exact hand do I hold? — Look again. That is the first level of reading your own hand.
+    BETTER ANSWER: What range does the regular assign me after seeing that bluff?
+    FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Which holdings could the regular have? — Look again. That examines the opponent’s hand, which is the second level.
+    BETTER ANSWER: What range does the regular assign me after seeing that bluff?
+    FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_5_guided_keep_table_welcoming [drill] Which response keeps the interaction respectful?
+CAPTION: After a large showdown loss a player looks frustrated and asks if their call was silly. No rules issue occurred.
+TEACH: Which response keeps the interaction respectful? A respectful table does not require giving unsolicited strategy lessons.
+Q: Which response keeps the interaction respectful?
+HINT [hidden]: (none)
+TABLE: River | You Ad Jd | Board Jc 8d 4s 3h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Acknowledge the result without criticizing how they played — Correct. Remain courteous and give them space to decide what to do next.
+    FEEDBACK TABLE: River | You Ad Jd | Board Jc 8d 4s 3h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Announce their strategic leaks to the table — Look again. Public criticism can embarrass a player and changes the social environment.
+    BETTER ANSWER: Acknowledge the result without criticizing how they played
+    FEEDBACK TABLE: River | You Ad Jd | Board Jc 8d 4s 3h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Pressure them to reload — Look again. Their buy-in decision belongs to them. Pressure is out of place.
+    BETTER ANSWER: Acknowledge the result without criticizing how they played
+    FEEDBACK TABLE: River | You Ad Jd | Board Jc 8d 4s 3h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_5_transfer_image_changes_value [drill] What adjustment does that change specifically support?
+CAPTION: This regular saw two of your river bluffs and now calls your small bets more often with Q-J and Q-T. Your A-Q beats both groups.
+Q: What adjustment does that change specifically support?
+HINT [hidden]: (none)
+TABLE: River | You As Qc | Board Qh 8d 4s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Consider more thin value at the small size — Correct. The opponent now supplies additional payments from weaker hands at that size.
+    FEEDBACK TABLE: River | You As Qc | Board Qh 8d 4s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Bluff more because those hands call — Look again. The higher call frequency weakens zero-recovery bluffs.
+    BETTER ANSWER: Consider more thin value at the small size
+    FEEDBACK TABLE: River | You As Qc | Board Qh 8d 4s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Reset your entire read on every player at the table — Look again. Only this regular’s observed response to this line was supplied.
+    BETTER ANSWER: Consider more thin value at the small size
+    FEEDBACK TABLE: River | You As Qc | Board Qh 8d 4s 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_5_day7_dont_use_private_image [review] What does that hand establish about the opponent’s image of you?
+ENTRY: drill
+CAPTION: You made a bluff two hands ago and won without showing. The current opponent had not joined the table. You have no matched evidence that they defend your river sizes differently.
+Q: What does that hand establish about the opponent’s image of you?
+HINT [hidden]: (none)
+TABLE: River | You Qd Js | Board Qc 7h 4d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qd Js stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] No evidence of a player-specific adjustment — Correct. They never observed your bluff. Use the available baseline or matched observations.
+    FEEDBACK TABLE: River | You Qd Js | Board Qc 7h 4d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] They know you bluff this line — Look again. The earlier hand was not visible to them and the cards were not shown.
+    BETTER ANSWER: No evidence of a player-specific adjustment
+    FEEDBACK TABLE: River | You Qd Js | Board Qc 7h 4d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] They now overfold to you — Look again. No behavior from this opponent was supplied to establish a change.
+    BETTER ANSWER: No evidence of a player-specific adjustment
+    FEEDBACK TABLE: River | You Qd Js | Board Qc 7h 4d 3c 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+===== WORLD 20 · LESSON read_calibration_checkpoint · Read calibration checkpoint =====
+
+TASK w20_6_teach [theory] What is the final step after narrowing an opponent range?
+CAPTION: For a read to change a decision, connect observable evidence to an explicit range adjustment and then price the resulting line.
+TEACH: What is the final step after narrowing an opponent range? For a read to change a decision, connect observable evidence to an explicit range adjustment and then price the resulting line.
+Q: What is the final step after narrowing an opponent range?
+HINT [hidden]: (none)
+TABLE: Facts no applicable hand facts
+  + [correct] Compare the feasible actions using the updated responses and price — Correct. The read only matters to the current action if it changes the relative payout.
+  - [wrong] Choose the option that matches the label regardless of size — Look again. Labels are summaries. Different bets require different equity or feed different responses.
+    BETTER ANSWER: Compare the feasible actions using the updated responses and price
+  - [wrong] Infer a single exact card combination — Look again. The model can remain a weighted range through the decision.
+    BETTER ANSWER: Compare the feasible actions using the updated responses and price
+
+TASK w20_6_read_confirmation_counterexample [drill] What should enter the review?
+CAPTION: You remember two large bluffs from a player. Their full matched showdown notes also include five large bets for value. A different analyst classified those notes before seeing your theory.
+Q: What should enter the review?
+HINT [hidden]: (none)
+TABLE: River | You As Jd | Board Jh 8c 6s 3d 2c | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 91.5 BB bet 6 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 6 BB
+  + [correct] Both the bluff and value notes — Correct. Including the counterexamples prevents the memorable bluffs from becoming your entire range.
+  - [wrong] Only the two hands you remember — Look again. That drops five observed value events and distorts the bucket.
+    BETTER ANSWER: Both the bluff and value notes
+  - [wrong] Discard all seven because the player surprised you — Look again. The complete matched roster is a better starting point than the surprise alone.
+    BETTER ANSWER: Both the bluff and value notes
+
+TASK w20_6_guided_short_price_with_read [drill] Call or fold?
+CAPTION: BB bets 12 BB with a legal combo from AQo KQo KJs JTs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.
+TEACH: Call or fold? Separate the observation-driven range from the stack-driven price.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jd | Board Qs 9c 5d 2c 2s | Pot 32.5 BB | To call 12 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+EFFECTIVE: BB 12
+POTS: main 44.5 (BB, BTN)
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jd stack 12 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 12 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 12 BB
+  + [correct] Call 12 BB — Correct. Call. Your 33.3% equity against this BB range clears the 27.0% price.
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 2.83 BB.
+    BETTER ANSWER: Call 12 BB
+
+TASK w20_6_checkpoint_filter_then_call [drill] Call or fold?
+CAPTION: BB bets 8 BB with a legal combo from 99 66 44 87s 75s JTs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You As Qd | Board Qh 9d 6s 4c 2s | Pot 19.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 94.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Qd stack 94.5 BB | SB folded stack 99.5 BB | BB stack 86.5 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] Call 8 BB — Correct. Call. Your 57.1% equity against this BB range clears the 29.1% price.
+    FEEDBACK TABLE: River | You As Qd | Board Qh 9d 6s 4c 2s | Pot 19.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [wrong] Fold — Look again. Folding saves the call now and forfeits a modeled gain of 7.71 BB.
+    BETTER ANSWER: Call 8 BB
+    FEEDBACK TABLE: River | You As Qd | Board Qh 9d 6s 4c 2s | Pot 19.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK w20_6_day7_late_sizing_update [review] Call or fold?
+ENTRY: drill
+CAPTION: BB bets 8 BB with a legal combo from AKo KQo 88 55 QTs, equally weighted. Compare calling with folding. A call closes the betting for this model.
+Q: Call or fold?
+HINT [hidden]: (none)
+TABLE: River | You Kc Jc | Board Kh 8c 5d 2s 2h | Pot 19.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
+EFFECTIVE: BB 94.5
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kc Jc stack 94.5 BB | SB folded stack 99.5 BB | BB stack 86.5 BB bet 8 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB · turn: BB checks · turn: BTN checks · river: BB bets 8 BB
+  + [correct] Fold — Correct. Fold. Your 18.2% equity against this BB range falls below the 29.1% price.
+  - [wrong] Call 8 BB — Look again. Calling buys a showdown whose counted share leaves a loss of 3.00 BB.
+    BETTER ANSWER: Fold
+
+===== REPAIR-ONLY TASKS =====
+
+===== DAY 7 REVIEW-ONLY TASKS · ZERO XP =====
