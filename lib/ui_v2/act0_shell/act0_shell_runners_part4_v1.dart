@@ -3998,7 +3998,7 @@ final _w10VsCallerValueHeavierRunner = _w7FormatPressureIntroRunner.copyWith(
   lessonTitle: "Pick a flop size",
   lessonSubtitle: 'Player Adjustment',
   caption:
-      "BB always calls 2 BB and 3 BB with weak kings and sevens, but folds them to 15 BB. BB calls 15 BB only with strong hands.",
+      "BB always calls 2 or 3 BB with weak kings and sevens. At 15 BB, weaker hands fold; only strong hands call.",
   hint: '',
   hintPolicy: Act0HintPolicyV1.theoryOnly,
   question: "Which size collects most from the stated weaker callers?",
@@ -9681,7 +9681,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
     step: Act0LessonStepKindV1.practice,
     xp: 10,
     caption:
-        'You lost two large pots and want to get even. New hand: UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. Assume BTN and both blinds fold to either a call or shove. UTG always calls a shove with this range. If you call, assume no more bets. No rake.',
+        'You lost two large pots and want to get even. UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. BTN, SB and BB fold to your call or all-in. UTG always calls your all-in. After a call, no further bets. No fee is taken from the pot.',
     question: 'What should you do?',
     teach: '',
     choices: const [
@@ -9689,7 +9689,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'fold',
         'Fold',
         Act0FeedbackQualityV1.correct,
-        'Fold QJo against QQ+/AK. Even if the other seats fold and no more bets go in, QJo has less than the 40% equity needed to call 3 BB.',
+        'UTG raises with QQ+/AK, so fold QJo. Calling 3 BB needs 40% equity even with the other seats folding and no more bets. QJo has less.',
       ),
       (
         'call_3_bb_to_win_chips_back',
@@ -9701,7 +9701,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_28_bb',
         'All-in to 28 BB',
         Act0FeedbackQualityV1.wrong,
-        'Going all-in risks 28 BB. UTG always calls with QQ+/AK, so there is no chance to win the pot by folds. QJo has too little equity against this range.',
+        'UTG always calls a 28 BB all-in with QQ+/AK. You cannot make UTG fold, and QJo has too little equity. Fold to save your stack.',
       ),
     ],
     table: _day7TableV1(

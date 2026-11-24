@@ -67,7 +67,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
     stackMatters: false,
     preChoiceAssumption:
-        "BB always calls 2 BB and 3 BB with weak kings and sevens, but folds them to 15 BB.",
+        "BB always calls 2 or 3 BB with weak kings and sevens. At 15 BB, weaker hands fold; only strong hands call.",
     suboptimalKinds: {"bet_2_bb": Act0SuboptimalKindV1.clearlyWorse},
   ),
   "w10_vs_sticky_defender_tighten_steals": Act0DecisionReasoningV1(
@@ -939,7 +939,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "call_3_bb_to_win_chips_back",
     edgeMechanism: Act0EdgeMechanismV1.avoidsDomination,
     opponentRead:
-        "UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. Assume BTN and both blinds fold to either a call or shove. UTG always calls a shove with this range. If you call, assume no more bets. No rake.",
+        "UTG raises to 3 BB with QQ+/AK. You have QJo in CO and 28 BB. BTN, SB and BB fold to your call or all-in. UTG always calls your all-in. After a call, no further bets. No fee is taken from the pot.",
     stackMatters: true,
     stackNote:
         "With 28 BB behind, going all-in against UTG risks the entire stack. Folding saves that stack and the 3 BB call.",
