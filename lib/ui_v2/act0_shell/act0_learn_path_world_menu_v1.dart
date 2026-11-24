@@ -27,14 +27,14 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
           ? AnimationStyle.noAnimation
           : null,
-      backgroundColor: Colors.transparent,
+      backgroundColor: Act0SkinTokensV1.transparent,
       isScrollControlled: false,
       builder: (context) => Padding(
         padding: const EdgeInsets.fromLTRB(
-          Act0ShellTokensV1.pageX,
-          Act0ShellTokensV1.pageX,
-          Act0ShellTokensV1.pageX,
-          Act0ShellTokensV1.gapMd,
+          Act0SkinTokensV1.screenGutter,
+          Act0SkinTokensV1.screenGutter,
+          Act0SkinTokensV1.screenGutter,
+          Act0SkinTokensV1.gapMd,
         ),
         child: _LockedVolumePreviewSheetV1(
           volume: volume,
@@ -61,7 +61,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
         label: _learnCopyV1(context, en: 'Volume I', ru: 'Том I'),
         subtitle: _learnCopyV1(context, en: 'Foundations', ru: 'Основы'),
         stateLabel: _learnCopyV1(context, en: 'Active', ru: 'Активен'),
-        color: Act0AcademyDesignTokensV1.focus,
+        color: Act0SkinTokensV1.accent,
       ),
       _VolumePillModelV1(
         id: 'volume_ii',
@@ -76,7 +76,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Later frontier',
           ru: 'Поздний рубеж',
         ),
-        color: Act0AcademyDesignTokensV1.inkMuted,
+        color: Act0SkinTokensV1.muted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -101,7 +101,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           en: 'Advanced frontier',
           ru: 'Продвинутый рубеж',
         ),
-        color: Act0AcademyDesignTokensV1.inkMuted,
+        color: Act0SkinTokensV1.muted,
         unlockAfterLabel: _learnCopyV1(
           context,
           en: 'This is a future landmark, not a lesson you can open today.',
@@ -118,21 +118,14 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
       key: const Key('act0_shell_levels_menu'),
       children: [
         Positioned.fill(
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 28, sigmaY: 28),
-            child: Container(
-              color: Act0AcademyDesignTokensV1.pageSurface.withValues(
-                alpha: 0.96,
-              ),
-            ),
-          ),
+          child: const ColoredBox(color: Act0SkinTokensV1.background),
         ),
         Padding(
           padding: const EdgeInsets.fromLTRB(
-            Act0ShellTokensV1.pageX,
-            Act0ShellTokensV1.gapLg,
-            Act0ShellTokensV1.pageX,
-            Act0ShellTokensV1.gapSm,
+            Act0SkinTokensV1.screenGutter,
+            Act0SkinTokensV1.gapLg,
+            Act0SkinTokensV1.screenGutter,
+            Act0SkinTokensV1.gapSm,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -142,12 +135,12 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                   width: 36,
                   height: 4,
                   decoration: BoxDecoration(
-                    color: Act0ShellTokensV1.border,
-                    borderRadius: BorderRadius.circular(2),
+                    color: Act0SkinTokensV1.line,
+                    borderRadius: BorderRadius.circular(Act0SkinTokensV1.gapXs),
                   ),
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapSm),
+              const SizedBox(height: Act0SkinTokensV1.gapSm),
               Row(
                 children: [
                   IconButton(
@@ -155,14 +148,14 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                     onPressed: onClose,
                     icon: const Icon(
                       Icons.arrow_back_rounded,
-                      color: Act0AcademyDesignTokensV1.ink,
+                      color: Act0SkinTokensV1.onSurface,
                     ),
                   ),
                   Expanded(
                     child: Text(
                       _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                       textAlign: TextAlign.center,
-                      style: Act0AcademyDesignTokensV1.sectionHeading,
+                      style: Act0SkinTokensV1.headline,
                     ),
                   ),
                   const SizedBox(width: 48),
@@ -171,9 +164,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
               Expanded(
                 child: ListView(
                   key: const Key('act0_shell_worlds_content_scroll'),
-                  padding: const EdgeInsets.only(bottom: 24),
+                  padding: const EdgeInsets.only(
+                    bottom: Act0SkinTokensV1.gapXl,
+                  ),
                   children: [
-                    const SizedBox(height: 2),
+                    const SizedBox(height: Act0SkinTokensV1.gapXs),
                     Center(
                       child: Text(
                         _learnCopyV1(
@@ -181,12 +176,10 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                           en: '3 volumes · 36 worlds',
                           ru: '3 тома · 36 миров',
                         ),
-                        style: Act0AcademyDesignTokensV1.supporting.copyWith(
-                          fontSize: 11.0,
-                        ),
+                        style: Act0SkinTokensV1.secondary,
                       ),
                     ),
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    const SizedBox(height: Act0SkinTokensV1.gapMd),
                     LayoutBuilder(
                       key: const Key('act0_shell_volume_strip'),
                       builder: (context, constraints) {
@@ -214,7 +207,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                 pills[i],
                                 if (i < pills.length - 1)
                                   const SizedBox(
-                                    height: Act0AcademyDesignTokensV1.gapXs,
+                                    height: Act0SkinTokensV1.gapXs,
                                   ),
                               ],
                             ],
@@ -227,39 +220,17 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               for (var i = 0; i < pills.length; i++) ...[
                                 Expanded(child: pills[i]),
                                 if (i < pills.length - 1)
-                                  const SizedBox(
-                                    width: Act0AcademyDesignTokensV1.gapXs,
-                                  ),
+                                  const SizedBox(width: Act0SkinTokensV1.gapXs),
                               ],
                             ],
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
-                    Container(
+                    const SizedBox(height: Act0SkinTokensV1.gapMd),
+                    Act0SkinCardV1(
                       key: const Key('act0_shell_levels_sticky_node_header'),
-                      width: double.infinity,
-                      padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
-                      decoration: BoxDecoration(
-                        color: Color.alphaBlend(
-                          currentStateColor.withValues(alpha: 0.08),
-                          Act0AcademyDesignTokensV1.pageSurface,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                          Act0AcademyDesignTokensV1.radiusCard,
-                        ),
-                        border: Border.all(
-                          color: currentStateColor.withValues(alpha: 0.36),
-                        ),
-                        boxShadow: <BoxShadow>[
-                          BoxShadow(
-                            color: currentStateColor.withValues(alpha: 0.10),
-                            blurRadius: 14,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
-                      ),
+                      emphasized: true,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -273,12 +244,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                 ru: 'Текущая основа',
                               ),
                             ),
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
+                            style: Act0SkinTokensV1.sectionLabel.copyWith(
                               color: currentStateColor,
-                              letterSpacing: 0.5,
                             ),
                           ),
-                          const SizedBox(height: 6),
+                          const SizedBox(height: Act0SkinTokensV1.gapSm),
                           Text(
                             _learnCopyV1(
                               context,
@@ -289,13 +259,13 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_selected_world_status_line',
                             ),
 
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
-                              color: currentStateColor.withValues(alpha: 0.90),
-                              fontSize: 10.8,
-                              letterSpacing: 0.36,
+                            style: Act0SkinTokensV1.sectionLabel.copyWith(
+                              color: currentStateColor.withValues(
+                                alpha: Act0SkinTokensV1.nearlyOpaque,
+                              ),
                             ),
                           ),
-                          const SizedBox(height: 5),
+                          const SizedBox(height: Act0SkinTokensV1.gapXs),
                           Text(
                             _learnCopyV1(
                               context,
@@ -306,11 +276,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_selected_world_current_line',
                             ),
 
-                            style: Act0AcademyDesignTokensV1.body.copyWith(
-                              color: Act0AcademyDesignTokensV1.ink,
+                            style: Act0SkinTokensV1.body.copyWith(
+                              color: Act0SkinTokensV1.onSurface,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: Act0SkinTokensV1.gapXs),
                           if (nextWorld != null) ...[
                             Text(
                               _learnCopyV1(
@@ -322,12 +292,12 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                                 'act0_shell_levels_selected_world_next_landmark',
                               ),
 
-                              style: Act0AcademyDesignTokensV1.body.copyWith(
-                                color: Act0AcademyDesignTokensV1.needsReviewFg,
+                              style: Act0SkinTokensV1.body.copyWith(
+                                color: Act0SkinTokensV1.accent,
                               ),
                             ),
                           ],
-                          const SizedBox(height: 4),
+                          const SizedBox(height: Act0SkinTokensV1.gapXs),
                           Text(
                             _learnCopyV1(
                               context,
@@ -338,13 +308,11 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_planned_foundation_line',
                             ),
 
-                            style: Act0AcademyDesignTokensV1.supporting
-                                .copyWith(
-                                  color: Act0AcademyDesignTokensV1.inkMuted,
-                                  fontSize: 10.4,
-                                ),
+                            style: Act0SkinTokensV1.secondary.copyWith(
+                              color: Act0SkinTokensV1.muted,
+                            ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: Act0SkinTokensV1.gapXs),
                           Text(
                             _learnCopyV1(
                               context,
@@ -355,16 +323,14 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                               'act0_shell_levels_later_frontier_line',
                             ),
 
-                            style: Act0AcademyDesignTokensV1.supporting
-                                .copyWith(
-                                  color: Act0AcademyDesignTokensV1.inkMuted,
-                                  fontSize: 10.2,
-                                ),
+                            style: Act0SkinTokensV1.secondary.copyWith(
+                              color: Act0SkinTokensV1.muted,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: Act0ShellTokensV1.gapMd),
+                    const SizedBox(height: Act0SkinTokensV1.gapMd),
                     for (var i = 0; i < worlds.length; i++) ...[
                       _WorldNodeV1(
                         world: worlds[i],
@@ -373,7 +339,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
                         onSelectWorld: onSelectWorld,
                       ),
                       if (i < worlds.length - 1)
-                        const SizedBox(height: Act0ShellTokensV1.gapSm),
+                        const SizedBox(height: Act0SkinTokensV1.gapSm),
                     ],
                   ],
                 ),
@@ -385,7 +351,9 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
           Positioned.fill(
             child: ModalBarrier(
               key: const Key('act0_shell_world_popup_scrim'),
-              color: Colors.black.withValues(alpha: 0.18),
+              color: Act0SkinTokensV1.scrim.withValues(
+                alpha: Act0SkinTokensV1.tintStrong,
+              ),
               dismissible: true,
               semanticsLabel: MaterialLocalizations.of(
                 context,
@@ -397,10 +365,10 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(
-                Act0ShellTokensV1.pageX,
-                Act0ShellTokensV1.pageX,
-                Act0ShellTokensV1.pageX,
-                Act0ShellTokensV1.gapMd,
+                Act0SkinTokensV1.screenGutter,
+                Act0SkinTokensV1.screenGutter,
+                Act0SkinTokensV1.screenGutter,
+                Act0SkinTokensV1.gapMd,
               ),
               child: GestureDetector(
                 excludeFromSemantics: true,
@@ -432,25 +400,34 @@ class _VolumePillV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final active = volume.id == 'volume_i';
     return Material(
-      color: Colors.transparent,
+      color: Act0SkinTokensV1.transparent,
       child: InkWell(
         key: Key('act0_shell_${volume.id}'),
         onTap: onTap,
-        borderRadius: BorderRadius.circular(
-          Act0AcademyDesignTokensV1.radiusCard,
-        ),
+        borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
         child: Ink(
-          padding: const EdgeInsets.fromLTRB(9, 7, 9, 7),
+          padding: const EdgeInsets.fromLTRB(
+            Act0SkinTokensV1.gapSm,
+            Act0SkinTokensV1.gapSm,
+            Act0SkinTokensV1.gapSm,
+            Act0SkinTokensV1.gapSm,
+          ),
           decoration: BoxDecoration(
             color: Color.alphaBlend(
-              volume.color.withValues(alpha: active ? 0.10 : 0.05),
-              Act0AcademyDesignTokensV1.pageSurface,
+              volume.color.withValues(
+                alpha: active
+                    ? Act0SkinTokensV1.tintSoft
+                    : Act0SkinTokensV1.tintSubtle,
+              ),
+              Act0SkinTokensV1.background,
             ),
-            borderRadius: BorderRadius.circular(
-              Act0AcademyDesignTokensV1.radiusCard,
-            ),
+            borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
             border: Border.all(
-              color: volume.color.withValues(alpha: active ? 0.22 : 0.16),
+              color: volume.color.withValues(
+                alpha: active
+                    ? Act0SkinTokensV1.edgeSoft
+                    : Act0SkinTokensV1.tintStrong,
+              ),
             ),
           ),
           child: Column(
@@ -460,30 +437,24 @@ class _VolumePillV1 extends StatelessWidget {
               Text(
                 volume.label,
 
-                style: Act0AcademyDesignTokensV1.label.copyWith(
+                style: Act0SkinTokensV1.sectionLabel.copyWith(
                   color: volume.color,
-                  letterSpacing: 0.18,
-                  fontSize: 8.5,
                 ),
               ),
               Text(
                 volume.subtitle,
 
-                style: Act0AcademyDesignTokensV1.supporting.copyWith(
-                  fontSize: 9.6,
-                  height: 1.0,
+                style: Act0SkinTokensV1.secondary.copyWith(
                   color: active
-                      ? Act0AcademyDesignTokensV1.inkMuted
-                      : Act0AcademyDesignTokensV1.inkMuted,
+                      ? Act0SkinTokensV1.muted
+                      : Act0SkinTokensV1.muted,
                 ),
               ),
               Text(
                 volume.stateLabel,
 
-                style: Act0AcademyDesignTokensV1.label.copyWith(
+                style: Act0SkinTokensV1.sectionLabel.copyWith(
                   color: volume.color,
-                  fontSize: 8.6,
-                  letterSpacing: 0.08,
                 ),
               ),
             ],
@@ -507,17 +478,15 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: Key('act0_shell_${volume.id}_preview_panel'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: const EdgeInsets.all(Act0SkinTokensV1.gapLg),
       decoration:
-          Act0ShellTokensV1.surfaceDecoration(
-            color: Act0AcademyDesignTokensV1.pageSurface,
-            borderColor: Act0AcademyDesignTokensV1.inkMuted.withValues(
-              alpha: 0.36,
+          Act0SkinTokensV1.cardDecoration(
+            color: Act0SkinTokensV1.background,
+            borderColor: Act0SkinTokensV1.muted.withValues(
+              alpha: Act0SkinTokensV1.edgeStrong,
             ),
           ).copyWith(
-            borderRadius: BorderRadius.circular(
-              Act0AcademyDesignTokensV1.radiusCard,
-            ),
+            borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
           ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -525,33 +494,33 @@ class _LockedVolumePreviewSheetV1 extends StatelessWidget {
         children: [
           _StateBadgeV1(
             label: volume.stateLabel,
-            color: Act0AcademyDesignTokensV1.inkMuted,
+            color: Act0SkinTokensV1.muted,
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(volume.label, style: Act0AcademyDesignTokensV1.sectionHeading),
-          const SizedBox(height: Act0ShellTokensV1.gapXs),
-          Text(volume.subtitle, style: Act0AcademyDesignTokensV1.body),
+          const SizedBox(height: Act0SkinTokensV1.gapSm),
+          Text(volume.label, style: Act0SkinTokensV1.headline),
+          const SizedBox(height: Act0SkinTokensV1.gapXs),
+          Text(volume.subtitle, style: Act0SkinTokensV1.body),
           if ((volume.unlockAfterLabel ?? '').isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            const SizedBox(height: Act0SkinTokensV1.gapSm),
             Text(
               volume.unlockAfterLabel!,
               key: Key('act0_shell_${volume.id}_unlock_label'),
-              style: Act0AcademyDesignTokensV1.body,
+              style: Act0SkinTokensV1.body,
             ),
           ],
           if ((volume.previewLine ?? '').isNotEmpty) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            const SizedBox(height: Act0SkinTokensV1.gapXs),
             Text(
               volume.previewLine!,
               key: Key('act0_shell_${volume.id}_preview_line'),
-              style: Act0AcademyDesignTokensV1.supporting,
+              style: Act0SkinTokensV1.secondary,
             ),
           ],
-          const SizedBox(height: Act0ShellTokensV1.gapMd),
+          const SizedBox(height: Act0SkinTokensV1.gapMd),
           OutlinedButton(
             key: Key('act0_shell_${volume.id}_continue_current_cta'),
             onPressed: () => Navigator.of(context).pop(),
-            style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
+            style: Act0SkinTokensV1.secondaryButtonStyle(),
             child: Text(continueLabel),
           ),
         ],
@@ -628,7 +597,7 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
     final completed = widget.world.status == Act0WorldStateV1.completed;
     final active = widget.world.status == Act0WorldStateV1.current;
     final nextWorld = _isImmediateNextWorldV1(widget.worlds, widget.world);
-    final nodeRadius = Act0AcademyDesignTokensV1.radiusCard;
+    final nodeRadius = Act0SkinTokensV1.radiusCard;
     final targetScaleFactor = widget.selected ? 1.01 : 1.0;
     final subtitle = act0AcademyWorldSubtitleV1(context, widget.world);
     final previousWorld = _worldBeforeV1(widget.worlds, widget.world);
@@ -648,10 +617,14 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
             : '',
     };
     final targetBorderColor = widget.selected
-        ? color.withValues(alpha: 0.40)
+        ? color.withValues(alpha: Act0SkinTokensV1.edgeStrong)
         : locked
-        ? color.withValues(alpha: nextWorld ? 0.30 : 0.18)
-        : color.withValues(alpha: 0.24);
+        ? color.withValues(
+            alpha: nextWorld
+                ? Act0SkinTokensV1.edgeSoft
+                : Act0SkinTokensV1.tintStrong,
+          )
+        : color.withValues(alpha: Act0SkinTokensV1.edgeSoft);
 
     return AnimatedBuilder(
       animation: _controller,
@@ -666,7 +639,7 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
         return Container(
           clipBehavior: Clip.none,
           child: Material(
-            color: Colors.transparent,
+            color: Act0SkinTokensV1.transparent,
             child: _LearnButtonV1(
               key: Key('act0_shell_world_${widget.world.worldNumber}'),
               borderRadius: BorderRadius.circular(nodeRadius),
@@ -674,41 +647,27 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
               child: Transform.scale(
                 scale: scaleFactor,
                 child: Ink(
-                  padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+                  padding: const EdgeInsets.fromLTRB(
+                    Act0SkinTokensV1.gapMd,
+                    Act0SkinTokensV1.gapMd,
+                    Act0SkinTokensV1.gapMd,
+                    Act0SkinTokensV1.gapMd,
+                  ),
                   decoration: BoxDecoration(
                     color: widget.selected
                         ? Color.alphaBlend(
-                            color.withValues(alpha: active ? 0.12 : 0.08),
-                            Act0AcademyDesignTokensV1.pageSurface,
+                            color.withValues(
+                              alpha: active
+                                  ? Act0SkinTokensV1.tintSoft
+                                  : Act0SkinTokensV1.tintSubtle,
+                            ),
+                            Act0SkinTokensV1.background,
                           )
-                        : Act0AcademyDesignTokensV1.cardSurface.withValues(
-                            alpha: 0.88,
+                        : Act0SkinTokensV1.surface.withValues(
+                            alpha: Act0SkinTokensV1.nearlyOpaque,
                           ),
                     borderRadius: BorderRadius.circular(nodeRadius),
                     border: Border.all(color: targetBorderColor, width: 1.0),
-                    boxShadow: <BoxShadow>[
-                      if (widget.selected)
-                        BoxShadow(
-                          color: color.withValues(alpha: 0.18 * t),
-                          blurRadius: 14,
-                          spreadRadius: 1.0,
-                          offset: Offset.zero,
-                        ),
-                      if (active || widget.selected || nextWorld)
-                        BoxShadow(
-                          color: color.withValues(alpha: 0.10 * t),
-                          blurRadius: 9 * t,
-                          spreadRadius: 0.5 * t,
-                          offset: Offset(0, 2 * t),
-                        )
-                      else if (completed)
-                        BoxShadow(
-                          color: color.withValues(alpha: 0.08 * t),
-                          blurRadius: 6 * t,
-                          offset: Offset(0, 1 * t),
-                        ),
-                      // locked: no shadow
-                    ],
                   ),
                   child: Row(
                     children: [
@@ -721,15 +680,19 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                               ? color
                               : color.withValues(
                                   alpha: locked
-                                      ? (nextWorld ? 0.14 : 0.10)
-                                      : 0.16,
+                                      ? Act0SkinTokensV1.tintSoft
+                                      : Act0SkinTokensV1.tintStrong,
                                 ),
                           borderRadius: BorderRadius.circular(
-                            Act0ShellTokensV1.radiusCard,
+                            Act0SkinTokensV1.radiusCard,
                           ),
                           border: Border.all(
                             color: color.withValues(
-                              alpha: locked ? (nextWorld ? 0.58 : 0.30) : 0.82,
+                              alpha: locked
+                                  ? (nextWorld
+                                        ? Act0SkinTokensV1.iconMutedOpacity
+                                        : Act0SkinTokensV1.edgeSoft)
+                                  : Act0SkinTokensV1.disabledOpacity,
                             ),
                             width: active ? 2.0 : 1.4,
                           ),
@@ -737,21 +700,19 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                         child: completed
                             ? Icon(
                                 Icons.check_rounded,
-                                color: Colors.white,
+                                color: Act0SkinTokensV1.onSurface,
                                 size: active ? 22 : 20,
                               )
                             : Text(
                                 '${widget.world.worldNumber}',
-                                style: TextStyle(
+                                style: Act0SkinTokensV1.captionStyle.copyWith(
                                   color: locked && !nextWorld
-                                      ? Act0AcademyDesignTokensV1.inkMuted
-                                      : Act0AcademyDesignTokensV1.ink,
-                                  fontSize: active ? 16 : 15,
-                                  fontWeight: FontWeight.w900,
+                                      ? Act0SkinTokensV1.muted
+                                      : Act0SkinTokensV1.onSurface,
                                 ),
                               ),
                       ),
-                      const SizedBox(width: 9),
+                      const SizedBox(width: Act0SkinTokensV1.gapSm),
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -767,48 +728,32 @@ class _WorldNodeV1State extends State<_WorldNodeV1>
                                       en: 'World ${widget.world.worldNumber}',
                                       ru: '\u041c\u0438\u0440 ${widget.world.worldNumber}',
                                     ),
-                                    style: Act0AcademyDesignTokensV1.label
-                                        .copyWith(
-                                          color: color,
-                                          letterSpacing: 0.42,
-                                        ),
+                                    style: Act0SkinTokensV1.sectionLabel
+                                        .copyWith(color: color),
                                   ),
                                 ),
                                 _StateBadgeV1(label: statusLabel, color: color),
                               ],
                             ),
-                            const SizedBox(height: 4),
+                            const SizedBox(height: Act0SkinTokensV1.gapXs),
                             Text(
                               act0AcademyWorldTitleV1(context, widget.world),
-                              style: Act0ShellTokensV1.cardTitle.copyWith(
+                              style: Act0SkinTokensV1.headline.copyWith(
                                 color: locked && !nextWorld
-                                    ? Act0AcademyDesignTokensV1.inkMuted
-                                    : Act0AcademyDesignTokensV1.ink,
-                                fontSize: widget.selected ? 14.2 : 13.8,
+                                    ? Act0SkinTokensV1.muted
+                                    : Act0SkinTokensV1.onSurface,
                               ),
                             ),
-                            const SizedBox(height: 3),
-                            Text(
-                              subtitle,
-                              style: Act0AcademyDesignTokensV1.supporting
-                                  .copyWith(
-                                    color: locked && !nextWorld
-                                        ? Act0AcademyDesignTokensV1.inkMuted
-                                        : Act0AcademyDesignTokensV1.inkMuted,
-                                    fontSize: 11.2,
-                                    height: 1.25,
-                                  ),
-                            ),
+                            const SizedBox(height: Act0SkinTokensV1.gapXs),
+                            Text(subtitle, style: Act0SkinTokensV1.secondary),
                             if (detailText.isNotEmpty) ...[
-                              const SizedBox(height: 5),
+                              const SizedBox(height: Act0SkinTokensV1.gapXs),
                               Text(
                                 detailText,
-                                style: Act0AcademyDesignTokensV1.label.copyWith(
+                                style: Act0SkinTokensV1.sectionLabel.copyWith(
                                   color: color.withValues(
-                                    alpha: locked ? 0.92 : 0.88,
+                                    alpha: Act0SkinTokensV1.nearlyOpaque,
                                   ),
-                                  fontSize: 10.2,
-                                  letterSpacing: 0.28,
                                 ),
                               ),
                             ],
@@ -846,12 +791,12 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     final progressionLocked = _isProgressionLockedWorldV1(worlds, world);
     final color = progressionLocked
-        ? Act0AcademyDesignTokensV1.needsReviewFg
+        ? Act0SkinTokensV1.accent
         : switch (world.status) {
-            Act0WorldStateV1.completed || Act0WorldStateV1.passedByRulesCheck =>
-              Act0AcademyDesignTokensV1.focus,
-            Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
-            Act0WorldStateV1.locked => Act0AcademyDesignTokensV1.inkMuted,
+            Act0WorldStateV1.completed ||
+            Act0WorldStateV1.passedByRulesCheck => Act0SkinTokensV1.accent,
+            Act0WorldStateV1.current => Act0SkinTokensV1.accent,
+            Act0WorldStateV1.locked => Act0SkinTokensV1.muted,
           };
     final worldTitle = act0AcademyWorldTitleV1(context, world);
     final worldSubtitle = act0AcademyWorldSubtitleV1(context, world);
@@ -874,15 +819,13 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
     };
     return Container(
       key: const Key('act0_shell_selected_world_panel'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapLg),
+      padding: const EdgeInsets.all(Act0SkinTokensV1.gapLg),
       decoration:
-          Act0ShellTokensV1.surfaceDecoration(
-            color: Act0AcademyDesignTokensV1.pageSurface,
-            borderColor: color.withValues(alpha: 0.48),
+          Act0SkinTokensV1.cardDecoration(
+            color: Act0SkinTokensV1.background,
+            borderColor: color.withValues(alpha: Act0SkinTokensV1.edgeStrong),
           ).copyWith(
-            borderRadius: BorderRadius.circular(
-              Act0AcademyDesignTokensV1.radiusCard,
-            ),
+            borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
           ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -892,24 +835,23 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
             children: [
               _StateBadgeV1(label: stateLabel, color: color),
               if (!progressionLocked) ...[
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
+                const SizedBox(width: Act0SkinTokensV1.gapSm),
                 Text(
                   _learnCopyV1(
                     context,
                     en: 'Lesson path',
                     ru: 'Маршрут доказательств',
                   ),
-                  style: Act0AcademyDesignTokensV1.label.copyWith(
-                    color: Act0AcademyDesignTokensV1.needsReviewFg,
-                    letterSpacing: 0.5,
+                  style: Act0SkinTokensV1.sectionLabel.copyWith(
+                    color: Act0SkinTokensV1.accent,
                   ),
                 ),
               ],
             ],
           ),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
-          Text(worldTitle, style: Act0AcademyDesignTokensV1.sectionHeading),
-          const SizedBox(height: Act0ShellTokensV1.gapSm),
+          const SizedBox(height: Act0SkinTokensV1.gapSm),
+          Text(worldTitle, style: Act0SkinTokensV1.headline),
+          const SizedBox(height: Act0SkinTokensV1.gapSm),
           Text(
             progressionLocked
                 ? _learnCopyV1(
@@ -919,17 +861,17 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
                   )
                 : act0DisplayWorldNameCopyV1(world.unlockLabel),
             key: const Key('act0_shell_world_unlock_label'),
-            style: Act0AcademyDesignTokensV1.body.copyWith(
-              color: Act0AcademyDesignTokensV1.ink,
+            style: Act0SkinTokensV1.body.copyWith(
+              color: Act0SkinTokensV1.onSurface,
             ),
           ),
           if (progressionLocked) ...[
-            Text(worldSubtitle, style: Act0AcademyDesignTokensV1.supporting),
-            const SizedBox(height: Act0ShellTokensV1.gapSm),
+            Text(worldSubtitle, style: Act0SkinTokensV1.secondary),
+            const SizedBox(height: Act0SkinTokensV1.gapSm),
             OutlinedButton(
               key: const Key('act0_shell_world_continue_current_cta'),
               onPressed: onContinueCurrentWorld,
-              style: Act0AcademyDesignTokensV1.secondaryButtonStyle(),
+              style: Act0SkinTokensV1.secondaryButtonStyle(),
               child: Text(
                 _learnCopyV1(
                   context,
@@ -939,21 +881,21 @@ class _SelectedWorldPopupV1 extends StatelessWidget {
               ),
             ),
           ] else if (world.isLocked) ...[
-            const SizedBox(height: Act0ShellTokensV1.gapMd),
+            const SizedBox(height: Act0SkinTokensV1.gapMd),
             Text(
               _learnCopyV1(context, en: 'Locked preview', ru: 'Предпросмотр'),
-              style: Act0AcademyDesignTokensV1.label.copyWith(
-                color: Act0AcademyDesignTokensV1.inkMuted,
+              style: Act0SkinTokensV1.sectionLabel.copyWith(
+                color: Act0SkinTokensV1.muted,
               ),
             ),
-            const SizedBox(height: Act0ShellTokensV1.gapXs),
+            const SizedBox(height: Act0SkinTokensV1.gapXs),
             Text(
               _learnCopyV1(
                 context,
                 en: 'This world opens later in the route. Stay on the current path first.',
                 ru: 'Этот мир откроется позже по маршруту. Сначала держись текущего пути.',
               ),
-              style: Act0AcademyDesignTokensV1.supporting,
+              style: Act0SkinTokensV1.secondary,
             ),
           ],
         ],
@@ -976,21 +918,23 @@ class _LearnCoachLineV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final accent = switch (mood) {
-      Act0SharkyMoodV1.repair => Act0ShellTokensV1.gold,
-      Act0SharkyMoodV1.celebrate => Act0ShellTokensV1.primary,
-      Act0SharkyMoodV1.happy => Act0ShellTokensV1.primary,
-      Act0SharkyMoodV1.neutral => Act0ShellTokensV1.info,
-      Act0SharkyMoodV1.thinking => Act0ShellTokensV1.info,
+      Act0SharkyMoodV1.repair => Act0SkinTokensV1.accent,
+      Act0SharkyMoodV1.celebrate => Act0SkinTokensV1.accent,
+      Act0SharkyMoodV1.happy => Act0SkinTokensV1.accent,
+      Act0SharkyMoodV1.neutral => Act0SkinTokensV1.accent,
+      Act0SharkyMoodV1.thinking => Act0SkinTokensV1.accent,
     };
     return Container(
       padding: const EdgeInsets.symmetric(
-        horizontal: Act0ShellTokensV1.gapMd,
-        vertical: Act0ShellTokensV1.gapSm,
+        horizontal: Act0SkinTokensV1.gapMd,
+        vertical: Act0SkinTokensV1.gapSm,
       ),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface3,
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
-        border: Border.all(color: accent.withValues(alpha: 0.22)),
+        color: Act0SkinTokensV1.track,
+        borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
+        border: Border.all(
+          color: accent.withValues(alpha: Act0SkinTokensV1.edgeSoft),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1000,25 +944,22 @@ class _LearnCoachLineV1 extends StatelessWidget {
             height: 34,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: accent.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+              color: accent.withValues(alpha: Act0SkinTokensV1.tintSoft),
+              borderRadius: BorderRadius.circular(
+                Act0SkinTokensV1.radiusControl,
+              ),
             ),
             child: Icon(Icons.waves_rounded, color: accent, size: 18),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          const SizedBox(width: Act0SkinTokensV1.gapSm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  line,
-                  style: Act0ShellTokensV1.body.copyWith(
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
+                Text(line, style: Act0SkinTokensV1.body),
                 if ((detail ?? '').trim().isNotEmpty) ...[
-                  const SizedBox(height: 2),
-                  Text(detail!, style: Act0ShellTokensV1.muted),
+                  const SizedBox(height: Act0SkinTokensV1.gapXs),
+                  Text(detail!, style: Act0SkinTokensV1.secondary),
                 ],
               ],
             ),
@@ -1039,12 +980,16 @@ class _LearnRouteContractCardV1 extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       key: const Key('act0_shell_learn_route_contract_card'),
-      padding: const EdgeInsets.all(Act0ShellTokensV1.gapMd),
+      padding: const EdgeInsets.all(Act0SkinTokensV1.gapMd),
       decoration: BoxDecoration(
-        color: Act0ShellTokensV1.surface2.withValues(alpha: 0.72),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+        color: Act0SkinTokensV1.raised.withValues(
+          alpha: Act0SkinTokensV1.disabledOpacity,
+        ),
+        borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
         border: Border.all(
-          color: Act0ShellTokensV1.info.withValues(alpha: 0.18),
+          color: Act0SkinTokensV1.accent.withValues(
+            alpha: Act0SkinTokensV1.tintStrong,
+          ),
         ),
       ),
       child: Row(
@@ -1055,16 +1000,20 @@ class _LearnRouteContractCardV1 extends StatelessWidget {
             height: 36,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: Act0ShellTokensV1.info.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
+              color: Act0SkinTokensV1.accent.withValues(
+                alpha: Act0SkinTokensV1.tintSoft,
+              ),
+              borderRadius: BorderRadius.circular(
+                Act0SkinTokensV1.radiusControl,
+              ),
             ),
             child: const Icon(
               Icons.alt_route_rounded,
               size: 18,
-              color: Act0ShellTokensV1.info,
+              color: Act0SkinTokensV1.accent,
             ),
           ),
-          const SizedBox(width: Act0ShellTokensV1.gapSm),
+          const SizedBox(width: Act0SkinTokensV1.gapSm),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1072,16 +1021,15 @@ class _LearnRouteContractCardV1 extends StatelessWidget {
                 Text(
                   line,
                   key: const Key('act0_shell_learn_route_contract_line'),
-                  style: Act0ShellTokensV1.body.copyWith(
-                    color: Act0ShellTokensV1.text,
-                    fontWeight: FontWeight.w800,
+                  style: Act0SkinTokensV1.body.copyWith(
+                    color: Act0SkinTokensV1.onSurface,
                   ),
                 ),
-                const SizedBox(height: Act0ShellTokensV1.gapXs),
+                const SizedBox(height: Act0SkinTokensV1.gapXs),
                 Text(
                   detail,
                   key: const Key('act0_shell_learn_route_contract_detail'),
-                  style: Act0ShellTokensV1.muted,
+                  style: Act0SkinTokensV1.secondary,
                 ),
               ],
             ),

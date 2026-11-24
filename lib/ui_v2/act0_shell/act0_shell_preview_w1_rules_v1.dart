@@ -123,6 +123,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
         selectedTaskId: question.taskId,
         selectedTaskFamily: Act0TaskFamilyV1.decision,
         showDecisionCoach: false,
+        progressLabel: 'Rules check · ${index + 1} of ${view.total}',
         onBack: _closeW1RulesCheckV1,
         onContinueTheory: () {},
         onChooseOption: (option) => _answerW1RulesCheckV1(

@@ -1276,6 +1276,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.isRestoredRepairFeedback = false,
     this.localizeW1Ctas = false,
     this.preserveSourceOwnedQuestion = false,
+    this.progressLabel,
     this.showDecisionCoach = true,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -1358,6 +1359,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final bool localizeW1Ctas;
   // Placement quick-check reuses one task ID for three authored questions.
   final bool preserveSourceOwnedQuestion;
+  final String? progressLabel;
   final bool showDecisionCoach;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -3287,6 +3289,37 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         child: BackButton(onPressed: widget.onBack),
       );
     }
+    if (runner.hideTable) {
+      return Column(
+        key: const Key('act0_shell_runner_screen'),
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _buildRunnerProgressV1(
+            context,
+            runner: runner,
+            onBack: _handleRunnerBackV1,
+            showGlossary: false,
+            progressLabel: widget.progressLabel,
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(Act0SkinTokensV1.screenGutter),
+              children: [
+                Text(runner.question, style: Act0SkinTokensV1.question),
+                for (final option in runner.options) ...[
+                  const SizedBox(height: Act0SkinTokensV1.gapMd),
+                  Act0SkinAnswerOptionRowV1(
+                    key: Key('act0_shell_option_${option.id}'),
+                    label: option.label,
+                    onTap: () => _handleChooseOptionTelemetry(option),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      );
+    }
     final isTheory = _isTheory;
     final isDrill = runner.phase == Act0LessonPhaseV1.drill;
     final isReview = _isReview;
@@ -3367,16 +3400,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         ? widget.numberEntry!.spec.question
         : widget.preserveSourceOwnedQuestion
         ? runner.question
-        : act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
-        ? act0AcademyW1InstructionV1(
+        : act0RunnerQuestionCopyV1(
             context,
             widget.selectedTaskId,
             runner.question,
-          )
-        : act0LocalizedRunnerQuestionAtomByTaskIdV1(
-            widget.selectedTaskId,
-            fallback: runner.question,
-            languageCode: act0AcademyLanguageV1(context),
           );
     final learningRailSupportSegments =
         widget.selectedTaskId == 'what_poker_is_theory'
@@ -4332,6 +4359,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   context,
                   runner: runner,
                   extraPracticeProgress: widget.extraPracticeProgress,
+                  progressLabel: widget.progressLabel,
                   onBack: _handleRunnerBackV1,
                   showGlossary: isTheory || isTeaching || isReview,
                 ),
@@ -4802,6 +4830,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               context,
               runner: runner,
               extraPracticeProgress: widget.extraPracticeProgress,
+              progressLabel: widget.progressLabel,
               onBack: _handleRunnerBackV1,
               showGlossary: isTheory || isTeaching || isReview,
             ),

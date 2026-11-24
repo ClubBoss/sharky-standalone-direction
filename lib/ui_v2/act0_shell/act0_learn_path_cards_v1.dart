@@ -37,28 +37,21 @@ class _ModuleHeaderV1 extends StatelessWidget {
     );
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
+      borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusCard),
       child: Container(
-        padding: const EdgeInsets.fromLTRB(11, 6, 11, 6),
+        padding: const EdgeInsets.fromLTRB(
+          Act0SkinTokensV1.gapMd,
+          Act0SkinTokensV1.gapSm,
+          Act0SkinTokensV1.gapMd,
+          Act0SkinTokensV1.gapSm,
+        ),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusMd),
-          border: Border.all(color: accent.withValues(alpha: 0.09), width: 1.0),
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: <Color>[
-              const Color(0xFF06131C).withValues(alpha: 0.96),
-              const Color(0xFF071923).withValues(alpha: 0.80),
-              Act0ShellTokensV1.background.withValues(alpha: 0.74),
-            ],
+          borderRadius: BorderRadius.circular(Act0SkinTokensV1.radiusControl),
+          border: Border.all(
+            color: accent.withValues(alpha: Act0SkinTokensV1.tintSoft),
+            width: 1.0,
           ),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.055),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
+          color: Act0SkinTokensV1.surface,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,20 +64,22 @@ class _ModuleHeaderV1 extends StatelessWidget {
                   height: 20,
                   alignment: Alignment.center,
                   decoration: BoxDecoration(
-                    color: accent.withValues(alpha: 0.10),
-                    borderRadius: BorderRadius.circular(6),
-                    border: Border.all(color: accent.withValues(alpha: 0.18)),
+                    color: accent.withValues(alpha: Act0SkinTokensV1.tintSoft),
+                    borderRadius: BorderRadius.circular(Act0SkinTokensV1.gapSm),
+                    border: Border.all(
+                      color: accent.withValues(
+                        alpha: Act0SkinTokensV1.tintStrong,
+                      ),
+                    ),
                   ),
                   child: Text(
                     '$worldNumber',
-                    style: TextStyle(
+                    style: Act0SkinTokensV1.captionStyle.copyWith(
                       color: accent,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 10.2,
                     ),
                   ),
                 ),
-                const SizedBox(width: 7),
+                const SizedBox(width: Act0SkinTokensV1.gapSm),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,80 +95,87 @@ class _ModuleHeaderV1 extends StatelessWidget {
                               : 'Мир $worldNumber · $title',
                         ),
 
-                        style: Act0ShellTokensV1.sectionTitle.copyWith(
-                          color: Act0ShellTokensV1.text,
-                          fontSize: 12.6,
-                          height: 1.02,
+                        style: Act0SkinTokensV1.headline.copyWith(
+                          color: Act0SkinTokensV1.onSurface,
                         ),
                       ),
                     ],
                   ),
                 ),
                 if (!compactHeader) ...[
-                  const SizedBox(width: 6),
+                  const SizedBox(width: Act0SkinTokensV1.gapSm),
                   Container(
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 7,
-                      vertical: 4,
+                      horizontal: Act0SkinTokensV1.gapSm,
+                      vertical: Act0SkinTokensV1.gapXs,
                     ),
                     decoration: BoxDecoration(
-                      color: accent.withValues(alpha: 0.08),
-                      borderRadius: BorderRadius.circular(
-                        Act0ShellTokensV1.radiusPill,
+                      color: accent.withValues(
+                        alpha: Act0SkinTokensV1.tintSubtle,
                       ),
-                      border: Border.all(color: accent.withValues(alpha: 0.18)),
+                      borderRadius: BorderRadius.circular(
+                        Act0SkinTokensV1.radiusControl,
+                      ),
+                      border: Border.all(
+                        color: accent.withValues(
+                          alpha: Act0SkinTokensV1.tintStrong,
+                        ),
+                      ),
                     ),
                     child: Text(
                       '$progressPercent%',
-                      style: Act0ShellTokensV1.label.copyWith(
+                      style: Act0SkinTokensV1.captionStyle.copyWith(
                         color: accent,
-                        fontSize: 8.4,
-                        letterSpacing: 0.18,
                       ),
                     ),
                   ),
                 ],
-                const SizedBox(width: 6),
+                const SizedBox(width: Act0SkinTokensV1.gapSm),
                 Tooltip(
                   message: _learnCopyV1(context, en: 'Worlds', ru: 'Миры'),
                   child: OutlinedButton.icon(
                     key: const Key('act0_shell_levels_menu_button'),
                     onPressed: onOpenWorldMenu,
-                    style: Act0ShellTokensV1.quietButtonStyle(height: 26)
+                    style: Act0SkinTokensV1.secondaryButtonStyle(height: 26)
                         .copyWith(
                           minimumSize: const WidgetStatePropertyAll(
                             Size(0, 26),
                           ),
                           padding: WidgetStatePropertyAll(
                             EdgeInsets.symmetric(
-                              horizontal: compactHeader ? 7 : 8,
+                              horizontal: compactHeader
+                                  ? Act0SkinTokensV1.gapSm
+                                  : Act0SkinTokensV1.gapSm,
                             ),
                           ),
                           foregroundColor: WidgetStatePropertyAll(
-                            accent.withValues(alpha: 0.95),
+                            accent.withValues(
+                              alpha: Act0SkinTokensV1.nearlyOpaque,
+                            ),
                           ),
                           backgroundColor: WidgetStatePropertyAll(
-                            accent.withValues(alpha: 0.08),
+                            accent.withValues(
+                              alpha: Act0SkinTokensV1.tintSubtle,
+                            ),
                           ),
                           side: const WidgetStatePropertyAll(BorderSide.none),
                           shape: WidgetStatePropertyAll(
                             RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
-                                Act0ShellTokensV1.radiusPill,
+                                Act0SkinTokensV1.radiusControl,
                               ),
                             ),
                           ),
                           textStyle: WidgetStatePropertyAll(
-                            Act0ShellTokensV1.label.copyWith(
-                              letterSpacing: 0.22,
-                              fontSize: 9.2,
-                            ),
+                            Act0SkinTokensV1.captionStyle,
                           ),
                         ),
                     icon: Icon(
                       Icons.map_rounded,
                       size: 13,
-                      color: accent.withValues(alpha: 0.95),
+                      color: accent.withValues(
+                        alpha: Act0SkinTokensV1.nearlyOpaque,
+                      ),
                     ),
                     label: compactHeader
                         ? const SizedBox.shrink()
@@ -194,24 +196,24 @@ class _ModuleHeaderV1 extends StatelessWidget {
                   child: Text(
                     compactMeta,
                     key: const Key('act0_shell_learn_route_board'),
-                    style: Act0ShellTokensV1.muted.copyWith(
-                      color: Act0ShellTokensV1.textMuted,
-                      fontSize: 9.6,
-                      height: 1.0,
+                    style: Act0SkinTokensV1.secondary.copyWith(
+                      color: Act0SkinTokensV1.muted,
                     ),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 2),
+            const SizedBox(height: Act0SkinTokensV1.gapXs),
             ClipRRect(
-              borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
+              borderRadius: BorderRadius.circular(
+                Act0SkinTokensV1.radiusControl,
+              ),
               child: LinearProgressIndicator(
                 key: const Key('act0_shell_learn_progress_bar'),
                 value: normalizedProgress,
                 minHeight: 1.5,
-                backgroundColor: Act0ShellTokensV1.surface.withValues(
-                  alpha: 0.72,
+                backgroundColor: Act0SkinTokensV1.surface.withValues(
+                  alpha: Act0SkinTokensV1.disabledOpacity,
                 ),
                 valueColor: AlwaysStoppedAnimation<Color>(accent),
               ),
@@ -242,7 +244,7 @@ class _PinnedModuleHeaderDelegateV1 extends SliverPersistentHeaderDelegate {
     double shrinkOffset,
     bool overlapsContent,
   ) {
-    return Container(color: Act0ShellTokensV1.background, child: child);
+    return Container(color: Act0SkinTokensV1.background, child: child);
   }
 
   @override
@@ -296,7 +298,7 @@ class _PathCardV1 extends StatelessWidget {
         ) &&
         lesson.courseTaskList.any((t) => !pathClosedTaskIds.contains(t.taskId));
     final stateColor = _stateColor(lesson.state);
-    final completedAccent = Act0ShellTokensV1.primary;
+    final completedAccent = Act0SkinTokensV1.accent;
     final icon = switch (lesson.state) {
       Act0LessonStateV1.completed => Icons.check_rounded,
       Act0LessonStateV1.current ||
@@ -340,8 +342,8 @@ class _PathCardV1 extends StatelessWidget {
     final lessonTitle = act0AcademyLessonTitleV1(context, lesson);
     final isExpandedFocus = expanded;
     final isHighlighted = selected || isCurrent || expanded;
-    final currentAccent = Act0ShellTokensV1.primary;
-    final nextAccent = Act0ShellTokensV1.gold;
+    final currentAccent = Act0SkinTokensV1.accent;
+    final nextAccent = Act0SkinTokensV1.accent;
     final showStateBadge = !(isCompleted && !expanded);
     final cardTint = isExpandedFocus
         ? (isCurrent
@@ -349,41 +351,59 @@ class _PathCardV1 extends StatelessWidget {
                   : isCompleted
                   ? completedAccent
                   : worldAccent)
-              .withValues(alpha: 0.034)
+              .withValues(alpha: Act0SkinTokensV1.tintSubtle)
         : isCurrent
-        ? currentAccent.withValues(alpha: 0.070)
+        ? currentAccent.withValues(alpha: Act0SkinTokensV1.tintSubtle)
         : isCompletedQuiet
-        ? completedAccent.withValues(alpha: 0.018)
+        ? completedAccent.withValues(alpha: Act0SkinTokensV1.tintSubtle)
         : isLocked
-        ? Act0ShellTokensV1.textDim.withValues(alpha: 0.004)
+        ? Act0SkinTokensV1.caption.withValues(
+            alpha: Act0SkinTokensV1.tintSubtle,
+          )
         : (isHighlighted ? stateColor : worldAccent).withValues(
-            alpha: isHighlighted ? 0.036 : 0.024,
+            alpha: isHighlighted
+                ? Act0SkinTokensV1.tintSubtle
+                : Act0SkinTokensV1.tintSubtle,
           );
     final cardBorderColor = isExpandedFocus
         ? (isCurrent
                   ? currentAccent
                   : isCompleted
                   ? completedAccent
-                  : Act0ShellTokensV1.border)
-              .withValues(alpha: isCurrent ? 0.42 : 0.28)
+                  : Act0SkinTokensV1.line)
+              .withValues(
+                alpha: isCurrent
+                    ? Act0SkinTokensV1.edgeStrong
+                    : Act0SkinTokensV1.edgeSoft,
+              )
         : isCurrent
-        ? currentAccent.withValues(alpha: 0.20)
+        ? currentAccent.withValues(alpha: Act0SkinTokensV1.tintStrong)
         : isCompleted
-        ? completedAccent.withValues(alpha: isCompletedQuiet ? 0.075 : 0.08)
+        ? completedAccent.withValues(
+            alpha: isCompletedQuiet
+                ? Act0SkinTokensV1.tintSubtle
+                : Act0SkinTokensV1.tintSubtle,
+          )
         : isLocked
-        ? Act0ShellTokensV1.border.withValues(alpha: 0.12)
+        ? Act0SkinTokensV1.line.withValues(alpha: Act0SkinTokensV1.tintSoft)
         : isHighlighted
-        ? stateColor.withValues(alpha: 0.15)
-        : Act0ShellTokensV1.border.withValues(alpha: 0.34);
+        ? stateColor.withValues(alpha: Act0SkinTokensV1.tintStrong)
+        : Act0SkinTokensV1.line.withValues(alpha: Act0SkinTokensV1.edgeStrong);
     final cardGlowColor = isExpandedFocus
         ? (isCurrent
                   ? currentAccent
                   : isCompleted
                   ? completedAccent
                   : worldAccent)
-              .withValues(alpha: isCurrent ? 0.14 : 0.04)
+              .withValues(
+                alpha: isCurrent
+                    ? Act0SkinTokensV1.tintSoft
+                    : Act0SkinTokensV1.tintSubtle,
+              )
         : (isCurrent ? currentAccent : stateColor).withValues(
-            alpha: isCurrent ? 0.08 : 0.05,
+            alpha: isCurrent
+                ? Act0SkinTokensV1.tintSubtle
+                : Act0SkinTokensV1.tintSubtle,
           );
     final leadColor = isExpandedFocus
         ? (isCurrent
@@ -391,7 +411,11 @@ class _PathCardV1 extends StatelessWidget {
                   : isCompleted
                   ? completedAccent
                   : worldAccent)
-              .withValues(alpha: isLocked ? 0.28 : 0.74)
+              .withValues(
+                alpha: isLocked
+                    ? Act0SkinTokensV1.edgeSoft
+                    : Act0SkinTokensV1.disabledOpacity,
+              )
         : (isCurrent ? currentAccent : stateColor).withValues(
             alpha: isLocked
                 ? 0.30
@@ -419,21 +443,21 @@ class _PathCardV1 extends StatelessWidget {
         : stateColor;
     final cardRadius = BorderRadius.circular(
       isCompletedQuiet
-          ? Act0ShellTokensV1.radiusMd
-          : Act0ShellTokensV1.radiusLg,
+          ? Act0SkinTokensV1.radiusControl
+          : Act0SkinTokensV1.radiusCard,
     );
     final rowPadding = EdgeInsets.fromLTRB(
-      isCurrent ? 14 : 10,
-      isCompletedQuiet ? 5 : 8,
-      10,
-      isCompletedQuiet ? 5 : 8,
+      isCurrent ? Act0SkinTokensV1.gapLg : Act0SkinTokensV1.gapMd,
+      isCompletedQuiet ? Act0SkinTokensV1.gapXs : Act0SkinTokensV1.gapSm,
+      Act0SkinTokensV1.gapMd,
+      isCompletedQuiet ? Act0SkinTokensV1.gapXs : Act0SkinTokensV1.gapSm,
     );
-    final rowTitleStyle = Act0ShellTokensV1.cardTitle.copyWith(
+    final rowTitleStyle = Act0SkinTokensV1.headline.copyWith(
       color: isCompletedQuiet
-          ? Act0ShellTokensV1.textMuted.withValues(alpha: 0.92)
-          : Act0ShellTokensV1.text,
-      fontSize: isCompletedQuiet ? 13.0 : 14.2,
-      height: 1.08,
+          ? Act0SkinTokensV1.muted.withValues(
+              alpha: Act0SkinTokensV1.nearlyOpaque,
+            )
+          : Act0SkinTokensV1.onSurface,
     );
 
     return Opacity(
@@ -447,14 +471,14 @@ class _PathCardV1 extends StatelessWidget {
       child: Material(
         borderRadius: cardRadius,
         clipBehavior: Clip.antiAlias,
-        color: Colors.transparent,
+        color: Act0SkinTokensV1.transparent,
         child: Ink(
           decoration: BoxDecoration(
             color: Color.alphaBlend(
               cardTint,
               isCompletedQuiet
-                  ? Act0ShellTokensV1.background
-                  : Act0ShellTokensV1.surface2,
+                  ? Act0SkinTokensV1.background
+                  : Act0SkinTokensV1.raised,
             ),
             borderRadius: cardRadius,
             border: Border.all(
@@ -468,20 +492,6 @@ class _PathCardV1 extends StatelessWidget {
                           : 0.68,
                     ),
             ),
-            boxShadow: <BoxShadow>[
-              if (!isCompletedQuiet)
-                const BoxShadow(
-                  color: Color(0x0E000000),
-                  blurRadius: 6,
-                  offset: Offset(0, 2),
-                ),
-              if (isHighlighted && !isExpandedFocus)
-                BoxShadow(
-                  color: cardGlowColor.withValues(alpha: 0.50),
-                  blurRadius: 7,
-                  offset: const Offset(0, 2),
-                ),
-            ],
           ),
           child: Stack(
             children: [
@@ -493,18 +503,13 @@ class _PathCardV1 extends StatelessWidget {
                   width: 2.5,
                   child: Container(
                     decoration: BoxDecoration(
-                      color: currentAccent.withValues(alpha: 0.72),
+                      color: currentAccent.withValues(
+                        alpha: Act0SkinTokensV1.disabledOpacity,
+                      ),
                       borderRadius: const BorderRadius.only(
                         topRight: Radius.circular(2.5),
                         bottomRight: Radius.circular(2.5),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: currentAccent.withValues(alpha: 0.22),
-                          blurRadius: 5,
-                          offset: const Offset(1, 0),
-                        ),
-                      ],
                     ),
                   ),
                 ),
@@ -527,27 +532,41 @@ class _PathCardV1 extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: isCompleted
                                   ? iconTint.withValues(
-                                      alpha: isCompletedQuiet ? 0.090 : 0.10,
+                                      alpha: isCompletedQuiet
+                                          ? Act0SkinTokensV1.tintSoft
+                                          : Act0SkinTokensV1.tintSoft,
                                     )
-                                  : iconTint.withValues(alpha: 0.09),
+                                  : iconTint.withValues(
+                                      alpha: Act0SkinTokensV1.tintSoft,
+                                    ),
                               borderRadius: BorderRadius.circular(
-                                isCompletedQuiet ? 8 : 10,
+                                isCompletedQuiet
+                                    ? Act0SkinTokensV1.gapSm
+                                    : Act0SkinTokensV1.gapMd,
                               ),
                               border: Border.all(
                                 color: iconTint.withValues(
-                                  alpha: isCompletedQuiet ? 0.16 : 0.20,
+                                  alpha: isCompletedQuiet
+                                      ? Act0SkinTokensV1.tintStrong
+                                      : Act0SkinTokensV1.tintStrong,
                                 ),
                               ),
                             ),
                             child: Icon(
                               icon,
                               color: iconTint.withValues(
-                                alpha: isCompletedQuiet ? 0.78 : 1.0,
+                                alpha: isCompletedQuiet
+                                    ? Act0SkinTokensV1.disabledOpacity
+                                    : 1.0,
                               ),
                               size: isCompletedQuiet ? 13 : 16,
                             ),
                           ),
-                          SizedBox(width: isCompletedQuiet ? 7 : 8),
+                          SizedBox(
+                            width: isCompletedQuiet
+                                ? Act0SkinTokensV1.gapSm
+                                : Act0SkinTokensV1.gapSm,
+                          ),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -563,23 +582,27 @@ class _PathCardV1 extends StatelessWidget {
                                           style: rowTitleStyle,
                                         ),
                                       ),
-                                      const SizedBox(width: 6),
+                                      const SizedBox(
+                                        width: Act0SkinTokensV1.gapSm,
+                                      ),
                                       if (showStateBadge)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
-                                            horizontal: 8,
-                                            vertical: 3,
+                                            horizontal: Act0SkinTokensV1.gapSm,
+                                            vertical: Act0SkinTokensV1.gapXs,
                                           ),
                                           decoration: BoxDecoration(
                                             color: badgeTint.withValues(
-                                              alpha: 0.08,
+                                              alpha:
+                                                  Act0SkinTokensV1.tintSubtle,
                                             ),
                                             borderRadius: BorderRadius.circular(
-                                              Act0ShellTokensV1.radiusPill,
+                                              Act0SkinTokensV1.radiusControl,
                                             ),
                                             border: Border.all(
                                               color: badgeTint.withValues(
-                                                alpha: 0.13,
+                                                alpha:
+                                                    Act0SkinTokensV1.tintSoft,
                                               ),
                                             ),
                                           ),
@@ -589,17 +612,17 @@ class _PathCardV1 extends StatelessWidget {
                                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                                             ),
 
-                                            style: Act0ShellTokensV1.label
-                                                .copyWith(
-                                                  color: badgeTint,
-                                                  letterSpacing: 0.06,
-                                                  fontSize: 9.0,
-                                                ),
+                                            style: Act0SkinTokensV1.captionStyle
+                                                .copyWith(color: badgeTint),
                                           ),
                                         ),
-                                      const SizedBox(width: 2),
+                                      const SizedBox(
+                                        width: Act0SkinTokensV1.gapXs,
+                                      ),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 1),
+                                        padding: const EdgeInsets.only(
+                                          top: Act0SkinTokensV1.gapXs,
+                                        ),
                                         child: AnimatedRotation(
                                           turns: expanded ? 0.5 : 0.0,
                                           duration:
@@ -615,7 +638,8 @@ class _PathCardV1 extends StatelessWidget {
                                             Icons.keyboard_arrow_down_rounded,
                                             size: 17,
                                             color: badgeTint.withValues(
-                                              alpha: 0.62,
+                                              alpha: Act0SkinTokensV1
+                                                  .iconMutedOpacity,
                                             ),
                                           ),
                                         ),
@@ -629,11 +653,8 @@ class _PathCardV1 extends StatelessWidget {
                                     children: [
                                       Text(
                                         'Lesson $index',
-                                        style: Act0ShellTokensV1.label.copyWith(
-                                          color: badgeTint,
-                                          letterSpacing: 0.22,
-                                          fontSize: 9.6,
-                                        ),
+                                        style: Act0SkinTokensV1.captionStyle
+                                            .copyWith(color: badgeTint),
                                       ),
                                       const Spacer(),
                                       AnimatedRotation(
@@ -649,27 +670,32 @@ class _PathCardV1 extends StatelessWidget {
                                           Icons.keyboard_arrow_down_rounded,
                                           size: 17,
                                           color: badgeTint.withValues(
-                                            alpha: 0.62,
+                                            alpha: Act0SkinTokensV1
+                                                .iconMutedOpacity,
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(width: 5),
+                                      const SizedBox(
+                                        width: Act0SkinTokensV1.gapXs,
+                                      ),
                                       if (showStateBadge)
                                         Container(
                                           padding: const EdgeInsets.symmetric(
-                                            horizontal: 7,
-                                            vertical: 2,
+                                            horizontal: Act0SkinTokensV1.gapSm,
+                                            vertical: Act0SkinTokensV1.gapXs,
                                           ),
                                           decoration: BoxDecoration(
                                             color: badgeTint.withValues(
-                                              alpha: 0.08,
+                                              alpha:
+                                                  Act0SkinTokensV1.tintSubtle,
                                             ),
                                             borderRadius: BorderRadius.circular(
-                                              Act0ShellTokensV1.radiusPill,
+                                              Act0SkinTokensV1.radiusControl,
                                             ),
                                             border: Border.all(
                                               color: badgeTint.withValues(
-                                                alpha: 0.13,
+                                                alpha:
+                                                    Act0SkinTokensV1.tintSoft,
                                               ),
                                             ),
                                           ),
@@ -679,29 +705,27 @@ class _PathCardV1 extends StatelessWidget {
                                               'act0_shell_learn_lesson_state_text_${lesson.lessonId}',
                                             ),
 
-                                            style: Act0ShellTokensV1.label
-                                                .copyWith(
-                                                  color: badgeTint,
-                                                  letterSpacing: 0.06,
-                                                  fontSize: 9.0,
-                                                ),
+                                            style: Act0SkinTokensV1.captionStyle
+                                                .copyWith(color: badgeTint),
                                           ),
                                         ),
                                     ],
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(
+                                    height: Act0SkinTokensV1.gapXs,
+                                  ),
                                   Text(lessonTitle, style: rowTitleStyle),
                                 ],
                                 if (stepSummary.isNotEmpty) ...[
-                                  const SizedBox(height: 3),
+                                  const SizedBox(
+                                    height: Act0SkinTokensV1.gapXs,
+                                  ),
                                   Text(
                                     stepSummary,
-                                    style: Act0ShellTokensV1.muted.copyWith(
-                                      fontSize: 10.6,
+                                    style: Act0SkinTokensV1.secondary.copyWith(
                                       color: isLocked
-                                          ? Act0ShellTokensV1.textDim
-                                          : Act0ShellTokensV1.textMuted,
-                                      height: 1.14,
+                                          ? Act0SkinTokensV1.caption
+                                          : Act0SkinTokensV1.muted,
                                     ),
                                   ),
                                 ],
@@ -721,13 +745,13 @@ class _PathCardV1 extends StatelessWidget {
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
-                                        horizontal: 11,
+                                        horizontal: Act0SkinTokensV1.gapMd,
                                       ),
                                       child: Divider(
                                         height: 1,
                                         thickness: 1,
                                         color: badgeTint.withValues(
-                                          alpha: 0.14,
+                                          alpha: Act0SkinTokensV1.tintSoft,
                                         ),
                                       ),
                                     ),
@@ -748,13 +772,13 @@ class _PathCardV1 extends StatelessWidget {
                                     children: [
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                          horizontal: 11,
+                                          horizontal: Act0SkinTokensV1.gapMd,
                                         ),
                                         child: Divider(
                                           height: 1,
                                           thickness: 1,
                                           color: badgeTint.withValues(
-                                            alpha: 0.14,
+                                            alpha: Act0SkinTokensV1.tintSoft,
                                           ),
                                         ),
                                       ),
@@ -775,17 +799,11 @@ class _PathCardV1 extends StatelessWidget {
 
 Color _stateColor(Act0LessonStateV1 state) {
   return switch (state) {
-    Act0LessonStateV1.completed => Act0ShellTokensV1.primary,
+    Act0LessonStateV1.completed => Act0SkinTokensV1.accent,
     Act0LessonStateV1.current ||
-    Act0LessonStateV1.available => Act0ShellTokensV1.primary,
-    Act0LessonStateV1.locked => Act0ShellTokensV1.textDim,
+    Act0LessonStateV1.available => Act0SkinTokensV1.accent,
+    Act0LessonStateV1.locked => Act0SkinTokensV1.caption,
   };
-}
-
-// Phase 2: Color desaturation helper for locked state
-Color _desaturateColor(Color color, double factor) {
-  final hsv = HSVColor.fromColor(color);
-  return hsv.withSaturation(hsv.saturation * (1 - factor)).toColor();
 }
 
 String _stepLabel(Act0LessonStepKindV1 kind) {
@@ -810,20 +828,22 @@ String _selectedTaskDetail({
 }) {
   if (isLocked) {
     final blockerTitle = (routeBlockerTaskTitle ?? '').trim();
-    return act0AcademyTaskLockedSummaryV1(
-      context,
-      task,
-      fallback:
-          task.lockedSummary ??
-          _learnCopyV1(
-            context,
-            en: blockerTitle.isNotEmpty
-                ? 'Clear ${blockerTitle.toLowerCase()} first, then this node opens.'
-                : 'Clear ${act0AcademyTaskTitleV1(context, nextTask).toLowerCase()} first, then this node opens.',
-            ru: blockerTitle.isNotEmpty
-                ? 'Сначала закрой шаг «${blockerTitle.toLowerCase()}», потом этот узел откроется.'
-                : '\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0437\u0430\u043a\u0440\u043e\u0439 \u0448\u0430\u0433 \u00ab${act0AcademyTaskTitleV1(context, nextTask).toLowerCase()}\u00bb, \u043f\u043e\u0442\u043e\u043c \u044d\u0442\u043e\u0442 \u0443\u0437\u0435\u043b \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f.',
-          ),
+    return _learnPlayerCopyV1(
+      act0AcademyTaskLockedSummaryV1(
+        context,
+        task,
+        fallback:
+            task.lockedSummary ??
+            _learnCopyV1(
+              context,
+              en: blockerTitle.isNotEmpty
+                  ? 'Clear ${blockerTitle.toLowerCase()} first, then this node opens.'
+                  : 'Clear ${_learnTaskTitleV1(context, nextTask).toLowerCase()} first, then this node opens.',
+              ru: blockerTitle.isNotEmpty
+                  ? 'Сначала закрой шаг «${blockerTitle.toLowerCase()}», потом этот узел откроется.'
+                  : '\u0421\u043d\u0430\u0447\u0430\u043b\u0430 \u0437\u0430\u043a\u0440\u043e\u0439 \u0448\u0430\u0433 \u00ab${_learnTaskTitleV1(context, nextTask).toLowerCase()}\u00bb, \u043f\u043e\u0442\u043e\u043c \u044d\u0442\u043e\u0442 \u0443\u0437\u0435\u043b \u043e\u0442\u043a\u0440\u043e\u0435\u0442\u0441\u044f.',
+            ),
+      ),
     );
   }
   if (isSkipped) {
@@ -857,15 +877,17 @@ String _preChoiceTaskSummaryV1(BuildContext context, Act0LessonTaskV1 task) {
       ru: 'Разномастные валет и восьмёрка с ранней позиции: посмотри на карты и самостоятельно выбери категорию.',
     );
   }
-  return act0PrechoiceDisplaySummaryV1(
-    taskId: task.taskId,
-    authoredSummary: act0AcademyTaskSummaryV1(
-      context,
-      task,
-      fallback: task.summary ?? task.runner.caption,
+  return _learnPlayerCopyV1(
+    act0PrechoiceDisplaySummaryV1(
+      taskId: task.taskId,
+      authoredSummary: act0AcademyTaskSummaryV1(
+        context,
+        task,
+        fallback: task.summary ?? task.runner.caption,
+      ),
+      isAssessment: act0IsPrechoiceAssessmentTaskV1(task),
+      hasSubmittedCurrentDecision: false,
     ),
-    isAssessment: act0IsPrechoiceAssessmentTaskV1(task),
-    hasSubmittedCurrentDecision: false,
   );
 }
 
@@ -902,7 +924,7 @@ String _selectedLessonGuidanceV1({
   required Act0LessonCardV1 lesson,
   required Act0LessonTaskV1 nextTask,
 }) {
-  final nextTaskTitle = act0AcademyTaskTitleV1(context, nextTask).trim();
+  final nextTaskTitle = _learnTaskTitleV1(context, nextTask).trim();
   final nextTaskSummary = _preChoiceTaskSummaryV1(context, nextTask).trim();
   final safeSummary =
       nextTaskSummary.isEmpty || nextTaskSummary == nextTaskTitle
@@ -957,9 +979,9 @@ IconData _stepIcon(Act0LessonStepKindV1 kind) {
 Color _worldStateColor(Act0WorldStateV1 state) {
   return switch (state) {
     Act0WorldStateV1.completed ||
-    Act0WorldStateV1.passedByRulesCheck => Act0ShellTokensV1.primary,
-    Act0WorldStateV1.current => Act0ShellTokensV1.primary,
-    Act0WorldStateV1.locked => Act0ShellTokensV1.textDim,
+    Act0WorldStateV1.passedByRulesCheck => Act0SkinTokensV1.accent,
+    Act0WorldStateV1.current => Act0SkinTokensV1.accent,
+    Act0WorldStateV1.locked => Act0SkinTokensV1.caption,
   };
 }
 
@@ -970,21 +992,12 @@ class _StateBadgeV1 extends StatelessWidget {
   final Color color;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 5),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
-        borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusPill),
-        border: Border.all(color: color.withValues(alpha: 0.35)),
-      ),
-      child: Text(
-        label,
-        style: Act0ShellTokensV1.label.copyWith(
-          color: color,
-          letterSpacing: 0.8,
-        ),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Act0SkinChipV1(
+    label: label,
+    tone: color == Act0SkinTokensV1.ok
+        ? Act0SkinChipToneV1.correct
+        : color == Act0SkinTokensV1.accent
+        ? Act0SkinChipToneV1.brass
+        : Act0SkinChipToneV1.neutral,
+  );
 }

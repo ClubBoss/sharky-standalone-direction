@@ -48,6 +48,7 @@ class Act0SkinTokensV1 {
   static const double radiusGroup = 16;
   static const double radiusCard = 20;
   static const double radiusSheet = 28;
+  static const double radiusPill = 999;
 
   // Size.
   static const double controlHeight = 56;
@@ -140,6 +141,51 @@ class Act0SkinTokensV1 {
 
   static const BorderSide cardBorder = BorderSide(color: line);
   static const BorderSide controlBorder = BorderSide(color: lineStrong);
+
+  static const Color transparent = Colors.transparent;
+  static const double tintSubtle = 0.06;
+  static const double tintSoft = 0.12;
+  static const double tintStrong = 0.18;
+  static const double edgeSoft = 0.28;
+  static const double edgeStrong = 0.42;
+  static const double iconMutedOpacity = 0.64;
+  static const double disabledOpacity = 0.78;
+  static const double nearlyOpaque = 0.96;
+  static const double bottomNavHeight = 66;
+  static const double tabletMinWidth = 700;
+  static const double contentMaxWidth = 560;
+  static const double wideContentMaxWidth = 980;
+
+  static BoxDecoration cardDecoration({
+    Color color = surface,
+    Color borderColor = line,
+  }) => BoxDecoration(
+    color: color,
+    border: Border.all(color: borderColor),
+    borderRadius: BorderRadius.circular(radiusCard),
+  );
+
+  static ButtonStyle primaryButtonStyle({double height = controlHeight}) =>
+      FilledButton.styleFrom(
+        foregroundColor: onAccent,
+        backgroundColor: accent,
+        minimumSize: Size.fromHeight(height),
+        textStyle: button,
+      );
+
+  static ButtonStyle secondaryButtonStyle({
+    double height = minTouch,
+    Color tone = onSurface,
+  }) => OutlinedButton.styleFrom(
+    foregroundColor: tone,
+    backgroundColor: raised,
+    side: controlBorder,
+    minimumSize: Size.fromHeight(height),
+    textStyle: button,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(radiusControl),
+    ),
+  );
 
   // Editorial reading surfaces.
   static const Color editorialPageSurface = Color(0xFFF7F5ED);
@@ -291,6 +337,7 @@ class Act0SkinTokensV1 {
   // Existing Material glyphs. Expose roles so asset choices stay in the skin.
   static const expandIcon = Icons.expand_more;
   static const collapseIcon = Icons.expand_less;
+  static const navigateIcon = Icons.chevron_right;
   static const correctIcon = Icons.check_rounded;
   static const mistakeIcon = Icons.close_rounded;
 

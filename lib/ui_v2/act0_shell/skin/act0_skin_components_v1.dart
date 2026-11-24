@@ -453,6 +453,7 @@ class Act0SkinListRowV1 extends StatelessWidget {
     this.controlKey,
     this.kind = Act0SkinListRowKindV1.pattern,
     this.dark = false,
+    this.expandable = true,
   });
 
   final String title;
@@ -466,6 +467,7 @@ class Act0SkinListRowV1 extends StatelessWidget {
   final Key? controlKey;
   final Act0SkinListRowKindV1 kind;
   final bool dark;
+  final bool expandable;
 
   @override
   Widget build(BuildContext context) {
@@ -507,8 +509,9 @@ class Act0SkinListRowV1 extends StatelessWidget {
         ),
       );
     }
+    final expansionState = expandable ? expanded : null;
     return Semantics(
-      expanded: expanded,
+      expanded: expansionState,
       child: ListTile(
         key: controlKey,
         contentPadding: EdgeInsets.zero,
@@ -532,10 +535,10 @@ class Act0SkinListRowV1 extends StatelessWidget {
             : dark
             ? _T.muted
             : null,
-        trailing: Icon(switch (expanded) {
+        trailing: Icon(switch (expansionState) {
           true => _T.collapseIcon,
           false => _T.expandIcon,
-          null => isDestructive ? Icons.delete_outline : Icons.chevron_right,
+          null => isDestructive ? Icons.delete_outline : _T.navigateIcon,
         }),
         onTap: onTap,
       ),

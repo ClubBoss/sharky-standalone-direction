@@ -1,6 +1,5 @@
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'dart:async' show Timer, unawaited;
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'act0_curriculum_pilot_v1.dart';
@@ -8,14 +7,14 @@ import 'act0_goal_route_v1.dart';
 import 'act0_learn_path_view_model_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_runtime_surface_copy_v1.dart';
 import 'package:flutter/rendering.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_prechoice_answer_cue_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_chrome_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
 
 part 'act0_learn_path_journey_v1.dart';
 part 'act0_learn_path_world_menu_v1.dart';
@@ -31,38 +30,12 @@ String _learnCopyV1(
   required String ru,
 }) => _isRuLocaleV1(context) ? ru : en;
 
-const Color _learnV6Blue = Act0VisualCanonV1.bluePrimary;
-const Color _learnV6Cyan = Act0VisualCanonV1.cyanAccent;
-const Color _learnV6Gold = Act0VisualCanonV1.goldAccent;
-const Color _learnV6Green = Act0VisualCanonV1.greenTable;
-const Color _learnV6Navy = Act0VisualCanonV1.navySurface;
-const Color _learnV6Deep = Act0VisualCanonV1.deepNavy;
+String _learnPlayerCopyV1(String text) => text
+    .replaceAll(RegExp(r"\bHero[’']s\b"), 'Your')
+    .replaceAll(RegExp(r'\bHero\b'), 'You');
 
-({Color accent, Color accentSoft}) _learnWorldToneV1(int worldNumber) {
-  return switch (worldNumber) {
-    <= 2 => (
-      accent: const Color(0xFF43C8A6),
-      accentSoft: const Color(0xFF1A3B33),
-    ),
-    <= 4 => (
-      accent: const Color(0xFF4EA3F8),
-      accentSoft: const Color(0xFF182C44),
-    ),
-    <= 6 => (
-      accent: const Color(0xFF7D8CFF),
-      accentSoft: const Color(0xFF242D56),
-    ),
-    <= 8 => (
-      accent: const Color(0xFFF7B83E),
-      accentSoft: const Color(0xFF3F2D12),
-    ),
-    <= 10 => (
-      accent: const Color(0xFFFF8A5B),
-      accentSoft: const Color(0xFF4A261B),
-    ),
-    _ => (accent: const Color(0xFFE76FB3), accentSoft: const Color(0xFF44233D)),
-  };
-}
+String _learnTaskTitleV1(BuildContext context, Act0LessonTaskV1 task) =>
+    _learnPlayerCopyV1(act0AcademyTaskTitleV1(context, task));
 
 bool _isImmediateNextWorldV1(
   List<Act0WorldCardV1> worlds,
@@ -108,12 +81,12 @@ Color _worldRouteStatusColorV1(
 ) {
   return switch (world.status) {
     Act0WorldStateV1.completed ||
-    Act0WorldStateV1.passedByRulesCheck => Act0AcademyDesignTokensV1.focus,
-    Act0WorldStateV1.current => Act0AcademyDesignTokensV1.focus,
+    Act0WorldStateV1.passedByRulesCheck => Act0SkinTokensV1.accent,
+    Act0WorldStateV1.current => Act0SkinTokensV1.accent,
     Act0WorldStateV1.locked =>
       _isImmediateNextWorldV1(worlds, world)
-          ? Act0AcademyDesignTokensV1.needsReviewFg
-          : Act0AcademyDesignTokensV1.inkMuted,
+          ? Act0SkinTokensV1.accent
+          : Act0SkinTokensV1.muted,
   };
 }
 
@@ -195,6 +168,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.showWorldMenu,
     this.onW1RulesCheck,
     this.nextAction,
+    this.dayGoalDone,
     required this.worldDetailId,
     required this.lessons,
     required this.selectedLessonId,
@@ -213,6 +187,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.onPreviewPremiumWorld,
     required this.onSelectLesson,
     this.requiredPractice,
+    this.requiredPracticeAnswered = 0,
     this.onStartRequiredPractice,
     required this.onOpenLessonAfterScroll,
     required this.onDismissDetail,
@@ -234,6 +209,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final bool showWorldMenu;
   final VoidCallback? onW1RulesCheck;
   final Act0AcademyHomeNextActionV1? nextAction;
+  final bool? dayGoalDone;
   final String? worldDetailId;
   final List<Act0LessonCardV1> lessons;
   final String selectedLessonId;
@@ -252,6 +228,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final ValueChanged<Act0WorldCardV1> onPreviewPremiumWorld;
   final bool Function(String lessonId) onSelectLesson;
   final Act0LessonCardV1? requiredPractice;
+  final int requiredPracticeAnswered;
   final VoidCallback? onStartRequiredPractice;
   final ValueChanged<String> onOpenLessonAfterScroll;
   final VoidCallback onDismissDetail;
@@ -378,8 +355,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     const minLessonTop = 45.0;
     final viewportBottom =
         anchorBox.size.height -
-        Act0ShellTokensV1.bottomNavHeight -
-        Act0ShellTokensV1.gapLg;
+        Act0SkinTokensV1.bottomNavHeight -
+        Act0SkinTokensV1.gapLg;
     final overflow = panelBottom - viewportBottom;
     // Keep the validated "scroll first, then open" contract dominant.
     // Only run a second pass when the expanded panel is materially clipped.
@@ -445,8 +422,8 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
     const comfortableTop = 124.0;
     final comfortableBottom =
         anchorBox.size.height -
-        Act0ShellTokensV1.bottomNavHeight -
-        Act0ShellTokensV1.gapLg -
+        Act0SkinTokensV1.bottomNavHeight -
+        Act0SkinTokensV1.gapLg -
         28;
     double delta = 0;
     if (detailBottom > comfortableBottom) {
@@ -546,7 +523,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       }
     }
     routeTask ??= routeLesson.courseTaskList.first;
-    return act0AcademyTaskTitleV1(context, routeTask);
+    return _learnTaskTitleV1(context, routeTask);
   }
 
   Widget? _expandedBodyForLessonV5({
@@ -617,6 +594,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       detailLessonId: widget.detailLessonId,
       worldDetailId: widget.worldDetailId,
       requiredPractice: widget.requiredPractice,
+      requiredPracticeAnswered: widget.requiredPracticeAnswered,
       pathClosedTaskIds: widget.pathClosedTaskIds,
       completedTaskIds: widget.completedTaskIds,
       showFullPath: _showFullJourneyPathV5,
@@ -639,7 +617,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
           Positioned.fill(
             child: ColoredBox(
               key: const Key('act0_shell_learn_page_background'),
-              color: Act0AcademyDesignTokensV1.pageSurface,
+              color: Act0SkinTokensV1.background,
             ),
           ),
           NotificationListener<ScrollNotification>(
@@ -668,135 +646,141 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               controller: _learnScrollController,
               key: const Key('act0_shell_learn_screen'),
               slivers: [
-                if (widget.nextAction case final action?)
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: TextButton(
-                        style: const ButtonStyle(
-                          splashFactory: InkRipple.splashFactory,
-                        ),
-                        onPressed: action.onPressed,
-                        child: Text('${action.title} · ${action.ctaLabel}'),
-                      ),
-                    ),
-                  ),
-                if (widget.onW1RulesCheck != null && detailLessonId == null)
-                  SliverToBoxAdapter(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        key: const Key('act0_shell_w1_rules_map'),
-                        onPressed: widget.onW1RulesCheck,
-                        child: const Text('Take the rules check'),
-                      ),
-                    ),
-                  ),
-                if (widget.liveRoomTitle case final title?
-                    when widget.selectedWorldId != act0LiveRoomModuleIdV1 &&
-                        detailLessonId == null)
-                  SliverToBoxAdapter(
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        key: const Key('act0_shell_live_room_v1'),
-                        onPressed: () =>
-                            widget.onSelectWorld(act0LiveRoomModuleIdV1),
-                        child: Text(title),
-                      ),
-                    ),
-                  ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
-                    Act0ShellTokensV1.pageX,
-                    Act0ShellTokensV1.gapXs,
-                    Act0ShellTokensV1.pageX,
-                    Act0ShellTokensV1.bottomNavHeight + 34,
+                    Act0SkinTokensV1.screenGutter,
+                    Act0SkinTokensV1.gapXs,
+                    Act0SkinTokensV1.screenGutter,
+                    Act0SkinTokensV1.gapSm,
                   ),
                   sliver: SliverToBoxAdapter(
-                    child: Act0ShellTokensV1.centeredContent(
-                      context,
-                      child: _LearnMissionFirstBodyV5(
-                        pinnedHeaderKey: _pinnedModuleHeaderKey,
-                        world: selectedWorld,
-                        moduleTitle: widget.moduleTitle,
-                        moduleProgressLabel: widget.moduleProgressLabel,
-                        lessonCount: widget.lessons.length,
-                        progressFraction: view.progressFraction,
-                        onOpenWorldMenu: widget.onOpenWorldMenu,
-                        onDismissDetail: widget.detailLessonId == null
-                            ? null
-                            : widget.onDismissDetail,
-                        currentMissionLesson: currentMissionLesson,
-                        currentMissionTask: currentMissionTask,
-                        currentMissionStepIndex: view.currentMissionStepIndex,
-                        detailMode: detailLessonId != null,
-                        firstLessonLanding: view.firstRun,
-                        onStartMission:
-                            widget.onStartRequiredPractice ??
-                            (currentMissionLesson.isSelectable
-                                ? () => widget.onStartTask(
-                                    currentMissionLesson.lessonId,
-                                    currentMissionTask.taskId,
-                                  )
-                                : null),
-                        lessons: widget.lessons,
-                        journeyLessonIndexes: view.journeyLessonIndexes,
-                        deferredLockedCount: view.deferredLockedCount,
-                        showFullPath: _showFullJourneyPathV5,
-                        onToggleFullPath: () {
-                          setState(() {
-                            _showFullJourneyPathV5 = !_showFullJourneyPathV5;
-                            _fullPathManualExpandedLessonIdV6 = null;
-                          });
-                        },
-                        lessonKeyForId: (lessonId) =>
-                            _lessonKeys.putIfAbsent(lessonId, GlobalKey.new),
-                        selectedLessonId: widget.selectedLessonId,
-                        detailLessonId: journeyDetailLessonId,
-                        activePopupTaskId: widget.activePopupTaskId,
-                        shouldShowDefaultTaskFocus: shouldShowDefaultTaskFocus,
-                        completedTaskIds: widget.completedTaskIds,
-                        skippedTaskIds: widget.skippedTaskIds,
-                        pathClosedTaskIds: widget.pathClosedTaskIds,
-                        onTapOutsideLesson: (lesson) {
-                          if (lesson.lessonId == detailLessonId &&
-                              (widget.activePopupTaskId != null ||
-                                  shouldShowDefaultTaskFocus)) {
-                            _dismissTaskFocusForLessonV1(lesson.lessonId);
-                            return;
-                          }
-                          widget.onDismissDetail();
-                        },
-                        onSelectLesson: (lessonId) {
-                          if (!_showFullJourneyPathV5) {
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth:
+                              MediaQuery.sizeOf(context).shortestSide >=
+                                  Act0SkinTokensV1.tabletMinWidth
+                              ? Act0SkinTokensV1.wideContentMaxWidth
+                              : Act0SkinTokensV1.contentMaxWidth,
+                        ),
+                        child: _LearnMissionFirstBodyV5(
+                          pinnedHeaderKey: _pinnedModuleHeaderKey,
+                          dayGoalDone: widget.dayGoalDone,
+                          onW1RulesCheck: detailLessonId == null
+                              ? widget.onW1RulesCheck
+                              : null,
+                          world: selectedWorld,
+                          moduleTitle: widget.moduleTitle,
+                          moduleProgressLabel: widget.moduleProgressLabel,
+                          lessonCount: widget.lessons.length,
+                          progressFraction: view.progressFraction,
+                          onOpenWorldMenu: widget.onOpenWorldMenu,
+                          onDismissDetail: widget.detailLessonId == null
+                              ? null
+                              : widget.onDismissDetail,
+                          currentMissionLesson: currentMissionLesson,
+                          currentMissionTask: currentMissionTask,
+                          currentMissionStepIndex: view.currentMissionStepIndex,
+                          detailMode: detailLessonId != null,
+                          firstLessonLanding: view.firstRun,
+                          onStartMission:
+                              widget.onStartRequiredPractice ??
+                              (currentMissionLesson.isSelectable
+                                  ? () => widget.onStartTask(
+                                      currentMissionLesson.lessonId,
+                                      currentMissionTask.taskId,
+                                    )
+                                  : null),
+                          lessons: widget.lessons,
+                          journeyLessonIndexes: view.journeyLessonIndexes,
+                          deferredLockedCount: view.deferredLockedCount,
+                          showFullPath: _showFullJourneyPathV5,
+                          onToggleFullPath: () {
+                            setState(() {
+                              _showFullJourneyPathV5 = !_showFullJourneyPathV5;
+                              _fullPathManualExpandedLessonIdV6 = null;
+                            });
+                          },
+                          lessonKeyForId: (lessonId) =>
+                              _lessonKeys.putIfAbsent(lessonId, GlobalKey.new),
+                          selectedLessonId: widget.selectedLessonId,
+                          detailLessonId: journeyDetailLessonId,
+                          activePopupTaskId: widget.activePopupTaskId,
+                          shouldShowDefaultTaskFocus:
+                              shouldShowDefaultTaskFocus,
+                          completedTaskIds: widget.completedTaskIds,
+                          skippedTaskIds: widget.skippedTaskIds,
+                          pathClosedTaskIds: widget.pathClosedTaskIds,
+                          onTapOutsideLesson: (lesson) {
+                            if (lesson.lessonId == detailLessonId &&
+                                (widget.activePopupTaskId != null ||
+                                    shouldShowDefaultTaskFocus)) {
+                              _dismissTaskFocusForLessonV1(lesson.lessonId);
+                              return;
+                            }
+                            widget.onDismissDetail();
+                          },
+                          onSelectLesson: (lessonId) {
+                            if (!_showFullJourneyPathV5) {
+                              return widget.onSelectLesson(lessonId);
+                            }
+                            final lesson = widget.lessons.firstWhere(
+                              (entry) => entry.lessonId == lessonId,
+                              orElse: () => widget.lessons.first,
+                            );
+                            if (!lesson.isSelectable) {
+                              return widget.onSelectLesson(lessonId);
+                            }
+                            final collapse =
+                                _fullPathManualExpandedLessonIdV6 == lessonId;
+                            setState(() {
+                              _fullPathManualExpandedLessonIdV6 = collapse
+                                  ? null
+                                  : lessonId;
+                            });
                             return widget.onSelectLesson(lessonId);
-                          }
-                          final lesson = widget.lessons.firstWhere(
-                            (entry) => entry.lessonId == lessonId,
-                            orElse: () => widget.lessons.first,
-                          );
-                          if (!lesson.isSelectable) {
-                            return widget.onSelectLesson(lessonId);
-                          }
-                          final collapse =
-                              _fullPathManualExpandedLessonIdV6 == lessonId;
-                          setState(() {
-                            _fullPathManualExpandedLessonIdV6 = collapse
-                                ? null
-                                : lessonId;
-                          });
-                          return widget.onSelectLesson(lessonId);
-                        },
-                        expandedBodyForLesson: (lesson) =>
-                            _expandedBodyForLessonV5(
-                              context: context,
-                              lesson: lesson,
-                              detailLessonId: journeyDetailLessonId,
-                              shouldShowDefaultTaskFocus:
-                                  shouldShowDefaultTaskFocus,
-                            ),
+                          },
+                          expandedBodyForLesson: (lesson) =>
+                              _expandedBodyForLessonV5(
+                                context: context,
+                                lesson: lesson,
+                                detailLessonId: journeyDetailLessonId,
+                                shouldShowDefaultTaskFocus:
+                                    shouldShowDefaultTaskFocus,
+                              ),
+                        ),
                       ),
+                    ),
+                  ),
+                ),
+                SliverPadding(
+                  padding: EdgeInsets.fromLTRB(
+                    Act0SkinTokensV1.screenGutter,
+                    Act0SkinTokensV1.gapMd,
+                    Act0SkinTokensV1.screenGutter,
+                    Act0SkinTokensV1.bottomNavHeight +
+                        MediaQuery.viewPaddingOf(context).bottom,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        if (widget.nextAction case final action?)
+                          Act0SkinSecondaryButtonV1(
+                            label: '${action.title} · ${action.ctaLabel}',
+                            onPressed: action.onPressed,
+                          ),
+                        if (widget.liveRoomTitle case final title?
+                            when widget.selectedWorldId !=
+                                    act0LiveRoomModuleIdV1 &&
+                                detailLessonId == null)
+                          Act0SkinSecondaryButtonV1(
+                            controlKey: const Key('act0_shell_live_room_v1'),
+                            label: title,
+                            onPressed: () =>
+                                widget.onSelectWorld(act0LiveRoomModuleIdV1),
+                          ),
+                      ],
                     ),
                   ),
                 ),

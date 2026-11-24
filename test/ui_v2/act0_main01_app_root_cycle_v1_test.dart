@@ -3006,7 +3006,7 @@ Future<void> _foundationReplayTheory(
   WidgetTester tester,
   Act0LessonCardV1 lesson,
 ) async {
-  final all = find.text('All lessons');
+  final all = find.widgetWithText(TextButton, 'All lessons');
   if (all.evaluate().isNotEmpty) {
     await tester.ensureVisible(all);
     await tester.tap(all);
