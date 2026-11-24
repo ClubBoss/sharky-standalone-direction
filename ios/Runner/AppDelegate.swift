@@ -120,6 +120,12 @@ private extension AppDelegate {
       let arguments = call.arguments as? [String: Any]
       let schedule = arguments?["schedule"] as? String ?? "none"
       switch call.method {
+      case "permissionDenied":
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+          let denied = settings.authorizationStatus == .denied ||
+            (settings.authorizationStatus == .authorized && settings.alertSetting != .enabled)
+          DispatchQueue.main.async { result(denied) }
+        }
       case "sync":
         guard defaults.bool(forKey: Self.practiceReminderOptIn) else {
           result(false)
@@ -171,7 +177,7 @@ private extension AppDelegate {
           return
         }
         let content = UNMutableNotificationContent()
-        content.title = "Sharky"
+        content.title = "Sharky Poker"
         content.body = "A short practice whenever you feel ready."
         guard let evening = practiceReminderEvening(
           tomorrow: schedule == "tomorrowEvening",

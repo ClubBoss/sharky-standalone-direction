@@ -175,7 +175,7 @@ void main() {
         findsOneWidget,
       );
       await tap(tester, 'act0_shell_placement_start_recommended');
-      expect(find.byType(Act0AcademyOnboardingLeafV1), findsOneWidget);
+      expect(find.byType(Act0WelcomeShellV1), findsOneWidget);
       await tap(tester, 'act0_shell_welcome_primary_cta');
       final demo = tester.widget<Act0LessonRunnerShellV1>(
         find.byType(Act0LessonRunnerShellV1),

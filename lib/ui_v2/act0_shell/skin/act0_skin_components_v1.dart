@@ -89,7 +89,12 @@ class Act0SkinSecondaryButtonV1 extends StatelessWidget {
           borderRadius: BorderRadius.circular(_T.radiusControl),
         ),
       ),
-      child: Text(label, textAlign: TextAlign.center),
+      child: Text(
+        label,
+        textAlign: TextAlign.center,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
     );
   }
 }
@@ -223,7 +228,14 @@ class Act0SkinStepBarV1 extends StatelessWidget {
 }
 
 /// Why Sharky is on screen. Sharky is never shown while the player decides.
-enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone, lessonDone }
+enum Act0SkinSharkyMomentV1 {
+  hint,
+  mistake,
+  selfFix,
+  milestone,
+  lessonDone,
+  idle,
+}
 
 /// Sharky in one ring: 56 pt next to a reason or hint, 120 pt on summaries.
 class Act0SkinSharkyExpressionV1 extends StatelessWidget {
@@ -238,7 +250,7 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
 
   static Color ringColorFor(Act0SkinSharkyMomentV1 moment) {
     return switch (moment) {
-      Act0SkinSharkyMomentV1.hint => _T.lineRing,
+      Act0SkinSharkyMomentV1.hint || Act0SkinSharkyMomentV1.idle => _T.lineRing,
       Act0SkinSharkyMomentV1.mistake => _T.accent,
       Act0SkinSharkyMomentV1.selfFix => _T.ok,
       Act0SkinSharkyMomentV1.milestone ||
@@ -263,7 +275,8 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Image.asset(
           switch (moment) {
-            Act0SkinSharkyMomentV1.hint => _T.sharkyHintAsset,
+            Act0SkinSharkyMomentV1.hint ||
+            Act0SkinSharkyMomentV1.idle => _T.sharkyHintAsset,
             Act0SkinSharkyMomentV1.mistake => _T.sharkyMistakeAsset,
             Act0SkinSharkyMomentV1.selfFix => _T.sharkyFixedItAsset,
             Act0SkinSharkyMomentV1.milestone => _T.sharkyFixedItAsset,
@@ -432,6 +445,10 @@ class Act0SkinListRowV1 extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.expanded,
+    this.icon,
+    this.toggle,
+    this.onChanged,
+    this.destructive = false,
     required this.onTap,
     this.controlKey,
     this.kind = Act0SkinListRowKindV1.pattern,
@@ -441,6 +458,10 @@ class Act0SkinListRowV1 extends StatelessWidget {
   final String title;
   final String? subtitle;
   final bool? expanded;
+  final IconData? icon;
+  final bool? toggle;
+  final ValueChanged<bool>? onChanged;
+  final bool destructive;
   final VoidCallback? onTap;
   final Key? controlKey;
   final Act0SkinListRowKindV1 kind;
@@ -448,7 +469,44 @@ class Act0SkinListRowV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final destructive = kind == Act0SkinListRowKindV1.destructive;
+    final isDestructive =
+        destructive || kind == Act0SkinListRowKindV1.destructive;
+    if (expanded == null &&
+        ((!dark && kind == Act0SkinListRowKindV1.pattern) ||
+            icon != null ||
+            toggle != null ||
+            destructive)) {
+      final color = isDestructive ? _T.bad : _T.onSurface;
+      return MergeSemantics(
+        child: ListTile(
+          key: toggle == null ? controlKey : null,
+          contentPadding: const EdgeInsets.symmetric(horizontal: _T.gapMd),
+          minTileHeight: _T.controlHeight,
+          leading: icon == null ? null : Icon(icon, color: color),
+          title: Text(title, style: _T.body.copyWith(color: color)),
+          subtitle: subtitle?.isNotEmpty != true
+              ? null
+              : Text(subtitle!, style: _T.secondary),
+          trailing: toggle == null
+              ? onTap == null
+                    ? null
+                    : Icon(Icons.chevron_right, color: color)
+              : Switch(
+                  key: controlKey,
+                  value: toggle!,
+                  onChanged: onChanged,
+                  activeThumbColor: _T.academyOnSurface,
+                  activeTrackColor: _T.academyTeal,
+                  inactiveThumbColor: _T.muted,
+                  inactiveTrackColor: _T.track,
+                  trackOutlineColor: const WidgetStatePropertyAll(
+                    _T.lineStrong,
+                  ),
+                ),
+          onTap: onTap,
+        ),
+      );
+    }
     return Semantics(
       expanded: expanded,
       child: ListTile(
@@ -456,7 +514,7 @@ class Act0SkinListRowV1 extends StatelessWidget {
         contentPadding: EdgeInsets.zero,
         title: Text(
           title,
-          style: destructive
+          style: isDestructive
               ? _T.body.copyWith(color: _T.bad)
               : dark
               ? _T.body
@@ -469,7 +527,7 @@ class Act0SkinListRowV1 extends StatelessWidget {
                 style: dark ? _T.secondary : _T.editorialSupporting,
               ),
         selected: expanded ?? false,
-        iconColor: destructive
+        iconColor: isDestructive
             ? _T.bad
             : dark
             ? _T.muted
@@ -477,7 +535,7 @@ class Act0SkinListRowV1 extends StatelessWidget {
         trailing: Icon(switch (expanded) {
           true => _T.collapseIcon,
           false => _T.expandIcon,
-          null => destructive ? Icons.delete_outline : Icons.chevron_right,
+          null => isDestructive ? Icons.delete_outline : Icons.chevron_right,
         }),
         onTap: onTap,
       ),
@@ -489,26 +547,30 @@ class Act0SkinScreenHeaderV1 extends StatelessWidget {
   const Act0SkinScreenHeaderV1({
     super.key,
     required this.title,
-    required this.onBack,
+    this.onBack,
     this.backKey,
+    this.trailing,
   });
 
   final String title;
-  final VoidCallback onBack;
+  final VoidCallback? onBack;
   final Key? backKey;
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context) => Row(
     children: [
-      IconButton(
-        key: backKey,
-        onPressed: onBack,
-        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
-        icon: const Icon(Icons.chevron_left),
-        color: _T.onSurface,
-      ),
-      const SizedBox(width: _T.gapSm),
+      if (onBack != null)
+        IconButton(
+          key: backKey,
+          onPressed: onBack,
+          tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+          icon: const Icon(Icons.chevron_left),
+          color: _T.onSurface,
+        ),
+      if (onBack != null) const SizedBox(width: _T.gapSm),
       Expanded(child: Text(title, style: _T.title)),
+      if (trailing != null) trailing!,
     ],
   );
 }
@@ -589,12 +651,20 @@ class Act0SkinConfirmSheetV1 extends StatelessWidget {
   const Act0SkinConfirmSheetV1({
     super.key,
     required this.title,
-    required this.confirmLabel,
+    this.confirmLabel = 'Delete',
+    this.description,
+    this.onCancel,
+    this.onConfirm,
+    this.cancelKey,
     this.confirmKey,
   });
 
   final String title;
   final String confirmLabel;
+  final String? description;
+  final VoidCallback? onCancel;
+  final VoidCallback? onConfirm;
+  final Key? cancelKey;
   final Key? confirmKey;
 
   Future<bool> show(BuildContext context) async =>
@@ -612,28 +682,61 @@ class Act0SkinConfirmSheetV1 extends StatelessWidget {
       false;
 
   @override
-  Widget build(BuildContext context) => SafeArea(
-    minimum: const EdgeInsets.all(_T.cardPadding),
-    child: Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: _T.title),
-        const SizedBox(height: _T.gapMd),
-        Act0SkinSecondaryButtonV1(
-          controlKey: confirmKey,
-          label: confirmLabel,
-          destructive: true,
-          onPressed: () => Navigator.of(context).pop(true),
+  Widget build(BuildContext context) {
+    if (description != null || onCancel != null || onConfirm != null) {
+      return SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(_T.cardPadding),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(title, style: _T.headline),
+              const SizedBox(height: _T.gapMd),
+              if (description != null) Text(description!, style: _T.secondary),
+              const SizedBox(height: _T.gapLg),
+              Act0SkinSecondaryButtonV1(
+                label: 'Cancel',
+                onPressed: onCancel ?? () => Navigator.of(context).pop(false),
+                controlKey: cancelKey,
+              ),
+              const SizedBox(height: _T.gapSm),
+              Act0SkinSecondaryButtonV1(
+                label: confirmLabel,
+                destructive: true,
+                onPressed: onConfirm ?? () => Navigator.of(context).pop(true),
+                controlKey: confirmKey,
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: _T.gapSm),
-        Act0SkinSecondaryButtonV1(
-          label: 'Cancel',
-          onPressed: () => Navigator.of(context).pop(false),
-        ),
-      ],
-    ),
-  );
+      );
+    }
+    return SafeArea(
+      minimum: const EdgeInsets.all(_T.cardPadding),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: _T.title),
+          const SizedBox(height: _T.gapMd),
+          Act0SkinSecondaryButtonV1(
+            controlKey: confirmKey,
+            label: confirmLabel,
+            destructive: true,
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+          const SizedBox(height: _T.gapSm),
+          Act0SkinSecondaryButtonV1(
+            label: 'Cancel',
+            controlKey: cancelKey,
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 /// Home's course bar. A missing ratio draws a track without announcing a value.

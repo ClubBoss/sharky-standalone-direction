@@ -9,7 +9,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_copy_guard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -1180,12 +1179,6 @@ class _ReviewEmptyLearningEnginePreviewV1 extends StatelessWidget {
             ),
             child: Row(
               children: [
-                const Act0SharkyPresenceMascotV1(
-                  mood: Act0SharkyMoodV1.thinking,
-                  tone: Act0ShellTokensV1.info,
-                  size: 42,
-                ),
-                const SizedBox(width: Act0ShellTokensV1.gapSm),
                 Expanded(
                   child: Text(
                     'After a lesson, Sharky brings back the exact cue you missed.',

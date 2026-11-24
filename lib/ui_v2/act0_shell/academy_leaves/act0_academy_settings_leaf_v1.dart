@@ -1,6 +1,6 @@
-import '../act0_shell_chrome_v1.dart';
 import 'package:flutter/material.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
+import '../skin/act0_skin_components_v1.dart';
+import '../skin/act0_skin_tokens_v1.dart';
 
 import '../act0_settings_view_model_v1.dart';
 
@@ -23,6 +23,7 @@ class Act0AcademySettingsLeafInputV1 {
     this.onSoundChanged,
     this.onHapticsChanged,
     this.practiceReminderEnabled,
+    this.reminderPermissionDenied = false,
     this.onPracticeReminderChanged,
     this.onRetryLoad,
     this.onOpenBetaMetrics,
@@ -44,6 +45,7 @@ class Act0AcademySettingsLeafInputV1 {
   final ValueChanged<bool>? onSoundChanged;
   final ValueChanged<bool>? onHapticsChanged;
   final bool? practiceReminderEnabled;
+  final bool reminderPermissionDenied;
   final ValueChanged<bool>? onPracticeReminderChanged;
   final VoidCallback? onRetryLoad;
   final VoidCallback? onOpenBetaMetrics;
@@ -66,341 +68,184 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
 
   final Act0AcademySettingsLeafInputV1 input;
 
-  static const _text = Act0AcademyLeafPaletteV1.text;
-  static const _muted = Act0AcademyLeafPaletteV1.textMuted;
-  static const _aqua = Act0AcademyLeafPaletteV1.aqua;
-  static const _rule = Act0AcademyLeafPaletteV1.rule;
-  static const _gold = Color(0xFFE4BB68);
-
   @override
-  Widget build(BuildContext context) {
-    final feel = <Widget>[
-      if (input.onSoundChanged != null)
-        _row(
-          'Sound effects',
-          input.soundDetail,
-          Act0AcademyLeafGlyphKindV1.sound,
-          color: const Color(0xFF86C9F5),
-          trailing: Switch(
-            key: const Key('act0_academy_settings_leaf_sound'),
-            value: input.soundEnabled,
-            onChanged: input.onSoundChanged,
-          ),
-        ),
-      if (input.onHapticsChanged != null)
-        _row(
-          'Haptics',
-          'Tactile response to decisions',
-          Act0AcademyLeafGlyphKindV1.haptics,
-          trailing: Switch(
-            key: const Key('act0_academy_settings_leaf_haptics'),
-            value: input.hapticsEnabled,
-            onChanged: input.onHapticsChanged,
-          ),
-        ),
-      if (input.practiceReminderEnabled != null)
-        _row(
-          'Practice reminder',
-          'One reminder at 6 pm local time when practice is available.',
-          Act0AcademyLeafGlyphKindV1.recall,
-          trailing: Switch(
-            key: const Key('act0_academy_settings_practice_reminder'),
-            value: input.practiceReminderEnabled!,
-            onChanged: input.onPracticeReminderChanged,
-          ),
-        ),
-    ];
-    final learning = <Widget>[
-      if (input.onOpenBetaMetrics != null)
-        _row(
-          'Beta activity',
-          'See local progress, give feedback, and copy diagnostics',
-          Act0AcademyLeafGlyphKindV1.recall,
-          key: const Key('act0_settings_beta_activity'),
-          onTap: input.onOpenBetaMetrics,
-        ),
-      if (input.onOpenSupport != null)
-        _row(
-          'Support',
-          'Find the support contact and copy diagnostics',
-          Act0AcademyLeafGlyphKindV1.recall,
-          key: const Key('act0_settings_support'),
-          onTap: input.onOpenSupport,
-        ),
-      if (input.onRecoveryOptions != null)
-        _row(
-          'Recovery options',
-          'Inspect your saved recovery copy',
-          Act0AcademyLeafGlyphKindV1.recall,
-          key: const Key('act0_academy_settings_leaf_recovery'),
-          onTap: input.onRecoveryOptions,
-        ),
-      if (input.onReplayWelcome != null)
-        _row(
-          'Replay Welcome',
-          'See your introduction again',
-          Act0AcademyLeafGlyphKindV1.recall,
-          key: const Key('act0_academy_settings_leaf_welcome'),
-          onTap: input.onReplayWelcome,
-        ),
-      if (input.onRetakePlacement != null)
-        _row(
-          'Retake placement',
-          'Check your starting world',
-          Act0AcademyLeafGlyphKindV1.placement,
-          key: const Key('act0_academy_settings_leaf_placement'),
-          color: _gold,
-          onTap: input.onRetakePlacement,
-        ),
-    ];
-    final legal = <Widget>[
-      if (input.onDeleteLocalData != null)
-        _row(
-          'Delete local data',
-          'Erase learning history, recovery copies and preferences',
-          Act0AcademyLeafGlyphKindV1.privacy,
-          key: const Key('act0_settings_delete_local_data'),
-          onTap: input.onDeleteLocalData,
-        ),
-      if (input.onOpenPrivacy != null)
-        _row(
-          'Privacy Policy',
-          'How Sharky handles your information',
-          Act0AcademyLeafGlyphKindV1.privacy,
-          key: const Key('act0_academy_settings_leaf_privacy'),
-          onTap: input.onOpenPrivacy,
-        ),
-      if (input.onOpenTerms != null)
-        _row(
-          'Terms of Use',
-          'Read the app terms',
-          Act0AcademyLeafGlyphKindV1.terms,
-          key: const Key('act0_academy_settings_leaf_terms'),
-          color: _muted,
-          onTap: input.onOpenTerms,
-        ),
-    ];
-
-    final Widget body = switch (input.loadState) {
-      Act0AcademySettingsLoadStateV1.loading => const Center(
-        key: Key('act0_academy_settings_leaf_loading'),
-        child: CircularProgressIndicator(color: _aqua),
-      ),
-      Act0AcademySettingsLoadStateV1.failed => Center(
-        child: TextButton(
-          key: const Key('act0_academy_settings_leaf_retry'),
-          onPressed: input.onRetryLoad,
-          style: TextButton.styleFrom(foregroundColor: _aqua),
-          child: const Text('Could not load preferences. Retry'),
-        ),
-      ),
-      Act0AcademySettingsLoadStateV1.ready => ListView(
-        key: const Key('act0_academy_settings_leaf_scroll'),
-        padding: const EdgeInsets.fromLTRB(23, 18, 23, 24),
-        children: [
-          const Text(
-            'YOUR EXPERIENCE',
-            style: TextStyle(
-              color: _aqua,
-              fontSize: 10,
-              letterSpacing: 2.2,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 12),
-          const Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(text: 'Make Sharky\n'),
-                TextSpan(
-                  text: 'feel right.',
-                  style: TextStyle(color: _gold),
-                ),
-              ],
-            ),
-            style: TextStyle(
-              color: _text,
-              fontSize: 36,
-              height: 1.08,
-              letterSpacing: -1.3,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 14),
-          const Text(
-            'A few choices for a focused learning experience.',
-            style: TextStyle(color: _muted, fontSize: 13, height: 1.45),
-          ),
-          if (input.version case final version?)
-            FutureBuilder<String>(
-              future: version,
-              builder: (context, snapshot) => Padding(
-                padding: const EdgeInsets.only(top: 12),
-                child: Text(
-                  snapshot.data ?? 'Reading version and build…',
-                  style: const TextStyle(color: _muted, fontSize: 12),
-                ),
-              ),
-            ),
-          if (feel.isNotEmpty) ...[_label('FEEL & FEEDBACK'), _group(feel)],
-          if (learning.isNotEmpty) ...[
-            _label('YOUR LEARNING'),
-            _group(learning),
-          ],
-          if (legal.isNotEmpty) ...[
-            _label('PRIVACY & INFORMATION'),
-            _group(legal),
-          ],
-          if (feel.isNotEmpty)
-            const Padding(
-              padding: EdgeInsets.only(top: 16),
-              child: Text(
-                'Preferences are saved on this device.',
-                key: Key('act0_academy_settings_leaf_saved_note'),
-                textAlign: TextAlign.center,
-                style: TextStyle(color: _muted, fontSize: 11),
-              ),
-            ),
-        ],
-      ),
-    };
-
-    // Donor #315 switch styling (aqua/teal), scoped to this leaf.
-    final themed = Theme.of(context).copyWith(
-      switchTheme: SwitchThemeData(
-        thumbColor: WidgetStateProperty.all(Colors.white),
-        trackColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected)
-              ? const Color(0xFF1BBFB2)
-              : const Color(0xFF345354),
-        ),
-        trackOutlineColor: WidgetStateProperty.resolveWith(
-          (s) => s.contains(WidgetState.selected) ? _aqua : _rule,
-        ),
-      ),
-    );
-    return Theme(data: themed, child: _frame(body));
-  }
-
-  Widget _frame(Widget body) {
-    return DecoratedBox(
-      key: const Key('act0_academy_settings_leaf'),
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [Color(0xFF03282A), Color(0xFF001719), Color(0xFF001113)],
-        ),
+  Widget build(BuildContext context) => ColoredBox(
+    key: const Key('act0_academy_settings_leaf'),
+    color: Act0SkinTokensV1.background,
+    child: Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: Act0SkinTokensV1.screenGutter,
       ),
       child: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(18, 0, 23, 6),
-            child: Act0ShellRouteHeaderV1(
-              title: 'Settings',
-              backKey: const Key('act0_academy_settings_leaf_back'),
-              onBack: input.onBack,
-            ),
+          Act0SkinScreenHeaderV1(
+            title: 'Settings',
+            backKey: const Key('act0_academy_settings_leaf_back'),
+            onBack: input.onBack,
           ),
-          Expanded(child: body),
+          Expanded(
+            child: switch (input.loadState) {
+              Act0AcademySettingsLoadStateV1.loading => const Center(
+                key: Key('act0_academy_settings_leaf_loading'),
+                child: CircularProgressIndicator(
+                  color: Act0SkinTokensV1.academyAccent,
+                ),
+              ),
+              Act0AcademySettingsLoadStateV1.failed => Center(
+                child: Act0SkinSecondaryButtonV1(
+                  controlKey: const Key('act0_academy_settings_leaf_retry'),
+                  label: 'Could not load preferences. Retry',
+                  onPressed: input.onRetryLoad,
+                ),
+              ),
+              Act0AcademySettingsLoadStateV1.ready => ListView(
+                key: const Key('act0_academy_settings_leaf_scroll'),
+                padding: const EdgeInsets.symmetric(
+                  vertical: Act0SkinTokensV1.gapMd,
+                ),
+                children: [
+                  Act0SkinCardV1(
+                    padding: EdgeInsets.zero,
+                    child: Column(
+                      children: [
+                        if (input.practiceReminderEnabled != null)
+                          Act0SkinListRowV1(
+                            title: 'Practice reminder',
+                            subtitle:
+                                'One reminder at 6 pm local time when practice is available.',
+                            icon: Icons.notifications_outlined,
+                            controlKey: const Key(
+                              'act0_academy_settings_practice_reminder',
+                            ),
+                            toggle: input.practiceReminderEnabled,
+                            onChanged: input.onPracticeReminderChanged,
+                            onTap: null,
+                          ),
+                        if (input.practiceReminderEnabled != null &&
+                            input.reminderPermissionDenied)
+                          const Act0SkinBannerV1(
+                            message:
+                                'Allow Sharky Poker notifications in iPhone Settings.',
+                          ),
+                        if (input.onOpenSupport != null ||
+                            input.onOpenBetaMetrics != null)
+                          _row(
+                            'Support',
+                            'Find the support contact and copy diagnostics',
+                            Icons.help_outline,
+                            input.onOpenBetaMetrics != null
+                                ? 'act0_settings_beta_activity'
+                                : 'act0_settings_support',
+                            input.onOpenSupport ?? input.onOpenBetaMetrics,
+                          ),
+                        _row(
+                          'Recovery options',
+                          'Inspect your saved recovery copy',
+                          Icons.restore,
+                          'act0_academy_settings_leaf_recovery',
+                          input.onRecoveryOptions,
+                        ),
+                        _row(
+                          'Privacy Policy',
+                          'How Sharky Poker handles your information',
+                          Icons.privacy_tip_outlined,
+                          'act0_academy_settings_leaf_privacy',
+                          input.onOpenPrivacy,
+                        ),
+                        _row(
+                          'Delete learner data',
+                          'Erase learning history, recovery copies and preferences',
+                          Icons.delete_outline,
+                          'act0_settings_delete_local_data',
+                          input.onDeleteLocalData,
+                          destructive: true,
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: Act0SkinTokensV1.gapMd),
+                  if (input.onSoundChanged != null)
+                    Act0SkinListRowV1(
+                      title: 'Sound effects',
+                      subtitle: input.soundDetail,
+                      toggle: input.soundEnabled,
+                      onChanged: input.onSoundChanged,
+                      controlKey: const Key('act0_academy_settings_leaf_sound'),
+                      icon: Icons.volume_up_outlined,
+                      onTap: null,
+                    ),
+                  if (input.onHapticsChanged != null)
+                    Act0SkinListRowV1(
+                      title: 'Haptics',
+                      subtitle: 'Tactile response to decisions',
+                      toggle: input.hapticsEnabled,
+                      onChanged: input.onHapticsChanged,
+                      controlKey: const Key(
+                        'act0_academy_settings_leaf_haptics',
+                      ),
+                      icon: Icons.vibration,
+                      onTap: null,
+                    ),
+                  _row(
+                    'Replay Welcome',
+                    'See your introduction again',
+                    Icons.replay,
+                    'act0_academy_settings_leaf_welcome',
+                    input.onReplayWelcome,
+                  ),
+                  _row(
+                    'Retake placement',
+                    'Check your starting world',
+                    Icons.fact_check_outlined,
+                    'act0_academy_settings_leaf_placement',
+                    input.onRetakePlacement,
+                  ),
+                  _row(
+                    'Terms of Use',
+                    'Read the app terms',
+                    Icons.description_outlined,
+                    'act0_academy_settings_leaf_terms',
+                    input.onOpenTerms,
+                  ),
+                  if (input.onSoundChanged != null ||
+                      input.onHapticsChanged != null)
+                    const Text(
+                      'Preferences are saved on this device.',
+                      key: Key('act0_academy_settings_leaf_saved_note'),
+                      style: Act0SkinTokensV1.captionStyle,
+                    ),
+                  if (input.version case final version?)
+                    FutureBuilder<String>(
+                      future: version,
+                      builder: (context, snapshot) => Text(
+                        snapshot.data ?? 'Reading version and build…',
+                        style: Act0SkinTokensV1.captionStyle,
+                      ),
+                    ),
+                ],
+              ),
+            },
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _label(String text) => Padding(
-    padding: const EdgeInsets.fromLTRB(4, 24, 4, 10),
-    child: Text(
-      text,
-      style: const TextStyle(
-        color: _muted,
-        fontSize: 10,
-        letterSpacing: 2,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
-  );
-
-  Widget _group(List<Widget> rows) => Material(
-    // Material surface so row ink is painted above the group colour.
-    color: const Color(0xCC0A2A2C),
-    clipBehavior: Clip.antiAlias,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(18),
-      side: const BorderSide(color: _rule),
-    ),
-    child: Column(
-      children: [
-        for (var i = 0; i < rows.length; i++) ...[
-          if (i > 0)
-            const Divider(height: 1, indent: 56, endIndent: 14, color: _rule),
-          rows[i],
-        ],
-      ],
     ),
   );
 
   Widget _row(
     String title,
     String subtitle,
-    Act0AcademyLeafGlyphKindV1 glyph, {
-    Key? key,
-    Color color = _aqua,
-    Widget? trailing,
-    VoidCallback? onTap,
-  }) {
-    final content = Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      child: Row(
-        children: [
-          Act0AcademyLeafGlyphV1(kind: glyph, color: color, size: 24),
-          const SizedBox(width: 18),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: _text,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: _muted, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          if (trailing != null)
-            trailing
-          else if (onTap != null)
-            const Act0AcademyLeafGlyphV1(
-              kind: Act0AcademyLeafGlyphKindV1.forward,
-              color: _muted,
-              size: 18,
-            ),
-        ],
-      ),
-    );
-    // Merge so a screen reader hears "Haptics ... switch" / "Privacy Policy
-    // ... button" as one control (donor #315 row semantics).
-    if (onTap == null) return MergeSemantics(child: content);
-    return MergeSemantics(
-      child: Semantics(
-        button: true,
-        child: InkWell(
-          key: key,
-          onTap: onTap,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(minHeight: 56),
-            child: content,
-          ),
-        ),
-      ),
-    );
-  }
+    IconData icon,
+    String key,
+    VoidCallback? action, {
+    bool destructive = false,
+  }) => action == null
+      ? const SizedBox.shrink()
+      : Act0SkinListRowV1(
+          title: title,
+          subtitle: subtitle,
+          icon: icon,
+          controlKey: Key(key),
+          onTap: action,
+          destructive: destructive,
+        );
 }

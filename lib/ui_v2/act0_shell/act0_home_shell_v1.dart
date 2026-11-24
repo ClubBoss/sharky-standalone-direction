@@ -1,3 +1,4 @@
+import 'skin/act0_skin_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
 import 'act0_goal_route_v1.dart';
@@ -6,7 +7,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 bool _isRuLocaleV1(BuildContext context) =>
@@ -150,7 +150,6 @@ class Act0HomeShellV1 extends StatelessWidget {
     final subtitle =
         nextActionSubtitle ?? act0AcademyLessonSubtitleV1(context, lesson);
     final courseTitle = act0AcademyWorldTitleV1(context, state.selectedWorld);
-    final sharky = sharkyOverride ?? lesson.runner.sharky;
     final nextActionCtaLabel = this.nextActionCtaLabel == 'Continue'
         ? act0AcademySurfaceAtomV1(
             context,
@@ -200,9 +199,6 @@ class Act0HomeShellV1 extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _HomeIdentityRowV1(
-                  state: state,
-                  sharky: sharky,
-                  courseTitle: courseTitle,
                   localeIsRu: _isRuLocaleV1(context),
                   onOpenDevMenu: onOpenDevMenu,
                 ),
@@ -459,63 +455,18 @@ class Act0HomeShellV1 extends StatelessWidget {
 }
 
 class _HomeIdentityRowV1 extends StatelessWidget {
-  const _HomeIdentityRowV1({
-    required this.state,
-    required this.sharky,
-    required this.courseTitle,
-    required this.localeIsRu,
-    this.onOpenDevMenu,
-  });
+  const _HomeIdentityRowV1({required this.localeIsRu, this.onOpenDevMenu});
 
-  final Act0ShellStateV1 state;
-  final Act0SharkyCueV1 sharky;
-  final String courseTitle;
   final bool localeIsRu;
   final VoidCallback? onOpenDevMenu;
 
   @override
   Widget build(BuildContext context) {
-    final tone = act0SharkyToneForMoodV1(sharky.preSessionMood);
     return Row(
       key: const Key('act0_shell_home_identity_row'),
       children: [
-        Container(
-          width: 38,
-          height: 38,
-          padding: const EdgeInsets.all(6),
-          decoration: BoxDecoration(
-            color: tone.withOpacity(0.12),
-            borderRadius: BorderRadius.circular(
-              38 * Act0ShellTokensV1.sharkyTileRadiusRatio,
-            ),
-            border: Border.all(color: tone.withOpacity(0.18)),
-          ),
-          child: Act0SharkyPresenceMascotV1(
-            mood: sharky.preSessionMood,
-            tone: tone,
-            size: 26,
-          ),
-        ),
-        const SizedBox(width: Act0ShellTokensV1.gapSm),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                localeIsRu ? 'Sharky' : 'Sharky',
-                style: Act0AcademyDesignTokensV1.body.copyWith(
-                  fontWeight: FontWeight.w900,
-                ),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                localeIsRu ? 'Покерная академия' : 'Poker Academy',
-                style: Act0AcademyDesignTokensV1.label.copyWith(
-                  letterSpacing: 0.1,
-                ),
-              ),
-            ],
-          ),
+        const Expanded(
+          child: Text('Sharky Poker', style: Act0SkinTokensV1.headline),
         ),
         if (onOpenDevMenu != null) ...[
           const SizedBox(width: 2),

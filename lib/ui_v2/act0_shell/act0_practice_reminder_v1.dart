@@ -25,6 +25,11 @@ abstract final class Act0PracticeReminderV1 {
   static Future<bool> setEnabled(bool enabled) =>
       _request('setEnabled', enabled);
 
+  static Future<bool> permissionDenied() async {
+    if (!isSupported) return false;
+    return await _channel.invokeMethod<bool>('permissionDenied') ?? false;
+  }
+
   static Future<bool> _request(String method, [bool? argument]) {
     if (!isSupported) return Future<bool>.value(false);
     final next = _pending.then((_) async {

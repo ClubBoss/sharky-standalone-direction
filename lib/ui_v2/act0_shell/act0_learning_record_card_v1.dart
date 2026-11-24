@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'academy_leaves/act0_academy_leaf_style_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
 import 'act0_profile_evidence_consumer_v1.dart';
 import 'act0_profile_evidence_projection_v1.dart';
 
@@ -15,119 +16,118 @@ class Act0LearningRecordCardV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const text = Act0AcademyLeafPaletteV1.text;
-    const muted = Act0AcademyLeafPaletteV1.textMuted;
+    const text = Act0SkinTokensV1.onSurface;
+    const muted = Act0SkinTokensV1.muted;
     Widget line(String value, {bool title = false}) => Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: Act0SkinTokensV1.gapXs),
       child: Text(
         value,
-        style: TextStyle(
-          color: title ? text : muted,
-          fontSize: title ? 15 : 13,
-          fontWeight: title ? FontWeight.w600 : FontWeight.w400,
-        ),
+        style: title ? Act0SkinTokensV1.body : Act0SkinTokensV1.secondary,
       ),
     );
     final week = projection.weeklyAnswers;
-    return Act0AcademyLeafSurfaceV1(
+    return Act0SkinCardV1(
       key: const Key('act0_learning_record'),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (week != null) ...[
-              line('Past 7 days', title: true),
-              if (week.answers == 0)
-                line('Your saved answers will appear here.')
-              else ...[
-                line(
-                  '${week.answers} saved ${week.answers == 1 ? 'answer' : 'answers'}',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (week != null) ...[
+            line('Past 7 days', title: true),
+            if (week.answers == 0)
+              line('Your saved answers will appear here.')
+            else ...[
+              line(
+                '${week.answers} saved ${week.answers == 1 ? 'answer' : 'answers'}',
+              ),
+              line('${week.correctWithoutHelp} correct without help'),
+              if (week.withHelp > 0)
+                line('${week.withHelp} answered with help'),
+              if (onOpenPractice != null)
+                Act0SkinSecondaryButtonV1(
+                  controlKey: const Key('act0_weekly_open_practice'),
+                  onPressed: onOpenPractice,
+                  label: 'Open Practice',
                 ),
-                line('${week.correctWithoutHelp} correct without help'),
-                if (week.withHelp > 0)
-                  line('${week.withHelp} answered with help'),
-                if (onOpenPractice != null)
-                  TextButton(
-                    key: const Key('act0_weekly_open_practice'),
-                    onPressed: onOpenPractice,
-                    child: const Text('Open Practice'),
-                  ),
-              ],
-              const Divider(),
             ],
-            line('Your learning evidence', title: true),
-            line(
-              'You can see what you studied, practiced, and answered without help.',
+            const Divider(color: Act0SkinTokensV1.line),
+          ],
+          line('Your learning evidence', title: true),
+          line(
+            'You can see what you studied, practiced, and answered without help.',
+          ),
+          if (projection.studiedTopics.isEmpty)
+            line('No study record for the current material yet.')
+          else
+            ExpansionTile(
+              tilePadding: EdgeInsets.zero,
+              shape: const Border(),
+              collapsedShape: const Border(),
+              textColor: text,
+              collapsedTextColor: text,
+              iconColor: muted,
+              collapsedIconColor: muted,
+              title: Text(
+                'Studied topics · ${projection.studiedTopics.length}',
+                style: Act0SkinTokensV1.body,
+              ),
+              subtitle: const Text(
+                'Completed teaching steps',
+                style: Act0SkinTokensV1.secondary,
+              ),
+              children: [
+                for (final topic in projection.studiedTopics)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: line(topic.title),
+                  ),
+                line('To see answers without help, try a practice hand.'),
+              ],
             ),
-            if (projection.studiedTopics.isEmpty)
-              line('No study record for the current material yet.')
-            else
+          if (projection.unverifiedStudyCount > 0)
+            line(
+              '${projection.unverifiedStudyCount} earlier study records need confirmation against current material. Saved history is kept.',
+            ),
+          if (projection.practiceStates.isEmpty)
+            line(
+              'No practice record for the current material yet. XP and completed tasks do not confirm a skill.',
+            )
+          else
+            for (final state in projection.practiceStates)
               ExpansionTile(
+                key: ValueKey(
+                  'act0_learning_record_${state.signal.conceptFamilyId}',
+                ),
                 tilePadding: EdgeInsets.zero,
+                shape: const Border(),
+                collapsedShape: const Border(),
                 textColor: text,
                 collapsedTextColor: text,
                 iconColor: muted,
                 collapsedIconColor: muted,
                 title: Text(
-                  'Studied topics · ${projection.studiedTopics.length}',
+                  act0ProfileEvidenceSkillLabelV1(state.skillAtomId) ??
+                      'Recorded practice',
+                  style: Act0SkinTokensV1.body,
                 ),
-                subtitle: const Text(
-                  'Completed teaching steps',
-                  style: TextStyle(color: muted),
+                subtitle: Text(
+                  state.stateLabel,
+                  style: Act0SkinTokensV1.secondary,
                 ),
                 children: [
-                  for (final topic in projection.studiedTopics)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: line(topic.title),
-                    ),
-                  line('To see answers without help, try a practice hand.'),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: line(state.explanation),
+                  ),
+                  line(
+                    'Current task versions and recorded help are checked. This is recent response evidence; transfer and retention need separate proof.',
+                  ),
                 ],
               ),
-            if (projection.unverifiedStudyCount > 0)
-              line(
-                '${projection.unverifiedStudyCount} earlier study records need confirmation against current material. Saved history is kept.',
-              ),
-            if (projection.practiceStates.isEmpty)
-              line(
-                'No practice record for the current material yet. XP and completed tasks do not confirm a skill.',
-              )
-            else
-              for (final state in projection.practiceStates)
-                ExpansionTile(
-                  key: ValueKey(
-                    'act0_learning_record_${state.signal.conceptFamilyId}',
-                  ),
-                  tilePadding: EdgeInsets.zero,
-                  textColor: text,
-                  collapsedTextColor: text,
-                  iconColor: muted,
-                  collapsedIconColor: muted,
-                  title: Text(
-                    act0ProfileEvidenceSkillLabelV1(state.skillAtomId) ??
-                        'Recorded practice',
-                  ),
-                  subtitle: Text(
-                    state.stateLabel,
-                    style: const TextStyle(color: muted),
-                  ),
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: line(state.explanation),
-                    ),
-                    line(
-                      'Current task versions and recorded help are checked. This is recent response evidence; transfer and retention need separate proof.',
-                    ),
-                  ],
-                ),
-            if (projection.hasUnverifiedPractice)
-              line(
-                'Earlier responses are saved. Their source or evidence needs confirmation before they can support a current skill claim.',
-              ),
-          ],
-        ),
+          if (projection.hasUnverifiedPractice)
+            line(
+              'Earlier responses are saved. Their source or evidence needs confirmation before they can support a current skill claim.',
+            ),
+        ],
       ),
     );
   }

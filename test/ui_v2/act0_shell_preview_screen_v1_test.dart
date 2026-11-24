@@ -609,14 +609,11 @@ void main() {
       expect(input.bankedRepairCount, 0);
       expect(input.reinforcedRepairCount, 0);
       expect(
-        find.byKey(const Key('act0_academy_you_leaf_not_earned')),
+        find.text(
+          'Your world and skill progress, independent answers, and repairs will appear here.',
+        ),
         findsOneWidget,
       );
-      expect(
-        find.text('Answer your first question correctly without help.'),
-        findsOneWidget,
-      );
-      expect(find.text('Your record begins here'), findsOneWidget);
       expect(
         find.byKey(const Key('act0_academy_you_leaf_tasks')),
         findsNothing,
