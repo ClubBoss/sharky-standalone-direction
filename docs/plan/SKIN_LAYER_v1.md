@@ -212,3 +212,17 @@ flutter test test/ui_v2/act0_skin_parity_v1_goldens.dart
 ```
 
 Golden evidence is pending. Flutter startup was denied writes to the cached SDK stamp and the Dart telemetry session in this sandbox. The test has been written against the existing fixtures, with its rendering and parity still to be exercised.
+
+## Shell literal guard · B66
+
+Tier A runs `test/guards/act0_skin_literal_guard_v1_test.dart`. It scans Act0
+shell Dart source for inline colors, `TextStyle` font sizes and colors,
+circular border radii, and numeric `EdgeInsets`. The skin kit, existing token
+owners, frozen Modern Table presentation files, and generated code are exempt.
+Transparent Material color is allowed.
+
+Run `dart test test/guards/act0_skin_literal_guard_v1_test.dart -r expanded`
+from the project root. Use the ten highest counts to sequence B35, B37, B38,
+and ALPHA2. Each file has its own ceiling in
+`test/guards/act0_skin_literal_baseline_v1.json`. When a file migrates, lower
+its entry to the new count or remove the entry at zero. New files start at zero.
