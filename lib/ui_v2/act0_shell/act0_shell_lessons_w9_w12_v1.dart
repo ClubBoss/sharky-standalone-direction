@@ -990,6 +990,7 @@ Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
     taskFamily: task.taskFamily,
     tablePresentation: task.tablePresentation,
     repairOnly: task.repairOnly,
+    guidedDecision: task.guidedDecision,
     summary: task.summary,
     lockedSummary: task.lockedSummary,
   );
