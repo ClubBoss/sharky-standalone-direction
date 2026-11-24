@@ -12,6 +12,7 @@ class Act0LearnPathViewModelV1 {
     required Act0LessonCardV1? requiredPractice,
     int requiredPracticeAnswered = 0,
     required Set<String> pathClosedTaskIds,
+    bool Function(Act0RunnerStateV1)? runnerAllowed,
     required Set<String> completedTaskIds,
     required bool showFullPath,
     required this.catalogFlag,
@@ -45,6 +46,7 @@ class Act0LearnPathViewModelV1 {
         ? act0FirstIncompleteLessonTaskV1(
             currentMissionLesson,
             pathClosedTaskIds,
+            runnerAllowed: runnerAllowed,
           )
         : requiredPractice.courseTaskList[requiredPracticeAnswered];
     currentMissionStepIndex = act0LessonStepIndexV1(

@@ -778,6 +778,13 @@ bool act0RunnerSupportsNineSeatPreviewV1(Act0RunnerStateV1 runner) =>
       (step) => step.table == null || act0TableSeatCountV1(step.table!) <= 9,
     );
 
+bool act0RunnerAllowedByNineSeatGateV1(
+  Act0RunnerStateV1 runner, {
+  required bool nineSeatPreview,
+}) =>
+    !act0RunnerRequiresNineSeatPreviewV1(runner) ||
+    (nineSeatPreview && act0RunnerSupportsNineSeatPreviewV1(runner));
+
 Act0LessonTaskV1 act0FirstIncompleteLessonTaskV1(
   Act0LessonCardV1 lesson,
   Set<String> pathClosedTaskIds, {
