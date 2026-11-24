@@ -14,6 +14,7 @@ test/ui_v2/act0_first_table_setup_grading_v1_test.dart
 test/ui_v2/act0_hand_history_import_v1_test.dart
 test/ui_v2/act0_nine_seat_engine_v1_test.dart
 test/ui_v2/act0_manual_own_hand_v1_test.dart
+test/ui_v2/act0_hst04_find_explain_newspot_v1_test.dart
 test/ui_v2/act0_instruction_content_policy_v1_test.dart
 test/ui_v2/act0_main01_app_root_cycle_v1_test.dart
 test/ui_v2/act0_w4_w7_owner_contract_decomposition_v1_test.dart
