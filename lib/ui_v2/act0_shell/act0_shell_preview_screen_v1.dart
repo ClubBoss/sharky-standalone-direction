@@ -5514,6 +5514,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               onSelected: _selectShellTabV1,
             ),
     );
+    // W4 number entry uses the shared launch, resume and feedback controls.
+    // Keep their ink consistent with the keypad and the production app theme.
+    final useNumberEntryInk =
+        (widget.numberEntryV1 && selectedWorld.worldNumber == 4) ||
+        useNumberEntry;
+    final themedShell = useNumberEntryInk
+        ? Theme(
+            data: Theme.of(
+              context,
+            ).copyWith(splashFactory: InkRipple.splashFactory),
+            child: shell,
+          )
+        : shell;
     // The task UI scales up to 1.3. Physical table labels keep their own
     // fixed text scale inside the runner.
     if (academySurface) {
@@ -5521,10 +5534,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         value: premiumAcademy || _showWelcome || _showPlacement
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
-        child: shell,
+        child: themedShell,
       );
     }
-    return _withRunnerChromeV1(shell);
+    return _withRunnerChromeV1(themedShell);
   }
 
   void _selectShellTabV1(

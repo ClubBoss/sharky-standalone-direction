@@ -45,6 +45,13 @@ const _continueKeys = [
   'act0_academy_home_leaf_cta',
 ];
 
+// Material 3 defaults to InkSparkle, whose shader asset is not bundled for
+// `flutter test`; its load error fails the test and the long session hangs.
+// Production keeps the platform default; the harness uses InkRipple.
+final ThemeData longSessionTestThemeV1 = ThemeData(
+  splashFactory: InkRipple.splashFactory,
+);
+
 Future<void> _mount(
   WidgetTester t, {
   bool firstRun = false,
@@ -53,6 +60,7 @@ Future<void> _mount(
 }) async {
   await t.pumpWidget(
     MaterialApp(
+      theme: longSessionTestThemeV1,
       locale: const Locale('en'),
       builder: textScale == null
           ? null
@@ -460,7 +468,6 @@ void _registerFocusedCases() {
   ) async {
     const taskId = 'w4_good_price_call';
     final semantics = t.ensureSemantics();
-    addTearDown(semantics.dispose);
     await _openSavedCourseTask(
       t,
       worldId: 'world_4',
@@ -560,7 +567,7 @@ void _registerFocusedCases() {
     );
     final finished = await _saved(t);
     final history = (finished['learningEvidenceHistory'] as List).cast<Map>();
-    expect(history, contains(miss));
+    expect(history, contains(equals(miss)));
     expect(
       history.any(
         (row) =>
@@ -571,6 +578,7 @@ void _registerFocusedCases() {
       isTrue,
     );
     expect(t.takeException(), isNull);
+    semantics.dispose();
   });
 
   testWidgets('pre-split first lesson resumes the card read with its XP', (
@@ -1009,9 +1017,10 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetPhysicalSize);
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
-      const MaterialApp(
-        locale: Locale('en'),
-        home: Act0ShellPreviewScreenV1(
+      MaterialApp(
+        theme: longSessionTestThemeV1,
+        locale: const Locale('en'),
+        home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
           showPlacementOnStart: false,
           debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
@@ -1069,9 +1078,10 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetPhysicalSize);
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
-      const MaterialApp(
-        locale: Locale('en'),
-        home: Act0ShellPreviewScreenV1(
+      MaterialApp(
+        theme: longSessionTestThemeV1,
+        locale: const Locale('en'),
+        home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
           showPlacementOnStart: false,
           debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
