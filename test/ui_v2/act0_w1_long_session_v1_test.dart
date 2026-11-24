@@ -34,6 +34,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_route_practice_v1.dart';
 // --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true. The app is
 // restarted in every world, and progress must carry on from where it stopped.
 // ACT0_LONG_SESSION_W7_TO_W8 resumes a save at W7 for focused Q7 checks.
+// Tier A runs the focused cases and the two route ranges as separate commands.
 // Any exception thrown by the app fails the test.
 const _continueKeys = [
   'act0_shell_feedback_continue_cta',
@@ -233,6 +234,13 @@ const _preSplitIntroTasks = <String>{
 };
 
 void main() {
+  _registerFocusedCases();
+  if (!const bool.fromEnvironment('ACT0_LONG_SESSION_FOCUSED_ONLY')) {
+    registerLongSessionRoutes();
+  }
+}
+
+void _registerFocusedCases() {
   test(
     'H5 is absent from the standard route and validates every pilot point',
     () {
@@ -1752,21 +1760,41 @@ void main() {
     expect(find.byKey(const Key('act0_shell_table')), findsNothing);
     expect(t.takeException(), isNull);
   });
+}
 
-  const fullRoute = bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
-  const w7ToW8 = bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
-  const pilot = act0CurriculumPilotEnabledV1 && !w7ToW8;
-  const lastWorld = pilot
-      ? act0LastCurriculumWorldV1
-      : (w7ToW8 ? 8 : (fullRoute ? 12 : 7));
-  for (final firstWorld
-      in pilot ? [13] : (w7ToW8 ? [7] : (fullRoute ? [1, 2] : [1]))) {
+void registerLongSessionRoutes({({int first, int last})? tierARange}) {
+  final fullRoute =
+      tierARange == null &&
+      const bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
+  final w7ToW8 =
+      tierARange == null &&
+      const bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
+  final pilot = tierARange == null && act0CurriculumPilotEnabledV1 && !w7ToW8;
+  final lastWorld =
+      tierARange?.last ??
+      (pilot ? act0LastCurriculumWorldV1 : (w7ToW8 ? 8 : (fullRoute ? 12 : 7)));
+  final firstWorlds = [
+    if (tierARange != null)
+      tierARange.first
+    else if (pilot)
+      13
+    else if (w7ToW8)
+      7
+    else ...[
+      1,
+      if (fullRoute) 2,
+    ],
+  ];
+  for (final firstWorld in firstWorlds) {
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
     final useRulesCheck = firstWorld == 2;
+    final restoreSaved =
+        w7ToW8 || pilot || (tierARange != null && firstWorld > 1);
+    final checkNextWorld = tierARange != null && lastWorld < 7;
     testWidgets(
-      'a ${w7ToW8 || pilot ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
+      'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       (t) async {
         SharedPreferences.setMockInitialValues(<String, Object>{});
         t.view.physicalSize = const Size(393, 852);
@@ -1779,7 +1807,15 @@ void main() {
           'harder_river_value_added',
         };
         final confirmedB19Misses = <String>{};
-        final worlds = Act0ShellStateV1.sample.worlds
+        final catalog = Act0ShellStateV1.sample;
+        final priorTaskIds = {
+          if (tierARange != null && restoreSaved)
+            for (final world in catalog.worlds)
+              if (world.worldNumber < firstWorld)
+                for (final lesson in world.lessons)
+                  for (final task in lesson.courseTaskList) task.taskId,
+        };
+        final worlds = catalog.worlds
             .where(
               (w) => w.worldNumber >= firstWorld && w.worldNumber <= lastWorld,
             )
@@ -1789,6 +1825,15 @@ void main() {
             for (final l in w.lessons)
               for (final task in l.courseTaskList) task.taskId: w.worldNumber,
         };
+        final nextWorldTaskId = checkNextWorld
+            ? catalog
+                  .worldById('world_${lastWorld + 1}')
+                  .lessons
+                  .first
+                  .courseTaskList
+                  .first
+                  .taskId
+            : null;
         final repairWorld = {
           for (final w in worlds)
             for (final l in w.lessons)
@@ -1808,11 +1853,12 @@ void main() {
         var complete = false;
         const w7Checkpoint = 'w7_checkpoint_river_card_excludes_hand';
         var priorXp = 0;
-        if (w7ToW8 || pilot) {
+        if (restoreSaved) {
           priorXp = await _openSavedCourseTask(
             t,
             worldId: 'world_$firstWorld',
             taskId: worlds.first.lessons.first.courseTaskList.first.taskId,
+            finishTeaching: tierARange == null,
           );
         } else {
           await _mount(t, firstRun: true);
@@ -1849,7 +1895,10 @@ void main() {
             final shell = t.widget<Act0LessonRunnerShellV1>(runnerFinder.first);
             final runner = shell.runner;
             final taskId = shell.selectedTaskId ?? '';
-            final world = taskWorld[taskId] ?? repairWorld[taskId];
+            final atNextWorld = taskId == nextWorldTaskId;
+            final world = atNextWorld
+                ? lastWorld + 1
+                : taskWorld[taskId] ?? repairWorld[taskId];
             if (world == null) break; // Never answer a future-world task.
             if (repairWorld.containsKey(taskId)) {
               expect(confirmedMisses, contains(world), reason: taskId);
@@ -1873,16 +1922,21 @@ void main() {
               final completed = (snapshot['completedTaskIds'] as List)
                   .cast<String>()
                   .toSet();
-              final prerequisites = taskWorld.entries
-                  .where((e) => e.value < world)
-                  .map((e) => e.key)
-                  .toSet();
+              final prerequisites = {
+                ...priorTaskIds,
+                for (final entry in taskWorld.entries)
+                  if (entry.value < world) entry.key,
+              };
               expect(
                 completed.containsAll(prerequisites),
                 isTrue,
                 reason:
                     'W$world unlocked before ${prerequisites.difference(completed)}',
               );
+            }
+            if (atNextWorld) {
+              complete = true;
+              break;
             }
             if (_tapLog.isEmpty || _tapLog.last != '@$taskId')
               _tapLog.add('@$taskId');
@@ -1989,7 +2043,7 @@ void main() {
             final completed = (routeSnapshot['completedTaskIds'] as List)
                 .cast<String>()
                 .toSet();
-            complete = completed.containsAll(taskWorld.keys);
+            complete = !checkNextWorld && completed.containsAll(taskWorld.keys);
             if (complete) break;
           }
           // The summary can promote a saved review above the course route.
@@ -2016,9 +2070,12 @@ void main() {
             final completed = (routeSnapshot['completedTaskIds'] as List)
                 .cast<String>()
                 .toSet();
-            final nextWorld = taskWorld.entries
-                .firstWhere((entry) => !completed.contains(entry.key))
-                .value;
+            final nextWorld =
+                taskWorld.entries
+                    .where((entry) => !completed.contains(entry.key))
+                    .firstOrNull
+                    ?.value ??
+                lastWorld + 1;
             // A summary can open the map of the world just completed. Choose
             // the next unlocked world using the same menu a learner uses.
             if (routeSnapshot['selectedWorldId'] != 'world_$nextWorld') {
@@ -2064,6 +2121,10 @@ void main() {
             .cast<String>()
             .toSet();
         expect(taskWorld.keys.toSet().difference(completed), isEmpty);
+        expect(priorTaskIds.difference(completed), isEmpty);
+        if (checkNextWorld) {
+          expect(enteredWorlds, contains(lastWorld + 1));
+        }
         final practiced =
             ((snapshot['routePractice'] as Map?)?['finished'] as List?) ??
             const [];
@@ -2093,7 +2154,13 @@ void main() {
                   y5bNewChoicesV1.length +
                   (fullRoute ? y5cNewChoicesV1.length : y5cTasksInWorldV1(7));
         expect(
-          taskWorld.length,
+          tierARange != null
+              ? catalog.worlds
+                    .where((world) => world.worldNumber <= 7)
+                    .expand((world) => world.lessons)
+                    .expand((lesson) => lesson.courseTaskList)
+                    .length
+              : taskWorld.length,
           useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
         );
         if (useRulesCheck) expect(completed.intersection(w1Ids), isEmpty);
@@ -2124,7 +2191,9 @@ void main() {
         }
         expect(t.takeException(), isNull);
       },
-      timeout: const Timeout(Duration(minutes: fullRoute ? 8 : 5)),
+      timeout: Timeout(
+        Duration(minutes: fullRoute ? 8 : (tierARange != null ? 6 : 5)),
+      ),
     );
   }
 }
