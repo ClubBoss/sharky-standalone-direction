@@ -1,3 +1,4 @@
+import '../act0_shell_chrome_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 
@@ -144,7 +145,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         ),
       if (input.onRetakePlacement != null)
         _row(
-          'Take the W1 rules check',
+          'Retake placement',
           'Check your starting world',
           Act0AcademyLeafGlyphKindV1.placement,
           key: const Key('act0_academy_settings_leaf_placement'),
@@ -295,40 +296,10 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(18, 0, 23, 6),
-            child: Row(
-              children: [
-                if (input.onBack != null) ...[
-                  IconButton(
-                    key: const Key('act0_academy_settings_leaf_back'),
-                    tooltip: 'Back',
-                    onPressed: input.onBack,
-                    icon: const RotatedBox(
-                      quarterTurns: 2,
-                      child: Act0AcademyLeafGlyphV1(
-                        kind: Act0AcademyLeafGlyphKindV1.forward,
-                        color: _muted,
-                      ),
-                    ),
-                    style: IconButton.styleFrom(
-                      backgroundColor: const Color(0xFF0A2A2C),
-                      minimumSize: const Size(44, 44),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(13),
-                        side: const BorderSide(color: _rule),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                ],
-                const Text(
-                  'Settings',
-                  style: TextStyle(
-                    color: _text,
-                    fontSize: 21,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
+            child: Act0ShellRouteHeaderV1(
+              title: 'Settings',
+              backKey: const Key('act0_academy_settings_leaf_back'),
+              onBack: input.onBack,
             ),
           ),
           Expanded(child: body),

@@ -293,6 +293,40 @@ void main() {
     },
   );
 
+  testWidgets('replay returns to the same archive before Review', (
+    tester,
+  ) async {
+    final attempt = _attempt(1);
+    final archive = const Act0AttemptArchiveV1.empty()
+        .add(attempt)
+        .select(attempt.id);
+    var closed = false;
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Act0AttemptArchiveScreenV1(
+            archive: archive,
+            onClose: () => closed = true,
+            onSelect: (_) {},
+            onRemove: (_) {},
+            onOwnHandsChanged: (_) {},
+          ),
+        ),
+      ),
+    );
+    final replay = find.byKey(const Key('act0_attempt_archive_open_replay'));
+    await tester.ensureVisible(replay);
+    await tester.tap(replay);
+    await tester.pumpAndSettle();
+    expect(find.byType(Act0AttemptReplayScreenV1), findsOneWidget);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(replay, findsOneWidget);
+    expect(closed, isFalse);
+    await tester.binding.handlePopRoute();
+    expect(closed, isTrue);
+  });
+
   group('Review replay', () {
     Future<void> mount(
       WidgetTester tester,

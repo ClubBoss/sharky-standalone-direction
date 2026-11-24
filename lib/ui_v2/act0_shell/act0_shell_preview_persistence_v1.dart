@@ -938,9 +938,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     _selectedOptionId = null;
     _phase = Act0LessonPhaseV1.theory;
     _teachingStepIndex = 0;
-    _showPlayHub = true;
-    _returnToPlayHubOnBack = false;
-    _tab = Act0ShellTabV1.review;
+    _returnToRunnerOriginV1(Act0ShellTabV1.review);
     _persistProgress();
   }
 

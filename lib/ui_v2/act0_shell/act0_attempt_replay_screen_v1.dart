@@ -1,3 +1,4 @@
+import 'act0_shell_chrome_v1.dart';
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -162,22 +163,12 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextButton(
-                key: const Key('act0_attempt_replay_back_to_archive'),
-                onPressed: widget.onClose,
-                child: Text(
-                  attempt == null
-                      ? 'Back to own hands'
-                      : 'Back to attempt archive',
-                ),
-              ),
-              Text(
-                attempt == null
+              Act0ShellRouteHeaderV1(
+                backKey: const Key('act0_attempt_replay_back_to_archive'),
+                onBack: widget.onClose,
+                title: attempt == null
                     ? 'Own hand · ${widget.hand!.isManual ? 'Manual entry' : 'PokerStars'}'
                     : attempt.taskLabel ?? attempt.evidence.taskId,
-                style: ownHand
-                    ? Act0ClubNightTokensV1.title
-                    : Act0AcademyReadingStyleV1.sectionTitle,
               ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               if (widget.practice case final practice?) practice,

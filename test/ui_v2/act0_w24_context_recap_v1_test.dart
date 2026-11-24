@@ -579,7 +579,7 @@ void main() {
         missBytes,
       );
       // Review opens the real persisted same-target debt after remount.
-      await tester.tap(find.text('Review').last);
+      await tester.tap(find.byKey(const Key('act0_shell_nav_review')));
       await tester.pumpAndSettle();
       await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
       expect(_w24Runner(tester).selectedTaskId, _taskId);
@@ -1040,7 +1040,7 @@ void main() {
         expectSavedMiss(saved);
         final remounted = await _w24Remount(tester, disk);
         expectSavedMiss(remounted);
-        await tester.tap(find.text('Review').last);
+        await tester.tap(find.byKey(const Key('act0_shell_nav_review')));
         await tester.pumpAndSettle();
         await _w24Tap(tester, 'act0_academy_review_leaf_repair_cta');
         expect(_w24Runner(tester).selectedTaskId, source.task);

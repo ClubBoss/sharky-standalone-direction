@@ -210,7 +210,7 @@ void main() {
     },
   );
 
-  testWidgets('production Settings binds the learner rules check', (
+  testWidgets('Learn owns the learner rules check and returns on back', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(393, 852);
@@ -230,10 +230,18 @@ void main() {
       find.byType(Act0AcademySettingsLeafV1),
     );
     expect(settings.input.onReplayWelcome, isNull);
-    expect(settings.input.onRetakePlacement, isNotNull);
-    settings.input.onRetakePlacement!();
+    expect(settings.input.onRetakePlacement, isNull);
+    await tester.tap(find.byKey(const Key('act0_academy_settings_leaf_back')));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Learn').last);
+    await tester.pumpAndSettle();
+    final rulesCheck = find.byKey(const Key('act0_shell_w1_rules_map'));
+    await tester.tap(rulesCheck);
     await tester.pumpAndSettle();
     expect(find.text(act0W1RulesQuestionsV1.first.question), findsWidgets);
+    await tester.binding.handlePopRoute();
+    await tester.pumpAndSettle();
+    expect(rulesCheck, findsOneWidget);
     expect(
       find.byKey(const Key('act0_shell_placement_intro_cta')),
       findsNothing,

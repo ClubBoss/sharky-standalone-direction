@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
 import 'dart:async';
@@ -940,7 +941,9 @@ void main() {
         await tester.tap(find.text('Home').last);
         await tester.pumpAndSettle();
         if (mode == 'reset') {
-          await tester.tap(find.byTooltip('Dev menu'));
+          await tester.tap(
+            act0ShellPresentationFinderV1('act0_shell_home_dev_menu_button'),
+          );
           await tester.pumpAndSettle();
           await _tap(tester, 'act0_shell_dev_menu_reset_progress');
           await tester.tap(
@@ -1196,7 +1199,10 @@ void main() {
           payload['pendingDecisionAssistance'] = pending;
       }
       await _replaceCheckpointFixture(tester, payload);
-      expect(find.byKey(const Key('act0_recovery_options')), findsOneWidget);
+      expect(
+        find.byKey(const Key('act0_recovery_open_settings')),
+        findsOneWidget,
+      );
       expect(
         find.byType(Act0LessonRunnerShellV1),
         findsNothing,
@@ -1294,6 +1300,7 @@ void main() {
       await _tap(tester, 'act0_recovery_retry');
       expect(find.text(unreadable), findsOneWidget);
       expect(await mockValues(), damagedValues);
+      await _tap(tester, 'act0_recovery_open_settings');
       await _tap(tester, 'act0_recovery_options');
       await _tap(tester, 'act0_recovery_cancel');
       expect(await mockValues(), damagedValues);
@@ -1382,10 +1389,10 @@ void main() {
       expect(_runner(tester).runner.phase, Act0LessonPhaseV1.review);
       await _tap(tester, 'act0_shell_runner_back');
       expect(_stableProgress(await _saved(tester)), _stableProgress(missed));
-      await tester.tap(find.text('Home').last);
-      await tester.pumpAndSettle();
-      // Launching from Home keeps the original miss and the earned progress.
-      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(find.text('Open Review'), findsOneWidget);
+      await _tap(tester, 'act0_shell_nav_learn');
+      // Learn can reopen the saved feedback while Home prioritizes Review.
+      await _tap(tester, 'act0_shell_current_mission_cta');
       expect(_runner(tester).selectedTaskId, _source);
       expect(_runner(tester).runner.selectedOptionId, 'five_board_now');
       expect(_runner(tester).runner.phase, Act0LessonPhaseV1.review);
@@ -1407,9 +1414,10 @@ void main() {
       expect(_rows(resumed, 'repairOutcomeProjection'), isEmpty);
 
       await _tap(tester, 'act0_shell_runner_back');
-      await tester.tap(find.text('Review').last);
-      await tester.pumpAndSettle();
-      await _tap(tester, 'act0_academy_review_leaf_repair_cta');
+      await _tap(tester, 'act0_shell_nav_home');
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(find.text('Repair now'), findsOneWidget);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
       await _foundationAdvanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
       final answered = await _saved(tester);
@@ -1646,9 +1654,8 @@ void main() {
       expect(rankIntent['mappingType'], 'intentional_exact');
       expect(rankIntent['repairOccurrenceId'], rankMiss['recordId']);
       await _tap(tester, 'act0_shell_runner_back');
-      await tester.tap(find.text('Home').last);
-      await tester.pumpAndSettle();
-      await _tap(tester, 'act0_academy_home_leaf_cta');
+      await _tap(tester, 'act0_shell_nav_learn');
+      await _tap(tester, 'act0_shell_current_mission_cta');
       expect(_runner(tester).selectedTaskId, rankTaskId);
       final rankOpened = await _saved(tester);
       for (final field in [
@@ -1942,20 +1949,10 @@ void main() {
         final summary = find.byType(Act0BlockCompletionShellV1);
         if (summary.evaluate().isNotEmpty) {
           final completed = (await _saved(tester))['completedTaskIds'] as List;
-          if (prerequisites.every(completed.contains)) {
-            await _tap(tester, 'act0_shell_block_summary_home_cta');
-            break;
-          }
-          final next = tester
-              .widget<Act0BlockCompletionShellV1>(summary)
-              .nextUsefulHand
-              ?.targetTaskId;
-          await _tap(
-            tester,
-            prerequisites.contains(next) && !completed.contains(next)
-                ? 'act0_shell_block_summary_continue_cta'
-                : 'act0_shell_block_summary_home_cta',
-          );
+          // Leave the result through Back so the open Review item stays
+          // pending while the ordinary prerequisites are completed.
+          await _backFromBlockSummary(tester);
+          if (prerequisites.every(completed.contains)) break;
         } else if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
           if (find
               .byKey(const Key('act0_shell_current_mission_cta'))
@@ -1996,9 +1993,9 @@ void main() {
       await finishAct0RoutePracticeV1(tester, correct: true);
       expect(find.text('Clear weak spots in Review to unlock'), findsOneWidget);
 
-      await tester.tap(find.text('Review').last);
-      await tester.pumpAndSettle();
-      await _tap(tester, 'act0_academy_review_leaf_repair_cta');
+      await _tap(tester, 'act0_shell_nav_review');
+      expect(find.text('Repair now'), findsOneWidget);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
       expect(_runner(tester).selectedTaskId, _source);
       await _foundationAdvanceToPrompt(tester);
       await _choose(tester, 'two_three_six');
@@ -2216,6 +2213,8 @@ void main() {
           expect(summary.summary.assistedCount, 0);
           final target = summary.nextUsefulHand?.targetTaskId;
           await _tap(tester, 'act0_shell_block_summary_continue_cta');
+          expect(find.byType(Act0LearnPathShellV1), findsOneWidget);
+          await _tap(tester, 'act0_shell_current_mission_cta');
           expect(_runner(tester).selectedLessonId, lessons[1].lessonId);
           if (target != null) expect(_runner(tester).selectedTaskId, target);
           await _tap(tester, 'act0_shell_runner_back');
@@ -2258,7 +2257,7 @@ void main() {
         } else {
           // Temporary Action orchestration does not complete legal-context.
           // Actual map navigation must retain access to outstanding tasks.
-          await _tap(tester, 'act0_shell_block_summary_home_cta');
+          await _backFromBlockSummary(tester);
         }
         continue;
       }
@@ -2550,6 +2549,13 @@ void main() {
   });
 }
 
+Future<void> _backFromBlockSummary(WidgetTester tester) async {
+  expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
+  await tester.binding.handlePopRoute();
+  await tester.pumpAndSettle();
+  expect(find.byType(Act0LearnPathShellV1), findsOneWidget);
+}
+
 Future<void> _remount(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pumpAndSettle();
@@ -2630,17 +2636,7 @@ Future<void> _advanceToTask(WidgetTester tester, String taskId) async {
     if (find.byType(Act0LessonRunnerShellV1).evaluate().isEmpty) {
       final summary = find.byType(Act0BlockCompletionShellV1);
       if (summary.evaluate().isNotEmpty) {
-        final next = tester
-            .widget<Act0BlockCompletionShellV1>(summary)
-            .nextUsefulHand
-            ?.targetTaskId;
-        final completed = (await _saved(tester))['completedTaskIds'] as List;
-        await _tap(
-          tester,
-          next != null && !completed.contains(next)
-              ? 'act0_shell_block_summary_continue_cta'
-              : 'act0_shell_block_summary_home_cta',
-        );
+        await _backFromBlockSummary(tester);
       } else {
         final mission = find.byKey(const Key('act0_shell_current_mission_cta'));
         if (mission.evaluate().isEmpty) {
@@ -2969,17 +2965,7 @@ Future<void> _advanceOrdinaryW1ToRank(WidgetTester tester) async {
     }
     final summary = find.byType(Act0BlockCompletionShellV1);
     if (summary.evaluate().isNotEmpty) {
-      final next = tester
-          .widget<Act0BlockCompletionShellV1>(summary)
-          .nextUsefulHand
-          ?.targetTaskId;
-      final completed = (await _saved(tester))['completedTaskIds'] as List;
-      await _tap(
-        tester,
-        next != null && allowed.contains(next) && !completed.contains(next)
-            ? 'act0_shell_block_summary_continue_cta'
-            : 'act0_shell_block_summary_home_cta',
-      );
+      await _backFromBlockSummary(tester);
       continue;
     }
     if (find

@@ -180,7 +180,7 @@ void main() {
     );
     expect(find.text('Repair reinforcement'), findsNothing);
     expect(find.text('Session proof'), findsNothing);
-    expect(find.text('Review'), findsOneWidget);
+    expect(find.byKey(const Key('act0_shell_nav_review')), findsOneWidget);
     expect(find.text('Learn'), findsOneWidget);
     expect(
       act0ShellPresentationFinderV1('act0_shell_review_screen'),
@@ -1221,6 +1221,16 @@ Future<void> _launchHomeRepair(WidgetTester tester) async {
   await tester.pumpAndSettle();
   await tester.tap(act0ShellPresentationFinderV1('act0_shell_main_cta'));
   await tester.pumpAndSettle();
+  if (act0ShellPresentationFinderV1(
+    'act0_shell_review_screen',
+  ).evaluate().isNotEmpty) {
+    final repair = act0ShellPresentationFinderV1(
+      'act0_shell_review_practice_cta',
+    );
+    await tester.ensureVisible(repair);
+    await tester.tap(repair);
+    await tester.pumpAndSettle();
+  }
 }
 
 Future<void> _openReview(WidgetTester tester) async {
@@ -1230,10 +1240,7 @@ Future<void> _openReview(WidgetTester tester) async {
     await tester.tap(runnerBack, warnIfMissed: false);
     await tester.pumpAndSettle();
   }
-  final reviewTab = find.descendant(
-    of: find.byKey(const Key('act0_shell_bottom_nav')),
-    matching: find.text('Review'),
-  );
+  final reviewTab = find.byKey(const Key('act0_shell_nav_review'));
   await tester.ensureVisible(reviewTab);
   await tester.tap(reviewTab, warnIfMissed: false);
   await tester.pumpAndSettle();

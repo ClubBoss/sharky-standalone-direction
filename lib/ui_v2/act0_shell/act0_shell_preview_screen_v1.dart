@@ -1,5 +1,8 @@
 import 'act0_action_reason_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
+import 'act0_shell_next_step_v1.dart';
+import 'act0_shell_chrome_v1.dart';
 import 'act0_route_practice_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -1494,6 +1497,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _lessonRunXp = 0;
   bool _showPlayHub = true;
   bool _returnToPlayHubOnBack = false;
+  Act0ShellTabV1? _runnerOriginTabV1;
+  Act0ShellTabV1? _rulesOriginTabV1;
+
+  void _recordRunnerOriginV1() {
+    if (_tab != Act0ShellTabV1.play || _showPlayHub) {
+      _runnerOriginTabV1 = _tab;
+    }
+  }
+
+  void _returnToRunnerOriginV1(Act0ShellTabV1 fallback) {
+    _tab = _runnerOriginTabV1 ?? fallback;
+    _runnerOriginTabV1 = null;
+    _showPlayHub = true;
+    _returnToPlayHubOnBack = false;
+  }
+
   final Map<String, _Act0MistakeRecordV1> _mistakeRecords =
       <String, _Act0MistakeRecordV1>{};
   final Map<String, Act0RepairIntentV1> _openRepairIntentBySourceTaskId =
@@ -2258,6 +2277,43 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
   }
 
+  Future<void> _openBootSettingsV1() async {
+    final epoch = _recoveryEpochV1;
+    final action = await showDialog<VoidCallback>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Act0ShellRouteHeaderV1(title: 'Settings'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            TextButton(
+              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+              key: const Key('act0_recovery_options'),
+              onPressed: () =>
+                  Navigator.pop(dialogContext, _openRecoveryOptionsV1),
+              child: const Text('Recovery options'),
+            ),
+            TextButton(
+              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+              onPressed: () =>
+                  Navigator.pop(dialogContext, _requestDeleteLocalDataV1),
+              child: const Text('Delete local data'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+    if (_acceptRecoveryCallbackV1(epoch)) action?.call();
+  }
+
   Future<void> _openRecoveryOptionsV1() async {
     Act0RecoveryProposalV1? proposal;
     Act0RecoveryCopyV1? copy;
@@ -2382,6 +2438,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _openPlacementFlow() {
     setState(() {
+      _runnerOriginTabV1 = _tab;
       _placementRetakeV1 = true;
       _showPlacement = true;
       _showWelcome = false;
@@ -2841,19 +2898,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         },
                   child: const Text('Try again'),
                 ),
-                if (_progressLoadFailed) ...[
+                if (_progressLoadFailed)
                   TextButton(
-                    key: const Key('act0_recovery_options'),
-                    onPressed: _recoveryBusyV1 ? null : _openRecoveryOptionsV1,
-                    child: const Text('Recovery options'),
+                    style: const ButtonStyle(
+                      splashFactory: InkRipple.splashFactory,
+                    ),
+                    key: const Key('act0_recovery_open_settings'),
+                    onPressed: _recoveryBusyV1 ? null : _openBootSettingsV1,
+                    child: const Text('Settings'),
                   ),
-                  TextButton(
-                    onPressed: _recoveryBusyV1
-                        ? null
-                        : _requestDeleteLocalDataV1,
-                    child: const Text('Delete local data'),
-                  ),
-                ],
               ],
             ),
           ),
@@ -2885,27 +2938,39 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         maxScaleFactor: 1.3,
         child: AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle.light,
-          child: _buildW1RulesFlowV1(),
+          child: PopScope<Object?>(
+            canPop: _showW1StartV1,
+            onPopInvokedWithResult: (didPop, _) {
+              if (!didPop && !_showW1StartV1) _closeW1RulesCheckV1();
+            },
+            child: _buildW1RulesFlowV1(),
+          ),
         ),
       );
     }
     if (_routePracticeV1.inRunner && _routePracticeV1.run != null) {
       return _withRunnerChromeV1(
-        Scaffold(
-          key: const Key('act0_shell_preview_screen'),
-          backgroundColor: Act0ShellTokensV1.background,
-          body: SafeArea(
-            bottom: false,
-            child: Column(
-              children: [
-                _progressSaveNoticeV1(),
-                Expanded(
-                  child: KeyedSubtree(
-                    key: const Key('act0_shell_route_practice_runner'),
-                    child: _buildRoutePracticeRunnerV1(_routePracticeV1.run!),
+        PopScope<Object?>(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (!didPop) _closeRoutePracticeV1();
+          },
+          child: Scaffold(
+            key: const Key('act0_shell_preview_screen'),
+            backgroundColor: Act0ShellTokensV1.background,
+            body: SafeArea(
+              bottom: false,
+              child: Column(
+                children: [
+                  _progressSaveNoticeV1(),
+                  Expanded(
+                    child: KeyedSubtree(
+                      key: const Key('act0_shell_route_practice_runner'),
+                      child: _buildRoutePracticeRunnerV1(_routePracticeV1.run!),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -2920,13 +2985,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final useDailyHome =
         _usesPersistedProgress &&
         act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.home);
+    final dueReviews = _dueReviewItemsV1();
+    final dueRepairs = reviewState.mistakes
+        .where(
+          (mistake) =>
+              _isMistakeClearableInReviewV1(mistake.taskId, state: state),
+        )
+        .toList(growable: false);
+    final dueCount = dueRepairs.length + dueReviews.length;
     final recommendedDueReview = _launchableDueReviewV1(personalizedNextStep);
-    final homeDueReview = useDailyHome && _tab == Act0ShellTabV1.home
-        ? recommendedDueReview ?? _dueReviewItemsV1().firstOrNull
-        : personalizedNextStep.reasonType ==
-              act0ReturnReasonNoPersonalReasonAvailableV1
-        ? null
-        : recommendedDueReview;
+    final homeDueReview = recommendedDueReview ?? dueReviews.firstOrNull;
     final homeDueReviewTitle = homeDueReview == null
         ? null
         : _localizedLessonTitleV1(
@@ -2960,7 +3028,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !_showWelcome) {
       _emitRepairItemShownTelemetryV1(reviewState.mistakes.first);
     }
-    final reviewNavHasDot = reviewState.mistakes.isNotEmpty;
+    final reviewNavHasDot =
+        reviewState.mistakes.isNotEmpty || dueReviews.isNotEmpty;
     final worlds = _progressWorlds(baseState);
     final goalRoute =
         _goalRouteEnabledV1 &&
@@ -3315,85 +3384,117 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? null
         : 'Step ${_taskIndex(homeResumeLesson, resumableLesson!.taskId) + 1} '
               'of ${homeResumeLesson.courseTaskList.length}';
-    final dailyLesson = _firstPlayableLesson(selectedWorld);
-    final dailyHomeAction = homeDueReview != null
-        ? Act0AcademyHomeNextActionV1(
-            title: 'Quick review',
-            subtitle: homeDueReviewTitle!,
-            ctaLabel: 'Quick review',
-            onPressed: () => setState(() {
-              if (recommendedDueReview != null) {
-                _recordPersonalizedNextStepOpenedV1(
-                  personalizedNextStep,
-                  'home',
+    final nextWorld = worlds.firstWhere(
+      (world) =>
+          world.isSelectable && world.status != Act0WorldStateV1.completed,
+      orElse: () => selectedWorld,
+    );
+    final dailyLesson = _firstPlayableLesson(nextWorld);
+    final nextPractice = _requiredRoutePracticeV1(
+      nextWorld,
+      _pathClosedTaskIds,
+    );
+    final nextStep = Act0ShellNextStepV1.resolve(
+      repairs: dueRepairs.length,
+      dueReviews: dueReviews.length,
+      hasResume: resumableLesson != null,
+      requiresPractice: nextPractice != null,
+      courseComplete: nextWorld.status == Act0WorldStateV1.completed,
+    );
+    void openReviewQueue() {
+      if (_acceptRecoveryCallbackV1(callbackEpochV1)) {
+        _selectShellTabV1(Act0ShellTabV1.review);
+      }
+    }
+
+    final repair =
+        dueRepairs
+            .where((item) => item.taskId == personalizedNextStep.sourceTaskId)
+            .firstOrNull ??
+        dueRepairs.firstOrNull;
+    final nextAction = switch (nextStep) {
+      Act0ShellNextStepV1.repair => Act0AcademyHomeNextActionV1(
+        title: 'Repair a mistake',
+        subtitle: '$dueCount due in Review',
+        ctaLabel: _tab == Act0ShellTabV1.review ? 'Repair now' : 'Open Review',
+        onPressed: _tab != Act0ShellTabV1.review
+            ? openReviewQueue
+            : () => setState(() {
+                if (personalizedNextStep.sourceTaskId == repair!.taskId) {
+                  _recordPersonalizedNextStepOpenedV1(
+                    personalizedNextStep,
+                    'review',
+                  );
+                }
+                _startMistakeRepair(
+                  selectedWorld,
+                  repair,
+                  returnToPlayHub: false,
                 );
-              }
-              _startDueReviewItemV1(homeDueReview);
-            }),
-          )
-        : homeResumeLesson != null
-        ? Act0AcademyHomeNextActionV1(
-            title: _localizedLessonTitleV1(homeResumeLesson),
-            subtitle: homeResumeStep!,
-            ctaLabel: 'Continue lesson',
-            onPressed: () =>
-                setState(() => _resumeHomeLessonV1(resumableLesson!)),
-          )
-        : requiredPractice != null
-        ? Act0AcademyHomeNextActionV1(
-            title: _copyV1(en: 'Practice', ru: 'Практика'),
-            subtitle: _copyV1(
-              en: 'Complete this set to open the next lesson.',
-              ru: 'Пройди эту серию, чтобы открыть следующий урок.',
-            ),
-            ctaLabel: _copyV1(en: 'Start practice', ru: 'Начать практику'),
-            onPressed: () => setState(() {
-              _startRoutePracticeV1(selectedWorld, requiredPractice);
-            }),
-          )
-        : _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
-              dailyGroup.isEnabled &&
-              _learningRecommendation(
-                    selectedWorld: selectedWorld,
-                    selectedLesson: dailyLesson,
-                    preferPracticeAfterThreeLessons: true,
-                  ).kind ==
-                  _Act0LearningNextActionKindV1.dailyDrill
-        ? Act0AcademyHomeNextActionV1(
-            title: _copyV1(en: 'Practice a short set', ru: 'Короткая практика'),
-            subtitle: _copyV1(
-              en: 'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
-              ru: 'Ты прошёл 3 урока за сегодня. Закрепи на практике — следующий урок остаётся открыт в Уроках.',
-            ),
-            ctaLabel: _recommendationCtaLabel(
-              _Act0LearningNextActionKindV1.dailyDrill,
-            ),
-            onPressed: () =>
-                setState(() => _startPracticeGroup(dailyGroup, selectedWorld)),
-          )
-        : Act0AcademyHomeNextActionV1(
-            title: _localizedLessonTitleV1(dailyLesson),
-            subtitle: _localizedLessonSubtitleV1(dailyLesson),
-            ctaLabel: selectedWorld.status == Act0WorldStateV1.completed
-                ? 'See lessons'
-                : 'Start lesson',
-            onPressed: () => setState(() {
-              if (selectedWorld.status == Act0WorldStateV1.completed) {
-                _tab = Act0ShellTabV1.learn;
-                _restoreSelectableLearnFocusV1();
-                return;
-              }
-              final task = _firstIncompleteTask(dailyLesson);
-              if (_startTaskByIds(
-                selectedWorld,
-                dailyLesson.lessonId,
-                task.taskId,
-              )) {
-                _returnToPlayHubOnBack = false;
-                _resetLessonRunMetrics();
-              }
-            }),
-          );
+              }),
+      ),
+      Act0ShellNextStepV1.dueReview => Act0AcademyHomeNextActionV1(
+        title: 'Quick review',
+        subtitle: '$dueCount due · ${homeDueReviewTitle!}',
+        ctaLabel: _tab == Act0ShellTabV1.review ? 'Review now' : 'Open Review',
+        onPressed: _tab != Act0ShellTabV1.review
+            ? openReviewQueue
+            : () => setState(() {
+                if (recommendedDueReview != null) {
+                  _recordPersonalizedNextStepOpenedV1(
+                    personalizedNextStep,
+                    'review',
+                  );
+                }
+                _startDueReviewItemV1(homeDueReview!);
+              }),
+      ),
+      Act0ShellNextStepV1.resumeLesson => Act0AcademyHomeNextActionV1(
+        title: _localizedLessonTitleV1(homeResumeLesson!),
+        subtitle: homeResumeStep!,
+        ctaLabel: 'Continue lesson',
+        onPressed: () => setState(() => _resumeHomeLessonV1(resumableLesson!)),
+      ),
+      Act0ShellNextStepV1.requiredPractice => Act0AcademyHomeNextActionV1(
+        title: _copyV1(en: 'Required practice', ru: 'Обязательная практика'),
+        subtitle: _copyV1(
+          en: 'Complete this set to open the next lesson.',
+          ru: 'Пройди эту серию, чтобы открыть следующий урок.',
+        ),
+        ctaLabel: _copyV1(en: 'Start practice', ru: 'Начать практику'),
+        onPressed: () =>
+            setState(() => _startRoutePracticeV1(nextWorld, nextPractice!)),
+      ),
+      Act0ShellNextStepV1.lesson => Act0AcademyHomeNextActionV1(
+        title: _localizedLessonTitleV1(dailyLesson),
+        subtitle: _localizedLessonSubtitleV1(dailyLesson),
+        ctaLabel: 'Start lesson',
+        onPressed: () => setState(() {
+          final task = _firstIncompleteTask(dailyLesson);
+          if (_startTaskByIds(nextWorld, dailyLesson.lessonId, task.taskId)) {
+            _returnToPlayHubOnBack = false;
+            _resetLessonRunMetrics();
+          }
+        }),
+      ),
+      Act0ShellNextStepV1.courseComplete => Act0AcademyHomeNextActionV1(
+        title: 'Course complete',
+        subtitle: 'Revisit your lessons in Learn.',
+        ctaLabel: 'See lessons',
+        onPressed: () => _selectShellTabV1(Act0ShellTabV1.learn),
+      ),
+    };
+    final actionTab = _tab;
+    final dailyHomeAction = Act0AcademyHomeNextActionV1(
+      title: nextAction.title,
+      subtitle: nextAction.subtitle,
+      ctaLabel: nextAction.ctaLabel,
+      onPressed: () {
+        if (_tab == actionTab && _acceptRecoveryCallbackV1(callbackEpochV1)) {
+          nextAction.onPressed();
+        }
+      },
+    );
     final repeatedMissSource = _secondLessonMissSourceV1(
       playSelectedTask,
       playRunner,
@@ -3410,6 +3511,70 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         (_showPlacement && !_placementDiagnosticActive) ||
         _showWelcome ||
         !isPlayRunner;
+    void closeRunner() => _setStateForRunnerCallbackV1(
+      callbackEpochV1,
+      callbackDiagnosticEntryV1,
+      callbackDiagnosticRunIdV1,
+      () {
+        if (openedAsSpacedReview) {
+          _returnFromSpacedReviewV1(callbackDiagnosticRunIdV1);
+          return;
+        }
+        final lessonExampleSource = _lessonExampleSourceTaskIdV1;
+        if (lessonExampleSource != null) {
+          _continueAfterRepeatedLessonMissV1(lessonExampleSource);
+          return;
+        }
+        _pendingReviewKindV1 = null;
+        if (_diagnosticLearningEntryV1 != null) {
+          _returnFromDiagnosticLearningEntryV1();
+          return;
+        }
+        if (_placementDiagnosticActive) {
+          _endPlacementAssessmentRunV1();
+          _placementDiagnosticActive = false;
+          _showPlacement = true;
+          _showPlayHub = true;
+          _placementDiagnosticIndex = 0;
+          _placementDiagnosticCorrect = 0;
+          _placementDiagnosticScore = 0;
+          _placementDiagnosticHitSignals.clear();
+          _placementDiagnosticMissSignals.clear();
+          _selectedOptionId = null;
+          _phase = Act0LessonPhaseV1.theory;
+          _teachingStepIndex = 0;
+          return;
+        }
+        if (_activeRepairTaskId != null) {
+          _returnToRunnerOriginV1(Act0ShellTabV1.review);
+          _clearActiveRepairLaunchV1();
+          _activeRepairSourceTaskId = null;
+          _activeRepairResultReceiptLine = null;
+          _activeRepairSessionSummaryLines = const <String>[];
+          _selectedOptionId = null;
+          _phase = Act0LessonPhaseV1.theory;
+          _teachingStepIndex = 0;
+          return;
+        }
+        final remember = _rememberLessonRunnerV1();
+        _emitSessionExitedTelemetryV1(sourceSurface: 'act0_runner_back');
+        final fallback = _returnToPlayHubOnBack
+            ? Act0ShellTabV1.play
+            : Act0ShellTabV1.learn;
+        _returnToRunnerOriginV1(fallback);
+        if (_tab == Act0ShellTabV1.learn) {
+          _activateLearnVisitEligibilityV1();
+        }
+        if (remember) _persistProgress();
+      },
+    );
+    void closePlacement() => setState(() {
+      _endPlacementAssessmentRunV1();
+      _showPlacement = false;
+      _placementRetakeV1 = false;
+      _returnToRunnerOriginV1(Act0ShellTabV1.learn);
+    });
+
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
       backgroundColor: premiumAcademy || _showWelcome || _showPlacement
@@ -3422,7 +3587,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         child: Column(
           children: [
             _progressSaveNoticeV1(),
-            if (showTopBar)
+            if (_showPlacement && _placementRetakeV1 && !isPlayRunner)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Act0ShellRouteHeaderV1(
+                  title: 'Placement',
+                  onBack: closePlacement,
+                ),
+              ),
+            if (showTopBar && _tab == Act0ShellTabV1.learn)
+              const ColoredBox(
+                color: Act0SkinTokensV1.surface,
+                child: Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Act0ShellRouteHeaderV1(title: 'Learn'),
+                ),
+              ),
+            if (showTopBar && _tab != Act0ShellTabV1.learn)
               _TopBarV1(
                 academy: academySurface,
                 state: state,
@@ -3537,23 +3718,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )
                                   .length,
                         totalLessons: selectedWorld.lessons.length,
-                        dailyAction: useDailyHome ? dailyHomeAction : null,
+                        dailyAction: dailyHomeAction,
                         dayGoalDone: useDailyHome
                             ? _lastShortSessionDayV1 == _todayDateString()
                             : null,
                         returningAfterBreak:
                             useDailyHome && _returningAfterBreakV1,
-                        resumeLabel:
-                            useDailyHome &&
-                                homeDueReview != null &&
-                                homeResumeStep != null
-                            ? 'Continue lesson · $homeResumeStep'
-                            : null,
-                        onResumeLesson: resumableLesson == null
-                            ? null
-                            : () => setState(
-                                () => _resumeHomeLessonV1(resumableLesson),
-                              ),
                         phase: homeDueReview != null
                             ? Act0AcademyHomePhaseV1.recall
                             : switch (personalizedNextStep.recommendedAction) {
@@ -3571,26 +3741,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           nextActionLabel: homeDueReview != null
                               ? _copyV1(en: 'Review', ru: 'Разбор')
                               : _homeNextActionLabel(),
-                          nextActionTitle:
-                              homeDueReviewTitle ??
-                              _homeNextActionTitle(
-                                _firstPlayableLesson(selectedWorld),
-                              ),
-                          nextActionSubtitle:
-                              homeDueReview != null &&
-                                  (personalizedNextStep.copyLine ?? '')
-                                      .trim()
-                                      .isNotEmpty
-                              ? personalizedNextStep.copyLine!
-                              : _homeNextActionSubtitle(
-                                  _firstPlayableLesson(selectedWorld),
-                                ),
-                          nextActionCtaLabel: homeDueReview != null
-                              ? _copyV1(
-                                  en: 'Review now',
-                                  ru: 'Повторить сейчас',
-                                )
-                              : _homeNextActionCtaLabel(),
+                          nextActionTitle: dailyHomeAction.title,
+                          nextActionSubtitle: dailyHomeAction.subtitle,
+                          nextActionCtaLabel: dailyHomeAction.ctaLabel,
                           nextActionHint: homeDueReview != null
                               ? null
                               : _homeCtaHint(
@@ -3701,17 +3854,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   ),
                                 )
                               : null,
-                          onContinue: () => setState(() {
-                            _openPersonalizedNextStepV1(
-                              personalizedNextStep,
-                              surface: 'home',
-                              selectedWorld: selectedWorld,
-                              reviewState: reviewState,
-                            );
-                          }),
+                          onContinue: dailyHomeAction.onPressed,
                         ),
                       ),
                       Act0ShellTabV1.learn => Act0LearnPathShellV1(
+                        nextAction:
+                            effectiveLearnDetailLessonId == null &&
+                                _learnDetailWorldId == null &&
+                                !_showWorldMenu
+                            ? dailyHomeAction
+                            : null,
                         moduleTitle: act0DisplayWorldNameCopyV1(
                           selectedWorld.title,
                         ),
@@ -3875,6 +4027,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                               !_taskAvailable(lesson, taskId)) {
                             return;
                           }
+                          // Keep unresolved feedback available while the
+                          // shared next step prioritizes the repair queue.
+                          if (resumableLesson != null &&
+                              resumableLesson.worldId ==
+                                  selectedWorld.worldId &&
+                              resumableLesson.lessonId == lessonId &&
+                              resumableLesson.taskId == taskId &&
+                              resumableLesson.phase ==
+                                  Act0LessonPhaseV1.review &&
+                              resumableLesson.selectedOptionId != null &&
+                              _openRepairIntentBySourceTaskId.containsKey(
+                                taskId,
+                              )) {
+                            setState(
+                              () => _resumeHomeLessonV1(resumableLesson),
+                            );
+                            return;
+                          }
                           _emitLessonStartedTelemetryV1(
                             lessonId: lessonId,
                             taskId: taskId,
@@ -3886,6 +4056,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             startedBy: 'learn_route',
                           );
                           setState(() {
+                            _recordRunnerOriginV1();
                             _selectedLessonId = lessonId;
                             _selectedTaskId = taskId;
                             _tab = Act0ShellTabV1.play;
@@ -3913,6 +4084,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 context,
                                 isCurrent: () =>
                                     _acceptRecoveryCallbackV1(callbackEpochV1),
+                                nextAction: dailyHomeAction,
+                                onOpenReview: openReviewQueue,
                                 legacy: Act0PlayShellV1(
                                   groups: practiceGroups,
                                   recommendedGroupId:
@@ -3977,15 +4150,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : _openMistakeCountForLessonV1(
                                         selectedLesson,
                                       ),
-                                onBackToHome: useDailyHome
-                                    ? () => setState(() {
-                                        _blockCompletionSummary = null;
-                                        _showPlayHub = true;
-                                        _tab = Act0ShellTabV1.home;
-                                        _restoreSelectableLearnFocusV1();
-                                        _persistProgress();
-                                      })
-                                    : null,
                                 onFirstLessonReminder:
                                     useDailyHome &&
                                         !_firstLessonReminderAnsweredV1 &&
@@ -4055,6 +4219,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       );
                                     }),
                                 onReplay: () => setState(() {
+                                  _runnerOriginTabV1 = Act0ShellTabV1.learn;
+                                  _blockCompletionSummary = null;
                                   _showPlayHub = false;
                                   _selectedTaskId = selectedLesson
                                       .courseTaskList
@@ -4090,110 +4256,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   _showWorldMenu = false;
                                   _blockCompletionSummary = null;
                                 }),
-                                onContinue: () => setState(() {
-                                  final progressedWorlds = _progressWorlds(
-                                    baseState,
-                                  );
-                                  final nextLessonId = _nextLessonId(
-                                    selectedWorld.lessons,
-                                    selectedLesson.lessonId,
-                                  );
-                                  if (nextLessonId == null) {
-                                    final nextWorld = _nextSelectableWorld(
-                                      progressedWorlds,
-                                      _selectedWorldId,
-                                    );
-                                    if (nextWorld == null) {
-                                      _tab = Act0ShellTabV1.learn;
-                                      _showPlayHub = true;
-                                      final currentPlayableLesson =
-                                          _firstPlayableLesson(selectedWorld);
-                                      _seedLearnRouteFocusV1(
-                                        lessonId:
-                                            currentPlayableLesson.lessonId,
-                                        taskId: _firstIncompleteTask(
-                                          currentPlayableLesson,
-                                        ).taskId,
-                                      );
-                                      _showWorldMenu = false;
-                                      _blockCompletionSummary = null;
-                                      return;
-                                    }
-                                    final nextLesson = _firstPlayableLesson(
-                                      nextWorld,
-                                    );
-                                    _selectedWorldId = nextWorld.worldId;
-                                    _selectedLessonId = nextLesson.lessonId;
-                                    _selectedTaskId = _firstIncompleteTask(
-                                      nextLesson,
-                                    ).taskId;
-                                    _phase = _taskById(
-                                      nextLesson,
-                                      _selectedTaskId,
-                                    ).entryPhase;
-                                    _showPlayHub = false;
-                                    _selectedOptionId = null;
-                                    _teachingStepIndex = 0;
-                                    _learnDetailLessonId = null;
-                                    _learnDetailWorldId = null;
-                                    _showWorldMenu = false;
-                                    _blockCompletionSummary = null;
-                                    _resetLessonRunMetrics();
-                                    return;
-                                  }
-                                  final progressedWorld = _worldById(
-                                    progressedWorlds,
-                                    _selectedWorldId,
-                                  );
-                                  final nextLesson = _lessonById(
-                                    progressedWorld.lessons,
-                                    nextLessonId,
-                                  );
-                                  if (!nextLesson.isSelectable ||
-                                      nextLesson.isLocked) {
-                                    _tab = Act0ShellTabV1.learn;
-                                    _showPlayHub = true;
-                                    final currentPlayableLesson =
-                                        _firstPlayableLesson(progressedWorld);
-                                    _seedLearnRouteFocusV1(
-                                      lessonId: currentPlayableLesson.lessonId,
-                                      taskId: _firstIncompleteTask(
-                                        currentPlayableLesson,
-                                      ).taskId,
-                                    );
-                                    _showWorldMenu = false;
-                                    _blockCompletionSummary = null;
-                                    return;
-                                  }
-                                  if (const {
-                                    'chips_in_the_middle',
-                                    'first_table_guide',
-                                  }.contains(nextLesson.lessonId)) {
-                                    final backToPlayHub =
-                                        _returnToPlayHubOnBack;
-                                    _startTaskByIds(
-                                      progressedWorld,
-                                      nextLesson.lessonId,
-                                      _firstIncompleteTask(nextLesson).taskId,
-                                    );
-                                    _returnToPlayHubOnBack = backToPlayHub;
-                                    _resetLessonRunMetrics();
-                                    return;
-                                  }
-                                  _selectedLessonId = nextLesson.lessonId;
-                                  _selectedTaskId = _firstIncompleteTask(
-                                    nextLesson,
-                                  ).taskId;
-                                  _phase = _taskById(
-                                    nextLesson,
-                                    _selectedTaskId,
-                                  ).entryPhase;
-                                  _showPlayHub = false;
-                                  _selectedOptionId = null;
-                                  _teachingStepIndex = 0;
-                                  _blockCompletionSummary = null;
-                                  _resetLessonRunMetrics();
-                                }),
+                                onContinue: () {
+                                  _selectShellTabV1(Act0ShellTabV1.learn);
+                                },
                               )
                             : Act0LessonRunnerShellV1(
                                 key: multiStreetRun == null
@@ -4355,72 +4420,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 showLearningRailFocusLabels:
                                     _activeRepairTaskId ==
                                     playSelectedTask.taskId,
-                                onBack: () => _setStateForRunnerCallbackV1(
-                                  callbackEpochV1,
-                                  callbackDiagnosticEntryV1,
-                                  callbackDiagnosticRunIdV1,
-                                  () {
-                                    if (openedAsSpacedReview) {
-                                      _returnFromSpacedReviewV1(
-                                        callbackDiagnosticRunIdV1,
-                                      );
-                                      return;
-                                    }
-                                    final lessonExampleSource =
-                                        _lessonExampleSourceTaskIdV1;
-                                    if (lessonExampleSource != null) {
-                                      _continueAfterRepeatedLessonMissV1(
-                                        lessonExampleSource,
-                                      );
-                                      return;
-                                    }
-                                    _pendingReviewKindV1 = null;
-                                    if (_diagnosticLearningEntryV1 != null) {
-                                      _returnFromDiagnosticLearningEntryV1();
-                                      return;
-                                    }
-                                    if (_placementDiagnosticActive) {
-                                      _endPlacementAssessmentRunV1();
-                                      _placementDiagnosticActive = false;
-                                      _showPlacement = true;
-                                      _showPlayHub = true;
-                                      _placementDiagnosticIndex = 0;
-                                      _placementDiagnosticCorrect = 0;
-                                      _placementDiagnosticScore = 0;
-                                      _placementDiagnosticHitSignals.clear();
-                                      _placementDiagnosticMissSignals.clear();
-                                      _selectedOptionId = null;
-                                      _phase = Act0LessonPhaseV1.theory;
-                                      _teachingStepIndex = 0;
-                                      return;
-                                    }
-                                    if (_activeRepairTaskId != null) {
-                                      _tab = Act0ShellTabV1.review;
-                                      _showPlayHub = true;
-                                      _returnToPlayHubOnBack = false;
-                                      _clearActiveRepairLaunchV1();
-                                      _activeRepairSourceTaskId = null;
-                                      _activeRepairResultReceiptLine = null;
-                                      _activeRepairSessionSummaryLines =
-                                          const <String>[];
-                                      _selectedOptionId = null;
-                                      _phase = Act0LessonPhaseV1.theory;
-                                      _teachingStepIndex = 0;
-                                      return;
-                                    }
-                                    final remember = _rememberLessonRunnerV1();
-                                    if (_returnToPlayHubOnBack) {
-                                      _showPlayHub = true;
-                                    } else {
-                                      _emitSessionExitedTelemetryV1(
-                                        sourceSurface: 'act0_runner_back',
-                                      );
-                                      _activateLearnVisitEligibilityV1();
-                                      _tab = Act0ShellTabV1.learn;
-                                    }
-                                    if (remember) _persistProgress();
-                                  },
-                                ),
+                                onBack: closeRunner,
                                 onPreviousTheory: () =>
                                     _setStateForRunnerCallbackV1(
                                       callbackEpochV1,
@@ -5092,9 +5092,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                           return;
                                         }
                                       }
-                                      _tab = Act0ShellTabV1.review;
-                                      _showPlayHub = true;
-                                      _returnToPlayHubOnBack = false;
+                                      _returnToRunnerOriginV1(
+                                        Act0ShellTabV1.review,
+                                      );
                                       _clearActiveRepairLaunchV1();
                                       _activeRepairSourceTaskId = null;
                                       _activeSameSignalFeedbackRepairV1 = false;
@@ -5307,6 +5307,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         ),
                       Act0ShellTabV1.review => act0AcademyReviewRuntimeV1(
                         context,
+                        nextAction: dailyHomeAction,
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
                         legacy: Act0ReviewShellV1(
@@ -5495,16 +5496,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           onRecoveryOptions: _usesPersistedProgress
                               ? _openRecoveryOptionsV1
                               : null,
-                          onRetakePlacement:
-                              act0SettingsPreviewActionV1(
-                                _openPlacementFlow,
-                                isDebugMode: kDebugMode,
-                                legacyPreviewRequested:
-                                    widget.debugLegacyPlacementOnStart,
-                              ) ??
-                              (_canTakeW1RulesCheckV1
-                                  ? _beginW1RulesCheckV1
-                                  : null),
+                          onRetakePlacement: act0SettingsPreviewActionV1(
+                            _openPlacementFlow,
+                            isDebugMode: kDebugMode,
+                            legacyPreviewRequested:
+                                widget.debugLegacyPlacementOnStart,
+                          ),
                           onReplayWelcome: act0SettingsPreviewActionV1(
                             _openWelcomeReplayV1,
                             isDebugMode: kDebugMode,
@@ -5523,6 +5520,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       bottomNavigationBar:
           !_bootSurfaceReady ||
               _showWelcome ||
+              _showAttemptArchiveV1 ||
               (_showPlacement && !_placementDiagnosticActive) ||
               (_tab == Act0ShellTabV1.play && !_showPlayHub)
           ? null
@@ -5547,6 +5545,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
             child: shell,
           )
         : shell;
+    final route = PopScope<Object?>(
+      canPop:
+          !isPlayRunner &&
+          !(_showPlacement && _placementRetakeV1) &&
+          _blockCompletionSummary == null,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        if (isPlayRunner) {
+          closeRunner();
+        } else if (_showPlacement && _placementRetakeV1) {
+          closePlacement();
+        } else if (_blockCompletionSummary != null) {
+          _selectShellTabV1(Act0ShellTabV1.learn);
+        }
+      },
+      child: themedShell,
+    );
     // The task UI scales up to 1.3. Physical table labels keep their own
     // fixed text scale inside the runner.
     if (academySurface) {
@@ -5554,10 +5569,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         value: premiumAcademy || _showWelcome || _showPlacement
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
-        child: themedShell,
+        child: route,
       );
     }
-    return _withRunnerChromeV1(themedShell);
+    return _withRunnerChromeV1(route);
   }
 
   void _selectShellTabV1(
@@ -5580,6 +5595,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       _closeLearningRunForLearnExitV1();
     }
     final remember = _rememberLessonRunnerV1();
+    _runnerOriginTabV1 = null;
     _tab = tab;
     _showAttemptArchiveV1 = false;
     if (tab == Act0ShellTabV1.play) {
@@ -7555,6 +7571,8 @@ class _NavItemV1 extends StatelessWidget {
         sortKey: OrdinalSortKey(tab.index.toDouble(), name: 'act0_navigation'),
         onTap: () => onSelected(tab),
         child: InkWell(
+          splashFactory: InkRipple.splashFactory,
+          key: Key('act0_shell_nav_${tab.name}'),
           onTap: () => onSelected(tab),
           borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusSm),
           child: ConstrainedBox(

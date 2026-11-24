@@ -1,3 +1,4 @@
+import 'act0_shell_chrome_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 
@@ -198,9 +199,10 @@ class _Act0ManualHandScreenV1State extends State<Act0ManualHandScreenV1> {
         backgroundColor: Act0ClubNightTokensV1.wall,
         appBar: AppBar(
           backgroundColor: Act0ClubNightTokensV1.wall,
-          foregroundColor: Act0ClubNightTokensV1.text,
-          title: Text(
-            widget.previous == null ? 'Enter own hand' : 'Edit own hand',
+          automaticallyImplyLeading: false,
+          title: Act0ShellRouteHeaderV1(
+            title: widget.previous == null ? 'Enter own hand' : 'Edit own hand',
+            onBack: () => Navigator.of(context).pop(),
           ),
         ),
         body: ListView(

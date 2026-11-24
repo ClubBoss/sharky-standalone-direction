@@ -94,6 +94,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       runKind: evidenceRunKind,
       startedBy: evidenceStartedBy,
     );
+    _recordRunnerOriginV1();
     _tab = Act0ShellTabV1.play;
     _showPlayHub = false;
     _returnToPlayHubOnBack = true;
@@ -246,9 +247,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0LessonTaskV1? unseen,
     Act0LessonTaskV1? changed,
   }) {
-    _spacedReviewReturnTabV1 = _tab == Act0ShellTabV1.home
-        ? Act0ShellTabV1.home
-        : Act0ShellTabV1.review;
+    _spacedReviewReturnTabV1 = _tab;
     _spacedReviewReturnV1 = (
       worldId: _selectedWorldId,
       lessonId: _selectedLessonId,
@@ -293,6 +292,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _showPlayHub = true;
     _returnToPlayHubOnBack = false;
     _tab = _spacedReviewReturnTabV1;
+    _runnerOriginTabV1 = null;
     _persistProgress();
   }
 

@@ -1,3 +1,4 @@
+import 'act0_club_night_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
@@ -154,6 +155,39 @@ class Act0ShellScreenHeaderV1 extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// Standard kit header with an optional route back control.
+class Act0ShellRouteHeaderV1 extends StatelessWidget {
+  const Act0ShellRouteHeaderV1({
+    super.key,
+    required this.title,
+    this.onBack,
+    this.backKey,
+  });
+
+  final String title;
+  final VoidCallback? onBack;
+  final Key? backKey;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        if (onBack != null)
+          IconButton(
+            style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+            key: backKey,
+            tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            constraints: const BoxConstraints.tightFor(width: 44, height: 44),
+            color: Act0ShellTokensV1.text,
+            onPressed: onBack,
+            icon: const Icon(Icons.chevron_left),
+          ),
+        Expanded(child: Act0ClubScreenHeaderV1(title: title)),
+      ],
     );
   }
 }

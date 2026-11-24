@@ -807,49 +807,6 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     ).label;
   }
 
-  String _homeNextActionTitle(Act0LessonCardV1 currentLesson) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
-    final selectedWorld = _worldById(
-      _progressedWorlds(state),
-      _selectedWorldId,
-    );
-    return _homePrimaryRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: currentLesson,
-    ).title;
-  }
-
-  String _homeNextActionSubtitle(Act0LessonCardV1 currentLesson) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
-    final selectedWorld = _worldById(
-      _progressedWorlds(state),
-      _selectedWorldId,
-    );
-    return _homePrimaryRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: currentLesson,
-    ).subtitle;
-  }
-
-  String _homeNextActionCtaLabel() {
-    if (_placementHandoffActive) {
-      return _copyV1(en: 'Start first hand', ru: 'Начать первую раздачу');
-    }
-    final state = widget.state ?? Act0ShellStateV1.sample;
-    final selectedWorld = _worldById(
-      _progressedWorlds(state),
-      _selectedWorldId,
-    );
-    final selectedLesson = _lessonById(
-      selectedWorld.lessons,
-      _selectedLessonId,
-    );
-    return _homePrimaryRecommendation(
-      selectedWorld: selectedWorld,
-      selectedLesson: selectedLesson,
-    ).ctaLabel;
-  }
-
   String? _homeCtaHint(
     Act0WorldCardV1 selectedWorld,
     Act0LessonCardV1 currentLesson,

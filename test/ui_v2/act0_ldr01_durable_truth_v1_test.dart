@@ -577,6 +577,8 @@ void main() {
         ..clear()
         ..addAll(saved);
       final before = Map.of(disk.values);
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       final confirm = tester.widget<TextButton>(
@@ -607,6 +609,8 @@ void main() {
       disk.values['flutter.${_key}_head'] = '{invalid';
       final dynamic state = tester.state(find.byType(Act0ShellPreviewScreenV1));
       await state.debugReloadProgressV1();
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
@@ -2009,6 +2013,8 @@ void main() {
         find.text('Your saved progress could not be read.'),
         findsOneWidget,
       );
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
@@ -2078,6 +2084,8 @@ void main() {
       await tester.runAsync(
         () => runtime.debugReloadProgressV1() as Future<void>,
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
@@ -2323,6 +2331,8 @@ void main() {
         () => runtime.debugReloadProgressV1() as Future<void>,
       );
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
@@ -2337,6 +2347,8 @@ void main() {
       );
       await tester.pumpAndSettle();
       final before = Map.of(disk.values);
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
@@ -2357,11 +2369,15 @@ void main() {
       await tester.tap(find.byKey(const Key('act0_recovery_retry')));
       await tester.pumpAndSettle();
       expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_cancel')));
       await tester.pumpAndSettle();
       expect(disk.values, before);
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_delete_copy')));
@@ -2441,6 +2457,8 @@ void main() {
         () => runtime.debugReloadProgressV1() as Future<void>,
       );
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_confirm')));
@@ -2514,6 +2532,8 @@ void main() {
       await tester.runAsync(
         () => runtime.debugReloadProgressV1() as Future<void>,
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();

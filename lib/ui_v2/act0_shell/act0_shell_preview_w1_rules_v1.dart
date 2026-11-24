@@ -8,12 +8,30 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   void _beginW1RulesCheckV1() {
     if (_w1RulesAnswersV1 != null || !_canTakeW1RulesCheckV1) return;
     _setStateV1(() {
+      _rulesOriginTabV1 = _showW1StartV1 ? null : _tab;
       _showW1StartV1 = false;
+      _showPlayHub = true;
       _w1RulesAnswersV1 = <int>[];
       _w1RulesResultV1 = null;
     });
     _recordBetaActivityV1(Act0BetaMetricsStoreV1.recordRulesCheckStarted);
     _recordW1RulesEventV1('w1_rules_check_started', 1);
+  }
+
+  void _closeW1RulesCheckV1() {
+    final origin = _rulesOriginTabV1;
+    final answers = _w1RulesAnswersV1;
+    if (answers != null) {
+      _recordW1RulesEventV1('w1_rules_check_abandoned', answers.length + 1);
+    }
+    _setStateV1(() {
+      _w1RulesAnswersV1 = null;
+      _w1RulesResultV1 = null;
+      _rulesOriginTabV1 = null;
+      _showW1StartV1 = origin == null;
+      _tab = origin ?? Act0ShellTabV1.home;
+      _showPlayHub = true;
+    });
   }
 
   void _answerW1RulesCheckV1(int index, int answer) {
@@ -77,6 +95,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
     }
     _setStateV1(() {
       _w1StartChosenV1 = true;
+      _rulesOriginTabV1 = null;
       _showW1StartV1 = false;
       _w1RulesAnswersV1 = null;
       _w1RulesResultV1 = null;
@@ -110,7 +129,7 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
         selectedTaskId: question.taskId,
         selectedTaskFamily: Act0TaskFamilyV1.decision,
         showDecisionCoach: false,
-        onBack: () => _openRulesStartLessonV1('world_1'),
+        onBack: _closeW1RulesCheckV1,
         onContinueTheory: () {},
         onChooseOption: (option) => _answerW1RulesCheckV1(
           index,
@@ -125,7 +144,10 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text('Your start', style: Act0ShellTokensV1.sectionTitle),
+            Act0ShellRouteHeaderV1(
+              title: 'Your start',
+              onBack: _closeW1RulesCheckV1,
+            ),
             const SizedBox(height: 8),
             Text(
               result.passed

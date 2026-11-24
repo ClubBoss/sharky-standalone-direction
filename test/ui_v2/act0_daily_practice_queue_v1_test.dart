@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_practice_leaf_v1.dart';
 import 'dart:convert';
 import '../support/act0_y5d_catalog_contract_v1.dart';
 import '../support/act0_w3_catalog_contract_v1.dart';
@@ -513,7 +514,7 @@ void main() {
   );
 
   testWidgets(
-    'Home opens required practice then offers its voluntary daily set after three lessons',
+    'Home opens required practice and Practice offers a voluntary daily set after three lessons',
     (tester) async {
       await tester.binding.setSurfaceSize(const Size(393, 852));
       addTearDown(() => tester.binding.setSurfaceSize(null));
@@ -609,10 +610,9 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
-      await tester.tap(
-        find.byKey(const Key('act0_shell_block_summary_home_cta')),
-      );
+      await tester.binding.handlePopRoute();
       await tester.pumpAndSettle();
+      await tapAct0RoutePracticeKeyV1(tester, 'act0_shell_nav_home');
 
       expect(find.text('Start practice'), findsOneWidget);
       expect(find.text('Start daily set'), findsNothing);
@@ -629,22 +629,9 @@ void main() {
         );
       }
       expect(act0RoutePracticeFinder, findsNothing);
-      await tester.tap(
-        find.descendant(
-          of: find.byKey(const Key('act0_shell_bottom_nav')),
-          matching: find.text('Home'),
-        ),
-      );
-      await tester.pumpAndSettle();
 
-      expect(find.text('Practice a short set'), findsOneWidget);
-      expect(find.text('Start daily set'), findsOneWidget);
-      expect(
-        find.text(
-          'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
-        ),
-        findsOneWidget,
-      );
+      expect(find.text('Start lesson'), findsOneWidget);
+      expect(find.text('Start daily set'), findsNothing);
 
       final prefs = await SharedPreferences.getInstance();
       final saved =
@@ -674,17 +661,29 @@ void main() {
         findsOneWidget,
       );
 
-      // Returning Home and tapping Start daily set launches a daily practice drill.
-      await tester.tap(
-        find.descendant(
-          of: find.byKey(const Key('act0_shell_bottom_nav')),
-          matching: find.text('Home'),
-        ),
+      await tester.tap(find.byKey(const Key('act0_shell_nav_play')));
+      await tester.pumpAndSettle();
+      final practiceLeaf = tester.widget<Act0AcademyPracticeLeafV1>(
+        find.byType(Act0AcademyPracticeLeafV1),
       );
+      final daily = practiceLeaf.input.groups.singleWhere(
+        (group) => group.groupId == 'daily',
+      );
+      expect(daily.isEnabled, isTrue);
+      final dailyStart = practiceLeaf.input.recommendedGroupId == 'daily'
+          ? find.byKey(const Key('act0_academy_practice_leaf_start'))
+          : find.byKey(const Key('act0_academy_practice_leaf_topic_daily'));
+      if (dailyStart.evaluate().isEmpty) {
+        await tester.scrollUntilVisible(dailyStart, 150);
+      }
+      await tester.ensureVisible(dailyStart);
+      expect(dailyStart.hitTestable(), findsOneWidget);
+      await tester.tap(dailyStart);
       await tester.pumpAndSettle();
-      await tester.tap(find.byKey(const Key('act0_academy_home_leaf_cta')));
-      await tester.pumpAndSettle();
-      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+      final dailyRunner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(dailyRunner.rapidReviewMode, isTrue);
 
       // Next day clears daily completed lessons and restores Start lesson on Home.
       await mountAt(dayOne.add(const Duration(days: 1)));

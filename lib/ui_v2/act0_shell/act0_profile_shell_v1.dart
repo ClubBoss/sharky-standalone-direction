@@ -117,14 +117,8 @@ class Act0ProfileShellV1 extends StatelessWidget {
           _ProfileMilestonesCardV1(profile: profile),
         ],
         const SizedBox(height: Act0ShellTokensV1.gapMd),
-        if (onRecoveryOptions != null)
-          TextButton.icon(
-            key: const Key('act0_profile_recovery_options'),
-            onPressed: onRecoveryOptions,
-            icon: const Icon(Icons.restore),
-            label: const Text('Recovery options'),
-          ),
         _ProfileAccountSettingsRowV1(
+          onRecoveryOptions: onRecoveryOptions,
           onRetakePlacement: onRetakePlacement,
           onReplayWelcome: onReplayWelcome,
         ),
@@ -418,10 +412,12 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
   const _ProfileAccountSettingsRowV1({
     required this.onRetakePlacement,
     this.onReplayWelcome,
+    this.onRecoveryOptions,
   });
 
   final VoidCallback? onRetakePlacement;
   final VoidCallback? onReplayWelcome;
+  final VoidCallback? onRecoveryOptions;
 
   @override
   Widget build(BuildContext context) {
@@ -434,6 +430,7 @@ class _ProfileAccountSettingsRowV1 extends StatelessWidget {
           context,
           onRetakePlacement: onRetakePlacement,
           onReplayWelcome: onReplayWelcome,
+          onRecoveryOptions: onRecoveryOptions,
         ),
         borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusLg),
         child: Container(
@@ -3375,6 +3372,7 @@ void _showFirstStartToolsSheetV1(
   BuildContext context, {
   required VoidCallback? onRetakePlacement,
   required VoidCallback? onReplayWelcome,
+  required VoidCallback? onRecoveryOptions,
 }) {
   showModalBottomSheet<void>(
     context: context,
@@ -3394,11 +3392,7 @@ void _showFirstStartToolsSheetV1(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                _profileCopyV1(
-                  context,
-                  atomId: 'profile_first_start_tools_title',
-                  fallback: 'First start tools',
-                ),
+                'Settings',
                 style: Act0AcademyReadingStyleV1.label.copyWith(
                   color: Act0AcademyReadingStyleV1.info,
                 ),
@@ -3417,6 +3411,18 @@ void _showFirstStartToolsSheetV1(
                 spacing: Act0ShellTokensV1.gapSm,
                 runSpacing: Act0ShellTokensV1.gapSm,
                 children: [
+                  if (onRecoveryOptions != null)
+                    TextButton(
+                      style: const ButtonStyle(
+                        splashFactory: InkRipple.splashFactory,
+                      ),
+                      key: const Key('act0_profile_recovery_options'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        onRecoveryOptions();
+                      },
+                      child: const Text('Recovery options'),
+                    ),
                   if (onReplayWelcome != null)
                     OutlinedButton.icon(
                       key: const Key('act0_shell_profile_replay_welcome'),

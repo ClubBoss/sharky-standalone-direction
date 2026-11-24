@@ -144,10 +144,12 @@ void main() {
       await _mount(tester, now);
       final primary = find.byKey(const Key('act0_academy_home_leaf_cta'));
       expect(
-        find.descendant(of: primary, matching: find.text('Quick review')),
+        find.descendant(of: primary, matching: find.text('Open Review')),
         findsOneWidget,
       );
-      expect(find.byKey(const Key('act0_home_resume_lesson')), findsOneWidget);
+      expect(find.textContaining('1 due'), findsOneWidget);
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      expect(find.byKey(const Key('act0_academy_review_leaf')), findsOneWidget);
       await _tap(tester, 'act0_academy_home_leaf_cta');
       final runnerFinder = find.byType(Act0LessonRunnerShellV1);
       expect(
@@ -161,6 +163,13 @@ void main() {
           .singleWhere((option) => option.isCorrect);
       await _tap(tester, 'act0_shell_option_${answer.id}');
       await _tap(tester, 'act0_shell_feedback_continue_cta');
+      expect(find.byKey(const Key('act0_academy_review_leaf')), findsOneWidget);
+      final homeTab = find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text('Home'),
+      );
+      await tester.tap(homeTab);
+      await tester.pumpAndSettle();
       expect(find.text('Today’s goal complete'), findsOneWidget);
       final savedAfter = await _snapshot();
       expect(savedAfter['earnedXp'], 10);

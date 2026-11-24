@@ -34,6 +34,8 @@ void main() {
         findsOneWidget,
       );
       expect(find.text('Try again'), findsOneWidget);
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       final options = find.byKey(const Key('act0_recovery_options'));
       expect(options, findsOneWidget);
       await tester.tap(options);
