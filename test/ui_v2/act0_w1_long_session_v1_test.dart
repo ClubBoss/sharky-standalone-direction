@@ -45,9 +45,17 @@ const _continueKeys = [
   'act0_academy_home_leaf_cta',
 ];
 
+// Material 3 defaults to InkSparkle, whose shader asset is not bundled for
+// `flutter test`; its load error fails the test and the long session hangs.
+// Production keeps the platform default; the harness uses InkRipple.
+final ThemeData longSessionTestThemeV1 = ThemeData(
+  splashFactory: InkRipple.splashFactory,
+);
+
 Future<void> _mount(WidgetTester t, {bool firstRun = false}) async {
   await t.pumpWidget(
     MaterialApp(
+      theme: longSessionTestThemeV1,
       locale: const Locale('en'),
       home: Act0ShellPreviewScreenV1(
         key: UniqueKey(),
@@ -845,9 +853,10 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetPhysicalSize);
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
-      const MaterialApp(
-        locale: Locale('en'),
-        home: Act0ShellPreviewScreenV1(
+      MaterialApp(
+        theme: longSessionTestThemeV1,
+        locale: const Locale('en'),
+        home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
           showPlacementOnStart: false,
           debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
@@ -905,9 +914,10 @@ void _registerFocusedCases() {
     addTearDown(t.view.resetPhysicalSize);
     addTearDown(t.view.resetDevicePixelRatio);
     await t.pumpWidget(
-      const MaterialApp(
-        locale: Locale('en'),
-        home: Act0ShellPreviewScreenV1(
+      MaterialApp(
+        theme: longSessionTestThemeV1,
+        locale: const Locale('en'),
+        home: const Act0ShellPreviewScreenV1(
           initialPhase: Act0LessonPhaseV1.drill,
           showPlacementOnStart: false,
           debugHarnessEntry: Act0ShellDebugHarnessEntryV1(

@@ -26,6 +26,7 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
 
   static ButtonStyle _buttonStyle({required bool compact}) =>
       FilledButton.styleFrom(
+        splashFactory: InkRipple.splashFactory,
         backgroundColor: _T.accent,
         foregroundColor: _T.onAccent,
         disabledBackgroundColor: _T.raised,
@@ -74,6 +75,7 @@ class Act0SkinSecondaryButtonV1 extends StatelessWidget {
       key: controlKey,
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
+        splashFactory: InkRipple.splashFactory,
         backgroundColor: destructive ? _T.badSoft : _T.raised,
         foregroundColor: destructive ? _T.bad : _T.onSurface,
         disabledForegroundColor: _T.caption,
@@ -533,12 +535,18 @@ class Act0SkinBannerV1 extends StatelessWidget {
             Expanded(child: Semantics(liveRegion: true, child: Text(message))),
             if (actionLabel case final label?)
               TextButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
                 key: actionKey,
                 onPressed: onAction,
                 child: Text(label),
               ),
             if (secondaryActionLabel case final label?)
               TextButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
                 key: secondaryActionKey,
                 onPressed: onSecondaryAction,
                 child: Text(label),
@@ -655,6 +663,7 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
           width: 48,
           height: 48,
           child: IconButton(
+            style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
             key: const Key('act0_shell_runner_back'),
             tooltip: closeLabel,
             onPressed: onClose,
@@ -690,6 +699,7 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
             width: 48,
             height: 48,
             child: IconButton(
+              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
               key: const Key('act0_shell_runner_glossary'),
               tooltip: 'Glossary',
               onPressed: onHelp,

@@ -271,6 +271,9 @@ class Act0BlockCompletionShellV1 extends StatelessWidget {
                 key: const Key('act0_shell_result_close'),
                 alignment: Alignment.centerLeft,
                 child: IconButton(
+                  style: const ButtonStyle(
+                    splashFactory: InkRipple.splashFactory,
+                  ),
                   key: Key(
                     onBackToHome != null
                         ? 'act0_shell_block_summary_home_cta'
