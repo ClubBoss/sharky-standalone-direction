@@ -9,8 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'export_answer_positions_v1.dart' as answer_positions;
+import 'export_transfer_novelty_v1.dart' as transfer_novelty;
 
 void main() {
+  if (const bool.fromEnvironment('TRANSFER_NOVELTY')) {
+    test('export transfer novelty pairs', transfer_novelty.main);
+    return;
+  }
   if (const bool.fromEnvironment('ANSWER_POSITIONS')) {
     test(
       'export answer positions for the pure-Dart audit',

@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 // Authored repeats and rechecks with a distinct task ID. Day 2 reopens the
 // source task (act0_shell_preview_answer_v1.dart, _unseenReviewTaskIdV1).
-const _authoredPairs = [
+const act0AuthoredRepeatPairsV1 = [
   ['what_poker_is_table_read_transfer', 'what_poker_is_table_read_recheck'],
   ['your_first_hand_preflop', 'your_first_hand_private_cards_recheck'],
   ['w3_play_from_blinds_bvb_bb_call', 'w3_play_from_blinds_bvb_bb_repeat'],
@@ -49,5 +49,7 @@ void main() {
   ];
   File(out)
     ..createSync(recursive: true)
-    ..writeAsStringSync(jsonEncode({'tasks': tasks, 'pairs': _authoredPairs}));
+    ..writeAsStringSync(
+      jsonEncode({'tasks': tasks, 'pairs': act0AuthoredRepeatPairsV1}),
+    );
 }
