@@ -1363,10 +1363,10 @@ Future<void> _w24OpenFamiliarReplay(
 ) async {
   await tester.tap(find.text('Learn').last);
   await tester.pumpAndSettle();
-  final all = find.text('All lessons');
+  final all = find.widgetWithText(TextButton, 'All lessons');
   if (all.evaluate().isNotEmpty) {
-    await tester.ensureVisible(all.last);
-    await tester.tap(all.last);
+    await tester.ensureVisible(all);
+    await tester.tap(all);
     await tester.pumpAndSettle();
   }
   await _w24Tap(tester, 'act0_shell_lesson_${lesson.title}');

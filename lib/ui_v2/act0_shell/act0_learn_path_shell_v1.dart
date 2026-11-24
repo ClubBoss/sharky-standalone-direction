@@ -754,11 +754,12 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                   ),
                 ),
                 SliverPadding(
-                  padding: const EdgeInsets.fromLTRB(
+                  padding: EdgeInsets.fromLTRB(
                     Act0SkinTokensV1.screenGutter,
                     Act0SkinTokensV1.gapMd,
                     Act0SkinTokensV1.screenGutter,
-                    Act0SkinTokensV1.bottomNavHeight,
+                    Act0SkinTokensV1.bottomNavHeight +
+                        MediaQuery.viewPaddingOf(context).bottom,
                   ),
                   sliver: SliverToBoxAdapter(
                     child: Column(

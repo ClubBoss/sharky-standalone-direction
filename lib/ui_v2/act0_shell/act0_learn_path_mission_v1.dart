@@ -359,19 +359,17 @@ class _CurrentMissionCardV1 extends StatelessWidget {
                 style: Act0SkinTokensV1.secondary,
               ),
           ],
-          if (onStart != null) ...[
-            const SizedBox(height: Act0SkinTokensV1.gapMd),
-            Act0SkinPrimaryButtonV1(
-              controlKey: const Key('act0_shell_current_mission_cta'),
-              compact: true,
-              onPressed: onStart,
-              label: replay
-                  ? _learnCopyV1(context, en: 'Replay', ru: 'Повторить')
-                  : stepIndex > 1
-                  ? _learnCopyV1(context, en: 'Continue', ru: 'Продолжить')
-                  : _learnCopyV1(context, en: 'Start', ru: 'Начать'),
-            ),
-          ],
+          const SizedBox(height: Act0SkinTokensV1.gapMd),
+          Act0SkinPrimaryButtonV1(
+            controlKey: const Key('act0_shell_current_mission_cta'),
+            compact: true,
+            onPressed: onStart,
+            label: replay
+                ? _learnCopyV1(context, en: 'Replay', ru: 'Повторить')
+                : stepIndex > 1
+                ? _learnCopyV1(context, en: 'Continue', ru: 'Продолжить')
+                : _learnCopyV1(context, en: 'Start', ru: 'Начать'),
+          ),
         ],
       ),
     );
