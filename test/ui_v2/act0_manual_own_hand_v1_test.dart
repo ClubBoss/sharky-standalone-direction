@@ -319,7 +319,7 @@ void main() {
       await reveal(event);
       expect(t.widget<Text>(event).data, contains('Button: seat 1.'));
 
-      await tap(find.text('Back to own hands'));
+      await tap(find.byKey(const Key('act0_attempt_replay_back_to_archive')));
       await tap(find.text('Edit hand'));
       expect(find.text('Edit own hand'), findsOneWidget);
       await tap(find.text('Next'));
@@ -333,7 +333,7 @@ void main() {
       expect(edited.heroCards, ['Ac', '2d']);
       expect(edited.actions, saved.actions);
       expect(archive.attempts, isEmpty);
-      await tap(find.text('Back to own hands'));
+      await tap(find.byKey(const Key('act0_attempt_replay_back_to_archive')));
       expect(find.text('Manual entry · Ac 2d'), findsOneWidget);
       await tap(find.text('Replay hand'));
       expect(t.widget<Act0AttemptReplayScreenV1>(replay).hand, same(edited));
