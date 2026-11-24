@@ -41,6 +41,7 @@ Map<String, Object?> _snapshot(
   final actor = table.decisionSeatId ?? hero;
   double? price;
   double? pot;
+  double? decisionPot;
   if (ledger != null && actor != null) {
     try {
       final amounts = ledger.amounts(
@@ -48,6 +49,7 @@ Map<String, Object?> _snapshot(
         actorSeatId: actor,
       );
       price = amounts.toCallBb;
+      decisionPot = amounts.potBb;
       if (ledger.fromStreet == PokerStreet.preflop) pot = amounts.potBb;
     } on FormatException {
       // Invalid ledger data cannot supply the price or pot.
@@ -124,6 +126,8 @@ Map<String, Object?> _snapshot(
     'id': task.taskId,
     'position': hero == null || actor == null ? null : [hero, actor],
     'price': price,
+    'decisionPotBb': decisionPot,
+    'equityPct': equity,
     'thresholdBucket': thresholdBucket,
     'handBucket': handBucket,
     'actionSet': hasStableChoices ? options.map(action).toList() : null,
