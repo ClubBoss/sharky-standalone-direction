@@ -1440,7 +1440,8 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       return;
     }
     final generatedDaily = act0DailyDealRecipeV1(decision.taskId) != null;
-    if (!generatedDaily) {
+    final lucky = decision.actionReason?.needsRepair ?? false;
+    if (!generatedDaily && !lucky) {
       _reviewMistakeHistoryV1 = _reviewMistakeHistoryV1.appendCompletedDecision(
         decision,
         repairOccurrenceId: repairOccurrenceId,
@@ -1463,6 +1464,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             choiceLabel: decision.recordedChoiceLabel,
             recordedTrail: decision.recordedTrail,
             timelineSnapshot: table?.handTimelinePrefix,
+            actionReason: decision.actionReason,
             tableFingerprint: table == null
                 ? null
                 : act0ReplayTableFingerprintV1(table),
@@ -1504,11 +1506,19 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
               latestRecord.worldId == dueReview.worldId &&
               latestRecord.lessonId == dueReview.lessonId &&
               latestRecord.taskId ==
-                  (dueReview.unseenTaskId ?? dueReview.taskId)
+                  (_activeSpacedReviewTaskV1?.taskId ?? dueReview.taskId)
           ? dueReview.conceptFamilyId
           : null;
       _durableRetentionHistoryV1 = _durableRetentionHistoryV1
-          .applyEvidence(latestRecord, dueConceptFamilyId: dueFamily)
+          .applyEvidence(
+            latestRecord,
+            dueConceptFamilyId:
+                dueFamily ??
+                (lucky
+                    ? '$act0ReasonRetestFamilyPrefixV1${decision.taskId}'
+                    : null),
+            completedReasonRepair: lucky,
+          )
           .refreshedAt(recordedAtUtc);
       if (widget.telemetrySink != null) {
         try {

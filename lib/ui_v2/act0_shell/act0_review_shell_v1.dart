@@ -51,6 +51,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     this.onOpenRecommendedAction,
     this.onOpenLearn,
     this.onOpenAttempts,
+    this.reasonRepairs,
   });
 
   final Act0ReviewStateV1 review;
@@ -71,6 +72,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenAttempts;
+  final Widget? reasonRepairs;
 
   @override
   Widget build(BuildContext context) {
@@ -205,6 +207,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
       const _ReviewTodayBarV1(),
       const SizedBox(height: Act0ShellTokensV1.gapMd),
       _ReviewCompactHeaderV1(missCount: missCount),
+      if (reasonRepairs case final repairs?) repairs,
       if (onOpenAttempts != null)
         Align(
           alignment: Alignment.centerLeft,
@@ -517,11 +520,17 @@ class _DueReviewCardV1 extends StatelessWidget {
           ),
           const SizedBox(height: Act0ShellTokensV1.gapXs),
           Text(
-            item.unseenTaskId == null ? 'Familiar situation' : 'New situation',
+            item.isReasonRetest
+                ? 'Changed scenario'
+                : item.unseenTaskId == null
+                ? 'Familiar situation'
+                : 'New situation',
             style: Act0AcademyReadingStyleV1.muted,
           ),
           Text(
-            item.unseenTaskId != null
+            item.isReasonRetest
+                ? 'Apply the same idea in a changed scenario.'
+                : item.unseenTaskId != null
                 ? 'Apply the same idea to a new hand.'
                 : hasOpenMistakeForTask
                 ? item.lapseCount > 0

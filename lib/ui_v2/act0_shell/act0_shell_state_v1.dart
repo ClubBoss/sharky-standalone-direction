@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -633,6 +634,8 @@ class Act0LessonTaskV1 {
   final String? summary;
   final String? lockedSummary;
   final Act0MultiStreetV1? multiStreet;
+
+  List<Act0ReasonV1>? get reasons => act0ActionReasonPilotsV1[taskId]?.reasons;
 
   Act0TaskFamilyV1 get resolvedTaskFamily =>
       taskFamily ?? act0InferTaskFamilyV1(phase: phase, stepKind: stepKind);

@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 /// Internal handoff for a completed Act0 decision.
@@ -43,8 +44,10 @@ class Act0CompletedDecisionV1 {
     this.recordedChoiceLabel,
     this.recordedTrail = const [],
     this.recordedTable,
+    this.actionReason,
   });
 
+  final Act0ActionReasonResultV1? actionReason;
   final int schemaVersion;
   final String attemptKey;
   final String? worldId;

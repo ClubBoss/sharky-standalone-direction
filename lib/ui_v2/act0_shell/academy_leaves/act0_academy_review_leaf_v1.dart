@@ -75,6 +75,7 @@ class Act0AcademyReviewLeafInputV1 {
     this.onOpenRecommendedAction,
     this.onOpenLearn,
     this.onOpenAttempts,
+    this.reasonRepairs,
     this.backdrop,
   });
 
@@ -93,6 +94,7 @@ class Act0AcademyReviewLeafInputV1 {
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenAttempts;
+  final Widget? reasonRepairs;
   final ImageProvider? backdrop;
 }
 
@@ -146,6 +148,7 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
         children: [
           _ReviewHeroV1(backdrop: input.backdrop),
+          if (input.reasonRepairs case final repairs?) repairs,
           if (input.onOpenAttempts != null)
             Align(
               alignment: Alignment.centerLeft,
@@ -263,7 +266,9 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      dueFirst.unseenTaskId == null
+                      dueFirst.isReasonRetest
+                          ? 'Changed scenario'
+                          : dueFirst.unseenTaskId == null
                           ? 'Familiar situation'
                           : 'New situation',
                       style: const TextStyle(color: _muted, fontSize: 14),

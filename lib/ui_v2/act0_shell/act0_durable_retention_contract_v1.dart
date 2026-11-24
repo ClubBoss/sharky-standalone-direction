@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'dart:convert';
 
@@ -44,6 +45,7 @@ class Act0DurableRetentionHistoryV1 {
   Act0DurableRetentionHistoryV1 applyEvidence(
     Act0LearningEvidenceRecordV1 record, {
     String? dueConceptFamilyId,
+    bool completedReasonRepair = false,
   }) {
     if (record.isAssistedCorrect) return this;
     // A placement answer is assessment, not learning: it must not seed
@@ -63,7 +65,10 @@ class Act0DurableRetentionHistoryV1 {
         ? (current ?? Act0DurableRetentionFamilyV1.empty(conceptFamilyId))
               .applyLegacy(record)
         : (current ?? Act0DurableRetentionFamilyV1.empty(conceptFamilyId))
-              .applyTimestamped(record);
+              .applyTimestamped(
+                record,
+                completedReasonRepair: completedReasonRepair,
+              );
     final updated = <Act0DurableRetentionFamilyV1>[
       for (final family in families)
         if (family.conceptFamilyId != conceptFamilyId) family,
@@ -300,8 +305,9 @@ class Act0DurableRetentionFamilyV1 {
   }
 
   Act0DurableRetentionFamilyV1 applyTimestamped(
-    Act0LearningEvidenceRecordV1 record,
-  ) {
+    Act0LearningEvidenceRecordV1 record, {
+    bool completedReasonRepair = false,
+  }) {
     final recordedAt = record.recordedAtUtc!.toUtc();
     final previousTime = lastRecordedAtUtc;
     // Keep the existing deadline when the device clock moves backwards.
@@ -318,7 +324,13 @@ class Act0DurableRetentionFamilyV1 {
     var stage = currentAtAttempt.spacedSuccessStage;
     var lapses = currentAtAttempt.lapseCount;
 
-    if (!record.isCorrect) {
+    if (completedReasonRepair) {
+      state = Act0RetentionStateV1.recoveredPendingSpacedReview;
+      nextDue = recordedAt.add(
+        Act0DurableLearningTimingV1.recoveryToFirstReview,
+      );
+      stage = 0;
+    } else if (!record.isCorrect) {
       if (state == Act0RetentionStateV1.durable ||
           currentAtAttempt.isDueAt(recordedAt) ||
           stage > 0) {
@@ -360,10 +372,12 @@ class Act0DurableRetentionFamilyV1 {
       conceptFamilyId: conceptFamilyId,
       worldId: _prefer(record.worldId, worldId),
       sourceLessonId: _prefer(record.lessonId, sourceLessonId),
-      sourceTaskId: _prefer(
-        record.sourceTaskId.isEmpty ? record.taskId : record.sourceTaskId,
-        sourceTaskId,
-      ),
+      sourceTaskId: conceptFamilyId.startsWith(act0ReasonRetestFamilyPrefixV1)
+          ? conceptFamilyId.substring(act0ReasonRetestFamilyPrefixV1.length)
+          : _prefer(
+              record.sourceTaskId.isEmpty ? record.taskId : record.sourceTaskId,
+              sourceTaskId,
+            ),
       retentionState: state,
       nextDueAtUtc: nextDue,
       lastSpacedReviewAtUtc: lastSpaced,
@@ -529,6 +543,9 @@ class Act0DueReviewItemV1 {
   final int repeatedMissCount;
   final int lapseCount;
   final String? unseenTaskId;
+
+  bool get isReasonRetest =>
+      conceptFamilyId.startsWith(act0ReasonRetestFamilyPrefixV1);
 
   Act0DueReviewItemV1 withUnseenTask(String? taskId) => Act0DueReviewItemV1(
     conceptFamilyId: conceptFamilyId,
