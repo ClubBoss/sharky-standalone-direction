@@ -306,7 +306,9 @@ void main() {
     );
     expect(routeBoard.data, '0 of 15 lessons');
 
-    final fullPath = find.byKey(const Key('act0_shell_learn_v5_view_full_path'));
+    final fullPath = find.byKey(
+      const Key('act0_shell_learn_v5_view_full_path'),
+    );
     await tester.ensureVisible(fullPath);
     await tester.pumpAndSettle();
     expect(fullPath.hitTestable(), findsOneWidget);
