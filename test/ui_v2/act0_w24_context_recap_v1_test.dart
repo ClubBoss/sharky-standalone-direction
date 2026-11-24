@@ -519,8 +519,7 @@ void main() {
         find.byKey(const Key('act0_academy_home_leaf_cta')),
         findsOneWidget,
       );
-      await tester.tap(find.text('Learn').last);
-      await tester.pumpAndSettle();
+      await _w24Tap(tester, 'act0_shell_nav_learn');
       await _w24Tap(tester, 'act0_shell_current_mission_cta');
       // Legacy restore and ordinary Learn launch are read-only. The first
       // required durable boundary below is the actual completed decision.
@@ -1361,14 +1360,11 @@ Future<void> _w24OpenFamiliarReplay(
   WidgetTester tester,
   Act0LessonCardV1 lesson,
 ) async {
-  await tester.tap(find.text('Learn').last);
-  await tester.pumpAndSettle();
-  final all = find.widgetWithText(TextButton, 'All lessons');
-  if (all.evaluate().isNotEmpty) {
-    await tester.ensureVisible(all);
-    await tester.tap(all);
-    await tester.pumpAndSettle();
+  await _w24Tap(tester, 'act0_shell_nav_learn');
+  if (find.text('Show less').evaluate().isEmpty) {
+    await _w24Tap(tester, 'act0_shell_learn_v5_view_full_path');
   }
+  expect(find.text('Show less'), findsOneWidget);
   await _w24Tap(tester, 'act0_shell_lesson_${lesson.title}');
   await _w24Tap(tester, 'act0_shell_lesson_step_$_taskId');
   await _w24Tap(tester, 'act0_shell_selected_lesson_cta');

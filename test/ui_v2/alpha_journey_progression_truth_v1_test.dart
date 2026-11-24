@@ -330,8 +330,15 @@ void main() {
       await pumpHost(tester, host(initialTab: Act0ShellTabV1.learn));
       expect(find.textContaining('1 of 15 lessons'), findsOneWidget);
       expect(find.text('Blinds and the pot'), findsWidgets);
-      await tester.tap(find.text('All lessons'));
+      final fullPath = find.byKey(
+        const Key('act0_shell_learn_v5_view_full_path'),
+      );
+      await tester.ensureVisible(fullPath);
       await tester.pumpAndSettle();
+      expect(fullPath.hitTestable(), findsOneWidget);
+      await tester.tap(fullPath);
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(TextButton, 'Show less'), findsOneWidget);
       final actionState = tester.widget<Text>(
         find.byKey(
           const Key('act0_shell_learn_lesson_state_text_fold_check_call_raise'),

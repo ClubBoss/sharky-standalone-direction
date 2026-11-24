@@ -306,18 +306,22 @@ void main() {
     );
     expect(routeBoard.data, '0 of 15 lessons');
 
-    await tester.tap(
-      find.byKey(const Key('act0_shell_learn_v5_view_full_path')),
-    );
+    final fullPath = find.byKey(const Key('act0_shell_learn_v5_view_full_path'));
+    await tester.ensureVisible(fullPath);
+    await tester.pumpAndSettle();
+    expect(fullPath.hitTestable(), findsOneWidget);
+    await tester.tap(fullPath);
     await tester.pumpAndSettle();
     expect(
       find.descendant(
         of: journey,
         matching: find.text('Your cards and the board'),
       ),
-      findsNothing,
+      findsOneWidget,
     );
     expect(find.text('All lessons'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'Show less'), findsOneWidget);
+    expect(find.text('0%'), findsOneWidget);
   });
 
   testWidgets('Wave 2 Learn progressed keeps proof without current duplicate', (

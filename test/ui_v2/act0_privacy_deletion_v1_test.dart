@@ -233,7 +233,7 @@ void main() {
     expect(settings.input.onRetakePlacement, isNull);
     await tester.tap(find.byKey(const Key('act0_academy_settings_leaf_back')));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Learn').last);
+    await tester.tap(find.byKey(const Key('act0_shell_nav_learn')));
     await tester.pumpAndSettle();
     final rulesCheck = find.byKey(const Key('act0_shell_w1_rules_map'));
     expect(find.text('Check W1 rules'), findsOneWidget);
@@ -242,6 +242,8 @@ void main() {
       findsOneWidget,
     );
     await tester.ensureVisible(rulesCheck);
+    await tester.pumpAndSettle();
+    expect(rulesCheck.hitTestable(), findsOneWidget);
     await tester.tap(rulesCheck);
     await tester.pumpAndSettle();
     expect(find.text(act0W1RulesQuestionsV1.first.question), findsWidgets);
