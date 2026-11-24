@@ -1831,9 +1831,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       );
 
   bool _runnerAllowedByNineSeatGateV1(Act0RunnerStateV1 runner) =>
-      !act0RunnerRequiresNineSeatPreviewV1(runner) ||
-      (_nineSeatPreviewEnabledV1 &&
-          act0RunnerSupportsNineSeatPreviewV1(runner));
+      act0RunnerAllowedByNineSeatGateV1(
+        runner,
+        nineSeatPreview: _nineSeatPreviewEnabledV1,
+      );
 
   @override
   void didChangeDependencies() {
@@ -3886,6 +3887,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             : null,
                         worldDetailId: _learnDetailWorldId,
                         lessons: selectedWorld.lessons,
+                        runnerAllowed: _runnerAllowedByNineSeatGateV1,
                         requiredPractice: requiredPracticeMission,
                         requiredPracticeAnswered:
                             _routePracticeV1.run?.stepId ==

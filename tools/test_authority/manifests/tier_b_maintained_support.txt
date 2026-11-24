@@ -64,6 +64,7 @@ test/ui_v2/act0_last_session_return_reason_v1_test.dart
 test/ui_v2/act0_learner_facing_premises_v1_test.dart
 test/ui_v2/act0_learning_evidence_contract_v1_test.dart
 test/ui_v2/act0_learning_transfer_measurement_v1_test.dart
+test/ui_v2/act0_mission_launch_consistency_v1_test.dart
 test/ui_v2/act0_obs01_pending_capture_v1_test.dart
 test/ui_v2/act0_obs03_daily_completion_copy_v1_test.dart
 test/ui_v2/act0_obs03_source_lineage_v1_test.dart

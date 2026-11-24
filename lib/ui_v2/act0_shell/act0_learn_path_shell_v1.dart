@@ -178,6 +178,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.perfectTaskIds,
     required this.skippedTaskIds,
     required this.pathClosedTaskIds,
+    this.runnerAllowed,
     required this.detailLessonId,
     required this.lessonOutcomeLabels,
     required this.onSelectWorld,
@@ -219,6 +220,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final Set<String> perfectTaskIds;
   final Set<String> skippedTaskIds;
   final Set<String> pathClosedTaskIds;
+  final bool Function(Act0RunnerStateV1)? runnerAllowed;
   final String? detailLessonId;
   final Map<String, String> lessonOutcomeLabels;
   final ValueChanged<String> onSelectWorld;
@@ -596,6 +598,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
       requiredPractice: widget.requiredPractice,
       requiredPracticeAnswered: widget.requiredPracticeAnswered,
       pathClosedTaskIds: widget.pathClosedTaskIds,
+      runnerAllowed: widget.runnerAllowed,
       completedTaskIds: widget.completedTaskIds,
       showFullPath: _showFullJourneyPathV5,
       catalogFlag: act0CurriculumPilotEnabledV1,
