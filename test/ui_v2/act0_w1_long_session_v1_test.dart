@@ -464,7 +464,7 @@ void _registerFocusedCases() {
     await _openSavedCourseTask(
       t,
       worldId: 'world_4',
-      taskId: 'w4_price_intro',
+      taskId: taskId,
       numberEntryV1: true,
       textScale: 1.3,
     );
