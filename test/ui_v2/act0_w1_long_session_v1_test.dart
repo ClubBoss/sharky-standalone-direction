@@ -12,6 +12,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_learn_path_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
@@ -140,6 +141,28 @@ Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
     return true;
   }
   return false;
+}
+
+Future<bool> _tapTeachingContinue(WidgetTester t) async {
+  final enabledContinue = [
+    for (final key in const [
+      'act0_shell_theory_continue_cta',
+      'act0_shell_continue_cta',
+    ])
+      find.byWidgetPredicate(
+        (widget) =>
+            widget.key == Key(key) &&
+            widget is ButtonStyleButton &&
+            widget.onPressed != null,
+        description: "enabled '$key'",
+      ),
+  ];
+  if (await _tapFirst(t, enabledContinue)) return true;
+
+  // A new teaching step can settle before its 820 ms dwell timer unlocks
+  // Continue. Advance the test clock and retry within the same route attempt.
+  await t.pump(const Duration(seconds: 1));
+  return _tapFirst(t, enabledContinue);
 }
 
 Future<void> _onboard(WidgetTester t, {required bool useRulesCheck}) async {
@@ -304,10 +327,7 @@ Future<void> _finishTeaching(
     final teaching = current.runner.activeTeachingStep;
     if (teaching == null) return;
     expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_theory_continue_cta')),
-        find.byKey(const Key('act0_shell_continue_cta')),
-      ]),
+      await _tapTeachingContinue(t),
       isTrue,
       reason:
           '${current.selectedTaskId}: no teaching CTA for ${teaching.ctaLabel}',
@@ -2377,13 +2397,12 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           }
           if (activeShell != null) {
             final review = activeShell.runner.phase == Act0LessonPhaseV1.review;
-            final continued = await _tapFirst(t, [
-              if (review)
-                find.byKey(const Key('act0_shell_feedback_continue_cta'))
-              else
-                find.byKey(const Key('act0_shell_theory_continue_cta')),
-              find.byKey(const Key('act0_shell_continue_cta')),
-            ]);
+            final continued = review
+                ? await _tapFirst(t, [
+                    find.byKey(const Key('act0_shell_feedback_continue_cta')),
+                    find.byKey(const Key('act0_shell_continue_cta')),
+                  ])
+                : await _tapTeachingContinue(t);
             expect(
               continued,
               isTrue,
@@ -2439,6 +2458,31 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                 isTrue,
                 reason: 'The level menu should offer W$nextWorld',
               );
+            }
+            final learn = t
+                .widgetList<Act0LearnPathShellV1>(
+                  find.byType(Act0LearnPathShellV1),
+                )
+                .firstOrNull;
+            // With a checkpoint locked by a weak spot, Learn falls back to
+            // replaying a completed lesson once required practice is done.
+            if (learn != null &&
+                learn.requiredPractice == null &&
+                !learn.lessons.any(
+                  (lesson) => lesson.state == Act0LessonStateV1.current,
+                ) &&
+                learn.lessons.any(
+                  (lesson) => lesson.primaryCtaLabel == 'Clear weak spots',
+                )) {
+              expect(await _tapFirst(t, [find.text('Review').last]), isTrue);
+              expect(
+                await _tapFirst(t, [
+                  find.byKey(const Key('act0_academy_review_leaf_repair_cta')),
+                ]),
+                isTrue,
+                reason: 'W$nextWorld: checkpoint repair is unreachable',
+              );
+              continue;
             }
             moved = await _tapFirst(t, [mission]);
           }
