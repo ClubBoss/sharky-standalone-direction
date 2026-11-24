@@ -116,33 +116,26 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
           key: const Key('act0_academy_you_leaf_scroll'),
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
           children: [
-            Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    'You',
-                    style: TextStyle(
-                      color: _text,
-                      fontSize: 28,
-                      fontWeight: FontWeight.w700,
+            Act0ClubScreenHeaderV1(
+              title: 'You',
+              trailing: input.onOpenSettings == null
+                  ? null
+                  : IconButton(
+                      style: const ButtonStyle(
+                        splashFactory: InkRipple.splashFactory,
+                      ),
+                      key: const Key('act0_academy_you_leaf_settings'),
+                      tooltip: 'Settings',
+                      onPressed: input.onOpenSettings,
+                      constraints: const BoxConstraints.tightFor(
+                        width: 44,
+                        height: 44,
+                      ),
+                      icon: const Act0AcademyLeafGlyphV1(
+                        kind: Act0AcademyLeafGlyphKindV1.settings,
+                        color: _muted,
+                      ),
                     ),
-                  ),
-                ),
-                if (input.onOpenSettings != null)
-                  IconButton(
-                    key: const Key('act0_academy_you_leaf_settings'),
-                    tooltip: 'Settings',
-                    onPressed: input.onOpenSettings,
-                    constraints: const BoxConstraints.tightFor(
-                      width: 44,
-                      height: 44,
-                    ),
-                    icon: const Act0AcademyLeafGlyphV1(
-                      kind: Act0AcademyLeafGlyphKindV1.settings,
-                      color: _muted,
-                    ),
-                  ),
-              ],
             ),
             const SizedBox(height: 6),
             Act0ClubCardV1(

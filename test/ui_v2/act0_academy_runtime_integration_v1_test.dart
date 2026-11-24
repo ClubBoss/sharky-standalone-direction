@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -103,7 +104,21 @@ void main() {
       );
       expect(home.input.earnedLessonCount, 0);
       expect(home.input.nextAction, isNotNull);
+      final nav = find.byKey(const Key('act0_shell_bottom_nav'));
+      for (final label in ['Home', 'Learn', 'Practice', 'Review', 'You']) {
+        expect(
+          find.descendant(of: nav, matching: find.text(label)),
+          findsOneWidget,
+        );
+      }
       await _tab(tester, 'Practice');
+      expect(
+        find.descendant(
+          of: find.byKey(const Key('act0_academy_practice_leaf')),
+          matching: find.text(home.input.nextAction!.title),
+        ),
+        findsOneWidget,
+      );
       expect(
         find.byKey(const Key('act0_academy_practice_leaf')),
         findsOneWidget,
@@ -120,7 +135,7 @@ void main() {
           .input;
       expect(you.completedTaskCount, 0);
       expect(you.earnedMoments, isEmpty);
-      expect(you.onRecoveryOptions, isNotNull);
+      expect(you.onRecoveryOptions, isNull);
       await _tab(tester, 'Home');
       expect(
         tester
@@ -133,6 +148,26 @@ void main() {
       expect(tester.takeException(), isNull);
     },
   );
+
+  for (final (tab, origin) in [
+    (Act0ShellTabV1.home, 'act0_academy_home_leaf'),
+    (Act0ShellTabV1.play, 'act0_academy_practice_leaf'),
+  ]) {
+    testWidgets('closing a lesson restores its origin $tab', (tester) async {
+      await _mount(tester, Act0ShellTabV1.home);
+      if (tab == Act0ShellTabV1.play) await _tab(tester, 'Practice');
+      final action = find.byKey(const Key('act0_academy_home_leaf_cta'));
+      await tester.ensureVisible(action);
+      await tester.tap(action);
+      await tester.pumpAndSettle();
+      expect(find.byType(Act0LessonRunnerShellV1), findsOneWidget);
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+      expect(find.byType(Act0LessonRunnerShellV1), findsNothing);
+      expect(find.byKey(Key(origin)), findsOneWidget);
+    });
+  }
 
   testWidgets(
     'Settings persists haptics and preserves intro and learner data',
@@ -199,6 +234,8 @@ void main() {
       await tester.runAsync(
         () => runtime.debugReloadProgressV1() as Future<void>,
       );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();

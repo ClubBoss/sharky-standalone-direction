@@ -291,7 +291,7 @@ void main() {
       );
       await tester.pumpWidget(const SizedBox.shrink());
       await _mount(tester, clock: _today.add(const Duration(hours: 25)));
-      await tester.tap(find.text('Review').last);
+      await tester.tap(find.byKey(const Key('act0_shell_nav_review')));
       await tester.pumpAndSettle();
       expect(find.text('2 reviews due'), findsOneWidget);
       await tester.ensureVisible(
@@ -390,7 +390,7 @@ void main() {
     final topics = act0W1RulesQuestionsV1.map((item) => item.topic).toSet();
     expect(find.text(topics.join(' · ')), findsOneWidget);
 
-    await tester.tap(find.text('Review').last);
+    await tester.tap(find.byKey(const Key('act0_shell_nav_review')));
     await tester.pumpAndSettle();
     expect(find.text('1 review due'), findsOneWidget);
     await tester.ensureVisible(

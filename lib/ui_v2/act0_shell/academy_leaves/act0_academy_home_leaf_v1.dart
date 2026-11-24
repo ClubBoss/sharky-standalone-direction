@@ -1,3 +1,5 @@
+import '../act0_club_night_components_v1.dart';
+import '../skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
 import '../act0_goal_route_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
@@ -111,88 +113,78 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
     return ColoredBox(
       key: const Key('act0_academy_home_leaf'),
       color: Act0AcademyLeafPaletteV1.ink,
-      child: Stack(
+      child: ListView(
+        key: const Key('act0_academy_home_leaf_scroll'),
+        padding: const EdgeInsets.fromLTRB(10, 2, 10, 16),
         children: [
-          Positioned(
-            top: 0,
-            left: 0,
-            right: 0,
-            height: 350,
-            child: Act0AcademyLeafBackdropV1(image: input.backdrop),
-          ),
-          const Positioned.fill(
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x00020E13),
-                      Color(0x00020E13),
-                      Color(0xFF020E13),
-                    ],
-                    stops: [0, 0.30, 0.47],
+          Act0ClubScreenHeaderV1(
+            title: 'Home',
+            trailing: input.onOpenDevMenu == null
+                ? (input.streakDays > 0
+                      ? Semantics(
+                          label: '${input.streakDays} day streak',
+                          child: Text(
+                            '${input.streakDays} ${input.streakDays == 1 ? 'day' : 'days'}',
+                            key: const Key('act0_academy_home_leaf_streak'),
+                            style: Act0ClubNightTokensV1.secondary,
+                          ),
+                        )
+                      : null)
+                : IconButton(
+                    style: const ButtonStyle(
+                      splashFactory: InkRipple.splashFactory,
+                    ),
+                    key: const Key('act0_academy_home_leaf_dev_menu'),
+                    tooltip: 'Developer tools',
+                    onPressed: input.onOpenDevMenu,
+                    icon: const Icon(Icons.settings_outlined),
                   ),
+          ),
+          const SizedBox(height: 20),
+          _HomeGreetingV1(returningAfterBreak: input.returningAfterBreak),
+          if (input.dayGoalDone == null)
+            _LearningCycleV1(currentPhase: input.phase),
+          const SizedBox(height: 20),
+          if (next != null) ...[
+            Act0AcademyNextActionCardV1(action: next),
+            const SizedBox(height: 10),
+          ],
+          if (input.onResumeLesson != null && input.resumeLabel != null)
+            TextButton(
+              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+              key: const Key('act0_home_resume_lesson'),
+              onPressed: input.onResumeLesson,
+              child: Text(input.resumeLabel!, textAlign: TextAlign.center),
+            ),
+          if (input.dayGoalDone case final done?)
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 6, 12, 14),
+              child: Text(
+                done
+                    ? 'Today’s goal complete'
+                    : 'Today’s goal: one lesson or review',
+                key: const Key('act0_home_today_goal'),
+                style: const TextStyle(
+                  color: Act0ClubNightTokensV1.text2,
+                  fontSize: 14,
                 ),
               ),
             ),
-          ),
-          ListView(
-            key: const Key('act0_academy_home_leaf_scroll'),
-            padding: const EdgeInsets.fromLTRB(10, 2, 10, 16),
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: _HomeHeaderV1(
-                  mood: input.mood,
-                  streakDays: input.streakDays,
-                  onOpenDevMenu: input.onOpenDevMenu,
+          if (input.onStartDailyPractice != null)
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
                 ),
+                key: const Key('act0_home_daily_practice'),
+                onPressed: input.onStartDailyPractice,
+                child: const Text('Daily practice'),
               ),
-              const SizedBox(height: 20),
-              _HomeGreetingV1(returningAfterBreak: input.returningAfterBreak),
-              if (input.dayGoalDone == null)
-                _LearningCycleV1(currentPhase: input.phase),
-              const SizedBox(height: 20),
-              if (next != null) ...[
-                _NextActionCardV1(action: next),
-                const SizedBox(height: 10),
-              ],
-              if (input.onResumeLesson != null && input.resumeLabel != null)
-                TextButton(
-                  key: const Key('act0_home_resume_lesson'),
-                  onPressed: input.onResumeLesson,
-                  child: Text(input.resumeLabel!, textAlign: TextAlign.center),
-                ),
-              if (input.dayGoalDone case final done?)
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(12, 6, 12, 14),
-                  child: Text(
-                    done
-                        ? 'Today’s goal complete'
-                        : 'Today’s goal: one lesson or review',
-                    key: const Key('act0_home_today_goal'),
-                    style: const TextStyle(
-                      color: Act0ClubNightTokensV1.text2,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              if (input.onStartDailyPractice != null)
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: TextButton(
-                    key: const Key('act0_home_daily_practice'),
-                    onPressed: input.onStartDailyPractice,
-                    child: const Text('Daily practice'),
-                  ),
-                ),
-              _CourseProgressStripV1(
-                courseTitle: input.courseTitle,
-                progress: progress,
-              ),
-            ],
+            ),
+          _CourseProgressStripV1(
+            courseTitle: input.courseTitle,
+            progress: progress,
           ),
         ],
       ),
@@ -249,114 +241,8 @@ class _HomeGreetingV1 extends StatelessWidget {
   }
 }
 
-class _HomeHeaderV1 extends StatelessWidget {
-  const _HomeHeaderV1({
-    required this.mood,
-    required this.streakDays,
-    this.onOpenDevMenu,
-  });
-
-  final Act0SharkyMoodV1 mood;
-  final int streakDays;
-  final VoidCallback? onOpenDevMenu;
-
-  @override
-  Widget build(BuildContext context) {
-    final tone = act0SharkyToneForMoodV1(mood);
-    return Row(
-      key: const Key('act0_academy_home_leaf_identity_row'),
-      children: [
-        Container(
-          width: 52,
-          height: 56,
-          padding: const EdgeInsets.all(2),
-          decoration: BoxDecoration(
-            color: tone.withValues(alpha: 0.10),
-            borderRadius: BorderRadius.circular(13),
-            border: Border.all(color: tone.withValues(alpha: 0.28)),
-            boxShadow: [
-              BoxShadow(
-                color: Act0AcademyLeafPaletteV1.teal.withValues(alpha: 0.18),
-                blurRadius: 18,
-              ),
-            ],
-          ),
-          child: Act0SharkyPresenceMascotV1(mood: mood, tone: tone, size: 48),
-        ),
-        const SizedBox(width: 11),
-        const Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Sharky',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.text,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                  letterSpacing: -0.4,
-                ),
-              ),
-              SizedBox(height: 2),
-              Text(
-                'Poker Academy',
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.textMuted,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-        ),
-        if (streakDays > 0)
-          Semantics(
-            label: '$streakDays day streak',
-            excludeSemantics: true,
-            child: Container(
-              key: const Key('act0_academy_home_leaf_streak'),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
-              decoration: BoxDecoration(
-                color: Act0AcademyLeafPaletteV1.aqua.withValues(alpha: 0.08),
-                borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: Act0AcademyLeafPaletteV1.rule.withValues(alpha: 0.42),
-                ),
-              ),
-              child: Text(
-                '$streakDays ${streakDays == 1 ? 'day' : 'days'}',
-                maxLines: 1,
-                style: const TextStyle(
-                  color: Act0AcademyLeafPaletteV1.aquaSoft,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-        if (onOpenDevMenu != null) ...[
-          const SizedBox(width: 4),
-          IconButton(
-            key: const Key('act0_academy_home_leaf_dev_menu'),
-            onPressed: onOpenDevMenu,
-            tooltip: 'Dev menu',
-            constraints: const BoxConstraints.tightFor(width: 44, height: 44),
-            icon: const Act0AcademyLeafGlyphV1(
-              kind: Act0AcademyLeafGlyphKindV1.overflow,
-              color: Act0AcademyLeafPaletteV1.textMuted,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-}
-
-class _NextActionCardV1 extends StatelessWidget {
-  const _NextActionCardV1({required this.action});
+class Act0AcademyNextActionCardV1 extends StatelessWidget {
+  const Act0AcademyNextActionCardV1({super.key, required this.action});
 
   final Act0AcademyHomeNextActionV1 action;
 
@@ -422,45 +308,14 @@ class _NextActionCardV1 extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 12),
-          SizedBox(
-            width: double.infinity,
-            height: 50,
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(13),
-                gradient: const LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [Color(0xFF43ECDD), Color(0xFF00D6C9)],
-                ),
-              ),
-              child: FilledButton.icon(
-                key: const Key('act0_academy_home_leaf_cta'),
-                onPressed: action.onPressed,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.transparent,
-                  shadowColor: Colors.transparent,
-                  foregroundColor: Act0AcademyLeafPaletteV1.ink,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(13),
-                  ),
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                iconAlignment: IconAlignment.end,
-                icon: const Act0AcademyLeafGlyphV1(
-                  kind: Act0AcademyLeafGlyphKindV1.forward,
-                  size: 19,
-                  color: Act0AcademyLeafPaletteV1.ink,
-                ),
-                label: Text(
-                  action.ctaLabel,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+          Theme(
+            data: Theme.of(
+              context,
+            ).copyWith(splashFactory: InkRipple.splashFactory),
+            child: Act0SkinPrimaryButtonV1(
+              controlKey: const Key('act0_academy_home_leaf_cta'),
+              label: action.ctaLabel,
+              onPressed: action.onPressed,
             ),
           ),
         ],

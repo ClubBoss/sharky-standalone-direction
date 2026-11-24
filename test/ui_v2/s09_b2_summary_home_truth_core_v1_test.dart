@@ -374,6 +374,10 @@ Future<void> _launchVisibleHomeRepairV1(WidgetTester tester) async {
     expect(cta, findsOneWidget);
     await tester.ensureVisible(cta);
     await tester.tap(cta);
+    await tester.pumpAndSettle();
+    final repair = find.byKey(const Key('act0_academy_review_leaf_repair_cta'));
+    await tester.ensureVisible(repair);
+    await tester.tap(repair);
   } else {
     final home = tester.widget<Act0HomeShellV1>(find.byType(Act0HomeShellV1));
     home.onStartRepair!();

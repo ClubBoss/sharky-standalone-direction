@@ -92,6 +92,19 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
     );
   }
 
+  void _closeRoutePracticeV1() {
+    if (!_routePracticeV1.inRunner) return;
+    _setStateV1(() {
+      _routePracticePresetV1 = null;
+      _routePracticeV1 = _routePracticeV1.update(
+        _routePracticeV1.run,
+        inRunner: false,
+      );
+      _returnToRunnerOriginV1(Act0ShellTabV1.learn);
+    });
+    _persistProgress();
+  }
+
   void _startRoutePracticeV1(
     Act0WorldCardV1 world,
     Act0RoutePracticeStepV1 step,
@@ -109,6 +122,7 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
         taskIds: deck.map((rep) => rep.task.taskId).toList(growable: false),
       );
     }
+    _recordRunnerOriginV1();
     _closeLearningRunForLearnExitV1();
     _tab = Act0ShellTabV1.learn;
     _showPlayHub = true;
@@ -181,12 +195,7 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
           ? _copyV1(en: 'Finish practice', ru: 'Завершить практику')
           : _copyV1(en: 'Continue', ru: 'Дальше'),
       onBack: () {
-        if (!isCurrent()) return;
-        _setStateV1(() {
-          _routePracticePresetV1 = null;
-          _routePracticeV1 = _routePracticeV1.update(run, inRunner: false);
-        });
-        _persistProgress();
+        if (isCurrent()) _closeRoutePracticeV1();
       },
       onContinueTheory: () {},
       onChooseOption: choose,
@@ -237,6 +246,7 @@ extension _PreviewRoutePracticeV1 on _Act0ShellPreviewScreenV1State {
             finishedStepId: run.isLast ? run.stepId : null,
             seenTaskId: run.isLast ? null : run.taskIds[run.answered + 1],
           );
+          if (run.isLast) _returnToRunnerOriginV1(Act0ShellTabV1.learn);
         });
         _persistProgress();
       },

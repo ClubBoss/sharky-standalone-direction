@@ -169,13 +169,11 @@ void main() {
     expect(find.text('4 days'), findsOneWidget);
   });
 
-  testWidgets('backdrop is optional and never references an undeclared asset', (
-    tester,
-  ) async {
+  testWidgets('Home omits the decorative backdrop', (tester) async {
     await _pumpHome(tester, _input());
     expect(
       find.byKey(const Key('act0_academy_leaf_backdrop_fallback')),
-      findsOneWidget,
+      findsNothing,
     );
     expect(
       find.byKey(const Key('act0_academy_leaf_backdrop_image')),
@@ -185,7 +183,7 @@ void main() {
     await _pumpHome(tester, _input(backdrop: MemoryImage(_pixelPng)));
     expect(
       find.byKey(const Key('act0_academy_leaf_backdrop_image')),
-      findsOneWidget,
+      findsNothing,
     );
   });
 

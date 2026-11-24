@@ -70,8 +70,6 @@ ValueChanged<T>? _guardValue<T>(
         if (isCurrent()) action(value);
       };
 
-const _backdrop = AssetImage(act0AcademyLeafLoungeBackdropAssetV1);
-
 Widget act0AcademyHomeRuntimeV1(
   BuildContext context, {
   required Act0HomeShellV1 legacy,
@@ -108,7 +106,6 @@ Widget act0AcademyHomeRuntimeV1(
             ctaLabel: legacy.nextActionCtaLabel,
             onPressed: _guard(isCurrent, legacy.onContinue)!,
           ),
-      backdrop: _backdrop,
       onOpenDevMenu: _guard(isCurrent, legacy.onOpenDevMenu),
       onStartDailyPractice: dayGoalDone == null
           ? _guard(isCurrent, legacy.onStartDailyDrill)
@@ -124,12 +121,16 @@ Widget act0AcademyHomeRuntimeV1(
 Widget act0AcademyPracticeRuntimeV1(
   BuildContext context, {
   required Act0PlayShellV1 legacy,
+  Act0AcademyHomeNextActionV1? nextAction,
+  VoidCallback? onOpenReview,
   required bool Function() isCurrent,
 }) {
   if (!act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.play)) return legacy;
   return Act0AcademyPracticeLeafV1(
     input: Act0AcademyPracticeLeafInputV1(
       groups: legacy.groups,
+      nextAction: nextAction,
+      onOpenReview: _guard(isCurrent, onOpenReview),
       recommendedGroupId: legacy.recommendedGroupId,
       recommendedTitle: legacy.recommendedTitle,
       recommendedSubtitle: legacy.recommendedSubtitle,
@@ -139,7 +140,6 @@ Widget act0AcademyPracticeRuntimeV1(
       onLaunchRepair: _guardValue(isCurrent, legacy.onLaunchRepairQueueTarget),
       completionTitle: legacy.completionTitle,
       completionBody: legacy.completionBody,
-      backdrop: _backdrop,
     ),
   );
 }
@@ -147,6 +147,7 @@ Widget act0AcademyPracticeRuntimeV1(
 Widget act0AcademyReviewRuntimeV1(
   BuildContext context, {
   required Act0ReviewShellV1 legacy,
+  Act0AcademyHomeNextActionV1? nextAction,
   required bool Function() isCurrent,
 }) {
   if (!act0AcademyRuntimeEnabledV1(context, Act0ShellTabV1.review))
@@ -163,6 +164,7 @@ Widget act0AcademyReviewRuntimeV1(
   ];
   return Act0AcademyReviewLeafV1(
     input: Act0AcademyReviewLeafInputV1(
+      nextAction: nextAction,
       openMistakes: legacy.review.mistakes,
       repeatedMistake: legacy.repeatedMistake,
       leakDashboard: legacy.leakDashboard,
@@ -187,14 +189,13 @@ Widget act0AcademyReviewRuntimeV1(
                 }
               }
             },
-      nextStep: legacy.nextStep,
+      nextStep: nextAction == null ? legacy.nextStep : null,
       onOpenRecommendedAction: _guard(
         isCurrent,
         legacy.onOpenRecommendedAction,
       ),
       onOpenLearn: _guard(isCurrent, legacy.onOpenLearn),
       onOpenAttempts: _guard(isCurrent, legacy.onOpenAttempts),
-      backdrop: _backdrop,
     ),
   );
 }
@@ -241,7 +242,6 @@ Widget act0AcademyYouRuntimeV1(
       dueReviewCount: dueReviews,
       onOpenReview: _guard(isCurrent, onOpenReview),
       onOpenLearn: _guard(isCurrent, onOpenLearn),
-      onRecoveryOptions: _guard(isCurrent, legacy.onRecoveryOptions),
       onOpenSettings: act0AcademySettingsPreviewV1
           ? _guard(
               isCurrent,

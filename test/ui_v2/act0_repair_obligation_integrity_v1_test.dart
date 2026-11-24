@@ -1,3 +1,4 @@
+import '../support/act0_shell_presentation_finders_v1.dart';
 import 'dart:async';
 import 'package:shared_preferences_platform_interface/shared_preferences_platform_interface.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_runtime_adapter_v1.dart';
@@ -333,13 +334,8 @@ List<Map> _debt(Map<String, dynamic> data, String task) => _rows(
   'openRepairIntents',
 ).where((intent) => intent['sourceTaskId'] == task).toList();
 
-Future<void> _tab(WidgetTester tester, String label) async {
-  await tester.tap(
-    find.descendant(
-      of: find.byKey(const Key('act0_shell_bottom_nav')),
-      matching: find.text(label),
-    ),
-  );
+Future<void> _tab(WidgetTester tester, Act0ShellTabV1 tab) async {
+  await tester.tap(find.byKey(Key('act0_shell_nav_${tab.name}')));
   await tester.pumpAndSettle();
 }
 
@@ -349,7 +345,7 @@ Future<void> _back(WidgetTester tester) async {
 }
 
 Future<void> _startWithoutRemount(WidgetTester tester, String task) async {
-  await _tab(tester, 'Learn');
+  await _tab(tester, Act0ShellTabV1.learn);
   tester
       .widget<Act0LearnPathShellV1>(find.byType(Act0LearnPathShellV1))
       .onStartTask(_actionLesson, task);
@@ -597,7 +593,7 @@ void main() {
       final pending = _debt(twoMisses, _actionSource).single;
       expect(_rows(twoMisses, 'openRepairIntents'), hasLength(2));
       await _back(tester);
-      await _tab(tester, 'Practice');
+      await _tab(tester, Act0ShellTabV1.play);
       final play = _practice(tester);
       final request = play.repairQueueConsumer.items
           .map((item) => item.launchRequest)
@@ -646,6 +642,11 @@ void main() {
       }
       await _continue(tester);
       expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_play_screen'),
+        findsOneWidget,
+      );
+      await _tab(tester, Act0ShellTabV1.review);
       expect(
         _openMistakes(tester).map((mistake) => mistake.taskId),
         [_actionSource],
@@ -713,7 +714,7 @@ void main() {
         repaired['repairOutcomeProjection'],
       );
       await _back(tester);
-      await _tab(tester, 'Review');
+      await _tab(tester, Act0ShellTabV1.review);
       expect(
         _openMistakes(tester).map((mistake) => mistake.taskId),
         unorderedEquals([_actionRepair, _actionSource]),
@@ -733,7 +734,7 @@ void main() {
       await _answer(tester, 'fold');
       final owed = await _saved(tester);
       await _back(tester);
-      await _tab(tester, 'Practice');
+      await _tab(tester, Act0ShellTabV1.play);
       final play = _practice(tester);
       final request = play.repairQueueConsumer.items
           .map((item) => item.launchRequest)
@@ -766,6 +767,11 @@ void main() {
       }
       await _continue(tester);
       expect(tester.state(find.byType(Act0ShellPreviewScreenV1)), same(root));
+      expect(
+        act0ShellPresentationFinderV1('act0_shell_play_screen'),
+        findsOneWidget,
+      );
+      await _tab(tester, Act0ShellTabV1.review);
       expect(
         _openMistakes(tester).map((mistake) => mistake.taskId),
         unorderedEquals([_actionRepair, _actionSource]),

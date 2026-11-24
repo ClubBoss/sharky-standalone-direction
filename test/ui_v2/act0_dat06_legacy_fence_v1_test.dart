@@ -110,6 +110,8 @@ void main() {
       final lateQueue = Completer<List<SessionDrillRecheckLaunchQueueItemV1>>();
       await tester.pumpWidget(_host(() => lateQueue.future));
       await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_recovery_open_settings')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_options')));
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_recovery_confirm')));

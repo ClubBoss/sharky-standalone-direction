@@ -1,3 +1,5 @@
+import 'act0_academy_home_leaf_v1.dart';
+import '../act0_club_night_components_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_leak_dashboard_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
@@ -77,6 +79,7 @@ class Act0AcademyReviewLeafInputV1 {
     this.onOpenAttempts,
     this.reasonRepairs,
     this.backdrop,
+    this.nextAction,
   });
 
   final List<Act0MistakeCardV1> openMistakes;
@@ -96,6 +99,7 @@ class Act0AcademyReviewLeafInputV1 {
   final VoidCallback? onOpenAttempts;
   final Widget? reasonRepairs;
   final ImageProvider? backdrop;
+  final Act0AcademyHomeNextActionV1? nextAction;
 }
 
 /// Premium Academy Review leaf (Review V4, Draft PR #312).
@@ -147,7 +151,12 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
         key: const Key('act0_academy_review_leaf_scroll'),
         padding: const EdgeInsets.fromLTRB(18, 0, 18, 22),
         children: [
-          _ReviewHeroV1(backdrop: input.backdrop),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Act0ClubScreenHeaderV1(title: 'Review queue'),
+          ),
+          if (input.nextAction case final action?)
+            Act0AcademyNextActionCardV1(action: action),
           if (input.reasonRepairs case final repairs?) repairs,
           if (input.onOpenAttempts != null)
             Align(
@@ -550,91 +559,4 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
       ),
     ),
   );
-}
-
-class _ReviewHeroV1 extends StatelessWidget {
-  const _ReviewHeroV1({required this.backdrop});
-
-  final ImageProvider? backdrop;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 152),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            left: -18,
-            right: -18,
-            top: 0,
-            bottom: -48,
-            child: Act0AcademyLeafBackdropV1(
-              image: backdrop,
-              alignment: Alignment.centerRight,
-            ),
-          ),
-          const Positioned(
-            left: -18,
-            right: -18,
-            top: 0,
-            bottom: -48,
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x25020E13),
-                      Color(0x60020E13),
-                      Color(0xFF020E13),
-                    ],
-                    stops: [0, .55, 1],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.only(left: 6, top: 20, bottom: 16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'SHARKY POKER ACADEMY',
-                  style: TextStyle(
-                    color: Act0AcademyLeafPaletteV1.aqua,
-                    fontSize: 9,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: 2.3,
-                  ),
-                ),
-                SizedBox(height: 10),
-                Text(
-                  'Review',
-                  style: TextStyle(
-                    color: Act0AcademyLeafPaletteV1.text,
-                    fontSize: 44,
-                    fontWeight: FontWeight.w700,
-                    height: 1.1,
-                    letterSpacing: -1,
-                  ),
-                ),
-                SizedBox(height: 7),
-                Text(
-                  'Turn missed clues into better decisions.',
-                  style: TextStyle(
-                    color: Act0AcademyLeafPaletteV1.textMuted,
-                    fontSize: 14,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

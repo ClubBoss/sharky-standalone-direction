@@ -481,7 +481,7 @@ void main() {
     }
   });
 
-  testWidgets('Home resumes feedback and Review retains the open repair', (
+  testWidgets('Home prioritizes the open repair and Review launches it', (
     tester,
   ) async {
     tester.view.physicalSize = const Size(393, 852);
@@ -555,20 +555,15 @@ void main() {
     expect(intent['targetTaskId'], 'actions_check_drill');
 
     if (act0AcademyHomePreviewV1) {
-      expect(find.text('Continue lesson'), findsOneWidget);
-      expect(find.text('Repair one weak spot'), findsNothing);
-      await tester.tap(find.byKey(const Key('act0_academy_home_leaf_cta')));
-      await tester.pumpAndSettle();
-      final savedFeedback = tester.widget<Act0LessonRunnerShellV1>(
-        find.byType(Act0LessonRunnerShellV1),
+      final action = find.byKey(const Key('act0_academy_home_leaf_cta'));
+      expect(
+        find.descendant(of: action, matching: find.text('Open Review')),
+        findsOneWidget,
       );
-      expect(savedFeedback.selectedTaskId, 'actions_legal_context');
-      expect(savedFeedback.runner.selectedOptionId, 'fold');
-      expect(savedFeedback.runner.phase, Act0LessonPhaseV1.review);
-      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      expect(find.text('Continue lesson'), findsNothing);
+      await tester.tap(action);
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Review').last);
-      await tester.pumpAndSettle();
+      expect(find.byKey(const Key('act0_academy_review_leaf')), findsOneWidget);
       final repair = find.byKey(
         const Key('act0_academy_review_leaf_repair_cta'),
       );

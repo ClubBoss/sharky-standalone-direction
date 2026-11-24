@@ -183,7 +183,7 @@ void main() {
           );
 
           expect(
-            act0ShellPresentationFinderV1('act0_shell_review_screen'),
+            act0ShellPresentationFinderV1('act0_shell_play_screen'),
             findsOneWidget,
           );
 
@@ -202,7 +202,7 @@ void main() {
             (progress()['multiRepairQueue'] as Map)['entries'],
             hasLength(1),
           );
-          await tester.tap(find.text('Review').last);
+          await tester.tap(find.byKey(const Key('act0_shell_nav_review')));
           await tester.pumpAndSettle();
           expect(sink.events.where((e) => e.name == 'fix_landed'), isEmpty);
           await tester.tap(find.text('Practice').last);

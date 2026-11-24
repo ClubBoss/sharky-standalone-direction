@@ -1,3 +1,5 @@
+import 'act0_academy_home_leaf_v1.dart';
+import '../act0_club_night_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart'
@@ -52,6 +54,7 @@ class Act0AcademyPracticeLeafInputV1 {
     this.completionTitle,
     this.completionBody,
     this.backdrop,
+    this.nextAction,
   });
 
   final List<Act0PracticeGroupV1> groups;
@@ -67,6 +70,7 @@ class Act0AcademyPracticeLeafInputV1 {
   final String? completionTitle;
   final String? completionBody;
   final ImageProvider? backdrop;
+  final Act0AcademyHomeNextActionV1? nextAction;
 }
 
 /// Premium Academy Practice leaf (owner-selected cinematic hybrid, Draft PR
@@ -112,7 +116,8 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
         .where(
           (g) =>
               !act0AcademyPracticeNonTopicGroupIdsV1.contains(g.groupId) &&
-              g.groupId != input.recommendedGroupId,
+              (input.nextAction != null ||
+                  g.groupId != input.recommendedGroupId),
         )
         .toList(growable: false);
     final topics = [
@@ -122,12 +127,18 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
     // Quick reps mirror the accepted shell: Daily is always reachable and an
     // enabled Weak spots group stays launchable even when it is not the
     // recommendation.
+    final showRecommendation =
+        input.nextAction == null || group?.groupId == 'daily';
+    final repairCtaLabel = _copy(
+      'play_action_practice_repair',
+      'Practice repair',
+    );
     final quickReps = [
       for (final id in const ['daily', 'weak_spots'])
         ...input.groups.where(
           (g) =>
               g.groupId == id &&
-              g.groupId != input.recommendedGroupId &&
+              (!showRecommendation || g.groupId != input.recommendedGroupId) &&
               (id == 'daily' || g.isEnabled),
         ),
     ];
@@ -141,10 +152,15 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
         key: const Key('act0_academy_practice_leaf_scroll'),
         padding: const EdgeInsets.fromLTRB(14, 0, 14, 16),
         children: [
-          _PracticeHeroV1(
-            title: _copy('play_title', 'Practice'),
-            backdrop: input.backdrop,
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: Act0ClubScreenHeaderV1(
+              key: const Key('act0_academy_practice_leaf_title'),
+              title: 'Practice sets',
+            ),
           ),
+          if (input.nextAction case final action?)
+            Act0AcademyNextActionCardV1(action: action),
           if (isEmpty)
             _PracticeEmptyV1(onOpenLearn: input.onOpenLearn)
           else ...[
@@ -152,20 +168,18 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
               _RepairQueueSectionV1(
                 consumer: input.repairQueue,
                 onLaunch: input.onLaunchRepair,
-                primary: true,
+                primary: input.nextAction == null,
                 supportingReason: group?.groupId == 'weak_spots'
                     ? input.recommendedReasonLabel
                     : null,
-                ctaLabel: _copy(
-                  'play_action_practice_repair',
-                  'Practice repair',
-                ),
+                ctaLabel: repairCtaLabel,
               ),
               const SizedBox(height: 12),
             ],
             // The source-owned queue is already the actionable repair entry.
             // Do not feature the same Weak spots target a second time.
-            if (input.groups.isNotEmpty &&
+            if (showRecommendation &&
+                input.groups.isNotEmpty &&
                 !(launchableRepair && group?.groupId == 'weak_spots'))
               _RecommendationCardV1(
                 actionLabel: group?.groupId == 'daily' ? group?.ctaLabel : null,
@@ -178,7 +192,7 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
                     ? input.recommendedReasonLabel.trim()
                     : null,
                 canStart: canStart,
-                secondary: launchableRepair,
+                secondary: launchableRepair || input.nextAction != null,
                 onStart: canStart ? () => input.onStartGroup(group) : null,
                 onOpenLearn: input.onOpenLearn,
               ),
@@ -201,10 +215,7 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
                 consumer: input.repairQueue,
                 onLaunch: input.onLaunchRepair,
                 primary: false,
-                ctaLabel: _copy(
-                  'play_action_practice_repair',
-                  'Practice repair',
-                ),
+                ctaLabel: repairCtaLabel,
               ),
             ],
             if (showRepairEmpty) ...[
@@ -310,85 +321,6 @@ class _Act0AcademyPracticeLeafV1State extends State<Act0AcademyPracticeLeafV1> {
               ),
             ],
           ],
-        ],
-      ),
-    );
-  }
-}
-
-class _PracticeHeroV1 extends StatelessWidget {
-  const _PracticeHeroV1({required this.title, required this.backdrop});
-
-  final String title;
-  final ImageProvider? backdrop;
-
-  @override
-  Widget build(BuildContext context) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(minHeight: 204),
-      child: Stack(
-        clipBehavior: Clip.none,
-        children: [
-          Positioned(
-            left: -14,
-            right: -14,
-            top: 0,
-            bottom: -18,
-            child: Act0AcademyLeafBackdropV1(
-              image: backdrop,
-              alignment: Alignment.centerRight,
-            ),
-          ),
-          const Positioned(
-            left: -14,
-            right: -14,
-            top: 0,
-            bottom: -18,
-            child: IgnorePointer(
-              child: DecoratedBox(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Color(0x28020E13),
-                      Color(0x00020E13),
-                      Color(0xFF020E13),
-                    ],
-                    stops: [0, .65, 1],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(8, 15, 0, 18),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  key: const Key('act0_academy_practice_leaf_title'),
-                  style: const TextStyle(
-                    color: Act0AcademyLeafPaletteV1.text,
-                    fontSize: 36,
-                    height: 1.15,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -.8,
-                  ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Train real decisions.\nBuild your skills step by step.',
-                  style: TextStyle(
-                    color: Act0AcademyLeafPaletteV1.textMuted,
-                    fontSize: 15,
-                    height: 1.4,
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
@@ -823,7 +755,7 @@ class _ReviewEntryV1 extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Review',
+                    'Review mistakes',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                   ),
                   SizedBox(height: 3),

@@ -1308,7 +1308,10 @@ void _registerFocusedCases() {
 
   group('Review attempt archive', () {
     Future<void> openArchive(WidgetTester t) async {
-      expect(await _tapFirst(t, [find.text('Review')]), isTrue);
+      expect(
+        await _tapFirst(t, [find.byKey(const Key('act0_shell_nav_review'))]),
+        isTrue,
+      );
       expect(
         await _tapFirst(t, [
           find.byKey(const Key('act0_review_open_attempts')),
@@ -1512,7 +1515,12 @@ void _registerFocusedCases() {
         );
         await tap('Previous');
         expect(find.textContaining('Button: seat 1.'), findsOneWidget);
-        await tap('Back to own hands');
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_attempt_replay_back_to_archive')),
+          ]),
+          isTrue,
+        );
         await tap('Import own hand');
         await t.enterText(text, fixture);
         await tap('Import hand');

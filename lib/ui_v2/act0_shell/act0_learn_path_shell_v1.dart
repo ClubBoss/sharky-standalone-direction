@@ -1,3 +1,4 @@
+import 'academy_leaves/act0_academy_home_leaf_v1.dart';
 import 'dart:async' show Timer, unawaited;
 import 'dart:ui' as ui;
 
@@ -193,6 +194,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     required this.selectedWorldId,
     required this.showWorldMenu,
     this.onW1RulesCheck,
+    this.nextAction,
     required this.worldDetailId,
     required this.lessons,
     required this.selectedLessonId,
@@ -231,6 +233,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final String selectedWorldId;
   final bool showWorldMenu;
   final VoidCallback? onW1RulesCheck;
+  final Act0AcademyHomeNextActionV1? nextAction;
   final String? worldDetailId;
   final List<Act0LessonCardV1> lessons;
   final String selectedLessonId;
@@ -665,6 +668,19 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               controller: _learnScrollController,
               key: const Key('act0_shell_learn_screen'),
               slivers: [
+                if (widget.nextAction case final action?)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: TextButton(
+                        style: const ButtonStyle(
+                          splashFactory: InkRipple.splashFactory,
+                        ),
+                        onPressed: action.onPressed,
+                        child: Text('${action.title} · ${action.ctaLabel}'),
+                      ),
+                    ),
+                  ),
                 if (widget.onW1RulesCheck != null && detailLessonId == null)
                   SliverToBoxAdapter(
                     child: Align(
@@ -672,7 +688,7 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                       child: TextButton(
                         key: const Key('act0_shell_w1_rules_map'),
                         onPressed: widget.onW1RulesCheck,
-                        child: const Text('Skip this world by test'),
+                        child: const Text('Take the rules check'),
                       ),
                     ),
                   ),

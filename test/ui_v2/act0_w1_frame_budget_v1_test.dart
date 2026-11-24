@@ -12,14 +12,16 @@ typedef _Sample = ({int frames, int widgets, int runner, int peakMicros});
 // for shared CI hosts. Keep these ceilings or lower them after an improvement.
 // The widget binding measures synchronous build/layout/paint, excluding raster.
 const _baseline = <String, _Sample>{
-  'enterTheory': (frames: 39, widgets: 396, runner: 1, peakMicros: 80000),
-  // ACC-03 keyboard focus nodes (+6)
-  'openDecision': (frames: 39, widgets: 709, runner: 2, peakMicros: 90000),
-  'showFeedback': (frames: 152, widgets: 894, runner: 2, peakMicros: 120000),
-  // ACC-03 keyboard focus nodes (+6)
-  'openRepair': (frames: 19, widgets: 744, runner: 2, peakMicros: 120000),
-  // B36 task chrome adds 2 widgets on recheck.
-  'showRecheck': (frames: 152, widgets: 837, runner: 2, peakMicros: 110000),
+  // B34 adds a PopScope for runner Back handling (+1 widget).
+  'enterTheory': (frames: 39, widgets: 397, runner: 1, peakMicros: 80000),
+  // ACC-03 keyboard focus nodes (+6); B34 runner PopScope (+1).
+  'openDecision': (frames: 39, widgets: 710, runner: 2, peakMicros: 90000),
+  // B34 runner PopScope (+1) on every runner stage below.
+  'showFeedback': (frames: 152, widgets: 895, runner: 2, peakMicros: 120000),
+  // ACC-03 keyboard focus nodes (+6); B34 runner PopScope (+1).
+  'openRepair': (frames: 19, widgets: 745, runner: 2, peakMicros: 120000),
+  // B36 task chrome adds 2 widgets on recheck; B34 runner PopScope (+1).
+  'showRecheck': (frames: 152, widgets: 838, runner: 2, peakMicros: 110000),
 };
 
 class _FrameBinding extends AutomatedTestWidgetsFlutterBinding {
