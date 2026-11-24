@@ -284,6 +284,7 @@ class _CurrentMissionCardV1 extends StatelessWidget {
       task.taskId,
       task.runner.question,
     );
+    final neutralTitle = act0PrechoiceNeutralTitleByTaskIdV1[task.taskId];
     final stepTitle = _learnPlayerCopyV1(
       question.isEmpty ? _learnTaskTitleV1(context, task) : question,
     );
@@ -341,18 +342,28 @@ class _CurrentMissionCardV1 extends StatelessWidget {
               child: Text(
                 _learnCopyV1(
                   context,
-                  en: 'Current step $stepIndex of $totalSteps · $stepTitle',
-                  ru: 'Текущий шаг $stepIndex из $totalSteps · $stepTitle',
+                  en: neutralTitle == null
+                      ? 'Current step $stepIndex of $totalSteps · $stepTitle'
+                      : 'Current step $stepIndex of $totalSteps',
+                  ru: neutralTitle == null
+                      ? 'Текущий шаг $stepIndex из $totalSteps · $stepTitle'
+                      : 'Текущий шаг $stepIndex из $totalSteps',
                 ),
                 key: const Key('act0_shell_current_mission_step_band'),
-                style: Act0SkinTokensV1.body,
+                style: Act0SkinTokensV1.secondary,
               ),
             ),
+            if (neutralTitle != null)
+              Text(
+                _learnTaskTitleV1(context, task),
+                style: Act0SkinTokensV1.secondary,
+              ),
           ],
           if (onStart != null) ...[
             const SizedBox(height: Act0SkinTokensV1.gapMd),
             Act0SkinPrimaryButtonV1(
               controlKey: const Key('act0_shell_current_mission_cta'),
+              compact: true,
               onPressed: onStart,
               label: replay
                   ? _learnCopyV1(context, en: 'Replay', ru: 'Повторить')
@@ -890,242 +901,228 @@ class _LessonHubStepV1State extends State<_LessonHubStepV1> {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            SizedBox(
-              height: rowHeight,
-              child: Stack(
-                clipBehavior: Clip.hardEdge,
-                children: [
-                  if (!widget.isLast)
-                    Positioned(
-                      left: threadX - 1.5,
-                      top: 24,
-                      bottom: 0,
-                      child: Container(
-                        width: 2,
-                        decoration: BoxDecoration(
-                          color: color.withValues(
-                            alpha: Act0SkinTokensV1.tintStrong,
-                          ),
-                          borderRadius: BorderRadius.circular(
-                            Act0SkinTokensV1.radiusControl,
-                          ),
+            Stack(
+              alignment: Alignment.topCenter,
+              clipBehavior: Clip.hardEdge,
+              children: [
+                SizedBox(height: rowHeight),
+                if (!widget.isLast)
+                  Positioned(
+                    left: threadX - 1.5,
+                    top: 24,
+                    bottom: 0,
+                    child: Container(
+                      width: 2,
+                      decoration: BoxDecoration(
+                        color: color.withValues(
+                          alpha: Act0SkinTokensV1.tintStrong,
+                        ),
+                        borderRadius: BorderRadius.circular(
+                          Act0SkinTokensV1.radiusControl,
                         ),
                       ),
                     ),
-                  Positioned(
-                    left: cardLeft,
-                    top: 4,
-                    child: CompositedTransformTarget(
-                      link: widget.link,
-                      child: Material(
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(top: Act0SkinTokensV1.gapXs),
+                  child: CompositedTransformTarget(
+                    link: widget.link,
+                    child: Material(
+                      borderRadius: BorderRadius.circular(
+                        Act0SkinTokensV1.radiusSheet,
+                      ),
+                      clipBehavior: Clip.antiAlias,
+                      color: Act0SkinTokensV1.transparent,
+                      child: InkWell(
+                        key: Key(
+                          'act0_shell_lesson_step_${widget.task.taskId}',
+                        ),
                         borderRadius: BorderRadius.circular(
                           Act0SkinTokensV1.radiusSheet,
                         ),
-                        clipBehavior: Clip.antiAlias,
-                        color: Act0SkinTokensV1.transparent,
-                        child: InkWell(
-                          key: Key(
-                            'act0_shell_lesson_step_${widget.task.taskId}',
+                        onTap: () => widget.onSelectTask(
+                          widget.lesson.lessonId,
+                          widget.task.taskId,
+                        ),
+                        child: Ink(
+                          width: cardWidth,
+                          padding: EdgeInsets.fromLTRB(
+                            compactWidth
+                                ? Act0SkinTokensV1.gapSm
+                                : Act0SkinTokensV1.gapSm,
+                            compactRow
+                                ? Act0SkinTokensV1.gapXs
+                                : Act0SkinTokensV1.gapXs,
+                            compactWidth
+                                ? Act0SkinTokensV1.gapSm
+                                : Act0SkinTokensV1.gapMd,
+                            compactRow
+                                ? Act0SkinTokensV1.gapXs
+                                : Act0SkinTokensV1.gapXs,
                           ),
-                          borderRadius: BorderRadius.circular(
-                            Act0SkinTokensV1.radiusSheet,
-                          ),
-                          onTap: () => widget.onSelectTask(
-                            widget.lesson.lessonId,
-                            widget.task.taskId,
-                          ),
-                          child: Ink(
-                            width: cardWidth,
-                            height: widget.isLocked
-                                ? (compactWidth
-                                      ? 42
-                                      : compactRow
-                                      ? 38
-                                      : 40)
-                                : compactWidth
-                                ? 47
-                                : compactRow
-                                ? 42
-                                : 46,
-                            padding: EdgeInsets.fromLTRB(
-                              compactWidth
-                                  ? Act0SkinTokensV1.gapSm
-                                  : Act0SkinTokensV1.gapSm,
-                              compactRow
-                                  ? Act0SkinTokensV1.gapXs
-                                  : Act0SkinTokensV1.gapXs,
-                              compactWidth
-                                  ? Act0SkinTokensV1.gapSm
-                                  : Act0SkinTokensV1.gapMd,
-                              compactRow
-                                  ? Act0SkinTokensV1.gapXs
-                                  : Act0SkinTokensV1.gapXs,
+                          decoration: BoxDecoration(
+                            color: Act0SkinTokensV1.surface,
+                            borderRadius: BorderRadius.circular(
+                              Act0SkinTokensV1.radiusCard,
                             ),
-                            decoration: BoxDecoration(
-                              color: Act0SkinTokensV1.surface,
-                              borderRadius: BorderRadius.circular(
-                                Act0SkinTokensV1.radiusCard,
-                              ),
-                              border: Border.all(
-                                color: widget.isSelected
-                                    ? rowAccent.withValues(
-                                        alpha: Act0SkinTokensV1.edgeStrong,
-                                      )
-                                    : Act0SkinTokensV1.line.withValues(
-                                        alpha: widget.isLocked
-                                            ? Act0SkinTokensV1.edgeSoft
-                                            : Act0SkinTokensV1.edgeStrong,
-                                      ),
-                              ),
+                            border: Border.all(
+                              color: widget.isSelected
+                                  ? rowAccent.withValues(
+                                      alpha: Act0SkinTokensV1.edgeStrong,
+                                    )
+                                  : Act0SkinTokensV1.line.withValues(
+                                      alpha: widget.isLocked
+                                          ? Act0SkinTokensV1.edgeSoft
+                                          : Act0SkinTokensV1.edgeStrong,
+                                    ),
                             ),
-                            child: Row(
-                              children: [
-                                Stack(
-                                  clipBehavior: Clip.none,
-                                  children: [
-                                    Container(
-                                      width: compactWidth
-                                          ? 24
-                                          : compactRow
-                                          ? 26
-                                          : 30,
-                                      height: compactWidth
-                                          ? 24
-                                          : compactRow
-                                          ? 26
-                                          : 30,
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                        color: Act0SkinTokensV1.surface,
-                                        borderRadius: BorderRadius.circular(
-                                          Act0SkinTokensV1.gapMd,
-                                        ),
-                                        border: Border.all(
-                                          color: rowAccent.withValues(
-                                            alpha: Act0SkinTokensV1.edgeStrong,
-                                          ),
-                                        ),
+                          ),
+                          child: Row(
+                            children: [
+                              Stack(
+                                clipBehavior: Clip.none,
+                                children: [
+                                  Container(
+                                    width: compactWidth
+                                        ? 24
+                                        : compactRow
+                                        ? 26
+                                        : 30,
+                                    height: compactWidth
+                                        ? 24
+                                        : compactRow
+                                        ? 26
+                                        : 30,
+                                    alignment: Alignment.center,
+                                    decoration: BoxDecoration(
+                                      color: Act0SkinTokensV1.surface,
+                                      borderRadius: BorderRadius.circular(
+                                        Act0SkinTokensV1.gapMd,
                                       ),
-                                      child: Icon(
-                                        icon,
-                                        size: compactWidth
-                                            ? 12
-                                            : compactRow
-                                            ? 13
-                                            : 14,
-                                        color: widget.isDone
-                                            ? Act0SkinTokensV1.onAccent
-                                            : rowAccent,
+                                      border: Border.all(
+                                        color: rowAccent.withValues(
+                                          alpha: Act0SkinTokensV1.edgeStrong,
+                                        ),
                                       ),
                                     ),
-                                    if (widget.isPerfect)
-                                      Positioned(
-                                        right: -3,
-                                        top: -3,
-                                        child: Container(
-                                          key: Key(
-                                            'act0_shell_lesson_step_perfect_${widget.task.taskId}',
-                                          ),
-                                          width: 12,
-                                          height: 12,
-                                          alignment: Alignment.center,
-                                          decoration: BoxDecoration(
-                                            color: Act0SkinTokensV1.accent,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: Act0SkinTokensV1.surface,
-                                              width: 1.2,
-                                            ),
-                                          ),
-                                          child: const Icon(
-                                            Icons.star_rounded,
-                                            size: 8,
+                                    child: Icon(
+                                      icon,
+                                      size: compactWidth
+                                          ? 12
+                                          : compactRow
+                                          ? 13
+                                          : 14,
+                                      color: widget.isDone
+                                          ? Act0SkinTokensV1.onAccent
+                                          : rowAccent,
+                                    ),
+                                  ),
+                                  if (widget.isPerfect)
+                                    Positioned(
+                                      right: -3,
+                                      top: -3,
+                                      child: Container(
+                                        key: Key(
+                                          'act0_shell_lesson_step_perfect_${widget.task.taskId}',
+                                        ),
+                                        width: 12,
+                                        height: 12,
+                                        alignment: Alignment.center,
+                                        decoration: BoxDecoration(
+                                          color: Act0SkinTokensV1.accent,
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
                                             color: Act0SkinTokensV1.surface,
+                                            width: 1.2,
                                           ),
                                         ),
+                                        child: const Icon(
+                                          Icons.star_rounded,
+                                          size: 8,
+                                          color: Act0SkinTokensV1.surface,
+                                        ),
                                       ),
+                                    ),
+                                ],
+                              ),
+                              SizedBox(
+                                width: compactWidth
+                                    ? Act0SkinTokensV1.gapSm
+                                    : compactRow
+                                    ? Act0SkinTokensV1.gapSm
+                                    : Act0SkinTokensV1.gapSm,
+                              ),
+                              Expanded(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      _learnTaskTitleV1(context, widget.task),
+                                      key: Key(
+                                        'act0_shell_lesson_step_title_${widget.task.taskId}',
+                                      ),
+                                      style: Act0SkinTokensV1.body.copyWith(
+                                        color: widget.isLocked
+                                            ? Act0SkinTokensV1.muted
+                                            : Act0SkinTokensV1.onSurface,
+                                      ),
+                                      maxLines: compactWidth ? 3 : 2,
+                                    ),
                                   ],
                                 ),
+                              ),
+                              if (showStatusChip) ...[
                                 SizedBox(
                                   width: compactWidth
-                                      ? Act0SkinTokensV1.gapSm
+                                      ? Act0SkinTokensV1.gapXs
                                       : compactRow
-                                      ? Act0SkinTokensV1.gapSm
-                                      : Act0SkinTokensV1.gapSm,
+                                      ? Act0SkinTokensV1.gapXs
+                                      : Act0SkinTokensV1.gapXs,
                                 ),
-                                Expanded(
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _learnTaskTitleV1(context, widget.task),
-                                        key: Key(
-                                          'act0_shell_lesson_step_title_${widget.task.taskId}',
-                                        ),
-                                        style: Act0SkinTokensV1.body.copyWith(
-                                          color: widget.isLocked
-                                              ? Act0SkinTokensV1.muted
-                                              : Act0SkinTokensV1.onSurface,
-                                        ),
-                                        maxLines: compactWidth ? 3 : 2,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                if (showStatusChip) ...[
-                                  SizedBox(
-                                    width: compactWidth
+                                Container(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: compactWidth
+                                        ? Act0SkinTokensV1.gapXs
+                                        : compactRow
+                                        ? Act0SkinTokensV1.gapSm
+                                        : Act0SkinTokensV1.gapSm,
+                                    vertical: compactWidth
                                         ? Act0SkinTokensV1.gapXs
                                         : compactRow
                                         ? Act0SkinTokensV1.gapXs
                                         : Act0SkinTokensV1.gapXs,
                                   ),
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: compactWidth
-                                          ? Act0SkinTokensV1.gapXs
-                                          : compactRow
-                                          ? Act0SkinTokensV1.gapSm
-                                          : Act0SkinTokensV1.gapSm,
-                                      vertical: compactWidth
-                                          ? Act0SkinTokensV1.gapXs
-                                          : compactRow
-                                          ? Act0SkinTokensV1.gapXs
-                                          : Act0SkinTokensV1.gapXs,
+                                  decoration: BoxDecoration(
+                                    color: rowAccent.withValues(
+                                      alpha: widget.isSelected
+                                          ? Act0SkinTokensV1.tintSoft
+                                          : Act0SkinTokensV1.tintSoft,
                                     ),
-                                    decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(
+                                      Act0SkinTokensV1.radiusControl,
+                                    ),
+                                    border: Border.all(
                                       color: rowAccent.withValues(
-                                        alpha: widget.isSelected
-                                            ? Act0SkinTokensV1.tintSoft
-                                            : Act0SkinTokensV1.tintSoft,
+                                        alpha: Act0SkinTokensV1.tintStrong,
                                       ),
-                                      borderRadius: BorderRadius.circular(
-                                        Act0SkinTokensV1.radiusControl,
-                                      ),
-                                      border: Border.all(
-                                        color: rowAccent.withValues(
-                                          alpha: Act0SkinTokensV1.tintStrong,
-                                        ),
-                                      ),
-                                    ),
-                                    child: Text(
-                                      statusLabel,
-                                      style: Act0SkinTokensV1.captionStyle
-                                          .copyWith(color: rowAccent),
                                     ),
                                   ),
-                                ],
+                                  child: Text(
+                                    statusLabel,
+                                    style: Act0SkinTokensV1.captionStyle
+                                        .copyWith(color: rowAccent),
+                                  ),
+                                ),
                               ],
-                            ),
+                            ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             AnimatedSize(
               duration: MediaQuery.disableAnimationsOf(context)

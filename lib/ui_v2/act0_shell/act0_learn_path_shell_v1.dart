@@ -646,6 +646,23 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               controller: _learnScrollController,
               key: const Key('act0_shell_learn_screen'),
               slivers: [
+                if (widget.onW1RulesCheck != null && detailLessonId == null)
+                  SliverPadding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Act0SkinTokensV1.screenGutter,
+                    ),
+                    sliver: SliverToBoxAdapter(
+                      child: Act0SkinListRowV1(
+                        controlKey: const Key('act0_shell_w1_rules_map'),
+                        title: 'Check W1 rules',
+                        subtitle: 'Pass to unlock W2 and skip the W1 lessons.',
+                        expanded: false,
+                        dark: true,
+                        expandable: false,
+                        onTap: widget.onW1RulesCheck,
+                      ),
+                    ),
+                  ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     Act0SkinTokensV1.screenGutter,
@@ -765,18 +782,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                           Act0SkinSecondaryButtonV1(
                             label: '${action.title} · ${action.ctaLabel}',
                             onPressed: action.onPressed,
-                          ),
-                        if (widget.onW1RulesCheck != null &&
-                            detailLessonId == null)
-                          Act0SkinListRowV1(
-                            controlKey: const Key('act0_shell_w1_rules_map'),
-                            title: 'Check W1 rules',
-                            subtitle:
-                                'Pass to unlock W2 and skip the W1 lessons.',
-                            expanded: false,
-                            dark: true,
-                            expandable: false,
-                            onTap: widget.onW1RulesCheck,
                           ),
                         if (widget.liveRoomTitle case final title?
                             when widget.selectedWorldId !=
