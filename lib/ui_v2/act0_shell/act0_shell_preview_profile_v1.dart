@@ -18,7 +18,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
         : _fixedMistakes().isEmpty
         ? base.fixedMistakes
         : _fixedMistakes();
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -65,7 +65,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
     Act0ProfileStateV1 base,
     _Act0ProgressSnapshotV1 progress,
   ) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -124,8 +124,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
     return Act0ProfileStateV1(
       playerName: base.playerName,
       level: 'Level ${progress.level}',
-      xpLine:
-          '${progress.xp} / ${(widget.state ?? Act0ShellStateV1.sample).xpTarget} XP',
+      xpLine: '${progress.xp} / ${_catalogStateV1.xpTarget} XP',
       lessonsLine: '$completedCount of $totalTasks tasks complete',
       accuracyLine: accuracy,
       qualityLine: qualityLine,
@@ -473,7 +472,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
                   : ''),
       );
     }
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final lessonId = entry?.lessonId ?? record?.lessonId ?? '';
     final lesson = state.lessonById(lessonId);
     final task = lesson.taskList.firstWhere(
@@ -871,8 +870,7 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
   }
 
   List<Act0LessonCardV1> _allLessons() => [
-    for (final world in (widget.state ?? Act0ShellStateV1.sample).worlds)
-      ...world.lessons,
+    for (final world in _catalogStateV1.worlds) ...world.lessons,
   ];
 
   Act0LessonCardV1? _lessonForTaskId(String taskId) {

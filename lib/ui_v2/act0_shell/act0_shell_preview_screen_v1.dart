@@ -1708,7 +1708,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   Map<String, Object?>? debugNextUsefulHandTargetPayloadV1() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -1735,7 +1735,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   Map<String, Object?> debugNextUsefulHandCopyBridgePayloadV1() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -1758,7 +1758,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   String? debugHomeNextUsefulHandReasonLineV1() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final selectedWorld = _worldById(
       _progressedWorlds(state),
       _selectedWorldId,
@@ -1821,9 +1821,24 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticScore = 0;
   bool _isRuLocaleV1 = false;
 
+  bool get _nineSeatPreviewEnabledV1 =>
+      Act0NineSeatDebugScopeV1.enabledOf(context, listen: false);
+
+  Act0ShellStateV1 get _catalogStateV1 =>
+      widget._state?.forLearners(nineSeatPreview: _nineSeatPreviewEnabledV1) ??
+      Act0ShellStateV1.learnerCatalog(
+        nineSeatPreview: _nineSeatPreviewEnabledV1,
+      );
+
+  bool _runnerAllowedByNineSeatGateV1(Act0RunnerStateV1 runner) =>
+      !act0RunnerRequiresNineSeatPreviewV1(runner) ||
+      (_nineSeatPreviewEnabledV1 &&
+          act0RunnerSupportsNineSeatPreviewV1(runner));
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    Act0NineSeatDebugScopeV1.enabledOf(context);
     // Runs after initState and again when MaterialApp changes locale.
     _isRuLocaleV1 = Localizations.localeOf(context).languageCode == 'ru';
   }
@@ -1924,7 +1939,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   bool get _usesPersistedProgress =>
       widget.debugHarnessEntry == null &&
-      (widget.state == null ||
+      (widget._state == null ||
           (kDebugMode && widget.debugPersistFixtureProgress));
 
   @override
@@ -1955,7 +1970,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _welcomeHandoffStartsRecommendedTaskV1 = false;
     _bootSurfaceReady = false;
     _showPlayHub = widget.initialTab != Act0ShellTabV1.play;
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     _selectedWorldId = state.selectedWorldId;
     _selectedLessonId = state.currentLesson.lessonId;
     _learnDetailLessonId = null;
@@ -1987,7 +2002,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       return;
     }
     final bootstrap = _bootstrapFirstStartRouteV1();
-    if (act0GrowthSupportedV1 && widget.state == null) {
+    if (act0GrowthSupportedV1 && widget._state == null) {
       unawaited(_registerGrowthLinksV1(bootstrap));
     }
   }
@@ -2031,9 +2046,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   void _syncPracticeReminderV1() {
     if (!Act0PracticeReminderV1.isSupported) return;
     _ensureDailyCountDayV1();
-    final canPractice = _dailyDeckEntries(
-      widget.state ?? Act0ShellStateV1.sample,
-    ).isNotEmpty;
+    final canPractice = _dailyDeckEntries(_catalogStateV1).isNotEmpty;
     final done =
         _dailyCompletedRepCount >= 3 ||
         (_dailyPracticeQueue.taskIds.isNotEmpty &&
@@ -2090,8 +2103,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               betaActivity != null &&
               todayBetaDay != null) {
             final validLessonIds = <String>{
-              for (final world
-                  in (widget.state ?? Act0ShellStateV1.sample).worlds)
+              for (final world in _catalogStateV1.worlds)
                 for (final lesson in world.lessons) lesson.lessonId,
             };
             _ensureDailyCountDayV1();
@@ -2181,7 +2193,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required String lessonId,
     required String taskId,
   }) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     for (final world in state.learningSections) {
       if (world.worldId != worldId) continue;
       for (final lesson in world.lessons) {
@@ -2976,7 +2988,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ),
       );
     }
-    final baseState = widget.state ?? Act0ShellStateV1.sample;
+    final baseState = _catalogStateV1;
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
@@ -3068,7 +3080,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : null;
     final isPlayRunner =
         playSelectedTask != null &&
-        !act0RunnerRequiresNineSeatPreviewV1(playSelectedTask.runner) &&
+        _runnerAllowedByNineSeatGateV1(playSelectedTask.runner) &&
         !_showPlayHub &&
         _blockCompletionSummary == null;
     final multiStreet = playSelectedTask?.multiStreet;
@@ -5047,10 +5059,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         // closes the repair, but cannot grant the
                                         // future lesson's completion or normal XP.
                                         final curriculumWorld = _worldById(
-                                          _progressedWorlds(
-                                            widget.state ??
-                                                Act0ShellStateV1.sample,
-                                          ),
+                                          _progressedWorlds(_catalogStateV1),
                                           _selectedWorldId,
                                         );
                                         final curriculumLesson = _lessonById(
@@ -5625,7 +5634,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     if (tab == Act0ShellTabV1.home &&
         !_worldById(
-          _progressedWorlds(widget.state ?? Act0ShellStateV1.sample),
+          _progressedWorlds(_catalogStateV1),
           _selectedWorldId,
         ).isSelectable) {
       _restoreSelectableLearnFocusV1();
@@ -5651,7 +5660,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   @visibleForTesting
   Map<String, String> debugSummaryHomeHandoffPayloadV1() {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final world = _worldById(_progressedWorlds(state), _selectedWorldId);
     return _summaryHomeHandoffV1(world).toPayload();
   }

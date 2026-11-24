@@ -43,7 +43,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   }) {
     final lesson = _lessonById(selectedWorld.lessons, lessonId);
     final task = _taskById(lesson, taskId);
-    if (act0RunnerRequiresNineSeatPreviewV1(task.runner)) return false;
+    if (!_runnerAllowedByNineSeatGateV1(task.runner)) return false;
     final drillBypass =
         allowDrillBypass && task.phase == Act0LessonPhaseV1.drill;
     final repairBypass =
@@ -115,7 +115,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   }
 
   Act0WorldCardV1? _dueReviewTargetWorldV1(Act0DueReviewItemV1 item) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     for (final world in state.worlds) {
       if (world.worldId != item.worldId) continue;
       for (final lesson in world.lessons) {
@@ -1715,10 +1715,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     // Retain the lesson cursor and its Review obligation while the learner
     // revisits an already completed example. The optional attempt is unscored.
     _lessonExampleSourceTaskIdV1 = sourceTaskId;
-    final world = _worldById(
-      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
-      target.worldId,
-    );
+    final world = _worldById(_progressWorlds(_catalogStateV1), target.worldId);
     if (!_startTaskByIds(
       world,
       target.lessonId,
@@ -1752,10 +1749,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   void _continueAfterRepeatedLessonMissV1(String sourceTaskId) {
     final source = _mistakeRecords[sourceTaskId];
     if (source == null) return;
-    final world = _worldById(
-      _progressWorlds(widget.state ?? Act0ShellStateV1.sample),
-      source.worldId,
-    );
+    final world = _worldById(_progressWorlds(_catalogStateV1), source.worldId);
     final lesson = _lessonById(world.lessons, source.lessonId);
     if (!_completedTaskIds.contains(sourceTaskId)) {
       _skippedTaskIds.add(sourceTaskId);

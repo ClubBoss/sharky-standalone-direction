@@ -195,7 +195,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
 
   void _applyDebugWave2FreshLearnerStateV1() {
     _resetDebugSurfaceChrome();
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final world = state.worldById('world_1');
     final lesson = world.lessons.first;
     _selectedWorldId = world.worldId;
@@ -230,7 +230,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
   void _applyDebugWave2ProgressedLearnerStateV1() {
     _applyDebugWave2FreshLearnerStateV1();
     _debugFreshLearnerV1 = false;
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final world = state.worldById('world_1');
     final completedLesson = world.lessons.first;
     final nextLesson = world.lessons[1];

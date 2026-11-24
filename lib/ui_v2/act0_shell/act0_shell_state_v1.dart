@@ -2,6 +2,7 @@ import 'act0_action_reason_v1.dart';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart' as solver;
 
@@ -39,12 +40,16 @@ part 'act0_shell_lessons_w19_w20_v1.dart';
 part 'act0_shell_lessons_w21_w22_v1.dart';
 part 'act0_shell_lessons_w23_w24_v1.dart';
 part 'act0_shell_lessons_b19_v1.dart';
+part 'act0_shell_lessons_ninemax_v1.dart';
 part 'act0_shell_lessons_live_room_v1.dart';
 part 'act0_shell_runners_part1_v1.dart';
 part 'act0_shell_runners_part2_v1.dart';
 part 'act0_shell_runners_part3_v1.dart';
 part 'act0_shell_runners_part4_v1.dart';
 part 'act0_y5d_lesson_tasks_v1.dart';
+
+const act0NineSeatDebugEnabledV1 =
+    kDebugMode && bool.fromEnvironment('tableNineSeatV1');
 
 const act0LiveRoomModuleIdV1 = 'live_room_v1';
 
@@ -249,13 +254,27 @@ class Act0ShellStateV1 {
   double get xpProgress => xpTarget <= 0 ? 0 : (xp / xpTarget).clamp(0, 1);
 
   /// The normal Act0 entry uses the route-safe view of the authored catalog.
-  static final sample = authoredCatalog.forLearners();
+  static final sample = learnerCatalog();
+  static final _learnerSixSeatCatalog = catalog(
+    nineSeatPreview: false,
+  ).forLearners();
+  static final _learnerNineSeatCatalog = catalog(
+    nineSeatPreview: true,
+  ).forLearners(nineSeatPreview: true);
 
-  Act0ShellStateV1 forLearners() {
+  static Act0ShellStateV1 learnerCatalog({
+    bool nineSeatPreview = act0NineSeatDebugEnabledV1,
+  }) => kDebugMode && nineSeatPreview
+      ? _learnerNineSeatCatalog
+      : _learnerSixSeatCatalog;
+
+  Act0ShellStateV1 forLearners({bool nineSeatPreview = false}) {
     final routedLessons = <Act0LessonCardV1, Act0LessonCardV1?>{};
     Act0LessonCardV1? admitted(Act0LessonCardV1 lesson) {
       if (routedLessons.containsKey(lesson)) return routedLessons[lesson];
-      return routedLessons[lesson] = lesson._forLearners();
+      return routedLessons[lesson] = lesson._forLearners(
+        kDebugMode && nineSeatPreview,
+      );
     }
 
     final projectedWorlds = <Act0WorldCardV1>[];
@@ -306,15 +325,30 @@ class Act0ShellStateV1 {
   }
 
   static final authoredCatalog = catalog();
-  static final _numberedCatalog = _buildCatalog(null);
-  static final _catalogWithLiveRoom = _buildCatalog(_act0LiveRoomV1);
+  static final _numberedCatalog = _buildCatalog(null, _act0PreviewWorlds);
+  static final _catalogWithLiveRoom = _buildCatalog(
+    _act0LiveRoomV1,
+    _act0PreviewWorlds,
+  );
+  static final _nineSeatCatalog = _buildCatalog(null, _act0NineSeatWorldsV1);
+  static final _nineSeatCatalogWithLiveRoom = _buildCatalog(
+    _act0LiveRoomV1,
+    _act0NineSeatWorldsV1,
+  );
 
   static Act0ShellStateV1 catalog({
     bool liveRoomV1 = const bool.fromEnvironment('liveRoomV1'),
-  }) => liveRoomV1 ? _catalogWithLiveRoom : _numberedCatalog;
+    bool nineSeatPreview = act0NineSeatDebugEnabledV1,
+  }) => switch ((liveRoomV1, kDebugMode && nineSeatPreview)) {
+    (true, true) => _nineSeatCatalogWithLiveRoom,
+    (false, true) => _nineSeatCatalog,
+    (true, false) => _catalogWithLiveRoom,
+    (false, false) => _numberedCatalog,
+  };
 
   static Act0ShellStateV1 _buildCatalog(
     Act0WorldCardV1? liveRoom,
+    List<Act0WorldCardV1> worlds,
   ) => Act0ShellStateV1(
     courseTitle: 'Poker from Zero',
     courseSubtitle: 'Learn the table one clear decision at a time.',
@@ -326,9 +360,9 @@ class Act0ShellStateV1 {
     dailyGoalValue: '5 minutes today',
     pathProgressLabel: '4 of 10 lessons complete',
     selectedWorldId: 'world_1',
-    worlds: _act0PreviewWorlds,
+    worlds: worlds,
     liveRoom: liveRoom,
-    lessons: _act0PreviewWorlds.first.lessons,
+    lessons: worlds.first.lessons,
     review: Act0ReviewStateV1(
       title: 'What to fix next',
       subtitle: 'Clean up one decision before moving on.',
@@ -499,19 +533,19 @@ class Act0LessonCardV1 {
   List<Act0LessonTaskV1> get courseTaskList =>
       taskList.where((task) => !task.repairOnly).toList(growable: false);
 
-  Act0LessonCardV1? _forLearners() {
+  Act0LessonCardV1? _forLearners(bool nineSeatPreview) {
+    bool supportsTable(Act0RunnerStateV1 value) =>
+        value.supportsLearnerTable ||
+        (nineSeatPreview && act0RunnerSupportsNineSeatPreviewV1(value));
     final all = taskList;
-    final visible = all
-        .where((task) => task.runner.supportsLearnerTable)
-        .toList();
-    if (visible.length == all.length && runner.supportsLearnerTable)
-      return this;
+    final visible = all.where((task) => supportsTable(task.runner)).toList();
+    if (visible.length == all.length && supportsTable(runner)) return this;
     final firstCourseTask = visible
         .where((task) => !task.repairOnly)
         .firstOrNull;
     if (firstCourseTask == null) return null;
     return copyWith(
-      runner: runner.supportsLearnerTable ? runner : firstCourseTask.runner,
+      runner: supportsTable(runner) ? runner : firstCourseTask.runner,
       tasks: List.unmodifiable(visible),
     );
   }
@@ -734,6 +768,13 @@ bool act0RunnerRequiresNineSeatPreviewV1(Act0RunnerStateV1 runner) =>
     runner.teachingSteps.any(
       (step) =>
           step.table != null && act0RequiresNineSeatPreviewV1(step.table!),
+    );
+
+bool act0RunnerSupportsNineSeatPreviewV1(Act0RunnerStateV1 runner) =>
+    act0RunnerRequiresNineSeatPreviewV1(runner) &&
+    act0TableSeatCountV1(runner.table) <= 9 &&
+    runner.teachingSteps.every(
+      (step) => step.table == null || act0TableSeatCountV1(step.table!) <= 9,
     );
 
 class Act0RunnerStateV1 {

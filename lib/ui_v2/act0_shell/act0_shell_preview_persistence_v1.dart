@@ -92,7 +92,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     if (parsed == null) {
       return;
     }
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final validTaskIds = <String>{
       for (final world in state.learningSections)
         for (final lesson in world.lessons)
@@ -250,7 +250,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         selectedLesson.courseTaskList.any(
               (task) =>
                   task.taskId == parsed.selectedTaskId &&
-                  !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+                  _runnerAllowedByNineSeatGateV1(task.runner),
             ) &&
             !closedTaskIds.contains(parsed.selectedTaskId)
         ? _taskByIdWithTaskIds(
@@ -857,7 +857,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     required String taskId,
     required String diagnosticVariantId,
   }) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     final tasks = [
       for (final world in state.worlds)
         if (world.worldId == worldId)
@@ -906,10 +906,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
   bool _startDiagnosticLearningEntryV1(Act0RepairIntentV1 intent) {
     final entry = _diagnosticLearningEntryForIntentV1(intent);
     if (entry == null) return false;
-    final world = _worldById(
-      (widget.state ?? Act0ShellStateV1.sample).worlds,
-      entry.targetWorldId,
-    );
+    final world = _worldById(_catalogStateV1.worlds, entry.targetWorldId);
     _startTaskByIds(
       world,
       entry.targetLessonId,

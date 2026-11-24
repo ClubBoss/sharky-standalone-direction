@@ -64,7 +64,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       _lessonRunXp += selectedTask.rewardXp;
     }
     _refreshRetentionMemoryStatusesV1();
-    final worlds = _progressWorlds(widget.state ?? Act0ShellStateV1.sample);
+    final worlds = _progressWorlds(_catalogStateV1);
     final world = _worldById(worlds, _selectedWorldId);
     final lesson = _lessonById(world.lessons, _selectedLessonId);
     if (_markLessonCompletedV1(lesson)) {
@@ -259,9 +259,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     if (_nextTask(selectedLesson, _selectedTaskId) != null) {
       return false;
     }
-    final progressedWorlds = _progressWorlds(
-      widget.state ?? Act0ShellStateV1.sample,
-    );
+    final progressedWorlds = _progressWorlds(_catalogStateV1);
     final progressedWorld = _worldById(progressedWorlds, selectedWorld.worldId);
     final nextLessonId = _nextLessonId(
       selectedWorld.lessons,
@@ -359,22 +357,19 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       taskCount: assessedTaskIds.length,
       correctCount: assessedCorrectCount,
       startLevel: _progressSnapshot(
-        widget.state ?? Act0ShellStateV1.sample,
+        _catalogStateV1,
         earnedXpDelta: _earnedXp - _lessonRunXp,
       ).level,
       endLevel: _progressSnapshot(
-        widget.state ?? Act0ShellStateV1.sample,
+        _catalogStateV1,
         earnedXpDelta: _earnedXp,
       ).level,
       startXp: _progressSnapshot(
-        widget.state ?? Act0ShellStateV1.sample,
+        _catalogStateV1,
         earnedXpDelta: _earnedXp - _lessonRunXp,
       ).xp,
-      endXp: _progressSnapshot(
-        widget.state ?? Act0ShellStateV1.sample,
-        earnedXpDelta: _earnedXp,
-      ).xp,
-      xpTarget: (widget.state ?? Act0ShellStateV1.sample).xpTarget,
+      endXp: _progressSnapshot(_catalogStateV1, earnedXpDelta: _earnedXp).xp,
+      xpTarget: _catalogStateV1.xpTarget,
       sharkyLine: selectedTask.runner.sharky.summaryLine,
       nextLessonTitle: nextLessonId == null
           ? null
@@ -492,7 +487,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
             _lessonRunEvidenceBoundariesV1[_selectedLessonId];
       } else {
         final taskIds = <String>[
-          for (final world in (widget.state ?? Act0ShellStateV1.sample).worlds)
+          for (final world in _catalogStateV1.worlds)
             for (final lesson in world.lessons)
               if (lesson.lessonId == _selectedLessonId)
                 for (final task in lesson.taskList) task.taskId,
@@ -550,9 +545,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       return;
     }
 
-    final progressedWorlds = _progressWorlds(
-      widget.state ?? Act0ShellStateV1.sample,
-    );
+    final progressedWorlds = _progressWorlds(_catalogStateV1);
     var nextWorld = _worldById(progressedWorlds, selectedWorld.worldId);
     var nextLesson = _firstPlayableLesson(nextWorld);
     if (nextWorld.status == Act0WorldStateV1.completed) {
@@ -647,7 +640,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     final taskExists = normalizedLesson.taskList.any(
       (task) =>
           task.taskId == _selectedTaskId &&
-          !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+          _runnerAllowedByNineSeatGateV1(task.runner),
     );
     final normalizedTask =
         taskExists ||
@@ -717,7 +710,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     Set<String> completedTaskIds,
   ) {
     final eligible = lesson.courseTaskList.where(
-      (task) => !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+      (task) => _runnerAllowedByNineSeatGateV1(task.runner),
     );
     return eligible.firstWhere(
       (task) => !completedTaskIds.contains(task.taskId),
@@ -728,8 +721,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   bool _taskAvailable(Act0LessonCardV1 lesson, String taskId) {
     if (!lesson.courseTaskList.any(
       (task) =>
-          task.taskId == taskId &&
-          !act0RunnerRequiresNineSeatPreviewV1(task.runner),
+          task.taskId == taskId && _runnerAllowedByNineSeatGateV1(task.runner),
     )) {
       return false;
     }
@@ -776,7 +768,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
 
   Act0LessonTaskV1? _nextTask(Act0LessonCardV1 lesson, String taskId) {
     final tasks = lesson.courseTaskList
-        .where((task) => !act0RunnerRequiresNineSeatPreviewV1(task.runner))
+        .where((task) => _runnerAllowedByNineSeatGateV1(task.runner))
         .toList();
     final index = tasks.indexWhere((task) => task.taskId == taskId);
     if (index >= 0 && index + 1 < tasks.length) {
@@ -820,7 +812,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
   }
 
   void _closeTaskWithoutRewardV1(String taskId) {
-    final state = widget.state ?? Act0ShellStateV1.sample;
+    final state = _catalogStateV1;
     for (final world in _progressWorlds(state)) {
       for (final lesson in world.lessons) {
         if (!lesson.taskList.any((task) => task.taskId == taskId)) {
