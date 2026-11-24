@@ -165,18 +165,18 @@ Act0TableStateV1? act0VerifiedReplayTableV1(
     return null;
   }
   final hand = task.multiStreet;
-  final table = hand == null
-      ? task.runner.table
+  final candidates = hand == null
+      ? [task.runner.table]
       : hand.decisions
             .where(
               (decision) => decision.options.any(
                 (option) => option.id == record.choiceId,
               ),
             )
-            .firstOrNull
-            ?.table;
-  if (table == null) return null;
-  return act0ReplayTableFingerprintV1(table) == tableFingerprint ? table : null;
+            .map((decision) => decision.table);
+  return candidates
+      .where((table) => act0ReplayTableFingerprintV1(table) == tableFingerprint)
+      .firstOrNull;
 }
 
 /// Full semantic revision of the actual existing diagnostic factory output.

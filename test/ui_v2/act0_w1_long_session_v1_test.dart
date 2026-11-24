@@ -1366,7 +1366,7 @@ void _registerFocusedCases() {
       expect(
         find.descendant(
           of: wrongRow,
-          matching: find.textContaining(' · Incorrect'),
+          matching: find.textContaining(' · Wrong'),
         ),
         findsOneWidget,
       );
@@ -1429,7 +1429,7 @@ void _registerFocusedCases() {
       expect(
         find.descendant(
           of: fixedRow,
-          matching: find.textContaining(' · Fixed'),
+          matching: find.textContaining(' · Repaired'),
         ),
         findsOneWidget,
       );
@@ -1464,12 +1464,20 @@ void _registerFocusedCases() {
           taskId: 'visible_king_combo_reduction_intro',
         );
         await _mount(t);
-        await openArchive(t);
+        expect(
+          await _tapFirst(t, [find.byKey(const Key('act0_shell_nav_review'))]),
+          isTrue,
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_review_open_own_hands')),
+          ]),
+          isTrue,
+        );
         Future<void> tap(String label) async {
           expect(await _tapFirst(t, [find.text(label)]), isTrue, reason: label);
         }
 
-        await tap('Own hands');
         await tap('Import own hand');
         final fixture = File(
           'test/fixtures/hand_history/pokerstars_nlhe_usd_fold.txt',
@@ -1490,22 +1498,18 @@ void _registerFocusedCases() {
         await tap('Import hand');
         expect(find.text('Own hand · PokerStars'), findsOneWidget);
         expect(find.text('Betting decisions · Call price'), findsOneWidget);
-        expect(find.text('Step 0 of 9'), findsOneWidget);
+        expect(find.text('Start · 1 of 9'), findsOneWidget);
         final summary = t
             .widget<Act0AttemptReplayScreenV1>(
               find.byType(Act0AttemptReplayScreenV1),
             )
             .streetSummary;
-        if (act0StreetSummaryPreviewV1) {
-          expect(summary!.heroSeat, '1');
-          expect(summary.streets, isEmpty);
-          final frame = summary.frameAt(PokerStreet.preflop)!;
-          expect(frame.potBb, closeTo(2, 1e-9));
-          expect(frame.stacksBb, {'1': 99.0, '2': 99.0});
-          expect(frame.foldedSeats, {'2'});
-        } else {
-          expect(summary, isNull);
-        }
+        expect(summary!.heroSeat, '1');
+        expect(summary.streets, isEmpty);
+        final frame = summary.frameAt(PokerStreet.preflop)!;
+        expect(frame.potBb, closeTo(2, 1e-9));
+        expect(frame.stacksBb, {'1': 99.0, '2': 99.0});
+        expect(frame.foldedSeats, {'2'});
         await tap('Next');
         expect(find.textContaining('Button: seat 1.'), findsOneWidget);
         await tap('Next');
@@ -1551,8 +1555,16 @@ void _registerFocusedCases() {
           }),
         });
         await _mount(t);
-        await openArchive(t);
-        await tap('Own hands');
+        expect(
+          await _tapFirst(t, [find.byKey(const Key('act0_shell_nav_review'))]),
+          isTrue,
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_review_open_own_hands')),
+          ]),
+          isTrue,
+        );
         expect(find.text('Replay hand'), findsOneWidget);
         await tap('Replay hand');
         expect(find.text('Own hand · PokerStars'), findsOneWidget);
@@ -1566,8 +1578,16 @@ void _registerFocusedCases() {
           'w4_good_price_call',
         );
         await _mount(t);
-        await openArchive(t);
-        await tap('Own hands');
+        expect(
+          await _tapFirst(t, [find.byKey(const Key('act0_shell_nav_review'))]),
+          isTrue,
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_review_open_own_hands')),
+          ]),
+          isTrue,
+        );
         await tap('Remove own hand');
         await tap('Cancel');
         expect(find.text('Replay hand'), findsOneWidget);
@@ -1581,8 +1601,16 @@ void _registerFocusedCases() {
           saved['learningEvidenceHistory'],
         );
         await _mount(t);
-        await openArchive(t);
-        await tap('Own hands');
+        expect(
+          await _tapFirst(t, [find.byKey(const Key('act0_shell_nav_review'))]),
+          isTrue,
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_review_open_own_hands')),
+          ]),
+          isTrue,
+        );
         expect(find.text('No saved own hands.'), findsOneWidget);
       },
     );
@@ -1626,14 +1654,10 @@ void _registerFocusedCases() {
         attempt: attempt,
         onClose: () {},
       );
-      final replaySummary = replay.streetSummary;
-      if (act0StreetSummaryPreviewV1) {
-        expect(replaySummary!.heroSeat, taskSummary!.heroSeat);
-        expect(replaySummary.streets.map((row) => row.potAfterBb), [6, 10]);
-        expect(replaySummary.frameAt(PokerStreet.turn), isNull);
-      } else {
-        expect(replaySummary, isNull);
-      }
+      final replaySummary = replay.streetSummary!;
+      expect(replaySummary.heroSeat, prefix.heroSeat);
+      expect(replaySummary.streets.map((row) => row.potAfterBb), [6, 10]);
+      expect(replaySummary.frameAt(PokerStreet.turn), isNull);
       expect(attempt.events.map((event) => event.label), [
         ...runner.table.actionTrail.map((event) => event.label),
         'Your choice: ${attempt.choiceLabel}',
@@ -1718,7 +1742,7 @@ void _registerFocusedCases() {
         isTrue,
       );
       expect(
-        find.text('Step 0 of ${(entry['events'] as List).length}'),
+        find.text('Start · 1 of ${(entry['events'] as List).length}'),
         findsOneWidget,
       );
       expect(

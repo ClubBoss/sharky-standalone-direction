@@ -320,7 +320,20 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
   }
 
   String? _repairIntentSurfaceCopyLineV1(String sourceTaskId) {
+    final record = _mistakeRecords[sourceTaskId];
     final intent = _openRepairIntentBySourceTaskId[sourceTaskId];
+    final occurrence = intent?.repairOccurrenceId ?? '';
+    final attempt = _attemptArchiveV1.attempts.where((attempt) {
+      final evidence = attempt.evidence;
+      return record != null &&
+          !evidence.isCorrect &&
+          (occurrence.isEmpty || attempt.id == occurrence) &&
+          evidence.worldId == record.worldId &&
+          evidence.lessonId == record.lessonId &&
+          evidence.taskId == record.taskId &&
+          evidence.choiceId == record.selectedOptionId;
+    }).firstOrNull;
+    if (attempt?.reflection.openedClue case final clue?) return clue.text;
     if (intent != null && !_hasValidatedRepairTargetV1(intent)) {
       return 'Mistake saved for another try';
     }

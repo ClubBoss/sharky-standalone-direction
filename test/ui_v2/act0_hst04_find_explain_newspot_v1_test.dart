@@ -149,7 +149,7 @@ void main() {
       attempt.actionReason!.toPayload(),
     );
     final steps = attempt.events.length;
-    expect(find.text('Step 0 of $steps'), findsOneWidget);
+    expect(find.text('Start · 1 of $steps'), findsOneWidget);
     expect(
       steps,
       inInclusiveRange(1, 40),

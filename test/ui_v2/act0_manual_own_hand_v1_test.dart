@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -153,6 +154,7 @@ void main() {
             body: StatefulBuilder(
               builder: (context, setState) => Act0AttemptArchiveScreenV1(
                 archive: archive,
+                ownHands: true,
                 onClose: () {},
                 onSelect: (_) {},
                 onRemove: (_) {},
@@ -258,7 +260,6 @@ void main() {
         ),
       ];
 
-      await tap(find.text('Own hands'));
       await tap(find.text('Enter own hand'));
       for (final (label, value) in [
         ('Seat 1 stack', '1000'),
@@ -314,10 +315,23 @@ void main() {
       final replay = find.byType(Act0AttemptReplayScreenV1);
       expect(t.widget<Act0AttemptReplayScreenV1>(replay).hand, same(saved));
       expect(find.text('Own hand · Manual entry'), findsOneWidget);
+      final table = find.byType(Act0TableSceneV1);
+      expect(t.widget<Act0TableSceneV1>(table).table.boardCards, isEmpty);
+      expect(t.widget<Act0TableSceneV1>(table).table.heroCards, isEmpty);
       await tap(find.byKey(const Key('act0_attempt_replay_next')));
       final event = find.byKey(const Key('act0_attempt_replay_current_event'));
       await reveal(event);
       expect(t.widget<Text>(event).data, contains('Button: seat 1.'));
+
+      await tap(find.text('Flop'));
+      expect(
+        t
+            .widget<Act0TableSceneV1>(table)
+            .table
+            .boardCards
+            .map((card) => card.label),
+        ['Ah', 'Tc', '4d'],
+      );
 
       await tap(find.byKey(const Key('act0_attempt_replay_back_to_archive')));
       await tap(find.text('Edit hand'));

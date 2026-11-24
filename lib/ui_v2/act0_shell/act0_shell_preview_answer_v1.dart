@@ -579,21 +579,26 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     }
     _resolvedMistakeTaskIds.remove(repairSourceTaskId);
     final previous = _mistakeRecords[repairSourceTaskId];
+    // A miss on a mapped repair belongs to the target journal. Preserve
+    // the original decision and clue on the source card.
+    final source = selectedTask.taskId != repairSourceTaskId ? previous : null;
     _mistakeRecords[repairSourceTaskId] = _Act0MistakeRecordV1(
       taskId: repairSourceTaskId,
       lessonId: repairSourceLessonId,
       worldId: repairSourceWorldId,
       title: previous?.title ?? _localizedTaskTitleV1(selectedTask),
       weaknessLabel: category,
-      selectedOptionId: option.id,
-      selectedLabel: option.label,
-      betterLabel: option.betterAnswerLabel,
-      reason: _hardenMistakeReason(
-        rawReason: option.feedbackReason,
-        betterLabel: option.betterAnswerLabel,
-        contextLabels: contextLabels,
-      ),
-      contextLabels: contextLabels,
+      selectedOptionId: source?.selectedOptionId ?? option.id,
+      selectedLabel: source?.selectedLabel ?? option.label,
+      betterLabel: source?.betterLabel ?? option.betterAnswerLabel,
+      reason:
+          source?.reason ??
+          _hardenMistakeReason(
+            rawReason: option.feedbackReason,
+            betterLabel: option.betterAnswerLabel,
+            contextLabels: contextLabels,
+          ),
+      contextLabels: source?.contextLabels ?? contextLabels,
       repairActionLabel:
           _activeRepairTaskId == selectedTask.taskId &&
               _activeRepairSourceTaskId != null &&
@@ -1865,6 +1870,12 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   ) {
     if (option.repairFocusLabels.isNotEmpty) {
       return option.repairFocusLabels;
+    }
+    // A teaching scene's table banner describes the setup, not the clue
+    // asked by the decision (for example, private cards versus BTN).
+    if (runner.table.scope == Act0TableScopeV1.orientation &&
+        runner.hint.trim().isNotEmpty) {
+      return [runner.hint];
     }
     return <String>[
       if (runner.table.centerLabel.isNotEmpty) runner.table.centerLabel,

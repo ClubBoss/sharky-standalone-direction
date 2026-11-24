@@ -1,5 +1,6 @@
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -63,7 +64,10 @@ Act0ArchivedAttemptV1 _attempt(int n) =>
       choiceLabel: "Call",
     )!;
 
-Act0ArchivedAttemptV1 _verifiedAttempt({bool tampered = false}) {
+Act0ArchivedAttemptV1 _verifiedAttempt({
+  bool tampered = false,
+  int number = 1,
+}) {
   final lesson = Act0ShellStateV1.sample.worlds
       .singleWhere((world) => world.worldId == 'world_4')
       .lessons
@@ -76,8 +80,9 @@ Act0ArchivedAttemptV1 _verifiedAttempt({bool tampered = false}) {
     task: task,
   )!;
   return Act0ArchivedAttemptV1.fromRecordedDecision(
-    _evidence(1, revision: revision, callIsCorrect: true),
+    _evidence(number, revision: revision, callIsCorrect: true),
     tableFingerprint: act0ReplayTableFingerprintV1(table),
+    timelineSnapshot: table.handTimelinePrefix,
     recordedTrail: [
       if (tampered) const Act0ActionTrailItemV1(label: 'BTN bets 500 BB'),
       ...table.actionTrail,
@@ -106,7 +111,6 @@ void main() {
     expect(view.atArchiveRoot, isTrue);
     expect(view.query, 'unmatched');
 
-    view.showOwnHands = true;
     final hand = archive
         .importPokerStars(
           File(
@@ -118,9 +122,150 @@ void main() {
     view.replayingHand = hand;
     view.backToParent();
     expect(view.replayingHand, isNull);
-    expect(view.showOwnHands, isTrue);
-    view.backToParent();
     expect(view.atArchiveRoot, isTrue);
+  });
+
+  test('private-cards miss keeps its saved question and clue', () {
+    const taskId = 'what_poker_is_find_hero';
+    const lessonId = 'what_poker_is';
+    const worldId = 'world_1';
+    final source = Act0ShellStateV1.sample;
+    final task = source
+        .worldById(worldId)
+        .lessons
+        .singleWhere((lesson) => lesson.lessonId == lessonId)
+        .taskList
+        .singleWhere((task) => task.taskId == taskId);
+    final miss = task.runner.options.singleWhere(
+      (option) => option.id == 'random',
+    );
+    final revision = act0AuthoredSourceFingerprintV1(
+      worldId: worldId,
+      lessonId: lessonId,
+      task: task,
+    )!;
+    final history = const Act0ReviewMistakeHistoryV1().appendCompletedDecision(
+      Act0CompletedDecisionV1(
+        attemptKey: 'private-cards-miss',
+        worldId: worldId,
+        lessonId: lessonId,
+        taskId: taskId,
+        sourceTaskId: taskId,
+        decisionKind: Act0CompletedDecisionKindV1.actionList,
+        selectedId: miss.id,
+        expectedId: 'bottom',
+        isCorrect: false,
+        decisionTimeBucket: 'unknown',
+        taskFamily: task.resolvedTaskFamily,
+        resultKind: 'incorrect',
+        errorType: 'confused_table_identity',
+        skillAtomId: 'table_position_read',
+        repairFocusId: 'hero_button',
+      ),
+    );
+    final evidence = Act0LearningEvidenceRecordV1(
+      recordId: 'private-cards-miss',
+      createdOrder: 1,
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+      choiceId: miss.id,
+      expectedChoiceId: 'bottom',
+      isCorrect: false,
+      errorType: 'confused_table_identity',
+      repairFocusId: 'hero_button',
+      skillAtomId: 'table_position_read',
+      decisionTimeBucket: 'unknown',
+      resultKind: 'incorrect',
+      authoredSourceFingerprint: revision,
+      recordedAtUtc: _recorded,
+      assistanceKind: Act0DecisionAssistanceV1.quickHint,
+    );
+    final attempt = Act0ArchivedAttemptV1.fromRecordedDecision(
+      evidence,
+      taskLabel: task.runner.question,
+      reflection: const Act0AttemptReflectionV1(
+        openedClue: Act0CausalClueV1.sharedCards,
+      ),
+    )!;
+    final archive = Act0AttemptArchiveV1.restore(
+      const Act0AttemptArchiveV1.empty().add(attempt).toPayload(),
+    );
+    final item = Act0ReviewMistakeHistoryConsumerV1.fromHistory(
+      history,
+      sourceState: source,
+      attemptArchive: archive,
+    ).items.single;
+    expect(item.sourceTaskId, taskId);
+    expect(item.primaryLabel, 'Which cards belong to you alone?');
+    expect(item.detailLine, Act0CausalClueV1.sharedCards.text);
+    final goal = act0RepairGoalContractForSourceV1(
+      worldId: worldId,
+      lessonId: lessonId,
+      taskId: taskId,
+      choiceId: miss.id,
+    )!;
+    expect(goal.sourceQuestion, task.runner.question);
+    expect(goal.sourceChoiceLabel, miss.label);
+    expect(goal.learnerGoalLabel, 'Private and shared cards');
+  });
+
+  testWidgets('combines archive filters and requires confirmation to delete', (
+    tester,
+  ) async {
+    var archive = const Act0AttemptArchiveV1.empty()
+        .add(_attempt(1))
+        .add(_verifiedAttempt(number: 2));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, refresh) => Act0AttemptArchiveScreenV1(
+              archive: archive,
+              onClose: () {},
+              onSelect: (id) => refresh(() => archive = archive.select(id)),
+              onRemove: (id) => refresh(() => archive = archive.remove(id)),
+              onOwnHandsChanged: (_) {},
+            ),
+          ),
+        ),
+      ),
+    );
+    Future<void> tap(Finder finder) async {
+      await tester.ensureVisible(finder);
+      await tester.tap(finder);
+      await tester.pumpAndSettle();
+    }
+
+    final wrong = find.byKey(const Key('act0_attempt_archive_entry_attempt-1'));
+    final correct = find.byKey(
+      const Key('act0_attempt_archive_entry_attempt-2'),
+    );
+    await tap(find.text('World'));
+    await tap(find.text('World 4'));
+    await tap(find.text('Skill'));
+    await tap(find.text('Betting decisions'));
+    await tap(find.text('Outcome'));
+    await tap(find.text('Wrong'));
+    expect(wrong, findsOneWidget);
+    expect(correct, findsNothing);
+    await tester.enterText(
+      find.byKey(const Key('act0_attempt_archive_search')),
+      'missing',
+    );
+    await tester.pumpAndSettle();
+    expect(find.text('No matching attempts.'), findsOneWidget);
+    await tap(find.text('Clear filters'));
+    expect(correct, findsOneWidget);
+    await tap(wrong);
+    final remove = find.byKey(const Key('act0_attempt_archive_remove'));
+    await tap(remove);
+    await tap(find.text('Cancel'));
+    expect(archive.attempts, hasLength(2));
+    await tap(remove);
+    await tap(find.byKey(const Key('act0_attempt_archive_confirm_remove')));
+    expect(archive.attempts.single.id, 'attempt-2');
+    expect(wrong, findsNothing);
   });
 
   test(
@@ -358,7 +503,7 @@ void main() {
         final previous = find.byKey(const Key('act0_attempt_replay_previous'));
         final next = find.byKey(const Key('act0_attempt_replay_next'));
 
-        expect(find.text('Step 0 of 2'), findsOneWidget);
+        expect(find.text('Start · 1 of 2'), findsOneWidget);
         expect(tester.widget<TextButton>(previous).onPressed, isNull);
         expect(find.text('CO bets 2 BB'), findsNothing);
 
@@ -399,8 +544,36 @@ void main() {
       expect(find.text('Pause'), findsNothing);
       await tester.tap(find.text('Reset'));
       await tester.pump();
-      expect(find.text('Step 0 of 2'), findsOneWidget);
+      expect(find.text('Start · 1 of 2'), findsOneWidget);
       expect(find.text('CO bets 2 BB'), findsNothing);
+    });
+
+    testWidgets('street jump pauses replay and reveals only that board', (
+      tester,
+    ) async {
+      final attempt = _verifiedAttempt();
+      await mount(tester, attempt);
+      final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
+      expect(
+        projection.streetPositions.keys,
+        containsAll(['Preflop', 'Flop', 'Turn']),
+      );
+      await tester.tap(find.text('Play'));
+      await tester.pump();
+      final flop = find.text('Flop');
+      await tester.ensureVisible(flop);
+      await tester.tap(flop);
+      await tester.pump(const Duration(seconds: 2));
+      final table = tester
+          .widget<Act0TableSceneV1>(find.byType(Act0TableSceneV1))
+          .table;
+      expect(table.boardCards, hasLength(3));
+      final play = find.byKey(const Key('act0_attempt_replay_play_pause'));
+      await tester.ensureVisible(play);
+      expect(
+        find.descendant(of: play, matching: find.text('Play')),
+        findsOneWidget,
+      );
     });
 
     for (final reduceMotion in [false, true]) {
@@ -409,7 +582,8 @@ void main() {
         (tester) async {
           final attempt = _verifiedAttempt();
           await mount(tester, attempt, reduceMotion: reduceMotion);
-          expect(find.byType(Act0TableSceneV1), findsNothing);
+          expect(find.byType(Act0TableSceneV1), findsOneWidget);
+          await tester.ensureVisible(find.text('Play'));
           await tester.tap(find.text('Play'));
           final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
           final firstCommitment =
@@ -468,7 +642,7 @@ void main() {
       final attempt = _verifiedAttempt();
       final restored = Act0ArchivedAttemptV1.tryParse(attempt.toPayload())!;
       final projection = Act0AttemptReplayTableV1.fromAttempt(restored)!;
-      expect(projection.atPosition(0), isNull);
+      expect(projection.atPosition(0)!.table.boardCards, isEmpty);
       final frames = [
         for (var position = 1; position <= attempt.events.length; position++)
           if (projection.atPosition(position) case final frame?) frame.table,

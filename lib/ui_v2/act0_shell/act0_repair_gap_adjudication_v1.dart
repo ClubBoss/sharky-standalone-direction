@@ -1226,14 +1226,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     sourceCorrectChoiceId: "bottom",
     sourceFingerprint:
         "a181b1dcb91facb86b8088c045760b4aa53f1e41a2cb98476af6aefe74df5b6c",
-    sourceQuestion:
-        "Which label could change next hand while the player is still you?",
-    sourceChoiceReason:
-        "Your cards remain yours; BTN is the changing table role.",
-    sourceChoiceLabel: "Your private cards",
+    sourceQuestion: "Which cards belong to you alone?",
+    sourceChoiceReason: "The cards at the other seats belong to those players.",
+    sourceChoiceLabel: "The cards at the other seats",
     sourceChoiceQuality: "wrong",
-    goalId: "player_identity_and_seat_role",
-    misconceptionId: "seat_role_as_private_cards",
+    goalId: "shared_board_vs_private_cards",
+    misconceptionId: "other_players_cards_as_own",
     relationId: "selected_w1_002_random_v1",
   ),
   Act0RepairGoalContractV1(

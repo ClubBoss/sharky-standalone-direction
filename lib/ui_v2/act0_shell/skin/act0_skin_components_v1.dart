@@ -136,10 +136,14 @@ class Act0SkinChipV1 extends StatelessWidget {
     super.key,
     required this.label,
     this.tone = Act0SkinChipToneV1.brass,
+    this.onPressed,
+    this.selected = false,
   });
 
   final String label;
   final Act0SkinChipToneV1 tone;
+  final VoidCallback? onPressed;
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -148,7 +152,7 @@ class Act0SkinChipV1 extends StatelessWidget {
       Act0SkinChipToneV1.correct => (_T.okSoft, _T.ok),
       Act0SkinChipToneV1.neutral => (_T.raised, _T.muted),
     };
-    return Container(
+    final chip = Container(
       constraints: const BoxConstraints(minHeight: 26),
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
@@ -156,6 +160,18 @@ class Act0SkinChipV1 extends StatelessWidget {
         borderRadius: BorderRadius.circular(999),
       ),
       child: Text(label, style: _T.tag.copyWith(color: fg)),
+    );
+    if (onPressed == null) return chip;
+    return Semantics(
+      button: true,
+      selected: selected,
+      child: InkWell(
+        onTap: onPressed,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(minHeight: _T.minTouch),
+          child: Center(widthFactor: 1, child: chip),
+        ),
+      ),
     );
   }
 }
@@ -408,37 +424,216 @@ class Act0SkinSheetHeaderV1 extends StatelessWidget {
 }
 
 /// Archive-style selectable row. Selection and ordering belong to the caller.
+enum Act0SkinListRowKindV1 { pattern, retry, hand, destructive }
+
 class Act0SkinListRowV1 extends StatelessWidget {
   const Act0SkinListRowV1({
     super.key,
     required this.title,
-    required this.subtitle,
-    required this.expanded,
+    this.subtitle,
+    this.expanded,
     required this.onTap,
     this.controlKey,
+    this.kind = Act0SkinListRowKindV1.pattern,
+    this.dark = false,
   });
 
   final String title;
-  final String subtitle;
-  final bool expanded;
+  final String? subtitle;
+  final bool? expanded;
   final VoidCallback? onTap;
   final Key? controlKey;
+  final Act0SkinListRowKindV1 kind;
+  final bool dark;
 
   @override
   Widget build(BuildContext context) {
+    final destructive = kind == Act0SkinListRowKindV1.destructive;
     return Semantics(
       expanded: expanded,
       child: ListTile(
         key: controlKey,
         contentPadding: EdgeInsets.zero,
-        title: Text(title, style: _T.editorialBody),
-        subtitle: Text(subtitle, style: _T.editorialSupporting),
-        selected: expanded,
-        trailing: Icon(expanded ? _T.collapseIcon : _T.expandIcon),
+        title: Text(
+          title,
+          style: destructive
+              ? _T.body.copyWith(color: _T.bad)
+              : dark
+              ? _T.body
+              : _T.editorialBody,
+        ),
+        subtitle: subtitle == null
+            ? null
+            : Text(
+                subtitle!,
+                style: dark ? _T.secondary : _T.editorialSupporting,
+              ),
+        selected: expanded ?? false,
+        iconColor: destructive
+            ? _T.bad
+            : dark
+            ? _T.muted
+            : null,
+        trailing: Icon(switch (expanded) {
+          true => _T.collapseIcon,
+          false => _T.expandIcon,
+          null => destructive ? Icons.delete_outline : Icons.chevron_right,
+        }),
         onTap: onTap,
       ),
     );
   }
+}
+
+class Act0SkinScreenHeaderV1 extends StatelessWidget {
+  const Act0SkinScreenHeaderV1({
+    super.key,
+    required this.title,
+    required this.onBack,
+    this.backKey,
+  });
+
+  final String title;
+  final VoidCallback onBack;
+  final Key? backKey;
+
+  @override
+  Widget build(BuildContext context) => Row(
+    children: [
+      IconButton(
+        key: backKey,
+        onPressed: onBack,
+        tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+        icon: const Icon(Icons.chevron_left),
+        color: _T.onSurface,
+      ),
+      const SizedBox(width: _T.gapSm),
+      Expanded(child: Text(title, style: _T.title)),
+    ],
+  );
+}
+
+/// Shared theme for dark routes that contain Material fields and controls.
+class Act0SkinDarkAreaV1 extends StatelessWidget {
+  const Act0SkinDarkAreaV1({
+    super.key,
+    required this.child,
+    this.paintBackground = true,
+    this.maxContentWidth,
+  });
+  final bool paintBackground;
+  final double? maxContentWidth;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final width = maxContentWidth;
+    final content = width == null
+        ? child
+        : Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: BoxConstraints(maxWidth: width),
+              child: child,
+            ),
+          );
+    return Theme(
+      data: theme.copyWith(
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: _T.background,
+        colorScheme: const ColorScheme.dark(
+          primary: _T.accent,
+          onPrimary: _T.onAccent,
+          surface: _T.surface,
+          onSurface: _T.onSurface,
+          onSurfaceVariant: _T.muted,
+          outline: _T.muted,
+          outlineVariant: _T.line,
+          error: _T.bad,
+        ),
+        textTheme: theme.textTheme
+            .apply(bodyColor: _T.onSurface, displayColor: _T.onSurface)
+            .copyWith(
+              bodyLarge: _T.body,
+              bodyMedium: _T.body,
+              bodySmall: _T.secondary,
+              labelLarge: _T.button,
+              labelMedium: _T.tag,
+              labelSmall: _T.captionStyle,
+              titleLarge: _T.title,
+              titleMedium: _T.headline,
+              titleSmall: _T.secondary,
+            ),
+        inputDecorationTheme: const InputDecorationTheme(
+          labelStyle: _T.secondary,
+          helperStyle: _T.secondary,
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: _T.accent,
+            disabledForegroundColor: _T.caption,
+            textStyle: _T.button,
+          ),
+        ),
+        dividerColor: _T.line,
+      ),
+      child: paintBackground
+          ? Material(color: _T.background, child: content)
+          : content,
+    );
+  }
+}
+
+class Act0SkinConfirmSheetV1 extends StatelessWidget {
+  const Act0SkinConfirmSheetV1({
+    super.key,
+    required this.title,
+    required this.confirmLabel,
+    this.confirmKey,
+  });
+
+  final String title;
+  final String confirmLabel;
+  final Key? confirmKey;
+
+  Future<bool> show(BuildContext context) async =>
+      await showModalBottomSheet<bool>(
+        context: context,
+        backgroundColor: _T.surface,
+        barrierColor: _T.scrim,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(_T.radiusSheet),
+          ),
+        ),
+        builder: (_) => this,
+      ) ??
+      false;
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    minimum: const EdgeInsets.all(_T.cardPadding),
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title, style: _T.title),
+        const SizedBox(height: _T.gapMd),
+        Act0SkinSecondaryButtonV1(
+          controlKey: confirmKey,
+          label: confirmLabel,
+          destructive: true,
+          onPressed: () => Navigator.of(context).pop(true),
+        ),
+        const SizedBox(height: _T.gapSm),
+        Act0SkinSecondaryButtonV1(
+          label: 'Cancel',
+          onPressed: () => Navigator.of(context).pop(false),
+        ),
+      ],
+    ),
+  );
 }
 
 /// Home's course bar. A missing ratio draws a track without announcing a value.
@@ -565,11 +760,13 @@ class Act0SkinEmptyStateV1 extends StatelessWidget {
     required this.title,
     required this.description,
     this.titleKey,
+    this.action,
   });
 
   final String title;
   final String description;
   final Key? titleKey;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -579,6 +776,10 @@ class Act0SkinEmptyStateV1 extends StatelessWidget {
         Text(title, key: titleKey, style: _T.reviewEmptyTitle),
         const SizedBox(height: _T.gapSm),
         Text(description, style: _T.reviewEmptyBody),
+        if (action case final button?) ...[
+          const SizedBox(height: _T.gapSm),
+          button,
+        ],
       ],
     );
   }
@@ -772,4 +973,46 @@ enum Act0SkinFeedbackGradeV1 {
     wrong => _T.bad,
     repaired || assisted => _T.accent,
   };
+}
+
+class Act0SkinStreetSummaryStripV1 extends StatelessWidget {
+  const Act0SkinStreetSummaryStripV1({
+    super.key,
+    required this.jumps,
+    required this.position,
+    required this.onJump,
+    required this.lines,
+  });
+
+  final Map<String, int> jumps;
+  final int position;
+  final ValueChanged<int> onJump;
+  final List<String> lines;
+
+  @override
+  Widget build(BuildContext context) {
+    final active = jumps.entries
+        .where((entry) => entry.value <= position)
+        .lastOrNull;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Wrap(
+          spacing: _T.gapSm,
+          children: [
+            for (final entry in jumps.entries)
+              Act0SkinChipV1(
+                label: entry.key,
+                selected: entry.key == active?.key,
+                tone: entry.key == active?.key
+                    ? Act0SkinChipToneV1.brass
+                    : Act0SkinChipToneV1.neutral,
+                onPressed: () => onJump(entry.value),
+              ),
+          ],
+        ),
+        for (final line in lines) Text(line, style: _T.secondary),
+      ],
+    );
+  }
 }

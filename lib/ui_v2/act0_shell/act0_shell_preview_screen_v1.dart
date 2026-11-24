@@ -1491,6 +1491,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _selectedPresetTaskId;
   String? _reviewConfidence;
   bool _showAttemptArchiveV1 = false;
+  bool _showOwnHandsV1 = false;
   Act0AttemptArchiveV1 _attemptArchiveV1 = const Act0AttemptArchiveV1.empty();
   int _teachingStepIndex = 0;
   int _earnedXp = 0;
@@ -3360,6 +3361,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final premiumAcademy =
         !_showPlacement &&
         !_showWelcome &&
+        !_showAttemptArchiveV1 &&
         !isPlayRunner &&
         _blockCompletionSummary == null &&
         act0AcademyRuntimeEnabledV1(context, _tab);
@@ -3590,7 +3592,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: premiumAcademy || _showWelcome || _showPlacement
+      backgroundColor: _tab == Act0ShellTabV1.review && _showAttemptArchiveV1
+          ? Act0SkinTokensV1.background
+          : premiumAcademy || _showWelcome || _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -5283,6 +5287,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       Act0ShellTabV1.review when _showAttemptArchiveV1 =>
                         Act0AttemptArchiveScreenV1(
                           archive: _attemptArchiveV1,
+                          ownHands: _showOwnHandsV1,
                           onClose: () => setState(() {
                             _showAttemptArchiveV1 = false;
                           }),
@@ -5327,7 +5332,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
                               return;
                             }
-                            setState(() => _showAttemptArchiveV1 = true);
+                            setState(() {
+                              _showOwnHandsV1 = false;
+                              _showAttemptArchiveV1 = true;
+                            });
+                          },
+                          onOpenOwnHands: () {
+                            if (!_acceptRecoveryCallbackV1(callbackEpochV1)) {
+                              return;
+                            }
+                            setState(() {
+                              _showOwnHandsV1 = true;
+                              _showAttemptArchiveV1 = true;
+                            });
                           },
                           onSelected: (value) => setState(() {
                             _reviewConfidence = value;
@@ -5366,6 +5383,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           mistakeHistoryItems:
                               Act0ReviewMistakeHistoryConsumerV1.fromHistory(
                                 _reviewMistakeHistoryV1,
+                                attemptArchive: _attemptArchiveV1,
                                 sourceState: state,
                                 localeIsRu:
                                     act0AcademyLanguageV1(context) == 'ru',
