@@ -188,6 +188,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
     this.sharkyGuideDetail,
     this.sharkyGuideMood = Act0SharkyMoodV1.thinking,
     required this.worlds,
+    this.liveRoomTitle,
     this.goalRoute,
     required this.selectedWorldId,
     required this.showWorldMenu,
@@ -225,6 +226,7 @@ class Act0LearnPathShellV1 extends StatefulWidget {
   final String? sharkyGuideDetail;
   final Act0SharkyMoodV1 sharkyGuideMood;
   final List<Act0WorldCardV1> worlds;
+  final String? liveRoomTitle;
   final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
   final String selectedWorldId;
   final bool showWorldMenu;
@@ -671,6 +673,20 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         key: const Key('act0_shell_w1_rules_map'),
                         onPressed: widget.onW1RulesCheck,
                         child: const Text('Skip this world by test'),
+                      ),
+                    ),
+                  ),
+                if (widget.liveRoomTitle case final title?
+                    when widget.selectedWorldId != act0LiveRoomModuleIdV1 &&
+                        detailLessonId == null)
+                  SliverToBoxAdapter(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        key: const Key('act0_shell_live_room_v1'),
+                        onPressed: () =>
+                            widget.onSelectWorld(act0LiveRoomModuleIdV1),
+                        child: Text(title),
                       ),
                     ),
                   ),

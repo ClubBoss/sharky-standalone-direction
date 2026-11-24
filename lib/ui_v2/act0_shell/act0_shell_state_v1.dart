@@ -36,11 +36,14 @@ part 'act0_shell_lessons_w13_w14_v1.dart';
 part 'act0_shell_lessons_w15_w16_v1.dart';
 part 'act0_shell_lessons_w17_w18_v1.dart';
 part 'act0_shell_lessons_b19_v1.dart';
+part 'act0_shell_lessons_live_room_v1.dart';
 part 'act0_shell_runners_part1_v1.dart';
 part 'act0_shell_runners_part2_v1.dart';
 part 'act0_shell_runners_part3_v1.dart';
 part 'act0_shell_runners_part4_v1.dart';
 part 'act0_y5d_lesson_tasks_v1.dart';
+
+const act0LiveRoomModuleIdV1 = 'live_room_v1';
 
 enum Act0ShellTabV1 { home, learn, play, review, profile }
 
@@ -184,6 +187,7 @@ class Act0ShellStateV1 {
     required this.pathProgressLabel,
     required this.selectedWorldId,
     required this.worlds,
+    this.liveRoom,
     required this.lessons,
     required this.review,
     required this.profile,
@@ -201,7 +205,14 @@ class Act0ShellStateV1 {
   final String selectedWorldId;
   // TODO(Wave F): Move to progression_state.dart
   final List<Act0WorldCardV1> worlds;
+  final Act0WorldCardV1? liveRoom;
   final List<Act0LessonCardV1> lessons;
+
+  Iterable<Act0WorldCardV1> get learningSections sync* {
+    yield* worlds;
+    if (liveRoom case final module?) yield module;
+  }
+
   // TODO(Wave F): Move to review_state.dart
   final Act0ReviewStateV1 review;
   // TODO(Wave F): Move to profile_state.dart
@@ -213,7 +224,7 @@ class Act0ShellStateV1 {
   );
 
   Act0WorldCardV1 worldById(String worldId) =>
-      worlds.firstWhere((world) => world.worldId == worldId);
+      learningSections.firstWhere((world) => world.worldId == worldId);
 
   Act0LessonCardV1 get currentLesson => lessons.firstWhere(
     (lesson) => lesson.state == Act0LessonStateV1.current,
@@ -225,7 +236,7 @@ class Act0ShellStateV1 {
 
   Act0LessonCardV1 lessonById(String lessonId) => lessons.firstWhere(
     (lesson) => lesson.lessonId == lessonId,
-    orElse: () => worlds
+    orElse: () => learningSections
         .expand((world) => world.lessons)
         .firstWhere((lesson) => lesson.lessonId == lessonId),
   );
@@ -282,6 +293,7 @@ class Act0ShellStateV1 {
       pathProgressLabel: pathProgressLabel,
       selectedWorldId: selected?.worldId ?? selectedWorldId,
       worlds: List.unmodifiable(projectedWorlds),
+      liveRoom: liveRoom,
       lessons: List.unmodifiable(
         projectedLessons.isEmpty ? selected?.lessons ?? [] : projectedLessons,
       ),
@@ -290,7 +302,17 @@ class Act0ShellStateV1 {
     );
   }
 
-  static final authoredCatalog = Act0ShellStateV1(
+  static final authoredCatalog = catalog();
+  static final _numberedCatalog = _buildCatalog(null);
+  static final _catalogWithLiveRoom = _buildCatalog(_act0LiveRoomV1);
+
+  static Act0ShellStateV1 catalog({
+    bool liveRoomV1 = const bool.fromEnvironment('liveRoomV1'),
+  }) => liveRoomV1 ? _catalogWithLiveRoom : _numberedCatalog;
+
+  static Act0ShellStateV1 _buildCatalog(
+    Act0WorldCardV1? liveRoom,
+  ) => Act0ShellStateV1(
     courseTitle: 'Poker from Zero',
     courseSubtitle: 'Learn the table one clear decision at a time.',
     levelLabel: 'Level 1',
@@ -302,6 +324,7 @@ class Act0ShellStateV1 {
     pathProgressLabel: '4 of 10 lessons complete',
     selectedWorldId: 'world_1',
     worlds: _act0PreviewWorlds,
+    liveRoom: liveRoom,
     lessons: _act0PreviewWorlds.first.lessons,
     review: Act0ReviewStateV1(
       title: 'What to fix next',

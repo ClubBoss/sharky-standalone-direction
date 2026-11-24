@@ -165,68 +165,71 @@ class _WorldContextStripV5 extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Container(
-                width: compact ? 32 : 36,
-                height: compact ? 32 : 36,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  color: Act0AcademyDesignTokensV1.focus.withValues(
-                    alpha: 0.12,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                    Act0ShellTokensV1.radiusMd,
-                  ),
-                  border: Border.all(
+              if (world.worldId != act0LiveRoomModuleIdV1) ...[
+                Container(
+                  width: compact ? 32 : 36,
+                  height: compact ? 32 : 36,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
                     color: Act0AcademyDesignTokensV1.focus.withValues(
-                      alpha: 0.28,
+                      alpha: 0.12,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                      Act0ShellTokensV1.radiusMd,
+                    ),
+                    border: Border.all(
+                      color: Act0AcademyDesignTokensV1.focus.withValues(
+                        alpha: 0.28,
+                      ),
+                    ),
+                  ),
+                  child: Text(
+                    '${world.worldNumber}',
+                    style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
+                      color: Act0AcademyDesignTokensV1.focus,
+                      fontSize: compact ? 15.5 : 16.5,
+                      height: 1.0,
                     ),
                   ),
                 ),
-                child: Text(
-                  '${world.worldNumber}',
-                  style: Act0AcademyDesignTokensV1.sectionHeading.copyWith(
-                    color: Act0AcademyDesignTokensV1.focus,
-                    fontSize: compact ? 15.5 : 16.5,
-                    height: 1.0,
-                  ),
-                ),
-              ),
-              const SizedBox(width: 11),
+                const SizedBox(width: 11),
+              ],
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      children: [
-                        Flexible(
-                          child: Text(
-                            _learnCopyV1(
-                              context,
-                              en: 'Current world · W${world.worldNumber}',
-                              ru: 'Текущий мир · W${world.worldNumber}',
-                            ),
-                            style: Act0AcademyDesignTokensV1.label.copyWith(
-                              color: Act0AcademyDesignTokensV1.focus,
-                              fontSize: 9.8,
-                              letterSpacing: 0,
-                            ),
-                          ),
-                        ),
-                        if (!compact) ...[
-                          const SizedBox(width: 6),
+                    if (world.worldId != act0LiveRoomModuleIdV1)
+                      Row(
+                        children: [
                           Flexible(
                             child: Text(
-                              moduleTitle,
-
+                              _learnCopyV1(
+                                context,
+                                en: 'Current world · W${world.worldNumber}',
+                                ru: 'Текущий мир · W${world.worldNumber}',
+                              ),
                               style: Act0AcademyDesignTokensV1.label.copyWith(
-                                fontSize: 9.4,
+                                color: Act0AcademyDesignTokensV1.focus,
+                                fontSize: 9.8,
                                 letterSpacing: 0,
                               ),
                             ),
                           ),
+                          if (!compact) ...[
+                            const SizedBox(width: 6),
+                            Flexible(
+                              child: Text(
+                                moduleTitle,
+
+                                style: Act0AcademyDesignTokensV1.label.copyWith(
+                                  fontSize: 9.4,
+                                  letterSpacing: 0,
+                                ),
+                              ),
+                            ),
+                          ],
                         ],
-                      ],
-                    ),
+                      ),
                     const SizedBox(height: 2),
                     Text(
                       act0AcademyWorldTitleV1(context, world),

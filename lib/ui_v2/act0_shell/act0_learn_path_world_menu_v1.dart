@@ -50,7 +50,7 @@ class _WorldMenuOverlayV1 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final worlds = view.worlds;
+    final worlds = view.numberedWorlds;
     final currentWorld = view.currentWorld;
     final detailWorld = view.detailWorld;
     final currentStateColor = _worldRouteStatusColorV1(worlds, currentWorld);

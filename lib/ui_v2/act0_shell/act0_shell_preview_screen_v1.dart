@@ -2162,7 +2162,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     required String taskId,
   }) {
     final state = widget.state ?? Act0ShellStateV1.sample;
-    for (final world in state.worlds) {
+    for (final world in state.learningSections) {
       if (world.worldId != worldId) continue;
       for (final lesson in world.lessons) {
         if (lesson.lessonId != lessonId) continue;
@@ -3457,7 +3457,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         }
                       }),
                       onStartDiagnostic: () => setState(() {
-                        _startPlacementDiagnostic(_progressWorlds(baseState));
+                        _startPlacementDiagnostic(
+                          _progressWorlds(baseState)
+                              .where(
+                                (world) =>
+                                    world.worldId != act0LiveRoomModuleIdV1,
+                              )
+                              .toList(),
+                        );
                       }),
                       onStartRecommended: () {
                         setState(() {
@@ -3717,6 +3724,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           _lessonById(selectedWorld.lessons, _selectedLessonId),
                         ),
                         worlds: worlds,
+                        liveRoomTitle: baseState.liveRoom?.title,
                         goalRoute: goalRoute,
                         selectedWorldId: _selectedWorldId,
                         showWorldMenu: _showWorldMenu,

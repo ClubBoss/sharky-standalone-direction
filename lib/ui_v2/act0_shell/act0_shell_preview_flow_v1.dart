@@ -272,6 +272,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       selectedWorld.worldId,
     );
     final isWorldComplete =
+        selectedWorld.worldId != act0LiveRoomModuleIdV1 &&
         nextLessonId == null &&
         progressedWorld.status == Act0WorldStateV1.completed;
     final worldRetentionSeed = isWorldComplete
@@ -551,7 +552,8 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
       );
       final nextWorldIndex = currentWorldIndex + 1;
       if (nextWorldIndex < progressedWorlds.length &&
-          progressedWorlds[nextWorldIndex].isSelectable) {
+          progressedWorlds[nextWorldIndex].isSelectable &&
+          progressedWorlds[nextWorldIndex].worldId != act0LiveRoomModuleIdV1) {
         nextWorld = progressedWorlds[nextWorldIndex];
         nextLesson = _firstPlayableLesson(nextWorld);
         _selectedWorldId = nextWorld.worldId;
@@ -848,7 +850,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     }
     for (var index = currentIndex + 1; index < worlds.length; index++) {
       final world = worlds[index];
-      if (world.isSelectable) {
+      if (world.isSelectable && world.worldId != act0LiveRoomModuleIdV1) {
         return world;
       }
     }

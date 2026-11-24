@@ -57,25 +57,33 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     Act0ShellStateV1 state,
     Set<String> completedTaskIds, {
     int? w1RulesBestScore,
-  }) => act0ProgressWorldsV1(
-    state.worlds,
-    pathClosedTaskIds: completedTaskIds,
-    earnedTaskIds: _completedTaskIds,
-    passedW1RulesCheck:
-        (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
-        Act0W1RulesResultV1.passingScore,
-    worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
-    practiceBlockedLessonIds: {
-      for (final world in state.worlds)
-        if (_requiredRoutePracticeV1(
-              world,
-              completedTaskIds,
-              w1RulesBestScore: w1RulesBestScore,
-            )
-            case final step?)
-          world.lessons[step.beforeLessonIndex].lessonId,
-    },
-  );
+  }) => [
+    ...act0ProgressWorldsV1(
+      state.worlds,
+      pathClosedTaskIds: completedTaskIds,
+      earnedTaskIds: _completedTaskIds,
+      passedW1RulesCheck:
+          (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
+          Act0W1RulesResultV1.passingScore,
+      worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
+      practiceBlockedLessonIds: {
+        for (final world in state.worlds)
+          if (_requiredRoutePracticeV1(
+                world,
+                completedTaskIds,
+                w1RulesBestScore: w1RulesBestScore,
+              )
+              case final step?)
+            world.lessons[step.beforeLessonIndex].lessonId,
+      },
+    ),
+    if (state.liveRoom case final module?)
+      ...act0ProgressWorldsV1(
+        [module],
+        pathClosedTaskIds: completedTaskIds,
+        earnedTaskIds: _completedTaskIds,
+      ),
+  ];
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
       _progressWorlds(state);
@@ -87,7 +95,9 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     final route = act0GoalRouteV1(
       goal: goal,
       placement: _goalRoutePlacementV1,
-      catalog: worlds,
+      catalog: worlds
+          .where((world) => world.worldId != act0LiveRoomModuleIdV1)
+          .toList(),
       w13PlusEnabled: act0CurriculumPilotEnabledV1,
     );
     final epoch = _recoveryEpochV1;
