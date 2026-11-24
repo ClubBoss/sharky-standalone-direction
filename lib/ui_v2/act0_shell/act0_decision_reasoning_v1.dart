@@ -5,6 +5,7 @@ import 'act0_decision_reasoning_w15_w16_v1.dart';
 import 'act0_decision_reasoning_w17_w18_v1.dart';
 import 'act0_decision_reasoning_w19_w20_v1.dart';
 import 'act0_decision_reasoning_w21_w22_v1.dart';
+import 'act0_decision_reasoning_w23_w24_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -144,6 +145,18 @@ const act0PrinciplesV1 = <String, int>{
     "solver_input_contract": 22,
     "test_heuristic_scope": 22,
     "future_branches_before_bet": 22,
+    "position_qualified_chart": 23,
+    "classify_playability": 23,
+    "price_changes_bb_range": 23,
+    "reraises_and_cap": 23,
+    "sb_mix_as_model": 23,
+    "combine_chart_role_and_model": 23,
+    "polar_condensed_interaction": 24,
+    "river_thresholds": 24,
+    "bluff_share_and_combo_ratio": 24,
+    "block_for_river_job": 24,
+    "terminal_value_branch": 24,
+    "river_raise_terminal": 24,
   },
 };
 
@@ -158,6 +171,7 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
     ...act0DecisionReasoningW17W18V1,
     ...act0DecisionReasoningW19W20V1,
     ...act0DecisionReasoningW21W22V1,
+    ...act0DecisionReasoningW23W24V1,
     ...act0DecisionReasoningB19V1,
   },
 };

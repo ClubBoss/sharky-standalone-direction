@@ -5117,4 +5117,6 @@ const _act0PilotCheckpointLessonsV1 = {
   'read_calibration_checkpoint',
   'session_checkpoint',
   'plans_checkpoint',
+  'range_construction_checkpoint',
+  'river_check_raise_checkpoint',
 };
