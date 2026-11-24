@@ -196,6 +196,7 @@ Widget act0AcademyReviewRuntimeV1(
       ),
       onOpenLearn: _guard(isCurrent, legacy.onOpenLearn),
       onOpenAttempts: _guard(isCurrent, legacy.onOpenAttempts),
+      onOpenOwnHands: _guard(isCurrent, legacy.onOpenOwnHands),
     ),
   );
 }

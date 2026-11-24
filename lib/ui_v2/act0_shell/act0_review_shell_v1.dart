@@ -1,3 +1,4 @@
+import 'skin/act0_skin_components_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_leak_dashboard_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_reading_style_v1.dart';
 import 'package:flutter/material.dart';
@@ -51,6 +52,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
     this.onOpenRecommendedAction,
     this.onOpenLearn,
     this.onOpenAttempts,
+    this.onOpenOwnHands,
     this.reasonRepairs,
   });
 
@@ -72,6 +74,7 @@ class Act0ReviewShellV1 extends StatelessWidget {
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenAttempts;
+  final VoidCallback? onOpenOwnHands;
   final Widget? reasonRepairs;
 
   @override
@@ -209,13 +212,20 @@ class Act0ReviewShellV1 extends StatelessWidget {
       _ReviewCompactHeaderV1(missCount: missCount),
       if (reasonRepairs case final repairs?) repairs,
       if (onOpenAttempts != null)
-        Align(
-          alignment: Alignment.centerLeft,
-          child: TextButton(
-            key: const Key('act0_review_open_attempts'),
-            onPressed: onOpenAttempts,
-            child: const Text('Attempt archive'),
-          ),
+        Act0SkinListRowV1(
+          controlKey: const Key('act0_review_open_attempts'),
+          title: 'Attempt archive',
+          kind: Act0SkinListRowKindV1.retry,
+          dark: true,
+          onTap: onOpenAttempts,
+        ),
+      if (onOpenOwnHands != null)
+        Act0SkinListRowV1(
+          controlKey: const Key('act0_review_open_own_hands'),
+          title: 'Own hands',
+          kind: Act0SkinListRowKindV1.hand,
+          dark: true,
+          onTap: onOpenOwnHands,
         ),
       const SizedBox(height: Act0ShellTokensV1.gapMd),
     ];

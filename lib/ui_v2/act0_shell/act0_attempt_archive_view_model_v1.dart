@@ -1,38 +1,59 @@
+import 'act0_w14_skill_state_v1.dart';
 import 'act0_attempt_archive_v1.dart';
 import 'act0_imported_hand_v1.dart';
 
 /// Local browsing state. The shell continues to own archive persistence.
 class Act0AttemptArchiveViewModelV1 {
-  bool showOwnHands = false;
   String query = '';
+  String? world;
+  String? skill;
+  String? outcome;
+
+  void clearFilters() {
+    query = '';
+    world = null;
+    skill = null;
+    outcome = null;
+  }
+
+  static List<String> skillsFor(Act0ArchivedAttemptV1 attempt) =>
+      act0SkillsForTaskV1(attempt.evidence.lessonId, attempt.evidence.taskId);
+
+  static String outcomeFor(Act0ArchivedAttemptV1 attempt) {
+    final evidence = attempt.evidence;
+    if (evidence.isRepaired) return 'Repaired';
+    return evidence.isCorrect ? 'Correct' : 'Wrong';
+  }
+
   Act0ArchivedAttemptV1? replayingAttempt;
   Act0ImportedHandV1? replayingHand;
 
-  bool get atArchiveRoot =>
-      !showOwnHands && replayingAttempt == null && replayingHand == null;
+  bool get atArchiveRoot => replayingAttempt == null && replayingHand == null;
 
   void backToParent() {
-    if (replayingAttempt != null || replayingHand != null) {
-      replayingAttempt = null;
-      replayingHand = null;
-    } else {
-      showOwnHands = false;
-    }
+    replayingAttempt = null;
+    replayingHand = null;
   }
 
   List<Act0ArchivedAttemptV1> visibleAttempts(Act0AttemptArchiveV1 archive) {
     final search = query.trim().toLowerCase();
-    if (search.isEmpty) return archive.attempts;
+
     return archive.attempts
         .where((attempt) {
-          return [
-            attempt.taskLabel,
-            attempt.choiceLabel,
-            attempt.evidence.taskId,
-            attempt.evidence.choiceId,
-          ].whereType<String>().any(
-            (label) => label.toLowerCase().contains(search),
-          );
+          if (world != null && attempt.evidence.worldId != world ||
+              skill != null && !skillsFor(attempt).contains(skill) ||
+              outcome != null && outcomeFor(attempt) != outcome) {
+            return false;
+          }
+          return search.isEmpty ||
+              [
+                attempt.taskLabel,
+                attempt.choiceLabel,
+                attempt.evidence.taskId,
+                attempt.evidence.choiceId,
+              ].whereType<String>().any(
+                (label) => label.toLowerCase().contains(search),
+              );
         })
         .toList(growable: false);
   }

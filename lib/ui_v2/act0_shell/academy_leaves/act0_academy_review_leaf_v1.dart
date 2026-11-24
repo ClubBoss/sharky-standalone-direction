@@ -1,3 +1,4 @@
+import '../skin/act0_skin_components_v1.dart';
 import 'act0_academy_home_leaf_v1.dart';
 import '../act0_club_night_components_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_leak_dashboard_v1.dart';
@@ -77,6 +78,7 @@ class Act0AcademyReviewLeafInputV1 {
     this.onOpenRecommendedAction,
     this.onOpenLearn,
     this.onOpenAttempts,
+    this.onOpenOwnHands,
     this.reasonRepairs,
     this.backdrop,
     this.nextAction,
@@ -97,6 +99,7 @@ class Act0AcademyReviewLeafInputV1 {
   final VoidCallback? onOpenRecommendedAction;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenAttempts;
+  final VoidCallback? onOpenOwnHands;
   final Widget? reasonRepairs;
   final ImageProvider? backdrop;
   final Act0AcademyHomeNextActionV1? nextAction;
@@ -159,13 +162,20 @@ class Act0AcademyReviewLeafV1 extends StatelessWidget {
             Act0AcademyNextActionCardV1(action: action),
           if (input.reasonRepairs case final repairs?) repairs,
           if (input.onOpenAttempts != null)
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton(
-                key: const Key('act0_review_open_attempts'),
-                onPressed: input.onOpenAttempts,
-                child: const Text('Attempt archive'),
-              ),
+            Act0SkinListRowV1(
+              controlKey: const Key('act0_review_open_attempts'),
+              title: 'Attempt archive',
+              kind: Act0SkinListRowKindV1.retry,
+              dark: true,
+              onTap: input.onOpenAttempts,
+            ),
+          if (input.onOpenOwnHands != null)
+            Act0SkinListRowV1(
+              controlKey: const Key('act0_review_open_own_hands'),
+              title: 'Own hands',
+              kind: Act0SkinListRowKindV1.hand,
+              dark: true,
+              onTap: input.onOpenOwnHands,
             ),
           Padding(
             padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),

@@ -1,3 +1,4 @@
+import 'act0_attempt_archive_v1.dart';
 import 'act0_repair_gap_adjudication_v1.dart';
 import 'act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_review_mistake_history_v1.dart';
@@ -18,6 +19,7 @@ class Act0ReviewMistakeHistoryConsumerV1 {
     Act0ReviewResolutionStateV1? reviewResolutionState,
     Act0ReviewPatternCoachingProjectionV1? patternCoachingProjection,
     Act0ShellStateV1? sourceState,
+    Act0AttemptArchiveV1? attemptArchive,
     String Function(String)? localizeOptionLabel,
     bool localeIsRu = false,
   }) {
@@ -26,6 +28,11 @@ class Act0ReviewMistakeHistoryConsumerV1 {
         .where((value) => value.isNotEmpty)
         .toSet();
     final items = <Act0ReviewMistakeHistoryItemV1>[];
+    final attempts = {
+      for (final attempt
+          in attemptArchive?.attempts ?? const <Act0ArchivedAttemptV1>[])
+        attempt.id: attempt,
+    };
     var didAttachPattern = false;
     for (final record in history.records) {
       final resolution = reviewResolutionState?.resolutionForReviewItemId(
@@ -46,6 +53,16 @@ class Act0ReviewMistakeHistoryConsumerV1 {
         didAttachPattern = true;
       }
       final task = _decisionTask(record, sourceState);
+      final candidate = attempts[record.sourceDecisionId];
+      final evidence = candidate?.evidence;
+      final attempt =
+          evidence != null &&
+              evidence.worldId == record.worldId &&
+              evidence.lessonId == record.lessonId &&
+              evidence.taskId == record.decisionTaskId &&
+              evidence.choiceId == record.selectedId
+          ? candidate
+          : null;
       final goal = act0RepairGoalContractForSourceV1(
         worldId: record.worldId,
         lessonId: record.lessonId,
@@ -71,6 +88,7 @@ class Act0ReviewMistakeHistoryConsumerV1 {
           stableKey: record.recordId,
           sourceTaskId: record.sourceTaskId,
           primaryLabel:
+              attempt?.taskLabel ??
               task?.title ??
               _firstReadableLabel(<String>[
                 record.skillAtomId,
@@ -78,7 +96,9 @@ class Act0ReviewMistakeHistoryConsumerV1 {
                 record.errorType,
               ]),
           detailLine:
+              attempt?.reflection.openedClue?.text ??
               authoredGoalLabel ??
+              (goal != null ? choice?.feedbackReason : null) ??
               _firstReadableLabel(<String>[
                 if (concept != null &&
                     concept.taskKeys.contains(

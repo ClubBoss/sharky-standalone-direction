@@ -445,7 +445,10 @@ class Act0AttemptReplayV1 {
   Act0AttemptReplayV1 play() =>
       atEnd ? this : Act0AttemptReplayV1._(events, position, true);
   Act0AttemptReplayV1 pause() => Act0AttemptReplayV1._(events, position, false);
-  Act0AttemptReplayV1 reset() => Act0AttemptReplayV1.events(events);
+  Act0AttemptReplayV1 seek(int position) =>
+      Act0AttemptReplayV1._(events, position.clamp(0, events.length), false);
+
+  Act0AttemptReplayV1 reset() => seek(0);
   Act0AttemptReplayV1 back() =>
       Act0AttemptReplayV1._(events, position > 0 ? position - 1 : 0, false);
 

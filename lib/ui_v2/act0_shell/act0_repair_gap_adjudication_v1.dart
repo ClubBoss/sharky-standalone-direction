@@ -1220,24 +1220,6 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
-    sourceLessonId: "what_poker_is",
-    sourceTaskId: "what_poker_is_find_hero",
-    sourceChoiceId: "random",
-    sourceCorrectChoiceId: "bottom",
-    sourceFingerprint:
-        "a181b1dcb91facb86b8088c045760b4aa53f1e41a2cb98476af6aefe74df5b6c",
-    sourceQuestion:
-        "Which label could change next hand while the player is still you?",
-    sourceChoiceReason:
-        "Your cards remain yours; BTN is the changing table role.",
-    sourceChoiceLabel: "Your private cards",
-    sourceChoiceQuality: "wrong",
-    goalId: "player_identity_and_seat_role",
-    misconceptionId: "seat_role_as_private_cards",
-    relationId: "selected_w1_002_random_v1",
-  ),
-  Act0RepairGoalContractV1(
-    sourceWorldId: "world_1",
     sourceLessonId: "cards_ranks_suits",
     sourceTaskId: "cards_ranks_suits_rank_drill",
     sourceChoiceId: "king",

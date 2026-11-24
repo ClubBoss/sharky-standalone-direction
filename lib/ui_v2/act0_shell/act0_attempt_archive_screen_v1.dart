@@ -1,18 +1,18 @@
 import 'act0_number_entry_v1.dart';
 import 'package:flutter/material.dart';
 
-import 'act0_academy_reading_style_v1.dart';
 import 'act0_attempt_archive_v1.dart';
 import 'act0_attempt_archive_view_model_v1.dart';
 import 'act0_attempt_replay_screen_v1.dart';
 import 'act0_completed_decision_contract_v1.dart';
-import 'act0_club_night_tokens_v1.dart';
-import 'act0_durable_learning_time_contract_v1.dart';
 
 import 'act0_imported_hand_v1.dart';
 import 'act0_manual_hand_screen_v1.dart';
-import 'act0_shell_tokens_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
+
+typedef _T = Act0SkinTokensV1;
 
 class Act0AttemptArchiveScreenV1 extends StatefulWidget {
   const Act0AttemptArchiveScreenV1({
@@ -23,6 +23,7 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
     required this.onRemove,
     required this.onOwnHandsChanged,
     this.onPracticeCallPrice,
+    this.ownHands = false,
   });
 
   final Act0AttemptArchiveV1 archive;
@@ -31,6 +32,7 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
   final ValueChanged<String> onRemove;
   final ValueChanged<Act0AttemptArchiveV1> onOwnHandsChanged;
   final VoidCallback? onPracticeCallPrice;
+  final bool ownHands;
 
   @override
   State<Act0AttemptArchiveScreenV1> createState() =>
@@ -39,7 +41,15 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
 
 class _Act0AttemptArchiveScreenV1State
     extends State<Act0AttemptArchiveScreenV1> {
-  String? _confirmRemovalId;
+  final _search = TextEditingController();
+  String? _openFilter;
+
+  @override
+  void dispose() {
+    _search.dispose();
+    super.dispose();
+  }
+
   final _view = Act0AttemptArchiveViewModelV1();
 
   Future<void> _enterHand([Act0ImportedHandV1? previous]) async {
@@ -67,58 +77,63 @@ class _Act0AttemptArchiveScreenV1State
     final updated = await showDialog<Act0AttemptArchiveV1>(
       context: context,
       builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
-          title: const Text('Import own hand'),
-          scrollable: true,
-          content: TextField(
-            minLines: 4,
-            maxLines: 8,
-            autocorrect: false,
-            enableSuggestions: false,
-            decoration: InputDecoration(
-              labelText: 'PokerStars hand history',
-              helperText: 'English USD NLHE cash. Side pots are unsupported.',
-              helperMaxLines: 2,
-              errorText: error,
-              errorMaxLines: 3,
+        builder: (context, setDialogState) => Act0SkinDarkAreaV1(
+          paintBackground: false,
+          child: AlertDialog(
+            title: const Text('Import own hand'),
+            scrollable: true,
+            content: TextField(
+              minLines: 4,
+              maxLines: 8,
+              autocorrect: false,
+              enableSuggestions: false,
+              decoration: InputDecoration(
+                labelText: 'PokerStars hand history',
+                helperText: 'English USD NLHE cash. Side pots are unsupported.',
+                helperMaxLines: 2,
+                errorText: error,
+                errorMaxLines: 3,
+              ),
+              onChanged: (value) => source = value,
             ),
-            onChanged: (value) => source = value,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                try {
-                  final next = widget.archive.importPokerStars(source);
-                  if (identical(next, widget.archive)) {
-                    setDialogState(() => error = 'This hand is already saved.');
-                    return;
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cancel'),
+              ),
+              TextButton(
+                onPressed: () {
+                  try {
+                    final next = widget.archive.importPokerStars(source);
+                    if (identical(next, widget.archive)) {
+                      setDialogState(
+                        () => error = 'This hand is already saved.',
+                      );
+                      return;
+                    }
+                    Navigator.of(context).pop(next);
+                  } on Act0HandImportExceptionV1 catch (failure) {
+                    setDialogState(
+                      () => error = switch (failure.code) {
+                        Act0HandImportErrorV1.unsupportedFormat =>
+                          'Unsupported format. Paste an English PokerStars USD NLHE cash hand.',
+                        Act0HandImportErrorV1.malformedHand =>
+                          'Incomplete, invalid or unsupported hand details'
+                              '${failure.line == null ? '.' : ' near line ${failure.line}.'}',
+                        Act0HandImportErrorV1.conflictingSource =>
+                          'A different record for this PokerStars hand is already saved.',
+                        Act0HandImportErrorV1.archiveFull =>
+                          act0OwnHandArchiveFullMessageV1,
+                        Act0HandImportErrorV1.sidePot =>
+                          act0OwnHandSidePotMessageV1,
+                      },
+                    );
                   }
-                  Navigator.of(context).pop(next);
-                } on Act0HandImportExceptionV1 catch (failure) {
-                  setDialogState(
-                    () => error = switch (failure.code) {
-                      Act0HandImportErrorV1.unsupportedFormat =>
-                        'Unsupported format. Paste an English PokerStars USD NLHE cash hand.',
-                      Act0HandImportErrorV1.malformedHand =>
-                        'Incomplete, invalid or unsupported hand details'
-                            '${failure.line == null ? '.' : ' near line ${failure.line}.'}',
-                      Act0HandImportErrorV1.conflictingSource =>
-                        'A different record for this PokerStars hand is already saved.',
-                      Act0HandImportErrorV1.archiveFull =>
-                        act0OwnHandArchiveFullMessageV1,
-                      Act0HandImportErrorV1.sidePot =>
-                        act0OwnHandSidePotMessageV1,
-                    },
-                  );
-                }
-              },
-              child: const Text('Import hand'),
-            ),
-          ],
+                },
+                child: const Text('Import hand'),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -128,23 +143,11 @@ class _Act0AttemptArchiveScreenV1State
   }
 
   Future<void> _removeHand(Act0ImportedHandV1 hand) async {
-    final remove = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Remove this own hand?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Remove hand'),
-          ),
-        ],
-      ),
-    );
-    if (!mounted || remove != true) return;
+    final remove = await const Act0SkinConfirmSheetV1(
+      title: 'Remove this own hand?',
+      confirmLabel: 'Remove hand',
+    ).show(context);
+    if (!mounted || !remove) return;
     widget.onOwnHandsChanged(widget.archive.removeImportedHand(hand.sourceKey));
   }
 
@@ -161,164 +164,207 @@ class _Act0AttemptArchiveScreenV1State
     final attempt = _view.replayingAttempt;
     final hand = _view.replayingHand;
     final skill = act0W14LessonSkillsV1[hand?.practiceLessonId]?.first;
-    return PopScope<void>(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (!didPop) _back();
-      },
-      child: hand != null
-          ? Act0AttemptReplayScreenV1.ownHand(
-              hand: hand,
-              onClose: _back,
-              practice: skill == null
-                  ? null
-                  : Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '$skill · Call price',
-                          style: Act0ClubNightTokensV1.body,
-                        ),
-                        const Text(
-                          'You faced a price to continue.',
-                          style: Act0ClubNightTokensV1.secondary,
-                        ),
-                        if (widget.onPracticeCallPrice case final onPractice?)
-                          TextButton(
-                            onPressed: onPractice,
-                            child: const Text('Practice call price'),
+    return Act0SkinDarkAreaV1(
+      maxContentWidth: _T.historyMaxWidth,
+      child: PopScope<void>(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, _) {
+          if (!didPop) _back();
+        },
+        child: hand != null
+            ? Act0AttemptReplayScreenV1.ownHand(
+                hand: hand,
+                onClose: _back,
+                practice: skill == null
+                    ? null
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('$skill · Call price', style: _T.body),
+                          const Text(
+                            'You faced a price to continue.',
+                            style: _T.secondary,
                           ),
-                      ],
-                    ),
-            )
-          : attempt == null
-          ? (_view.showOwnHands
-                ? _ownHandsList(context)
-                : _archiveList(context))
-          : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
+                          if (widget.onPracticeCallPrice case final onPractice?)
+                            TextButton(
+                              onPressed: onPractice,
+                              child: const Text('Practice call price'),
+                            ),
+                        ],
+                      ),
+              )
+            : attempt == null
+            ? (widget.ownHands ? _ownHandsList(context) : _archiveList(context))
+            : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
+      ),
     );
   }
+
+  static const _padding = EdgeInsets.fromLTRB(
+    _T.historyGutter,
+    _T.gapMd,
+    _T.historyGutter,
+    _T.gapXl,
+  );
 
   Widget _archiveList(BuildContext context) {
     final archive = widget.archive;
     final attempts = _view.visibleAttempts(archive);
-    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
-    return ListView.builder(
+    final worlds = archive.attempts
+        .map((entry) => entry.evidence.worldId)
+        .toSet();
+    final skills = archive.attempts
+        .expand(Act0AttemptArchiveViewModelV1.skillsFor)
+        .toSet();
+    return ListView(
       key: const PageStorageKey('act0_attempt_archive_list'),
-      padding: EdgeInsets.fromLTRB(
-        pagePadding,
-        Act0ShellTokensV1.gapMd,
-        pagePadding,
-        Act0ShellTokensV1.gapXl,
-      ),
-      itemCount: attempts.isEmpty ? 2 : attempts.length + 1,
-      itemBuilder: (context, index) {
-        final Widget child;
-        if (index == 0) {
-          child = Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      padding: _padding,
+      children: [
+        Act0SkinScreenHeaderV1(
+          backKey: const Key('act0_attempt_archive_back'),
+          onBack: _back,
+          title: 'Attempt archive',
+        ),
+        if (archive.attempts.isNotEmpty) ...[
+          TextField(
+            key: const Key('act0_attempt_archive_search'),
+            controller: _search,
+            decoration: const InputDecoration(
+              labelText: 'Search saved attempts',
+              prefixIcon: Icon(Icons.search),
+            ),
+            onChanged: (value) => setState(() => _view.query = value),
+          ),
+          Wrap(
+            spacing: _T.gapSm,
             children: [
-              TextButton(
-                key: const Key('act0_attempt_archive_back'),
-                onPressed: widget.onClose,
-                child: const Text('Back to Review'),
+              _filter(
+                'World',
+                _view.world,
+                worlds,
+                (value) => _view.world = value,
               ),
-              Text(
-                'Attempt archive',
-                style: Act0AcademyReadingStyleV1.sectionTitle.copyWith(
-                  color: Act0ClubNightTokensV1.text,
-                ),
+              _filter(
+                'Skill',
+                _view.skill,
+                skills,
+                (value) => _view.skill = value,
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapMd),
-              TextButton(
-                onPressed: () => setState(() => _view.showOwnHands = true),
-                child: const Text('Own hands'),
+              _filter('Outcome', _view.outcome, const {
+                'Correct',
+                'Wrong',
+                'Repaired',
+              }, (value) => _view.outcome = value),
+            ],
+          ),
+        ],
+        if (attempts.isEmpty)
+          if (archive.attempts.isEmpty)
+            Act0SkinEmptyStateV1(
+              title: 'No saved attempts yet.',
+              description: 'Your decisions will appear here after you answer.',
+              action: TextButton(
+                onPressed: _back,
+                child: const Text('Return to Review'),
               ),
-              if (archive.attempts.isNotEmpty) ...[
-                TextFormField(
-                  key: const Key('act0_attempt_archive_search'),
-                  initialValue: _view.query,
-                  style: Act0AcademyReadingStyleV1.body,
-                  decoration: const InputDecoration(
-                    labelText: 'Search saved attempts',
-                    prefixIcon: Icon(Icons.search),
-                  ),
-                  onChanged: (value) => setState(() {
-                    _view.query = value;
-                    _confirmRemovalId = null;
+            )
+          else
+            Act0SkinEmptyStateV1(
+              title: 'No matching attempts.',
+              description: 'No saved attempts match this search and filters.',
+              action: TextButton(
+                onPressed: () => setState(() {
+                  _search.clear();
+                  _view.clearFilters();
+                  _openFilter = null;
+                }),
+                child: const Text('Clear filters'),
+              ),
+            ),
+        for (final attempt in attempts) _attemptRow(context, attempt),
+      ],
+    );
+  }
+
+  Widget _filter(
+    String label,
+    String? selected,
+    Set<String> values,
+    ValueChanged<String?> change,
+  ) {
+    final expanded = _openFilter == label;
+    String readableValue(String value) =>
+        label == 'World' && value.startsWith('world_')
+        ? 'World ${value.substring('world_'.length)}'
+        : value;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Act0SkinChipV1(
+          label: selected == null
+              ? label
+              : '$label: ${readableValue(selected)}',
+          tone: selected == null
+              ? Act0SkinChipToneV1.neutral
+              : Act0SkinChipToneV1.brass,
+          selected: selected != null,
+          onPressed: () =>
+              setState(() => _openFilter = expanded ? null : label),
+        ),
+        if (expanded)
+          Wrap(
+            spacing: _T.gapSm,
+            children: [
+              for (final value in <String?>[null, ...(values.toList()..sort())])
+                Act0SkinChipV1(
+                  label: value == null
+                      ? 'All ${label.toLowerCase()}s'
+                      : readableValue(value),
+                  selected: value == selected,
+                  tone: value == selected
+                      ? Act0SkinChipToneV1.brass
+                      : Act0SkinChipToneV1.neutral,
+                  onPressed: () => setState(() {
+                    change(value);
+                    _openFilter = null;
                   }),
                 ),
-                const SizedBox(height: Act0ShellTokensV1.gapMd),
-              ],
             ],
-          );
-        } else if (attempts.isEmpty) {
-          child = Text(
-            archive.attempts.isEmpty
-                ? 'No saved attempts yet.'
-                : 'No matching attempts.',
-            style: Act0AcademyReadingStyleV1.muted,
-          );
-        } else {
-          child = _attemptRow(context, attempts[index - 1]);
-        }
-        return Act0ShellTokensV1.centeredContent(
-          context,
-          tabletMaxWidth: 860,
-          child: child,
-        );
-      },
+          ),
+      ],
     );
   }
 
   Widget _ownHandsList(BuildContext context) {
-    final pagePadding = Act0ShellTokensV1.pageHorizontalPaddingFor(context);
     final hands = widget.archive.importedHands;
-    return ColoredBox(
-      color: Act0ClubNightTokensV1.wall,
-      child: ListView.builder(
-        key: const PageStorageKey('act0_own_hands_list'),
-        padding: EdgeInsets.fromLTRB(
-          pagePadding,
-          Act0ShellTokensV1.gapMd,
-          pagePadding,
-          Act0ShellTokensV1.gapXl,
+    return ListView(
+      key: const PageStorageKey('act0_own_hands_list'),
+      padding: _padding,
+      children: [
+        Act0SkinScreenHeaderV1(title: 'Own hands', onBack: _back),
+        if (hands.isEmpty)
+          Act0SkinEmptyStateV1(
+            title: 'No saved own hands.',
+            description: 'Enter a hand to replay its recorded decisions.',
+            action: TextButton(
+              onPressed: _enterHand,
+              child: const Text('Enter own hand'),
+            ),
+          )
+        else
+          TextButton(
+            onPressed: _enterHand,
+            child: const Text('Enter own hand'),
+          ),
+        Align(
+          alignment: AlignmentDirectional.centerStart,
+          child: TextButton(
+            onPressed: _import,
+            child: const Text('Import own hand'),
+          ),
         ),
-        itemCount: 1 + hands.length,
-        itemBuilder: (context, index) => Act0ShellTokensV1.centeredContent(
-          context,
-          tabletMaxWidth: 860,
-          child: index == 0
-              ? Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    TextButton(
-                      onPressed: _back,
-                      child: const Text('Back to attempt archive'),
-                    ),
-                    const Text('Own hands', style: Act0ClubNightTokensV1.title),
-                    Wrap(
-                      children: [
-                        TextButton(
-                          onPressed: _import,
-                          child: const Text('Import own hand'),
-                        ),
-                        TextButton(
-                          onPressed: _enterHand,
-                          child: const Text('Enter own hand'),
-                        ),
-                      ],
-                    ),
-                    if (hands.isEmpty)
-                      const Text(
-                        'No saved own hands.',
-                        style: Act0ClubNightTokensV1.secondary,
-                      ),
-                  ],
-                )
-              : _handRow(hands[index - 1]),
-        ),
-      ),
+        for (final hand in hands) _handRow(hand),
+      ],
     );
   }
 
@@ -326,20 +372,20 @@ class _Act0AttemptArchiveScreenV1State
     key: ValueKey(hand.sourceKey),
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text(
-        '${hand.isManual ? 'Manual entry' : 'PokerStars · ${hand.timeEt}'} · '
-        '${hand.heroCards.join(' ')}',
-        style: Act0ClubNightTokensV1.body,
+      Act0SkinListRowV1(
+        title:
+            '${hand.isManual ? 'Manual entry' : 'PokerStars · ${hand.timeEt}'} · '
+            '${hand.heroCards.join(' ')}',
+        subtitle: 'Replay hand',
+        kind: Act0SkinListRowKindV1.hand,
+        dark: true,
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          setState(() => _view.replayingHand = hand);
+        },
       ),
       Wrap(
         children: [
-          TextButton(
-            onPressed: () {
-              FocusScope.of(context).unfocus();
-              setState(() => _view.replayingHand = hand);
-            },
-            child: const Text('Replay hand'),
-          ),
           if (hand.isManual)
             TextButton(
               onPressed: () => _enterHand(hand),
@@ -365,57 +411,28 @@ class _Act0AttemptArchiveScreenV1State
     final usedWorkedMath =
         act0IsNumberEntryChoiceV1(evidence.choiceId) &&
         evidence.assistanceKind == Act0DecisionAssistanceV1.quickHint;
-    final result =
-        attempt.actionReason?.title ??
-        (evidence.resultKind == Act0CompletedDecisionV1.repairedResultKind &&
-                evidence.reviewKind == Act0ReviewKindV1.exactReplay
-            ? 'Repaired'
-            : evidence.isRepaired
-            ? 'Fixed'
-            : switch (evidence.resultKind) {
-                'correct' ||
-                'co_correct' ||
-                'acceptable' when usedWorkedMath => 'Answered with help',
-                'correct' || 'co_correct' => 'Correct',
-                'acceptable' => 'Acceptable',
-                'suboptimal' => 'Suboptimal',
-                _ => 'Incorrect',
-              });
+    final result = Act0AttemptArchiveViewModelV1.outcomeFor(attempt);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Semantics(
+        Act0SkinListRowV1(
+          controlKey: Key('act0_attempt_archive_entry_${attempt.id}'),
+          title: attempt.taskLabel ?? evidence.taskId,
+          subtitle: '$date · $clock · $result',
+          kind: Act0SkinListRowKindV1.retry,
+          dark: true,
           expanded: selected,
-          child: ListTile(
-            key: Key('act0_attempt_archive_entry_${attempt.id}'),
-            contentPadding: EdgeInsets.zero,
-            title: Text(
-              attempt.taskLabel ?? evidence.taskId,
-              style: Act0AcademyReadingStyleV1.body.copyWith(
-                color: Act0ClubNightTokensV1.text,
-              ),
-            ),
-            subtitle: Text(
-              '$date · $clock · $result',
-              style: Act0AcademyReadingStyleV1.muted,
-            ),
-            selected: selected,
-            trailing: Icon(selected ? Icons.expand_less : Icons.expand_more),
-            onTap: () {
-              setState(() => _confirmRemovalId = null);
-              widget.onSelect(selected ? null : attempt.id);
-            },
-          ),
+          onTap: () => widget.onSelect(selected ? null : attempt.id),
         ),
         if (selected) ...[
           Text(
             'Your choice: ${attempt.choiceLabel ?? evidence.choiceId}',
-            style: Act0AcademyReadingStyleV1.body,
+            style: _T.body,
           ),
           if (attempt.actionReason case final result?)
             Text(
               'Reason: ${result.reason.text} · ${result.reason.tag.label}',
-              style: Act0AcademyReadingStyleV1.muted,
+              style: _T.secondary,
             ),
           Text(switch (evidence.assistanceKind) {
             Act0DecisionAssistanceV1.none => 'Help: none',
@@ -424,55 +441,38 @@ class _Act0AttemptArchiveScreenV1State
             Act0DecisionAssistanceV1.quickHint => 'Help: quick hint',
             Act0DecisionAssistanceV1.theoryRecall => 'Help: theory recall',
             Act0DecisionAssistanceV1.legacyUnknown => 'Help: unknown',
-          }, style: Act0AcademyReadingStyleV1.muted),
+          }, style: _T.secondary),
           if (attempt.reflection.confidence case final confidence?)
             Text(switch (confidence) {
               Act0DecisionConfidenceV1.unsure => 'Confidence: unsure',
               Act0DecisionConfidenceV1.somewhatSure =>
                 'Confidence: somewhat sure',
               Act0DecisionConfidenceV1.verySure => 'Confidence: very sure',
-            }, style: Act0AcademyReadingStyleV1.muted),
+            }, style: _T.secondary),
           if (attempt.reflection.openedClue case final clue?)
-            Text(
-              'Opened clue: ${clue.text}',
-              style: Act0AcademyReadingStyleV1.muted,
-            ),
-          if (_confirmRemovalId != attempt.id)
-            TextButton(
-              key: const Key('act0_attempt_archive_open_replay'),
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                setState(() => _view.replayingAttempt = attempt);
-              },
-              child: const Text('Replay attempt'),
-            ),
-          if (_confirmRemovalId == attempt.id) ...[
-            const Text(
-              'Remove this attempt from the archive?',
-              style: Act0AcademyReadingStyleV1.body,
-            ),
-            Wrap(
-              children: [
-                TextButton(
-                  key: const Key('act0_attempt_archive_confirm_remove'),
-                  onPressed: () {
-                    setState(() => _confirmRemovalId = null);
-                    widget.onRemove(attempt.id);
-                  },
-                  child: const Text('Remove attempt'),
-                ),
-                TextButton(
-                  onPressed: () => setState(() => _confirmRemovalId = null),
-                  child: const Text('Cancel'),
-                ),
-              ],
-            ),
-          ] else
-            TextButton(
-              key: const Key('act0_attempt_archive_remove'),
-              onPressed: () => setState(() => _confirmRemovalId = attempt.id),
-              child: const Text('Remove from archive'),
-            ),
+            Text('Opened clue: ${clue.text}', style: _T.secondary),
+          TextButton(
+            key: const Key('act0_attempt_archive_open_replay'),
+            onPressed: () {
+              FocusScope.of(context).unfocus();
+              setState(() => _view.replayingAttempt = attempt);
+            },
+            child: const Text('Replay attempt'),
+          ),
+          Act0SkinListRowV1(
+            controlKey: const Key('act0_attempt_archive_remove'),
+            title: 'Remove from archive',
+            kind: Act0SkinListRowKindV1.destructive,
+            dark: true,
+            onTap: () async {
+              final confirmed = await const Act0SkinConfirmSheetV1(
+                title: 'Remove this attempt from the archive?',
+                confirmLabel: 'Remove attempt',
+                confirmKey: Key('act0_attempt_archive_confirm_remove'),
+              ).show(context);
+              if (mounted && confirmed) widget.onRemove(attempt.id);
+            },
+          ),
         ],
         const Divider(),
       ],

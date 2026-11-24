@@ -12,7 +12,7 @@ class Act0AttemptReplayTableV1 {
   );
 
   final Act0TableStateV1 _table;
-  final Act0TableChoreographyPlanV1 _plan;
+  final Act0TableChoreographyPlanV1? _plan;
 
   final int? _choicePosition;
 
@@ -36,7 +36,6 @@ class Act0AttemptReplayTableV1 {
       return null;
     }
     final plan = act0TableChoreographyPlanForTableV1(table);
-    if (plan == null) return null;
     final choiceIndex = table.actionTrail.length;
     final choicePosition =
         choiceIndex < attempt.events.length &&
@@ -46,17 +45,38 @@ class Act0AttemptReplayTableV1 {
     return Act0AttemptReplayTableV1._(table, plan, choicePosition);
   }
 
+  Map<String, int> get streetPositions {
+    final plan = _plan;
+    if (plan == null) return const {};
+    final result = {plan.initialStreet.label: 0};
+    for (final beat in plan.beats) {
+      if (beat.sourceIndex case final index?) {
+        result.putIfAbsent(beat.street.label, () => index + 1);
+      }
+    }
+    return result;
+  }
+
   ({Act0TableStateV1 table, bool newCommitment})? atPosition(int position) {
-    if (position <= 0) return null;
+    final plan = _plan;
+    if (plan == null) {
+      // A verified teaching scene has no played-hand choreography. A played
+      // hand with an unprojectable trail can show only its saved decision.
+      if (_table.scope == Act0TableScopeV1.orientation ||
+          _table.scope == Act0TableScopeV1.explanation ||
+          _choicePosition != null && position >= _choicePosition) {
+        return (table: _table, newCommitment: false);
+      }
+      return null;
+    }
     final choicePosition = _choicePosition;
     final index = choicePosition != null && position >= choicePosition
-        ? _plan.beats.length -
+        ? plan.beats.length -
               1 // Choreography appends the decision-ready beat.
-        : _plan.beats.lastIndexWhere(
+        : plan.beats.lastIndexWhere(
             (beat) => beat.sourceIndex != null && beat.sourceIndex! < position,
           );
-    if (index < 0) return null;
-    final frame = act0TableChoreographyFrameAfterBeatV1(_plan, index);
+    final frame = act0TableChoreographyFrameAfterBeatV1(plan, index);
     var table = act0TableForChoreographyFrameV1(
       _table,
       frame,
@@ -69,8 +89,9 @@ class Act0AttemptReplayTableV1 {
     return (
       table: table,
       newCommitment:
+          index >= 0 &&
           frame.latestCommitmentSeatId != null &&
-          _plan.beats[index].sourceIndex == position - 1,
+          plan.beats[index].sourceIndex == position - 1,
     );
   }
 }

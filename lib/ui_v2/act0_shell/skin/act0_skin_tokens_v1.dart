@@ -34,6 +34,8 @@ class Act0SkinTokensV1 {
 
   // Spacing on a 4 pt grid.
   static const double screenGutter = 20;
+  static const double historyGutter = 16;
+  static const double historyMaxWidth = 860;
   static const double gapXs = 4;
   static const double gapSm = 8;
   static const double gapMd = 12;

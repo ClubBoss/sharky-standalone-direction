@@ -1,10 +1,9 @@
-import 'act0_shell_chrome_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
 
-import 'act0_club_night_components_v1.dart';
-import 'act0_club_night_tokens_v1.dart';
 import 'act0_imported_hand_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
 
 class Act0ManualHandScreenV1 extends StatefulWidget {
   const Act0ManualHandScreenV1({super.key, this.previous});
@@ -160,7 +159,7 @@ class _Act0ManualHandScreenV1State extends State<Act0ManualHandScreenV1> {
   Widget _field(String name, {bool cards = false}) => TextFormField(
     key: ValueKey(name),
     initialValue: _fields[name],
-    style: Act0ClubNightTokensV1.body,
+    style: Act0SkinTokensV1.body,
     decoration: InputDecoration(labelText: name),
     keyboardType: cards ? TextInputType.text : TextInputType.number,
     autocorrect: false,
@@ -171,10 +170,13 @@ class _Act0ManualHandScreenV1State extends State<Act0ManualHandScreenV1> {
   Future<void> _editAction(PokerStreet street, {int? index}) async {
     final action = await showDialog<Act0ImportedActionV1>(
       context: context,
-      builder: (_) => _ActionEditor(
-        street: street,
-        seats: _seats.map((seat) => seat.number).toList(),
-        action: index == null ? null : _actions[index],
+      builder: (_) => Act0SkinDarkAreaV1(
+        paintBackground: false,
+        child: _ActionEditor(
+          street: street,
+          seats: _seats.map((seat) => seat.number).toList(),
+          action: index == null ? null : _actions[index],
+        ),
       ),
     );
     if (!mounted || action == null) return;
@@ -193,136 +195,157 @@ class _Act0ManualHandScreenV1State extends State<Act0ManualHandScreenV1> {
   @override
   Widget build(BuildContext context) {
     final streets = _step == 2 ? _board().length : 0;
-    return Theme(
-      data: ThemeData.dark(useMaterial3: true),
+    return Act0SkinDarkAreaV1(
       child: Scaffold(
-        backgroundColor: Act0ClubNightTokensV1.wall,
-        appBar: AppBar(
-          backgroundColor: Act0ClubNightTokensV1.wall,
-          automaticallyImplyLeading: false,
-          title: Act0ShellRouteHeaderV1(
-            title: widget.previous == null ? 'Enter own hand' : 'Edit own hand',
-            onBack: () => Navigator.of(context).pop(),
-          ),
-        ),
-        body: ListView(
-          key: ValueKey(_step),
-          padding: const EdgeInsets.all(Act0ClubNightTokensV1.screenGutter),
-          children: [
-            Text(
-              [
-                'Seats and blinds',
-                'Cards',
-                'Actions by street',
-                'Payouts and showdown',
-              ][_step],
-              style: Act0ClubNightTokensV1.title,
-            ),
-            if (_step == 0) ...[
-              const Text(
-                'Enter a complete single-pot NLHE hand. Use USD cents and leave empty seats blank. '
-                'Side pots are unsupported. Return any uncalled chips after a short all-in call.',
-              ),
-              DropdownButtonFormField<int>(
-                initialValue: _size,
-                decoration: const InputDecoration(labelText: 'Table size'),
-                items: [
-                  for (var size = 2; size <= 9; size++)
-                    DropdownMenuItem(value: size, child: Text('$size seats')),
-                ],
-                onChanged: (size) => setState(() => _size = size!),
-              ),
-              for (var seat = 1; seat <= _size; seat++)
-                _field('Seat $seat stack'),
-              for (final name in [
-                'Button seat',
-                'Your seat',
-                'Small blind',
-                'Big blind',
-              ])
-                _field(name),
-            ],
-            if (_step == 1) ...[
-              const Text(
-                'Use rank and suit, for example As Kd. Leave undealt streets blank.',
-              ),
-              for (final name in ['Your cards', 'Flop', 'Turn', 'River'])
-                _field(name, cards: true),
-            ],
-            if (_step == 2) ...[
-              const Text(
-                'Include both blind posts. Enter only the cents added or returned on each action.',
-              ),
-              for (final (index, street) in PokerStreet.values.indexed)
-                if (streets >= [0, 3, 4, 5][index]) ...[
-                  Text(
-                    pokerStreetToString(street),
-                    style: Act0ClubNightTokensV1.body,
-                  ),
-                  for (final (index, action) in _actions.indexed)
-                    if (action.street == street)
-                      ListTile(
-                        title: Text(
-                          'Seat ${action.seat} · ${action.kind.label} · ${action.cents}¢',
-                        ),
-                        onTap: () => _editAction(street, index: index),
-                        trailing: IconButton(
-                          tooltip: 'Remove action',
-                          onPressed: () =>
-                              setState(() => _actions.removeAt(index)),
-                          icon: const Icon(Icons.remove_circle_outline),
-                        ),
-                      ),
-                  TextButton(
-                    onPressed: () => _editAction(street),
-                    child: Text('Add ${street.name} action'),
-                  ),
-                ],
-              for (final (index, action) in _actions.indexed)
-                if (streets < [0, 3, 4, 5][action.street.index])
-                  ListTile(
-                    title: Text(
-                      '${action.street.name}: seat ${action.seat} · ${action.kind.label} (no board cards)',
-                    ),
-                    trailing: IconButton(
-                      tooltip: 'Remove action',
-                      onPressed: () => setState(() => _actions.removeAt(index)),
-                      icon: const Icon(Icons.remove_circle_outline),
-                    ),
-                  ),
-            ],
-            if (_step == 3) ...[
-              const Text(
-                'Enter only recorded payouts and known showdown cards. Enter 0 if there was no rake.',
-              ),
-              for (final seat in _seats) ...[
-                _field('Seat ${seat.number} collected'),
-                _field('Seat ${seat.number} shown cards', cards: true),
-              ],
-              _field('Rake'),
-            ],
-            if (_error case final error?)
-              Semantics(
-                liveRegion: true,
-                child: Text(error, style: Act0ClubNightTokensV1.body),
-              ),
-            Wrap(
-              children: [
-                if (_step > 0)
-                  TextButton(
-                    onPressed: () => setState(() {
-                      _step--;
-                      _error = null;
-                    }),
-                    child: const Text('Previous'),
-                  ),
-                Act0ClubButtonsV1.primary(
-                  onPressed: _next,
-                  label: _step == 3 ? 'Save hand' : 'Next',
+        backgroundColor: Act0SkinTokensV1.background,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: Act0SkinTokensV1.historyGutter,
                 ),
-              ],
-            ),
-          ],
+                child: Act0SkinScreenHeaderV1(
+                  title: widget.previous == null
+                      ? 'Enter own hand'
+                      : 'Edit own hand',
+                  onBack: () => Navigator.of(context).pop(),
+                ),
+              ),
+              Expanded(
+                child: ListView(
+                  key: ValueKey(_step),
+                  padding: const EdgeInsets.all(Act0SkinTokensV1.historyGutter),
+                  children: [
+                    Text(
+                      [
+                        'Seats and blinds',
+                        'Cards',
+                        'Actions by street',
+                        'Payouts and showdown',
+                      ][_step],
+                      style: Act0SkinTokensV1.title,
+                    ),
+                    if (_step == 0) ...[
+                      const Text(
+                        'Enter a complete single-pot NLHE hand. Use USD cents and leave empty seats blank. '
+                        'Side pots are unsupported. Return any uncalled chips after a short all-in call.',
+                      ),
+                      DropdownButtonFormField<int>(
+                        initialValue: _size,
+                        decoration: const InputDecoration(
+                          labelText: 'Table size',
+                        ),
+                        items: [
+                          for (var size = 2; size <= 9; size++)
+                            DropdownMenuItem(
+                              value: size,
+                              child: Text('$size seats'),
+                            ),
+                        ],
+                        onChanged: (size) => setState(() => _size = size!),
+                      ),
+                      for (var seat = 1; seat <= _size; seat++)
+                        _field('Seat $seat stack'),
+                      for (final name in [
+                        'Button seat',
+                        'Your seat',
+                        'Small blind',
+                        'Big blind',
+                      ])
+                        _field(name),
+                    ],
+                    if (_step == 1) ...[
+                      const Text(
+                        'Use rank and suit, for example As Kd. Leave undealt streets blank.',
+                      ),
+                      for (final name in [
+                        'Your cards',
+                        'Flop',
+                        'Turn',
+                        'River',
+                      ])
+                        _field(name, cards: true),
+                    ],
+                    if (_step == 2) ...[
+                      const Text(
+                        'Include both blind posts. Enter only the cents added or returned on each action.',
+                      ),
+                      for (final (index, street) in PokerStreet.values.indexed)
+                        if (streets >= [0, 3, 4, 5][index]) ...[
+                          Text(
+                            pokerStreetToString(street),
+                            style: Act0SkinTokensV1.body,
+                          ),
+                          for (final (index, action) in _actions.indexed)
+                            if (action.street == street)
+                              ListTile(
+                                title: Text(
+                                  'Seat ${action.seat} · ${action.kind.label} · ${action.cents}¢',
+                                ),
+                                onTap: () => _editAction(street, index: index),
+                                trailing: IconButton(
+                                  tooltip: 'Remove action',
+                                  onPressed: () =>
+                                      setState(() => _actions.removeAt(index)),
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                ),
+                              ),
+                          TextButton(
+                            onPressed: () => _editAction(street),
+                            child: Text('Add ${street.name} action'),
+                          ),
+                        ],
+                      for (final (index, action) in _actions.indexed)
+                        if (streets < [0, 3, 4, 5][action.street.index])
+                          ListTile(
+                            title: Text(
+                              '${action.street.name}: seat ${action.seat} · ${action.kind.label} (no board cards)',
+                            ),
+                            trailing: IconButton(
+                              tooltip: 'Remove action',
+                              onPressed: () =>
+                                  setState(() => _actions.removeAt(index)),
+                              icon: const Icon(Icons.remove_circle_outline),
+                            ),
+                          ),
+                    ],
+                    if (_step == 3) ...[
+                      const Text(
+                        'Enter only recorded payouts and known showdown cards. Enter 0 if there was no rake.',
+                      ),
+                      for (final seat in _seats) ...[
+                        _field('Seat ${seat.number} collected'),
+                        _field('Seat ${seat.number} shown cards', cards: true),
+                      ],
+                      _field('Rake'),
+                    ],
+                    if (_error case final error?)
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(error, style: Act0SkinTokensV1.body),
+                      ),
+                    Wrap(
+                      children: [
+                        if (_step > 0)
+                          TextButton(
+                            onPressed: () => setState(() {
+                              _step--;
+                              _error = null;
+                            }),
+                            child: const Text('Previous'),
+                          ),
+                        Act0SkinPrimaryButtonV1(
+                          onPressed: _next,
+                          label: _step == 3 ? 'Save hand' : 'Next',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
