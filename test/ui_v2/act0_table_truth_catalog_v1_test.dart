@@ -153,7 +153,7 @@ void main() {
       final regular = Act0ShellStateV1.learnerCatalog(nineSeatPreview: false);
       expect(
         nineSeatWorlds.map((world) => world.lessons.single.taskList.length),
-        [5, 6, 6],
+        [5, 6, 7],
       );
       for (final (index, world) in preview.worlds.indexed) {
         final original = regular.worlds[index];

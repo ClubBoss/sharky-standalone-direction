@@ -219,3 +219,16 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: 10, yellow
   - [wrong] 11.429, yellow — Look again. This counts only six seats in the orbit.
     BETTER ANSWER: 10, yellow
+
+TASK w09_9m_orbit_cost_repair [drill] What is M with 15 BB and no ante?
+CAPTION: Blinds are 0.5/1 BB. No ante. You start with 15 BB. Count each forced payment you make over one orbit, then divide your stack by that cost.
+Q: What is M with 15 BB and no ante?
+HINT [hidden]: (none)
+TABLE: Preflop | You Ad 8d | Pot 1.5 BB | To call 1 BB | Seat UTG | Active utg | Decision utg | Facts no applicable hand facts
+SEATS: UTG Ad 8d stack 15 BB | UTG+1 stack 15 BB | MP stack 15 BB | LJ stack 15 BB | HJ stack 15 BB | CO stack 15 BB | BTN dealer stack 15 BB | SB stack 14.5 BB | BB stack 14 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB
+  + [correct] 10 — Correct. Divide 15 BB by the 1.5 BB orbit cost.
+  - [wrong] 15 — Look again. Include your small blind as well as your big blind.
+    BETTER ANSWER: 10
+  - [wrong] 6.25 — Look again. There are no antes in this hand.
+    BETTER ANSWER: 10

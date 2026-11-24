@@ -449,6 +449,7 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
   Act0TaskFamilyV1? family,
   String? signal,
   String? explanation,
+  bool repairOnly = false,
 }) {
   final answers = _wave6AuthoredChoicesV1(choices);
   return Act0LessonTaskV1(
@@ -458,8 +459,9 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
     rewardXp: xp,
     stepKind: step,
     taskFamily: family,
+    repairOnly: repairOnly,
     runner: Act0RunnerStateV1(
-      lessonId: xp == 0 ? lesson : id,
+      lessonId: xp == 0 && !repairOnly ? lesson : id,
       lessonTitle: lessonTitle,
       lessonSubtitle: '',
       beatIndex: 1,

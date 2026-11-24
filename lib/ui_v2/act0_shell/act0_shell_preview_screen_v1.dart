@@ -1821,8 +1821,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int _placementDiagnosticScore = 0;
   bool _isRuLocaleV1 = false;
 
-  bool get _nineSeatPreviewEnabledV1 =>
-      Act0NineSeatDebugScopeV1.enabledOf(context, listen: false);
+  bool _nineSeatPreviewEnabledV1 = act0NineSeatDebugEnabledV1;
 
   Act0ShellStateV1 get _catalogStateV1 =>
       widget._state?.forLearners(nineSeatPreview: _nineSeatPreviewEnabledV1) ??
@@ -1838,7 +1837,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    Act0NineSeatDebugScopeV1.enabledOf(context);
+    _nineSeatPreviewEnabledV1 =
+        act0NineSeatDebugEnabledV1 &&
+        Act0NineSeatDebugScopeV1.enabledOf(context);
     // Runs after initState and again when MaterialApp changes locale.
     _isRuLocaleV1 = Localizations.localeOf(context).languageCode == 'ru';
   }

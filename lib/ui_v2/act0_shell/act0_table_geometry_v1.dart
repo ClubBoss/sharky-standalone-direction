@@ -203,13 +203,12 @@ class Act0NineSeatDebugScopeV1 extends InheritedWidget {
   static const tableNineSeatV1 = act0NineSeatDebugEnabledV1;
   final bool enabled;
 
-  static bool enabledOf(BuildContext context, {bool listen = true}) {
-    if (!kDebugMode) return false;
-    final scope = listen
-        ? context.dependOnInheritedWidgetOfExactType<Act0NineSeatDebugScopeV1>()
-        : context.getInheritedWidgetOfExactType<Act0NineSeatDebugScopeV1>();
-    return scope?.enabled ?? tableNineSeatV1;
-  }
+  static bool enabledOf(BuildContext context) =>
+      kDebugMode &&
+      (context
+              .dependOnInheritedWidgetOfExactType<Act0NineSeatDebugScopeV1>()
+              ?.enabled ??
+          tableNineSeatV1);
 
   @override
   bool updateShouldNotify(Act0NineSeatDebugScopeV1 oldWidget) =>

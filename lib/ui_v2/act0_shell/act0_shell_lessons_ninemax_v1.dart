@@ -1,5 +1,12 @@
 part of 'act0_shell_state_v1.dart';
 
+bool act0IsNineSeatLessonV1(String lessonId) => switch (lessonId) {
+  'w04_9m_full_ring_transfer' ||
+  'w08_9m_full_ring_transfer' ||
+  'w09_9m_full_ring_transfer' => true,
+  _ => false,
+};
+
 // The specs share one authored lesson ID. Progress uses world-specific keys.
 final _act0NineSeatWorldsV1 = [
   for (final world in _act0PreviewWorlds)
@@ -1446,6 +1453,74 @@ final _nineSeatLessonsV1 = <int, Act0LessonCardV1>{
       ),
       explanation:
           "One SB post + one BB post + nine individual ante posts = 2.4 BB. M = 24/2.4 ≈ 10.",
+    ),
+    _wave6AuthoredTaskV1(
+      id: "w09_9m_orbit_cost_repair",
+      lesson: "full_ring_transfer",
+      lessonTitle: "Full ring transfer",
+      title: "What is M with 15 BB and no ante?",
+      phase: Act0LessonPhaseV1.drill,
+      step: Act0LessonStepKindV1.practice,
+      xp: 0,
+      repairOnly: true,
+      caption:
+          "Blinds are 0.5/1 BB. No ante. You start with 15 BB. Count each forced payment you make over one orbit, then divide your stack by that cost.",
+      question: "What is M with 15 BB and no ante?",
+      teach: "",
+      choices: const [
+        (
+          "answer",
+          "10",
+          Act0FeedbackQualityV1.correct,
+          "Divide 15 BB by the 1.5 BB orbit cost.",
+        ),
+        (
+          "alternative",
+          "15",
+          Act0FeedbackQualityV1.wrong,
+          "Include your small blind as well as your big blind.",
+        ),
+        (
+          "other",
+          "6.25",
+          Act0FeedbackQualityV1.wrong,
+          "There are no antes in this hand.",
+        ),
+      ],
+      table: _nineSeatTableV1(
+        hero: "utg",
+        hand: "Ad 8d",
+        board: const [],
+        stacks: const {
+          "utg": 1500,
+          "utg+1": 1500,
+          "mp": 1500,
+          "lj": 1500,
+          "hj": 1500,
+          "co": 1500,
+          "btn": 1500,
+          "sb": 1500,
+          "bb": 1500,
+        },
+        actions: const [
+          (
+            PokerStreet.preflop,
+            "sb",
+            Act0HandVerbV1.smallBlind,
+            50,
+            "preflop: SB posts 0.5 BB",
+          ),
+          (
+            PokerStreet.preflop,
+            "bb",
+            Act0HandVerbV1.bigBlind,
+            100,
+            "preflop: BB posts 1 BB",
+          ),
+        ],
+      ),
+      explanation:
+          "Add 0.5 BB and 1 BB. Use that 1.5 BB orbit cost as the divisor when calculating M.",
     ),
   ], routeId: "w09_9m_full_ring_transfer"),
 };
