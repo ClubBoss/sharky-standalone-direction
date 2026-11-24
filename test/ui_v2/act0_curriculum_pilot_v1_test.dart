@@ -78,7 +78,7 @@ void main() {
             !_b19Lessons.contains(row.lesson.lessonId) &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(144));
+      expect(played, hasLength(195));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
@@ -100,12 +100,13 @@ void main() {
   );
 
   test(
-    'W17–W18 use the accepted C1 pots and call prices',
+    'W17–W20 use the accepted C1 pots and call prices',
     () {
+      const prices = {..._b4Prices, ..._b5Prices};
       final rows = catalogTasks.where(
-        (row) => row.world.worldNumber == 17 || row.world.worldNumber == 18,
+        (row) => row.world.worldNumber >= 17 && row.world.worldNumber <= 20,
       );
-      for (final world in [17, 18]) {
+      for (final world in [17, 18, 19, 20]) {
         expect(
           rows.where((row) => row.world.worldNumber == world),
           hasLength(30),
@@ -116,7 +117,7 @@ void main() {
       );
       expect(
         played.map((row) => row.task.taskId),
-        unorderedEquals(_b4Prices.keys),
+        unorderedEquals(prices.keys),
       );
       for (final row in played) {
         final id = row.task.taskId;
@@ -150,7 +151,7 @@ void main() {
             due,
             due == 0 ? null : (1000 * due / (eligiblePot + due)).round() / 10,
           ),
-          _b4Prices[id],
+          prices[id],
           reason: id,
         );
       }
@@ -333,4 +334,56 @@ const _b4Prices = <String, (double, double, double?)>{
   'w18_6_guided_value_on_blank': (8, 0, null),
   'w18_6_checkpoint_two_caller_check': (8, 0, null),
   'w18_6_day7_tie_with_three_players': (8, 0, null),
+};
+
+// Accepted W19–W20 values: total pot, call amount, and eligible-pot equity.
+const _b5Prices = <String, (double, double, double?)>{
+  'w19_1_read_information_value': (9.5, 4, 29.6),
+  'w19_1_guided_respond_to_extra_bluffs': (10.5, 5, 32.3),
+  'w19_1_transfer_pick_baseline_when_uncertain': (11.5, 6, 34.3),
+  'w19_1_day7_counter_changes_with_strategy': (10.5, 5, 32.3),
+  'w19_2_read_overfold_denominator': (5.5, 0, null),
+  'w19_2_guided_bluff_pool_overfold': (5.5, 0, null),
+  'w19_2_transfer_pool_underfold': (5.5, 0, null),
+  'w19_2_day7_pool_overbluffs_size': (18.5, 8, 30.2),
+  'w19_3_read_site_and_type': (5.5, 0, null),
+  'w19_3_guided_depth_split': (5.5, 0, null),
+  'w19_3_transfer_overcalls_draws': (5.5, 0, null),
+  'w19_3_day7_anonymous_fastfold': (10.5, 5, 32.3),
+  'w19_4_read_predictable_single_size': (5.5, 0, null),
+  'w19_4_guided_adaptation_before': (5.5, 0, null),
+  'w19_4_transfer_adaptation_after': (5.5, 0, null),
+  'w19_4_day7_simplify_mix': (5.5, 0, null),
+  'w19_5_read_cap_can_vanish': (5.5, 0, null),
+  'w19_5_guided_attack_a_proven_cap': (5.5, 0, null),
+  'w19_5_transfer_no_attack_into_traps': (6.5, 0, null),
+  'w19_5_day7_runout_nuts_after_check': (5.5, 0, null),
+  'w19_6_read_self_audit_ratio': (11, 5.5, 33.3),
+  'w19_6_guided_depth_changes_counter': (32.5, 12, 27.0),
+  'w19_6_checkpoint_which_data_controls': (8.5, 0, null),
+  'w19_6_day7_audit_which_hands_fold': (13.5, 8, 37.2),
+  'w20_1_read_time_bank_context': (10.5, 5, 32.3),
+  'w20_1_guided_compare_matched_timing': (5.5, 0, null),
+  'w20_1_transfer_live_baseline_break': (11.5, 6, 34.3),
+  'w20_1_day7_distracted_online_sample': (13.5, 8, 37.2),
+  'w20_2_read_filter_action_chain': (15.5, 6, 27.9),
+  'w20_2_guided_value_heavy_size': (17.5, 8, 31.4),
+  'w20_2_transfer_large_size_polar': (20.5, 9, 30.5),
+  'w20_2_day7_unfamiliar_size_fold': (23.5, 12, 33.8),
+  'w20_3_read_reg_vs_crusher': (5.5, 0, null),
+  'w20_3_guided_raise_larger_inelastic': (5.5, 0, null),
+  'w20_3_transfer_stakes_discomfort_caveat': (5.5, 0, null),
+  'w20_3_day7_table_captain_vs_overbluffer': (11.5, 6, 34.3),
+  'w20_4_read_more_limpers_change_price': (3.5, 1, 22.2),
+  'w20_4_guided_isolation_two_sizes': (3.5, 1, 22.2),
+  'w20_4_transfer_skip_marginal_isolation': (5, 0, null),
+  'w20_4_day7_value_adjust_to_sticky': (7.5, 2, 21.1),
+  'w20_5_read_third_level': (5.5, 0, null),
+  'w20_5_guided_keep_table_welcoming': (5.5, 0, null),
+  'w20_5_transfer_image_changes_value': (5.5, 0, null),
+  'w20_5_day7_dont_use_private_image': (5.5, 0, null),
+  'w20_6_read_confirmation_counterexample': (11.5, 6, 34.3),
+  'w20_6_guided_short_price_with_read': (32.5, 12, 27.0),
+  'w20_6_checkpoint_filter_then_call': (19.5, 8, 29.1),
+  'w20_6_day7_late_sizing_update': (19.5, 8, 29.1),
 };

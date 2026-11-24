@@ -5113,4 +5113,6 @@ const _act0PilotCheckpointLessonsV1 = {
   'commitment_checkpoint',
   'three_four_bet_checkpoint',
   'multiway_checkpoint',
+  'audit_and_checkpoint',
+  'read_calibration_checkpoint',
 };

@@ -3,6 +3,7 @@ import 'act0_decision_reasoning_w10_w12_v1.dart';
 import 'act0_decision_reasoning_w13_w14_v1.dart';
 import 'act0_decision_reasoning_w15_w16_v1.dart';
 import 'act0_decision_reasoning_w17_w18_v1.dart';
+import 'act0_decision_reasoning_w19_w20_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -118,6 +119,18 @@ const act0PrinciplesV1 = <String, int>{
     "eligible_side_pot": 18,
     "reopen_or_enter": 18,
     "multiway_showdown_plan": 18,
+    "equilibrium_or_counter": 19,
+    "population_by_node": 19,
+    "scope_evidence": 19,
+    "protect_against_adjustment": 19,
+    "evidence_of_cap": 19,
+    "audit_your_response": 19,
+    "weight_tell_by_context": 20,
+    "action_conditioned_read": 20,
+    "observable_player_profiles": 20,
+    "isolate_with_plan": 20,
+    "ethical_metagame": 20,
+    "calibrated_action_choice": 20,
   },
 };
 
@@ -130,6 +143,7 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
     ...act0DecisionReasoningW13W14V1,
     ...act0DecisionReasoningW15W16V1,
     ...act0DecisionReasoningW17W18V1,
+    ...act0DecisionReasoningW19W20V1,
     ...act0DecisionReasoningB19V1,
   },
 };
