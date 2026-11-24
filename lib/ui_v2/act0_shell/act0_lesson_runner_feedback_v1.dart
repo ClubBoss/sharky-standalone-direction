@@ -23,6 +23,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.completionSummary,
     this.isAssistedDecision = false,
     this.isRepaired = false,
+    this.assistedTitle,
     this.localizeW1Ctas = false,
     this.firstValueReceiptLine,
     this.repairReasonLine,
@@ -42,6 +43,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     this.forceCompactPhoneFeedback = false,
     this.ensureFullCtaGeometry = false,
     this.sceneOwnsFeedbackExplanation = false,
+    this.alwaysShowAnswerReason = false,
     this.coachVoiceSeed,
     required this.onContinue,
   });
@@ -66,6 +68,7 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final Act0RunnerCompletionSummaryV1? completionSummary;
   final bool isAssistedDecision;
   final bool isRepaired;
+  final String? assistedTitle;
   final bool localizeW1Ctas;
   final String? firstValueReceiptLine;
   final String? repairReasonLine;
@@ -85,12 +88,17 @@ class Act0FeedbackShellV1 extends StatelessWidget {
   final bool forceCompactPhoneFeedback;
   final bool ensureFullCtaGeometry;
   final bool sceneOwnsFeedbackExplanation;
+  final bool alwaysShowAnswerReason;
   final String? coachVoiceSeed;
   final VoidCallback onContinue;
 
   @override
   Widget build(BuildContext context) => Act0ChoiceResultSemanticsV1(
-    title: isRepaired ? _fixedFeedbackLabelV1(context) : title,
+    title: isRepaired
+        ? _fixedFeedbackLabelV1(context)
+        : isAssistedDecision && quality.passes
+        ? assistedTitle ?? title
+        : title,
     selectedLabel: selectedLabel,
     otherOptions: otherOptions,
     reason: reason,
@@ -177,9 +185,10 @@ class Act0FeedbackShellV1 extends StatelessWidget {
     final resolvedTitle = isRepaired
         ? _fixedFeedbackLabelV1(context)
         : isAssistedDecision && !isWrong
-        ? act0AcademyLanguageV1(context) == 'ru'
-              ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
-              : 'Correct with help'
+        ? assistedTitle ??
+              (act0AcademyLanguageV1(context) == 'ru'
+                  ? '\u0412\u0435\u0440\u043d\u043e \u0441 \u043f\u043e\u0434\u0441\u043a\u0430\u0437\u043a\u043e\u0439'
+                  : 'Correct with help')
         : _feedbackTitleFloorV1(
             context,
             title: title,
@@ -443,7 +452,8 @@ class Act0FeedbackShellV1 extends StatelessWidget {
       );
     }
 
-    final showReason = !rapidMode && !hasRepairTeachingBlock;
+    final showReason =
+        alwaysShowAnswerReason || (!rapidMode && !hasRepairTeachingBlock);
     final foldsNextClueIntoExplanation =
         pinsF1FeedbackCta &&
         showReason &&

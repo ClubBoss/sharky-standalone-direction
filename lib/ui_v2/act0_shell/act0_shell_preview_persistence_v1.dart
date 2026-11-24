@@ -706,12 +706,13 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       if (runner == null) {
         continue;
       }
-      final selectedOption = runner.options
-          .cast<Act0RunnerOptionV1?>()
-          .firstWhere(
-            (candidate) => candidate?.id == intent.choiceId,
-            orElse: () => null,
-          );
+      final selectedOption =
+          runner.options
+              .where((candidate) => candidate.id == intent.choiceId)
+              .firstOrNull ??
+          (placementRunner == null
+              ? act0RestoredNumberOptionV1(task, intent.choiceId)
+              : null);
       final correctOption = runner.options
           .cast<Act0RunnerOptionV1?>()
           .firstWhere(
