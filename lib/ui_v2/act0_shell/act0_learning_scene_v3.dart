@@ -1,4 +1,3 @@
-import 'skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_coach_phrase_contract_v1.dart';
@@ -139,7 +138,6 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     required this.phase,
     required this.sharkyState,
     this.isAssistedFeedback = false,
-    this.feedbackGrade,
     required this.eyebrow,
     required this.headline,
     required this.support,
@@ -159,7 +157,6 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
   final Act0SharkyCompanionStateV1 sharkyState;
 
   final bool isAssistedFeedback;
-  final Act0SkinFeedbackGradeV1? feedbackGrade;
   final String eyebrow;
   final String headline;
   final String support;
@@ -246,24 +243,18 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
                     : Text(
                         eyebrow,
                         key: const Key('act0_integrated_scene_purpose'),
-                        maxLines: feedbackGrade == null ? 1 : null,
-                        overflow: feedbackGrade == null
-                            ? TextOverflow.fade
-                            : null,
-                        softWrap: feedbackGrade == null ? false : null,
+                        maxLines: 1,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
                         style: Act0ShellTokensV1.label.copyWith(
                           color:
-                              feedbackGrade?.tone ??
-                              (showSpokenSurface ||
-                                      phase ==
-                                          Act0LearningScenePhaseV3.tableTask
-                                  ? Act0ShellTokensV1.textMuted
-                                  : tone),
+                              showSpokenSurface ||
+                                  phase == Act0LearningScenePhaseV3.tableTask
+                              ? Act0ShellTokensV1.textMuted
+                              : tone,
                           fontSize: showSpokenSurface ? 8.8 : 10.2,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: feedbackGrade == null
-                              ? (showSpokenSurface ? 0.35 : 0.65)
-                              : null,
+                          letterSpacing: showSpokenSurface ? 0.35 : 0.65,
                         ),
                       ),
               ),

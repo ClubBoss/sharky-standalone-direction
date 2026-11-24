@@ -1,5 +1,4 @@
 import 'act0_action_reason_v1.dart';
-import 'skin/act0_skin_components_v1.dart';
 import 'act0_route_practice_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -3048,31 +3047,23 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         total: selectedLesson.courseTaskList.length,
       );
     }
-    final canShowRepairFeedback =
-        playSelectedTask != null &&
-        !_placementDiagnosticActive &&
-        _diagnosticLearningEntryV1 == null &&
-        !openedAsSpacedReview &&
-        _activeSameSignalRecheckTaskId != playSelectedTask.taskId;
-    final isLessonRetry =
-        canShowRepairFeedback && _isExactLessonRetryV1(playSelectedTask);
+    final lastAnswer = _learningEvidenceHistoryV1.records.lastOrNull;
     final isRepairAttempt =
-        canShowRepairFeedback &&
-        (isLessonRetry ||
+        playSelectedTask != null &&
+        !openedAsSpacedReview &&
+        _activeSameSignalRecheckTaskId != playSelectedTask.taskId &&
+        (_isExactLessonRetryV1(playSelectedTask) ||
             _activeLessonWrapUpTaskId == playSelectedTask.taskId ||
             _activeRepairTaskId == playSelectedTask.taskId ||
             _practiceQueueRepairRequestForTaskV1(playSelectedTask.taskId) !=
-                null);
-    final lastAttempt = _learningEvidenceHistoryV1.records.lastOrNull;
-    final restoredRepairFeedback =
-        canShowRepairFeedback &&
-        _phase == Act0LessonPhaseV1.review &&
-        _selectedOptionId != null &&
-        lastAttempt?.isRepaired == true &&
-        lastAttempt?.worldId == selectedWorld.worldId &&
-        lastAttempt?.lessonId == selectedLesson.lessonId &&
-        lastAttempt?.taskId == playSelectedTask.taskId &&
-        lastAttempt?.choiceId == _selectedOptionId;
+                null ||
+            (_phase == Act0LessonPhaseV1.review &&
+                lastAnswer != null &&
+                lastAnswer.worldId == selectedWorld.worldId &&
+                lastAnswer.lessonId == selectedLesson.lessonId &&
+                lastAnswer.taskId == playSelectedTask.taskId &&
+                lastAnswer.choiceId == _selectedOptionId &&
+                lastAnswer.isRepaired));
     final sameSessionLearningDelta =
         playSelectedTask != null &&
             _activeRepairTaskId != playSelectedTask.taskId
@@ -4224,9 +4215,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 completionSummary: completionSummary,
                                 isAssistedDecision: _choiceWasAssistedV1,
                                 isRepairAttempt: isRepairAttempt,
-                                isLessonRetryFeedback: isLessonRetry,
-                                isRestoredRepairFeedback:
-                                    restoredRepairFeedback,
                                 firstValueReceiptLine:
                                     _diagnosticLearningEntryV1 == null &&
                                         _placementHandoffActive &&

@@ -6,8 +6,6 @@ import 'act0_attempt_archive_view_model_v1.dart';
 import 'act0_attempt_replay_screen_v1.dart';
 import 'act0_completed_decision_contract_v1.dart';
 import 'act0_club_night_tokens_v1.dart';
-import 'act0_durable_learning_time_contract_v1.dart';
-
 import 'act0_imported_hand_v1.dart';
 import 'act0_manual_hand_screen_v1.dart';
 import 'act0_shell_tokens_v1.dart';
@@ -363,10 +361,7 @@ class _Act0AttemptArchiveScreenV1State
     final clock = dateLabels.formatTimeOfDay(TimeOfDay.fromDateTime(time));
     final result =
         attempt.actionReason?.title ??
-        (evidence.resultKind == Act0CompletedDecisionV1.repairedResultKind &&
-                evidence.reviewKind == Act0ReviewKindV1.exactReplay
-            ? 'Repaired'
-            : evidence.isRepaired
+        (evidence.isRepaired
             ? 'Fixed'
             : switch (evidence.resultKind) {
                 'correct' || 'co_correct' => 'Correct',

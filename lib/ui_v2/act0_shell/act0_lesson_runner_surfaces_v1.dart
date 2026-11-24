@@ -9,7 +9,6 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
     required this.table,
     required this.isReview,
     required this.isRepaired,
-    required this.isLessonRetryFeedback,
     required this.question,
     required this.onBack,
     required this.onChooseOption,
@@ -29,7 +28,6 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
   final Act0TableStateV1 table;
   final bool isReview;
   final bool isRepaired;
-  final bool isLessonRetryFeedback;
   final String question;
   final VoidCallback onBack;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
@@ -103,10 +101,7 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                             children: [
                               Text(
                                 isRepaired
-                                    ? _fixedFeedbackLabelV1(
-                                        context,
-                                        lessonRetry: isLessonRetryFeedback,
-                                      )
+                                    ? _fixedFeedbackLabelV1(context)
                                     : actionPayoff?.type ==
                                           Act0ActionPayoffTypeV1
                                               .recoveredSuccess
@@ -144,16 +139,16 @@ class _TaskOwnedStablePracticePresentationV1 extends StatelessWidget {
                                 alignment: Alignment.centerRight,
                                 child: KeyedSubtree(
                                   key: const Key('act0_shell_continue_cta'),
-                                  child: Act0SkinPrimaryButtonV1(
-                                    compact: true,
-                                    controlKey: const Key(
+                                  child: FilledButton(
+                                    key: const Key(
                                       'act0_shell_feedback_continue_cta',
                                     ),
                                     onPressed: onContinueReview,
-                                    label:
-                                        forwardCtaLabel ??
-                                        actionPayoff?.primaryActionLabel ??
-                                        'Continue',
+                                    child: Text(
+                                      forwardCtaLabel ??
+                                          actionPayoff?.primaryActionLabel ??
+                                          'Continue',
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1693,6 +1688,9 @@ class _LearningRailV1 extends StatelessWidget {
     final fallbackCoachLine = sharkyLine.trim();
     final showFallbackCoachLine =
         !hasSupportLine && fallbackCoachLine.isNotEmpty;
+    final tone = canAdvance
+        ? Act0ShellTokensV1.primary
+        : Act0ShellTokensV1.textMuted;
     if (contextOwnsTeachingCopy) {
       final pageCount = math.max(1, supportSegments.length);
       final currentPage = activeSupportSegmentIndex.clamp(0, pageCount - 1);
@@ -1702,11 +1700,13 @@ class _LearningRailV1 extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(14, 9, 14, 8),
           child: SizedBox(
             width: double.infinity,
-            child: Act0SkinPrimaryButtonV1(
-              compact: true,
-              controlKey: const Key('act0_shell_continue_cta'),
+            child: FilledButton(
+              key: const Key('act0_shell_continue_cta'),
               onPressed: canAdvance ? onAdvance : null,
-              label: advanceLabel,
+              style: Act0ShellTokensV1.primaryButtonStyle(
+                height: Act0ShellTokensV1.compactCtaHeight,
+              ),
+              child: Text(advanceLabel),
             ),
           ),
         );
@@ -1740,14 +1740,14 @@ class _LearningRailV1 extends StatelessWidget {
                     : const SizedBox.shrink(),
               ),
               const SizedBox(width: Act0ShellTokensV1.gapSm),
-              Flexible(
-                flex: 2,
-                child: Act0SkinPrimaryButtonV1(
-                  compact: true,
-                  controlKey: const Key('act0_shell_continue_cta'),
-                  onPressed: canAdvance ? onAdvance : null,
-                  label: advanceLabel,
-                ),
+              _LearningRailNavButtonV1(
+                icon: Icons.arrow_forward_ios_rounded,
+                buttonKey: const Key('act0_shell_continue_cta'),
+                enabled: canAdvance,
+                onPressed: canAdvance ? onAdvance : null,
+                tone: tone,
+                compact: true,
+                label: advanceLabel,
               ),
             ],
           ),
@@ -1857,6 +1857,7 @@ class _LearningRailV1 extends StatelessWidget {
                     const SizedBox(height: 3),
                     SizedBox(
                       key: const Key('act0_shell_learning_rail_fixed_footer'),
+                      height: 28,
                       child: Row(
                         children: [
                           _LearningRailNavButtonV1(
@@ -1887,16 +1888,16 @@ class _LearningRailV1 extends StatelessWidget {
                             const SizedBox(width: Act0ShellTokensV1.gapSm),
                           ] else
                             const Spacer(),
-                          Flexible(
-                            flex: 2,
-                            child: Act0SkinPrimaryButtonV1(
-                              compact: true,
-                              controlKey: const Key('act0_shell_continue_cta'),
-                              onPressed: canAdvance ? onAdvance : null,
-                              label: act0RuntimeLocalizedGeneralLabelV1(
-                                context,
-                                advanceLabel,
-                              ),
+                          _LearningRailNavButtonV1(
+                            icon: Icons.arrow_forward_ios_rounded,
+                            buttonKey: const Key('act0_shell_continue_cta'),
+                            enabled: canAdvance,
+                            onPressed: canAdvance ? onAdvance : null,
+                            tone: tone,
+                            compact: compactRail,
+                            label: act0RuntimeLocalizedGeneralLabelV1(
+                              context,
+                              advanceLabel,
                             ),
                           ),
                         ],
@@ -1984,7 +1985,9 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
     required this.buttonKey,
     required this.enabled,
     this.onPressed,
+    this.tone = Act0ShellTokensV1.text,
     this.compact = false,
+    this.label,
     this.semanticLabel,
   });
 
@@ -1992,19 +1995,25 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
   final Key buttonKey;
   final bool enabled;
   final VoidCallback? onPressed;
+  final Color tone;
   final bool compact;
+  final String? label;
   final String? semanticLabel;
 
   @override
   Widget build(BuildContext context) {
-    const tone = Act0ShellTokensV1.text;
-    final size = compact ? 32.0 : 40.0;
+    final hasLabel = (label ?? '').trim().isNotEmpty;
+    final resolvedLabel = label?.trim() ?? '';
     return Act0SemanticActionV1(
-      label: semanticLabel ?? 'Previous theory page',
+      label:
+          semanticLabel ?? (hasLabel ? resolvedLabel : 'Previous theory page'),
       onTap: enabled ? onPressed : null,
       child: Container(
-        width: size,
-        height: size,
+        width: hasLabel ? null : (compact ? 32 : 40),
+        height: compact ? 32 : 40,
+        constraints: BoxConstraints(
+          minWidth: hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
+        ),
         decoration: BoxDecoration(
           color: enabled
               ? tone.withValues(alpha: 0.12)
@@ -2020,18 +2029,49 @@ class _LearningRailNavButtonV1 extends StatelessWidget {
           key: buttonKey,
           onPressed: enabled ? onPressed : null,
           style: TextButton.styleFrom(
-            padding: EdgeInsets.zero,
-            minimumSize: Size.square(size),
+            padding: EdgeInsets.symmetric(
+              horizontal: hasLabel ? 10 : 0,
+              vertical: 0,
+            ),
+            minimumSize: Size(
+              hasLabel ? (compact ? 92 : 110) : (compact ? 32 : 40),
+              compact ? 32 : 40,
+            ),
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(Act0ShellTokensV1.radiusBase),
             ),
           ),
-          child: Icon(
-            icon,
-            size: compact ? 12 : 16,
-            color: enabled ? tone : Act0ShellTokensV1.textDim,
-          ),
+          child: hasLabel
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        resolvedLabel,
+                        overflow: TextOverflow.fade,
+                        softWrap: false,
+                        style: Act0ShellTokensV1.label.copyWith(
+                          color: enabled ? tone : Act0ShellTokensV1.textDim,
+                          fontSize: compact ? 11.0 : 11.5,
+                          fontWeight: FontWeight.w800,
+                          letterSpacing: 0,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Icon(
+                      icon,
+                      size: compact ? 12 : 16,
+                      color: enabled ? tone : Act0ShellTokensV1.textDim,
+                    ),
+                  ],
+                )
+              : Icon(
+                  icon,
+                  size: compact ? 12 : 16,
+                  color: enabled ? tone : Act0ShellTokensV1.textDim,
+                ),
         ),
       ),
     );
