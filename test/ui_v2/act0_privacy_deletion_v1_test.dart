@@ -386,7 +386,7 @@ void main() {
       expect(banner, findsNothing);
       expect(promptCount, 1);
     },
-    variant: const TargetPlatformVariant.only(TargetPlatform.iOS),
+    variant: TargetPlatformVariant.only(TargetPlatform.iOS),
   );
 
   test('reminders need explicit opt-in and deletion disables them', () async {
