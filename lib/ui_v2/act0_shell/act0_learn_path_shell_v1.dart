@@ -646,23 +646,6 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
               controller: _learnScrollController,
               key: const Key('act0_shell_learn_screen'),
               slivers: [
-                if (widget.onW1RulesCheck != null && detailLessonId == null)
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: Act0SkinTokensV1.screenGutter,
-                    ),
-                    sliver: SliverToBoxAdapter(
-                      child: Act0SkinListRowV1(
-                        controlKey: const Key('act0_shell_w1_rules_map'),
-                        title: 'Check W1 rules',
-                        subtitle: 'Pass to unlock W2 and skip the W1 lessons.',
-                        expanded: false,
-                        dark: true,
-                        expandable: false,
-                        onTap: widget.onW1RulesCheck,
-                      ),
-                    ),
-                  ),
                 SliverPadding(
                   padding: const EdgeInsets.fromLTRB(
                     Act0SkinTokensV1.screenGutter,
@@ -683,6 +666,9 @@ class _Act0LearnPathShellV1State extends State<Act0LearnPathShellV1> {
                         child: _LearnMissionFirstBodyV5(
                           pinnedHeaderKey: _pinnedModuleHeaderKey,
                           dayGoalDone: widget.dayGoalDone,
+                          onW1RulesCheck: detailLessonId == null
+                              ? widget.onW1RulesCheck
+                              : null,
                           world: selectedWorld,
                           moduleTitle: widget.moduleTitle,
                           moduleProgressLabel: widget.moduleProgressLabel,

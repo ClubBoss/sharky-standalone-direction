@@ -4,6 +4,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
   const _LearnMissionFirstBodyV5({
     required this.pinnedHeaderKey,
     required this.dayGoalDone,
+    required this.onW1RulesCheck,
     required this.world,
     required this.moduleTitle,
     required this.moduleProgressLabel,
@@ -37,6 +38,7 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
 
   final GlobalKey pinnedHeaderKey;
   final bool? dayGoalDone;
+  final VoidCallback? onW1RulesCheck;
   final Act0WorldCardV1 world;
   final String moduleTitle;
   final String moduleProgressLabel;
@@ -118,6 +120,18 @@ class _LearnMissionFirstBodyV5 extends StatelessWidget {
           onSelectLesson: onSelectLesson,
           expandedBodyForLesson: expandedBodyForLesson,
         ),
+        if (onW1RulesCheck != null) ...[
+          const SizedBox(height: Act0SkinTokensV1.gapMd),
+          Act0SkinListRowV1(
+            controlKey: const Key('act0_shell_w1_rules_map'),
+            title: 'Check W1 rules',
+            subtitle: 'Pass to unlock W2 and skip the W1 lessons.',
+            expanded: false,
+            dark: true,
+            expandable: false,
+            onTap: onW1RulesCheck,
+          ),
+        ],
         const SizedBox(
           key: Key('act0_shell_learn_safe_bottom_spacer'),
           height: Act0SkinTokensV1.gapLg,
