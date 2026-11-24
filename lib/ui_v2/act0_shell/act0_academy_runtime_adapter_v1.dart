@@ -172,6 +172,7 @@ Widget act0AcademyReviewRuntimeV1(
           .map((i) => Act0AcademyReviewSavedCheckV1(checkId: i.jobId))
           .toList(growable: false),
       hasHistory: legacy.mistakeHistoryItems.isNotEmpty,
+      reasonRepairs: legacy.reasonRepairs,
       onRepairMistake: _guardValue(isCurrent, legacy.onFixMistake),
       onReplayPastRepair: _guardValue(isCurrent, legacy.onReplayFixedMistake),
       onStartDueReview: _guardValue(isCurrent, legacy.onStartDueReview),

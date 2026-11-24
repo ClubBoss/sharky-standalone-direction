@@ -359,14 +359,16 @@ class _Act0AttemptArchiveScreenV1State
     final dateLabels = MaterialLocalizations.of(context);
     final date = dateLabels.formatMediumDate(time);
     final clock = dateLabels.formatTimeOfDay(TimeOfDay.fromDateTime(time));
-    final result = evidence.isRepaired
-        ? 'Fixed'
-        : switch (evidence.resultKind) {
-            'correct' || 'co_correct' => 'Correct',
-            'acceptable' => 'Acceptable',
-            'suboptimal' => 'Suboptimal',
-            _ => 'Incorrect',
-          };
+    final result =
+        attempt.actionReason?.title ??
+        (evidence.isRepaired
+            ? 'Fixed'
+            : switch (evidence.resultKind) {
+                'correct' || 'co_correct' => 'Correct',
+                'acceptable' => 'Acceptable',
+                'suboptimal' => 'Suboptimal',
+                _ => 'Incorrect',
+              });
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -398,6 +400,11 @@ class _Act0AttemptArchiveScreenV1State
             'Your choice: ${attempt.choiceLabel ?? evidence.choiceId}',
             style: Act0AcademyReadingStyleV1.body,
           ),
+          if (attempt.actionReason case final result?)
+            Text(
+              'Reason: ${result.reason.text} · ${result.reason.tag.label}',
+              style: Act0AcademyReadingStyleV1.muted,
+            ),
           Text(switch (evidence.assistanceKind) {
             Act0DecisionAssistanceV1.none => 'Help: none',
             Act0DecisionAssistanceV1.quickHint => 'Help: quick hint',

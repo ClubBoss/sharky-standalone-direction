@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'act0_route_practice_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -1345,8 +1346,28 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _persistProgress(acknowledgement: acknowledgement);
   }
 
+  static const _actionReasonEnabledV1 =
+      !kReleaseMode && bool.fromEnvironment('actionReasonV1');
+  bool get _actionReasonV1 => _actionReasonEnabledV1;
+  Act0ActionReasonResultV1? _pendingActionReasonV1;
+
+  bool get _luckyCorrectV1 {
+    if (!_actionReasonV1 || _phase != Act0LessonPhaseV1.review) return false;
+    final last = _learningEvidenceHistoryV1.records.reversed
+        .where(
+          (record) =>
+              record.worldId == _selectedWorldId &&
+              record.lessonId == _selectedLessonId &&
+              record.taskId == _selectedTaskId,
+        )
+        .firstOrNull;
+    return last != null &&
+        last.choiceId == _selectedOptionId &&
+        act0IsReasonErrorTypeV1(last.errorType);
+  }
+
   bool get _choiceHasIndependentProvenanceV1 =>
-      _choiceAssistanceV1 == Act0DecisionAssistanceV1.none;
+      _choiceAssistanceV1 == Act0DecisionAssistanceV1.none && !_luckyCorrectV1;
   bool get _choiceWasAssistedV1 =>
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.quickHint ||
       _choiceAssistanceV1 == Act0DecisionAssistanceV1.theoryRecall;
@@ -4442,11 +4463,44 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     );
                                   },
                                 ),
+                                reasons:
+                                    _actionReasonV1 &&
+                                        multiStreet == null &&
+                                        !_placementDiagnosticActive &&
+                                        _diagnosticLearningEntryV1 == null &&
+                                        _lessonExampleSourceTaskIdV1 == null &&
+                                        _activeRepairTaskId == null &&
+                                        _activeSameSignalRecheckTaskId ==
+                                            null &&
+                                        _activeLessonWrapUpTaskId == null
+                                    ? playSelectedTask.reasons
+                                    : null,
+                                onActionReason: (reason) {
+                                  if (_acceptRecoveryCallbackV1(
+                                        callbackEpochV1,
+                                      ) &&
+                                      _selectedTaskId ==
+                                          playSelectedTask.taskId) {
+                                    _pendingActionReasonV1 = reason;
+                                  }
+                                },
                                 onChooseOption: (option) => _setStateForRunnerCallbackV1(
                                   callbackEpochV1,
                                   callbackDiagnosticEntryV1,
                                   callbackDiagnosticRunIdV1,
                                   () {
+                                    final lucky =
+                                        _pendingActionReasonV1?.needsRepair ??
+                                        false;
+                                    _pendingActionReasonV1 = null;
+                                    if (lucky) {
+                                      _selectedOptionId = option.id;
+                                      _selectedPresetId = null;
+                                      _selectedPresetTaskId = null;
+                                      _phase = Act0LessonPhaseV1.review;
+                                      _teachingStepIndex = 0;
+                                      return;
+                                    }
                                     if (multiStreetRun != null) {
                                       final current =
                                           _multiStreetRunsV1[playSelectedTask
@@ -4661,6 +4715,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       return;
                                     }
                                     _latestCompletedDecisionV1 = decision;
+                                    if (decision.actionReason?.needsRepair ??
+                                        false) {
+                                      _appendLearningEvidenceV1(decision);
+                                      return;
+                                    }
                                     _recordCanonicalRepairDecisionV1(
                                       decision,
                                       selectedTask: playSelectedTask,
@@ -5001,7 +5060,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                                     .selectedOption
                                                     ?.isCorrect ??
                                                 false) &&
-                                            _choiceHasIndependentProvenanceV1);
+                                            (_choiceHasIndependentProvenanceV1 ||
+                                                (_luckyCorrectV1 &&
+                                                    _choiceAssistanceV1 ==
+                                                        Act0DecisionAssistanceV1
+                                                            .none)));
                                     if (_rapidPracticeLoop &&
                                         _activePracticeGroupId == 'daily') {
                                       _completeCurrentTask(
@@ -5253,6 +5316,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     _reviewResolutionStateV1(),
                                 patternCoachingProjection: reviewCoaching,
                               ).items,
+                          reasonRepairs: _actionReasonV1
+                              ? _reasonRepairsForReviewV1()
+                              : null,
                           dueReviewItems: _dueReviewItemsV1(),
                           nextStep: personalizedNextStep,
                           onOpenRecommendedAction: () => setState(() {

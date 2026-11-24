@@ -1,6 +1,33 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
 extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
+  Widget? _reasonRepairsForReviewV1() {
+    final groups = <Act0MisconceptionTagV1, List<Act0ArchivedAttemptV1>>{};
+    for (final attempt in _attemptArchiveV1.attempts) {
+      final result = attempt.actionReason;
+      if (result == null || !result.needsRepair) continue;
+      groups.putIfAbsent(result.reason.tag, () => []).add(attempt);
+    }
+    if (groups.isEmpty) return null;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text('Reason repairs'),
+        for (final MapEntry(key: tag, value: attempts) in groups.entries)
+          ExpansionTile(
+            title: Text(tag.label),
+            children: [
+              for (final attempt in attempts)
+                ListTile(
+                  title: Text(attempt.taskLabel ?? attempt.evidence.taskId),
+                  subtitle: Text(attempt.actionReason!.reason.text),
+                ),
+            ],
+          ),
+      ],
+    );
+  }
+
   bool _startTaskByIds(
     Act0WorldCardV1 selectedWorld,
     String lessonId,
@@ -112,11 +139,26 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     for (final item in _durableRetentionHistoryV1.dueItemsAt(
       widget.clock.nowUtc(),
     ))
-      if (_dueReviewTargetWorldV1(item) != null)
+      if (_dueReviewTargetWorldV1(item) != null &&
+          (!item.isReasonRetest ||
+              (_actionReasonV1 && _actionReasonRetestTaskV1(item) != null)))
         item.withUnseenTask(_unseenReviewTaskIdV1(item)),
   ];
 
+  Act0LessonTaskV1? _actionReasonRetestTaskV1(Act0DueReviewItemV1 item) {
+    final targetId = act0ActionReasonPilotsV1[item.taskId]?.retestTaskId;
+    final world = _dueReviewTargetWorldV1(item);
+    return world?.lessons
+        .where((lesson) => lesson.lessonId == item.lessonId)
+        .expand((lesson) => lesson.taskList)
+        .where((task) => task.taskId == targetId)
+        .firstOrNull;
+  }
+
   String? _unseenReviewTaskIdV1(Act0DueReviewItemV1 item) {
+    if (item.isReasonRetest) {
+      return null;
+    }
     final family = _durableRetentionHistoryV1.familyById(item.conceptFamilyId);
     // Day 2 checks retention on familiar material. After a spaced success,
     // offer a new hand only if its review-only source has never been opened.
@@ -165,7 +207,11 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     }
     final world = _dueReviewTargetWorldV1(item);
     if (world == null) return;
-    if (item.unseenTaskId == null) {
+    if (item.isReasonRetest) {
+      if (!_actionReasonV1) return;
+      final target = _actionReasonRetestTaskV1(item);
+      if (target != null) _openSpacedReviewTaskV1(item, world, changed: target);
+    } else if (item.unseenTaskId == null) {
       _openSpacedReviewTaskV1(item, world);
     } else {
       unawaited(_openUnseenReviewTaskV1(item, world));
@@ -198,6 +244,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     Act0DueReviewItemV1 item,
     Act0WorldCardV1 world, {
     Act0LessonTaskV1? unseen,
+    Act0LessonTaskV1? changed,
   }) {
     _spacedReviewReturnTabV1 = _tab == Act0ShellTabV1.home
         ? Act0ShellTabV1.home
@@ -209,6 +256,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     );
     _activeDueReviewItemV1 = item;
     _activeSpacedReviewTaskV1 =
+        changed ??
         unseen ??
         act0ReviewOnlyTaskV1(item.worldId, item.lessonId, item.taskId);
     _pendingReviewKindV1 = unseen == null
@@ -218,7 +266,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _startTaskByIds(
       world,
       item.lessonId,
-      unseen?.taskId ?? item.taskId,
+      changed?.taskId ?? unseen?.taskId ?? item.taskId,
       skipTeaching: true,
       evidenceRunKind: 'spaced_review',
       evidenceStartedBy: 'review_due',

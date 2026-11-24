@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_imported_hand_v1.dart';
@@ -42,6 +43,7 @@ class Act0ArchivedAttemptV1 {
     this.tableFingerprint,
     this.learnerInput,
     this.timelineSnapshot,
+    this.actionReason,
   );
 
   static final _sourceRevision = RegExp(r'^[a-f0-9]{64}$');
@@ -57,6 +59,7 @@ class Act0ArchivedAttemptV1 {
     String? tableFingerprint,
     Act0LearnerReflectionInputV1? learnerInput,
     Act0HandTimelinePrefixV1? timelineSnapshot,
+    Act0ActionReasonResultV1? actionReason,
   }) {
     if (Act0LearningEvidenceRecordV1.tryParse(evidence.toPayload()) == null ||
         !_sourceRevision.hasMatch(evidence.authoredSourceFingerprint) ||
@@ -82,6 +85,7 @@ class Act0ArchivedAttemptV1 {
       tableFingerprint,
       _inputFor(evidence, learnerInput),
       timelineSnapshot,
+      actionReason,
     );
   }
 
@@ -92,6 +96,7 @@ class Act0ArchivedAttemptV1 {
   final String? choiceLabel;
   final String? tableFingerprint;
   final Act0HandTimelinePrefixV1? timelineSnapshot;
+  final Act0ActionReasonResultV1? actionReason;
 
   // Kept apart from the historical reflection rendered by the archive row.
   final Act0LearnerReflectionInputV1? learnerInput;
@@ -121,6 +126,7 @@ class Act0ArchivedAttemptV1 {
       'confidence': confidence.name,
     if (reflection.openedClue case final clue?) 'openedClue': clue.name,
     if (learnerInput case final input?) 'learnerInput': input.toPayload(),
+    if (actionReason case final result?) 'actionReason': result.toPayload(),
     'events': [
       for (final event in events)
         {
@@ -206,6 +212,7 @@ class Act0ArchivedAttemptV1 {
       ),
       // A damaged optional snapshot leaves the original text replay usable.
       timelineSnapshot: Act0HandTimelinePrefixV1.tryParse(raw['handTimeline']),
+      actionReason: Act0ActionReasonResultV1.tryParse(raw['actionReason']),
     );
   }
 }
@@ -265,6 +272,7 @@ class Act0AttemptArchiveV1 {
               attempt.tableFingerprint,
               Act0ArchivedAttemptV1._inputFor(attempt.evidence, input),
               attempt.timelineSnapshot,
+              attempt.actionReason,
             )
           else
             attempt,

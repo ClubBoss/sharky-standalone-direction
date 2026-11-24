@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
@@ -1250,6 +1251,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onChooseSeat,
     this.onCompletedDecision,
     this.onChoiceAssistance,
+    this.reasons,
+    this.onActionReason,
     this.onAssistanceExposureRequested,
     this.initialChoiceAssistance = Act0DecisionAssistanceV1.none,
     required this.onContinueReview,
@@ -1325,6 +1328,8 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final ValueChanged<String>? onChooseSeat;
   final ValueChanged<Act0CompletedDecisionV1>? onCompletedDecision;
   final ValueChanged<Act0DecisionAssistanceV1>? onChoiceAssistance;
+  final List<Act0ReasonV1>? reasons;
+  final ValueChanged<Act0ActionReasonResultV1>? onActionReason;
   final Future<bool> Function(Act0DecisionAssistanceV1)?
   onAssistanceExposureRequested;
   final Act0DecisionAssistanceV1 initialChoiceAssistance;
@@ -2219,6 +2224,86 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     }
     if (_rejectInvalidAuthoredBettingPriceV1(option)) return;
     _decisionSubmittedForTaskV1 = true;
+    if (widget.reasons case final reasons?) {
+      _askActionReasonV1(option, reasons);
+    } else {
+      _commitActionOptionV1(option);
+    }
+  }
+
+  Future<void> _askActionReasonV1(
+    Act0RunnerOptionV1 option,
+    List<Act0ReasonV1> reasons,
+  ) async {
+    final taskId = widget.selectedTaskId;
+    final runId = widget.evidenceRunId;
+    final reason = await showDialog<Act0ReasonV1>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Why?'),
+        scrollable: true,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text('You chose ${option.label}.'),
+            for (final (index, reason) in reasons.indexed)
+              OutlinedButton(
+                key: Key('act0_action_reason_$index'),
+                onPressed: () => Navigator.of(context).pop(reason),
+                child: Text(reason.text),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Back'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted ||
+        widget.selectedTaskId != taskId ||
+        widget.evidenceRunId != runId)
+      return;
+    if (reason == null) {
+      _decisionSubmittedForTaskV1 = false;
+      return;
+    }
+    final result = Act0ActionReasonResultV1(option.isCorrect, reason);
+    final best = widget.runner.options
+        .where(act0RunnerOptionIsPreferredV1)
+        .firstOrNull;
+    final bestReason = best?.feedbackReason ?? widget.runner.feedbackReason;
+    final explanation = result.needsRepair
+        ? 'Repair · ${reason.tag.label}\n\n${reason.tag.repair}\n\n$bestReason'
+        : !option.isCorrect && reason.isSound
+        ? '${option.label} does not follow from that comparison. $bestReason'
+        : bestReason;
+    // Commit before showing the result so a revealed answer cannot be retried
+    // as a fresh independent choice by dismissing the feedback.
+    _commitActionOptionV1(option, reason: result);
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(result.title),
+        scrollable: true,
+        content: Text(explanation),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Continue'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _commitActionOptionV1(
+    Act0RunnerOptionV1 option, {
+    Act0ActionReasonResultV1? reason,
+  }) {
     final telemetryDecisionTimeBucket = _decisionTimeBucketV1(
       _decisionTelemetryStopwatch.isRunning
           ? _decisionTelemetryStopwatch.elapsed
@@ -2238,11 +2323,13 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       kind: Act0CompletedDecisionKindV1.actionList,
     );
     widget.onChoiceAssistance?.call(_decisionAssistanceKindV1);
+    if (reason != null) widget.onActionReason?.call(reason);
     widget.onChooseOption(option);
     _emitCompletedDecision(
       option,
       Act0CompletedDecisionKindV1.actionList,
       decisionTimeBucket: decisionTimeBucket,
+      actionReason: reason,
     );
   }
 
@@ -2461,6 +2548,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     Act0RunnerOptionV1 option,
     Act0CompletedDecisionKindV1 kind, {
     String? decisionTimeBucket,
+    Act0ActionReasonResultV1? actionReason,
   }) {
     final evidenceRunId = widget.evidenceRunId.trim();
     final taskKey =
@@ -2483,7 +2571,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       option: option,
       taskFamily: widget.selectedTaskFamily,
     );
-    final resultKind = widget.isRepairAttempt && option.isCorrect
+    final lucky = actionReason?.needsRepair ?? false;
+    final resultKind = lucky
+        ? Act0FeedbackQualityV1.wrong.resultKind
+        : widget.isRepairAttempt && option.isCorrect
         ? act0RepairedResultKindV1
         : option.quality.resultKind;
     final concept = act0ConceptErrorDefinitionForTaskV1(
@@ -2539,13 +2630,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         decisionKind: kind,
         selectedId: option.id,
         expectedId: expectedOption?.id,
-        isCorrect: option.isCorrect,
+        isCorrect: option.isCorrect && !lucky,
+        actionReason: actionReason,
         decisionTimeBucket:
             decisionTimeBucket ?? _completedDecisionTimeBucket(),
         taskFamily: widget.selectedTaskFamily,
         assistanceKind: _decisionAssistanceKindV1,
         resultKind: resultKind,
-        errorType: errorType,
+        errorType: lucky
+            ? act0ReasonErrorTypeV1(actionReason!.reason.tag)
+            : errorType,
         conceptFamilyId: reviewConceptFamily,
         skillAtomId:
             receipt?.skillAtomId ??

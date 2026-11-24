@@ -1,3 +1,4 @@
+import 'act0_action_reason_v1.dart';
 import 'dart:convert';
 import 'act0_predecision_card_focus_v1.dart';
 import 'act0_prechoice_answer_cue_policy_v1.dart';
@@ -426,7 +427,9 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
     fingerprint: fingerprint,
     skillAtomId: skillAtomId,
     conceptFamilyId: conceptFamilyId,
-    isCurrentlyCorrect: act0RunnerOptionIsAuthoredCorrectV1(option),
+    isCurrentlyCorrect:
+        act0RunnerOptionIsAuthoredCorrectV1(option) &&
+        !act0IsReasonErrorTypeV1(record.errorType),
   );
 }
 
