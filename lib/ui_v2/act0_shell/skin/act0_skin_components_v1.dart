@@ -11,31 +11,45 @@ class Act0SkinPrimaryButtonV1 extends StatelessWidget {
     required this.label,
     required this.onPressed,
     this.controlKey,
+    this.labelKey,
+    this.compact = false,
   });
 
   final String label;
   final VoidCallback? onPressed;
   final Key? controlKey;
+  final Key? labelKey;
+  final bool compact;
+
+  static final _compactStyle = _buttonStyle(compact: true);
+  static final _regularStyle = _buttonStyle(compact: false);
+
+  static ButtonStyle _buttonStyle({required bool compact}) =>
+      FilledButton.styleFrom(
+        splashFactory: InkRipple.splashFactory,
+        backgroundColor: _T.accent,
+        foregroundColor: _T.onAccent,
+        disabledBackgroundColor: _T.raised,
+        disabledForegroundColor: _T.caption,
+        minimumSize: Size.fromHeight(compact ? _T.minTouch : _T.controlHeight),
+        padding: EdgeInsets.symmetric(
+          horizontal: compact ? 12 : 20,
+          vertical: compact ? 6 : 16,
+        ),
+        textStyle: _T.button,
+        elevation: _T.controlElevation,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(_T.radiusControl),
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
     return FilledButton(
       key: controlKey,
       onPressed: onPressed,
-      style: FilledButton.styleFrom(
-        backgroundColor: _T.accent,
-        foregroundColor: _T.onAccent,
-        disabledBackgroundColor: _T.raised,
-        disabledForegroundColor: _T.caption,
-        minimumSize: const Size.fromHeight(_T.controlHeight),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-        textStyle: _T.button,
-        elevation: _T.controlElevation,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(_T.radiusControl),
-        ),
-      ),
-      child: Text(label, textAlign: TextAlign.center),
+      style: compact ? _compactStyle : _regularStyle,
+      child: Text(label, key: labelKey, textAlign: TextAlign.center),
     );
   }
 }
@@ -61,6 +75,7 @@ class Act0SkinSecondaryButtonV1 extends StatelessWidget {
       key: controlKey,
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
+        splashFactory: InkRipple.splashFactory,
         backgroundColor: destructive ? _T.badSoft : _T.raised,
         foregroundColor: destructive ? _T.bad : _T.onSurface,
         disabledForegroundColor: _T.caption,
@@ -192,7 +207,7 @@ class Act0SkinStepBarV1 extends StatelessWidget {
 }
 
 /// Why Sharky is on screen. Sharky is never shown while the player decides.
-enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone }
+enum Act0SkinSharkyMomentV1 { hint, mistake, selfFix, milestone, lessonDone }
 
 /// Sharky in one ring: 56 pt next to a reason or hint, 120 pt on summaries.
 class Act0SkinSharkyExpressionV1 extends StatelessWidget {
@@ -210,7 +225,8 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
       Act0SkinSharkyMomentV1.hint => _T.lineRing,
       Act0SkinSharkyMomentV1.mistake => _T.accent,
       Act0SkinSharkyMomentV1.selfFix => _T.ok,
-      Act0SkinSharkyMomentV1.milestone => _T.ok,
+      Act0SkinSharkyMomentV1.milestone ||
+      Act0SkinSharkyMomentV1.lessonDone => _T.ok,
     };
   }
 
@@ -234,7 +250,8 @@ class Act0SkinSharkyExpressionV1 extends StatelessWidget {
             Act0SkinSharkyMomentV1.hint => _T.sharkyHintAsset,
             Act0SkinSharkyMomentV1.mistake => _T.sharkyMistakeAsset,
             Act0SkinSharkyMomentV1.selfFix => _T.sharkyFixedItAsset,
-            Act0SkinSharkyMomentV1.milestone => _T.sharkyLessonDoneAsset,
+            Act0SkinSharkyMomentV1.milestone => _T.sharkyFixedItAsset,
+            Act0SkinSharkyMomentV1.lessonDone => _T.sharkyLessonDoneAsset,
           },
           fit: BoxFit.cover,
           alignment: Alignment.topCenter,
@@ -257,11 +274,15 @@ class Act0SkinAnswerOptionRowV1 extends StatelessWidget {
     required this.label,
     this.verdict = Act0SkinAnswerVerdictV1.none,
     this.onTap,
+    this.compact = false,
+    this.verdictLabel,
   });
 
   final String label;
   final Act0SkinAnswerVerdictV1 verdict;
   final VoidCallback? onTap;
+  final bool compact;
+  final String? verdictLabel;
 
   static const String notThisOneLabel = 'Not this one';
   static const String betterLabel = 'Better';
@@ -288,6 +309,22 @@ class Act0SkinAnswerOptionRowV1 extends StatelessWidget {
         _T.correctIcon,
       ),
     };
+    if (compact && icon != null) {
+      final caption = verdictLabel ?? word!;
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 16, color: tone),
+          const SizedBox(width: 6),
+          Expanded(
+            child: Text(
+              '$caption: $label',
+              style: _T.tag.copyWith(color: tone),
+            ),
+          ),
+        ],
+      );
+    }
     final semantics = word == null ? label : '$label, ${word.toLowerCase()}';
     return Semantics(
       button: onTap != null,
@@ -470,11 +507,19 @@ class Act0SkinBannerV1 extends StatelessWidget {
     required this.message,
     this.actionLabel,
     this.onAction,
+    this.actionKey,
+    this.secondaryActionLabel,
+    this.onSecondaryAction,
+    this.secondaryActionKey,
   });
 
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final Key? actionKey;
+  final String? secondaryActionLabel;
+  final VoidCallback? onSecondaryAction;
+  final Key? secondaryActionKey;
 
   @override
   Widget build(BuildContext context) {
@@ -489,7 +534,23 @@ class Act0SkinBannerV1 extends StatelessWidget {
           children: [
             Expanded(child: Semantics(liveRegion: true, child: Text(message))),
             if (actionLabel case final label?)
-              TextButton(onPressed: onAction, child: Text(label)),
+              TextButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
+                key: actionKey,
+                onPressed: onAction,
+                child: Text(label),
+              ),
+            if (secondaryActionLabel case final label?)
+              TextButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
+                key: secondaryActionKey,
+                onPressed: onSecondaryAction,
+                child: Text(label),
+              ),
           ],
         ),
       ),
@@ -571,4 +632,144 @@ class Act0SkinStatTileV1 extends StatelessWidget {
       ),
     );
   }
+}
+
+class Act0SkinTaskHeaderV1 extends StatelessWidget {
+  const Act0SkinTaskHeaderV1({
+    super.key,
+    required this.step,
+    required this.total,
+    required this.onClose,
+    this.modeLabel,
+    this.onHelp,
+    this.closeLabel = 'Close',
+    this.progressLabel,
+  });
+
+  final int step;
+  final int total;
+  final VoidCallback onClose;
+  final String? modeLabel;
+  final VoidCallback? onHelp;
+  final String closeLabel;
+  final String? progressLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    final count = progressLabel ?? '$step of $total';
+    // Fixed height: the mode label must never change the header's layout.
+    return SizedBox(
+      height: 48,
+      child: Row(
+        children: [
+          SizedBox(
+            width: 48,
+            height: 48,
+            child: IconButton(
+              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+              key: const Key('act0_shell_runner_back'),
+              tooltip: closeLabel,
+              onPressed: onClose,
+              icon: const Icon(Icons.close_rounded),
+            ),
+          ),
+          Expanded(
+            child: Semantics(
+              label: 'Lesson progress',
+              value: count,
+              child: CustomPaint(
+                size: const Size(0, _T.courseProgressHeight),
+                painter: _TaskHeaderProgressPainterV1(
+                  total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
+                  Directionality.of(context),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: _T.gapMd),
+          if (modeLabel case final mode?)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(count, style: _T.captionStyle),
+                Text(mode, style: _T.tag.copyWith(color: _T.accent)),
+              ],
+            )
+          else
+            Text(count, style: _T.captionStyle),
+          if (onHelp != null)
+            SizedBox(
+              width: 48,
+              height: 48,
+              child: IconButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
+                key: const Key('act0_shell_runner_glossary'),
+                tooltip: 'Glossary',
+                onPressed: onHelp,
+                icon: const Icon(Icons.menu_book_rounded, size: 22),
+              ),
+            )
+          else
+            const SizedBox(width: 48),
+        ],
+      ),
+    );
+  }
+}
+
+// Task progress is determinate. Paint the track and fill in one render object
+// so each task transition skips the Material progress indicator subtree.
+class _TaskHeaderProgressPainterV1 extends CustomPainter {
+  const _TaskHeaderProgressPainterV1(this.fraction, this.direction);
+
+  final double fraction;
+  final TextDirection direction;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bounds = Offset.zero & size;
+    final track = RRect.fromRectAndRadius(
+      bounds,
+      const Radius.circular(_T.courseProgressRadius),
+    );
+    final paint = Paint()..color = _T.courseProgressTrack;
+    canvas.drawRRect(track, paint);
+    final fillWidth = size.width * fraction;
+    canvas.save();
+    canvas.clipRRect(track);
+    canvas.drawRect(
+      Rect.fromLTWH(
+        direction == TextDirection.rtl ? size.width - fillWidth : 0,
+        0,
+        fillWidth,
+        size.height,
+      ),
+      paint..color = _T.courseProgressFill,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_TaskHeaderProgressPainterV1 oldDelegate) =>
+      fraction != oldDelegate.fraction || direction != oldDelegate.direction;
+}
+
+enum Act0SkinFeedbackGradeV1 {
+  correct('CORRECT READ'),
+  wrong('MISSED CLUE'),
+  repaired('Fixed after a hint'),
+  assisted('CORRECT WITH HELP');
+
+  const Act0SkinFeedbackGradeV1(this.label);
+  final String label;
+
+  Color get tone => switch (this) {
+    correct => _T.ok,
+    wrong => _T.bad,
+    repaired || assisted => _T.accent,
+  };
 }

@@ -491,6 +491,29 @@ void main() {
   }
 
   testWidgets(
+    'B36 pending save waits two seconds and clears on acknowledgement',
+    (tester) async {
+      await _setup(tester, _actionLesson, _actionSource);
+      await _startWithoutRemount(tester, _actionSource);
+      await _ready(tester, 'fold');
+      final disk = await _faultDisk(tester);
+      disk.holdNextHead = true;
+      await _answer(tester, 'fold', settle: false);
+      await tester.pump();
+      expect(disk.held, isNotNull);
+      expect(_saveNotice, findsNothing);
+      await tester.pump(const Duration(milliseconds: 1999));
+      expect(_saveNotice, findsNothing);
+      await tester.pump(const Duration(milliseconds: 2));
+      expect(find.text('Saving…'), findsOneWidget);
+      disk.held!.complete();
+      await _store.flush();
+      await tester.pump();
+      expect(_saveNotice, findsNothing);
+    },
+  );
+
+  testWidgets(
     'G05 older successful ACK cannot clear a newer pending snapshot',
     (tester) async {
       await _setup(tester, _actionLesson, _actionSource);
@@ -510,8 +533,10 @@ void main() {
         await tester.pump(const Duration(milliseconds: 10));
       }
       expect(disk.held, isNot(same(older)));
+      expect(_saveNotice, findsNothing);
+      await tester.pump(const Duration(milliseconds: 2001));
       expect(_saveNotice, findsOneWidget);
-      expect(find.text('Saving progress. Keep Sharky open.'), findsOneWidget);
+      expect(find.text('Saving…'), findsOneWidget);
       expect(_retrySave, findsNothing);
       // Refuse only the newest head after the old complete write acknowledged.
       disk.refusedKey = 'flutter.${_store.headKey}';

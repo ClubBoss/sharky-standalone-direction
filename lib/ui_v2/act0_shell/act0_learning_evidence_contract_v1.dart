@@ -351,7 +351,7 @@ class Act0LearningEvidenceRecordV1 {
           (runKind == 'repair' &&
               reviewKind != Act0ReviewKindV1.originalSourceRecheck));
 
-  bool get isAssistedCorrect => isCorrect && hasKnownAssistance;
+  bool get isAssistedCorrect => isCorrect && !isRepaired && hasKnownAssistance;
 
   bool get hasKnownAssistance =>
       assistanceKind == Act0DecisionAssistanceV1.quickHint ||
@@ -360,6 +360,7 @@ class Act0LearningEvidenceRecordV1 {
   bool get isIndependentCorrect =>
       !isDiagnosticLearningEntry &&
       isCorrect &&
+      !isRepaired &&
       assistanceKind == Act0DecisionAssistanceV1.none;
 
   Map<String, Object?> toPayload() {
@@ -580,6 +581,7 @@ class Act0LearningEvidenceRunSummaryV1 {
     required this.runOrdinal,
     required this.spotsPlayed,
     required this.correctCount,
+    this.repairedCount = 0,
     required this.incorrectCount,
     required this.distinctErrorTypes,
     required this.topRepairFocusId,
@@ -591,6 +593,7 @@ class Act0LearningEvidenceRunSummaryV1 {
   final int? runOrdinal;
   final int spotsPlayed;
   final int correctCount;
+  final int repairedCount;
   final int incorrectCount;
   final List<String> distinctErrorTypes;
   final String topRepairFocusId;
@@ -712,8 +715,11 @@ class Act0SessionSummaryEvidenceViewModelV1 {
       runKind: summary.runKind,
       spotsLine:
           'You played ${summary.spotsPlayed} ${summary.spotsPlayed == 1 ? 'spot' : 'spots'}.',
-      resultLine:
-          '${summary.correctCount} correct / ${summary.incorrectCount} to review.',
+      resultLine: [
+        '${summary.correctCount - summary.repairedCount} correct',
+        if (summary.repairedCount > 0) '${summary.repairedCount} repaired',
+        '${summary.incorrectCount} to review.',
+      ].join(' / '),
       repairFocusLine: safeRepairFocusLine,
       repairCandidateLine: safeRepairCandidateLine,
       learningProofLine: learningProofLine,
@@ -1190,6 +1196,7 @@ class Act0LearningEvidenceHistoryV1 {
       runOrdinal: latest.runOrdinal,
       spotsPlayed: runRecords.length,
       correctCount: correctCount,
+      repairedCount: runRecords.where((record) => record.isRepaired).length,
       incorrectCount: runRecords.length - correctCount,
       distinctErrorTypes: List<String>.unmodifiable(errorTypes),
       topRepairFocusId: rankedRepairFocus.isEmpty
@@ -1207,7 +1214,7 @@ const Set<String> _decisionTimeBuckets = <String>{
   'unknown',
 };
 
-const act0RepairedResultKindV1 = 'repaired';
+const act0RepairedResultKindV1 = Act0CompletedDecisionV1.repairedResultKind;
 
 const Set<String> _passingResultKinds = {
   'correct',

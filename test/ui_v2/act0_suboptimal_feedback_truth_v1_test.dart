@@ -79,12 +79,13 @@ void main() {
     final correct = await renderReview('board_cards');
     expect(correct.phase.name, 'feedbackCorrect');
     expect(correct.eyebrow, 'CORRECT READ');
-    expect(correct.headline, contains('was right'));
+    expect(correct.headline, 'Right answer: Board cards');
 
     final wrong = await renderReview('hero_private_cards');
     expect(wrong.phase.name, 'feedbackWrong');
     expect(wrong.eyebrow, 'MISSED CLUE');
-    expect(wrong.headline, contains('better play'));
+    expect(wrong.headline, startsWith('Not this one: '));
+    expect(wrong.headline, endsWith('Right answer: Board cards'));
   });
 
   testWidgets(

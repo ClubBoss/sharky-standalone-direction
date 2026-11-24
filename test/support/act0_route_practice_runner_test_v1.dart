@@ -46,11 +46,19 @@ Future<void> tapAct0RoutePracticeKeyV1(WidgetTester tester, String id) async {
   final target = find.byKey(Key(id));
   expect(target, findsOneWidget, reason: id);
   await tester.ensureVisible(target);
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(
+    const Duration(milliseconds: 100),
+    EnginePhase.sendSemanticsUpdate,
+    const Duration(seconds: 5),
+  );
   final reachable = target.hitTestable();
   expect(reachable, findsOneWidget, reason: id);
   await tester.tap(reachable);
-  await tester.pumpAndSettle();
+  await tester.pumpAndSettle(
+    const Duration(milliseconds: 100),
+    EnginePhase.sendSemanticsUpdate,
+    const Duration(seconds: 5),
+  );
 }
 
 Future<void> finishAct0RoutePracticeV1(

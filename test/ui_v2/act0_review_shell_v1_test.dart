@@ -10,6 +10,8 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_retention_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_personalized_return_reason_v1.dart';
 import 'package:poker_analyzer/ui_v2/runner/canonical_launcher_api_v1.dart';
 
+import '../support/act0_widget_test_theme_v1.dart';
+
 void main() {
   Widget reviewHost(
     Act0ReviewStateV1 review, {
@@ -23,6 +25,7 @@ void main() {
     VoidCallback? onOpenRecommendedAction,
   }) {
     return MaterialApp(
+      theme: act0WidgetTestThemeV1,
       home: Scaffold(
         body: Act0ReviewShellV1(
           review: review,
@@ -316,6 +319,7 @@ void main() {
     (tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          theme: act0WidgetTestThemeV1,
           home: Scaffold(
             body: Act0ReviewShellV1(
               review: const Act0ReviewStateV1(
@@ -357,6 +361,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: act0WidgetTestThemeV1,
           home: Builder(
             builder: (context) {
               hostContext = context;
@@ -423,6 +428,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
+          theme: act0WidgetTestThemeV1,
           home: Builder(
             builder: (context) {
               hostContext = context;
