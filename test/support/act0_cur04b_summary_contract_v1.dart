@@ -19,7 +19,7 @@ const cur04bSummaryChoicesV1 = <String, List<(String, String, bool)>>{
       'Call and log the seat, price and hands you beat',
       true,
     ),
-    ('call_log_result', 'Call and log only whether you won', false),
+    ('call_log_result', 'Call and log the result', false),
     ('fold_log_last_loss', 'Fold and log the last loss', false),
   ],
   'w12_cur04b_small_steal_reset': [

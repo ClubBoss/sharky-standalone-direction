@@ -9701,7 +9701,7 @@ final _w12MindsetBridgeCheckpointTasksV1 = <Act0LessonTaskV1>[
         'all_in_to_28_bb',
         'All-in to 28 BB',
         Act0FeedbackQualityV1.wrong,
-        'Shoving QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify a shove.',
+        'Going all-in with QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify going all-in.',
       ),
     ],
     table: _day7TableV1(

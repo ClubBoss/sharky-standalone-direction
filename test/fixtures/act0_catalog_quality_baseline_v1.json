@@ -28,9 +28,7 @@
     "w7_river_one_bluff_of_six|choice_2": 50,
     "w11_review_loop_intro|bb_called_8_into_18_versus_a_tight_turn_range": 54
   },
-  "findings": [
-    "16.extreme_wrong_option|w12_cur04b_log_price_not_result|call_log_result"
-  ],
+  "findings": [],
   "reasoning_v1": {
     "findings_by_world": {
       "world_1": {},

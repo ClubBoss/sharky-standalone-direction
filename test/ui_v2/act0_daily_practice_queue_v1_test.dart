@@ -19,6 +19,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_wave6_contract_v1.dart';
+import '../support/act0_cur04b_summary_contract_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_w11_wave4_contract_v1.dart';
 import '../support/act0_w12_wave4_contract_v1.dart';
@@ -335,6 +336,7 @@ void main() {
             y5cDrillCountV1 +
             w11Wave4ChoiceContractV1.length +
             w12Wave4ChoiceContractV1.length +
+            cur04bSummaryChoicesV1.length +
             wave6CurrentRowsV1.values
                 .where((row) => row['identity'][3] == 'drill')
                 .length -

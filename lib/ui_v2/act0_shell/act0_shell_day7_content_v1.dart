@@ -5550,7 +5550,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
           '3_bet_to_9_bb',
           '3-bet to 9 BB',
           Act0FeedbackQualityV1.correct,
-          'Raise AKs to 9 BB for value against AQ, AJ and KQ. BB tends to fold to a 3-bet. If you call 2 BB, BB can come along for 1.5 BB more.',
+          'Raise AKs to 9 BB because CO calls 3-bets with AQ, AJ and KQ. BB tends to fold to a 3-bet. If you call 2 BB, BB can come along for 1.5 BB more.',
         ),
         (
           'call_2_bb',
@@ -7277,5 +7277,32 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     },
     reason:
         'The new 2 BB bet needs its own read. A pause helps keep the old loss out of this choice.',
+  ),
+  _day7ExampleV1(
+    12,
+    'w10_w12_summary_block',
+    'misread_mindset_discipline',
+    _day7PostflopV1(
+      'bb',
+      'Qh 9c',
+      'Qs 8d 4s 2h 3c',
+      openBb: 2.5,
+      betBb: 3,
+      showTurn: true,
+    ),
+    caption: 'HJ bets 3 BB on the river. You lost the last pot.',
+    question: 'Which note would help you judge the new call later?',
+    choices: const [
+      'The size of the last loss',
+      'The price and the share of bets you beat',
+      'The result of this hand',
+    ],
+    correct: 1,
+    wrongReasons: const {
+      0: 'The past loss gives no information about the new 3 BB price. Save the current bet and the hands it might contain.',
+      2: 'A win can follow a poor call. A loss can follow a sound call. Keep the price and the hands you beat to judge the choice.',
+    },
+    reason:
+        'A 3 BB call makes an 11.5 BB pot, so you need about 26.1% wins. Record the share of HJ’s bets you beat to test the decision.',
   ),
 ];

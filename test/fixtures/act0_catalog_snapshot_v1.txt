@@ -7695,13 +7695,13 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to
 ===== WORLD 12 · LESSON w10_w12_summary_block · Putting your table reads together =====
 
 TASK w12_cur04b_call_after_loss [drill] Call after a loss
-CAPTION: You lost the last river call. Here BB bets the rest. For this exercise the bet contains only these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.
+CAPTION: You lost the last river call. Here BB bets the rest. Suppose the bet contains these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.
 Q: Which decision earns more in this hand?
 HINT [hidden]: (none)
 TABLE: River | You Qh Tc | Board Qs 6s 5d 2c 8h | Pot 10.5 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 4
 POTS: main 14.5 (BB, BTN)
-REASONING: principle process_over_outcome · alt fold · edge priceBeatsEquity 0.83333333 BB · stack_matters false · assumption You lost the last river call. Here BB bets the rest. For this exercise the bet contains only these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.
+REASONING: principle process_over_outcome · alt fold · edge priceBeatsEquity 0.83333333 BB · stack_matters false · assumption You lost the last river call. Here BB bets the rest. Suppose the bet contains these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Tc stack 97 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 4 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB all-in 4 BB
   - [wrong] Fold because the last call lost — Look again. The earlier loss is over. Your pair beats two of the six hands, enough for this call. Call earns about +0.83 BB over folding: (2/6)×14.5−4.
@@ -7709,44 +7709,44 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Call 4 BB — Correct. Your queens beat two missed spade draws. Two wins in six bets cover the 27.6% price. BB bets both misses. Calling 4 BB earns about +0.83 BB over folding: (2/6)×14.5−4.
 
 TASK w12_cur04b_ignore_one_show [drill] Use the current bet mix
-CAPTION: BB showed one bluff after your last fold. Use only these equally likely hands for the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.
+CAPTION: BB showed one bluff after your last fold. Suppose these equally likely hands make up the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.
 Q: Which response has the higher expected value?
 HINT [hidden]: (none)
 TABLE: River | You Jc 9c | Board Jd 8d 5s 3c 2h | Pot 12.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 6
 POTS: main 18.5 (BB, BTN)
-REASONING: principle price_vs_equity · alt call_6_bb · edge equityBelowPrice 2.3 BB · stack_matters false · assumption BB showed one bluff after your last fold. Use only these equally likely hands for the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.
+REASONING: principle price_vs_equity · alt call_6_bb · edge equityBelowPrice 2.3 BB · stack_matters false · assumption BB showed one bluff after your last fold. Suppose these equally likely hands make up the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Jc 9c stack 97 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 6 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB all-in 6 BB
-  - [wrong] Call 6 BB because BB showed a bluff — Look again. The missed diamonds win you one bet in five. That share falls short of the price. Call EV: (1/5)×18.5−6 = −2.30 BB.
+  - [wrong] Call 6 BB because BB showed a bluff — Look again. The missed diamonds win you one bet in five. Fold because that share falls short of the price. Call EV: (1/5)×18.5−6 = −2.30 BB.
     BETTER ANSWER: Fold at the current price
   + [correct] Fold at the current price — Correct. One win in five bets is below the 32.4% price. Folding saves 2.30 BB on average. BB bets one missed draw. Call EV (6 BB): (1/5)×18.5−6 = −2.30 BB.
 
 TASK w12_cur04b_both_opponents [drill] Check outs against both opponents
-CAPTION: Study model: CO has 9s 9c, BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.
+CAPTION: Suppose CO has 9s 9c and BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.
 Q: Do the rivers that win against both players cover this price?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 8h | Board Kh 5h 9d 3c | Pot 15.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts high card, flush draw, completion cards 9
 EFFECTIVE: CO 97 · BTN 97
-REASONING: principle multiway_tighten · alt call_3_bb · edge equityBelowPrice 0.79761905 BB · stack_matters false · assumption Study model: CO has 9s 9c, BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.
+REASONING: principle multiway_tighten · alt call_3_bb · edge equityBelowPrice 0.79761905 BB · stack_matters false · assumption Suppose CO has 9s 9c and BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 94 BB bet 3 BB | BTN dealer stack 94 BB call 3 BB | SB folded stack 99.5 BB | BB Ah 8h stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN calls 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · CO checks · BTN checks · Turn: BB checks · CO bets 3 BB · BTN calls 3 BB
-  + [correct] Fold — Correct. Only five hearts win against both players. That is 5 of 42 rivers, short of the 16.2% price. BTN calls with two hearts. CO wins on 3h and 9h. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.
-  - [wrong] Call 3 BB — Look again. Two hearts are in BTN’s hand. Two other hearts give CO a full house or quads. Calling loses about 0.80 BB. The winning rivers are 2h, 4h, 6h, 7h and Th. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.
+  + [correct] Fold — Correct. Only five hearts win against both players. That is 5 of 42 rivers, short of the 16.2% price. BTN calls with two hearts. If 3h or 9h comes, CO wins. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.
+  - [wrong] Call 3 BB — Look again. Two hearts are in BTN’s hand. Two other hearts give CO a full house or quads. Calling loses about 0.80 BB. If those are their hands, you win on 2h, 4h, 6h, 7h and Th. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.
     BETTER ANSWER: Fold
 
 TASK w12_cur04b_log_price_not_result [drill] Save a note you can replay
-CAPTION: Your session goal is to review one river call. Use these equally likely BB all-in hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.
+CAPTION: Your session goal is to review one river call. Suppose BB goes all-in with these equally likely hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.
 Q: Which choice and review note fit both the price and your session goal?
 HINT [hidden]: (none)
 TABLE: River | You Kd Td | Board Kc 9d 6s 3h 2c | Pot 11.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 5
 POTS: main 16.5 (BB, BTN)
-REASONING: principle process_over_outcome · alt call_log_result · edge processRule · stack_matters false · assumption Your session goal is to review one river call. Use these equally likely BB all-in hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.
+REASONING: principle process_over_outcome · alt call_log_result · edge processRule · stack_matters false · assumption Your session goal is to review one river call. Suppose BB goes all-in with these equally likely hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Td stack 97 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB all-in 5 BB
-  + [correct] Call and log the seat, price and hands you beat — Correct. Your kings beat two hands BB bets. Save BTN, the 5 BB call into 11.5 BB and the hands you beat so you can test the read later. “Call and log only whether you won” misses BB’s range. EV: (2/5)×16.5−5=+1.60 BB.
-  - [wrong] Call and log only whether you won — Look again. The call pays in this model. A win or loss alone leaves out the price and hands you beat, so you cannot replay the decision. That note misses the review goal. Call EV: (2/5)×16.5−5 = +1.60 BB.
+  + [correct] Call and log the seat, price and hands you beat — Correct. Your kings beat two hands BB bets. Save BTN, the 5 BB call into 11.5 BB and the hands you beat so you can test the read later. “Call and log the result” misses BB’s range. EV: (2/5)×16.5−5=+1.60 BB.
+  - [wrong] Call and log the result — Look again. The call pays in this model. A win or loss alone leaves out the price and hands you beat, so you cannot replay the decision. That note misses the review goal. Call EV: (2/5)×16.5−5 = +1.60 BB.
     BETTER ANSWER: Call and log the seat, price and hands you beat
   - [wrong] Fold and log the last loss — Look again. The earlier loss cannot price this call. Two wins in five beat the 30.3% price. Folding misses +1.60 BB: (2/5)×16.5−5.
     BETTER ANSWER: Call and log the seat, price and hands you beat
@@ -7767,12 +7767,12 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Raise to 2 BB — Correct. Both raises get the same folds. The 2 BB open loses less when BB reraises, so it earns more. Raise to 2 BB: (4/5)×1.5−(1/5)×1.5 = +0.90 BB. Raise to 5 BB: (4/5)×1.5−(1/5)×4.5 = +0.30 BB.
 
 TASK w12_cur04b_stack_capped_value [drill] Fit the bet to the calls
-CAPTION: BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. Facing a 10 BB bet for its remaining stack, BB calls only with 6c 6d. After a check or call, go to showdown.
+CAPTION: Suppose BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. If you bet its last 10 BB, BB calls with 6c 6d alone. After a check or call, go to showdown.
 Q: Which play earns most under these responses?
 HINT [hidden]: (none)
 TABLE: River | You As Jd | Board Ac 7d 6s 3h 2c | Pot 6.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 10
-REASONING: principle value_vs_worse · alt check · edge moreValueFromWorse 1.5 BB · stack_matters true · assumption BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. Facing a 10 BB bet for its remaining stack, BB calls only with 6c 6d. After a check or call, go to showdown.
+REASONING: principle value_vs_worse · alt check · edge moreValueFromWorse 1.5 BB · stack_matters true · assumption Suppose BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. If you bet its last 10 BB, BB calls with 6c 6d alone. After a check or call, go to showdown.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jd stack 97 BB | SB folded stack 99.5 BB | BB stack 10 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises to 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · BTN checks · Turn: BB checks · BTN checks · River: BB checks
   - [wrong] Check — Look again. Checking wins against three hands but collects no extra chips. A 3 BB bet earns 1.50 BB more on average. Check EV: 3×6.5/4 = 4.875 BB. Bet 3 BB: [3×(6.5+3)−3]/4 = 6.375 BB. Bet 10 BB: (3×6.5−10)/4 = 2.375 BB.
@@ -7782,13 +7782,13 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
   + [correct] Bet 3 BB — Correct. The weaker aces and sevens pay 3 BB. Their three calls outweigh the one extra payment to the set. Check EV: 3×6.5/4 = 4.875 BB. Bet 3 BB: [3×(6.5+3)−3]/4 = 6.375 BB. Bet 10 BB: (3×6.5−10)/4 = 2.375 BB.
 
 TASK w12_cur04b_two_ranges_one_call [drill] Read the bet and the overcall
-CAPTION: The four remaining hand pairs are equally likely. In CO/BTN order they are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.
+CAPTION: The four remaining hand pairs are equally likely. Suppose the CO/BTN pairs are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.
 Q: Which decision uses the chance of beating both players?
 HINT [hidden]: (none)
 TABLE: River | You Qd 9h | Board Qc 7s 4d 3s 2c | Pot 17.5 BB | To call 4 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: CO 4 · BTN 97
 POTS: main 21.5 (BB, CO, BTN)
-REASONING: principle multiway_tighten · alt call_vs_co_only · edge processRule · stack_matters false · assumption The four remaining hand pairs are equally likely. In CO/BTN order they are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.
+REASONING: principle multiway_tighten · alt call_vs_co_only · edge processRule · stack_matters false · assumption The four remaining hand pairs are equally likely. Suppose the CO/BTN pairs are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 0 BB allIn 4 BB | BTN dealer stack 93 BB call 4 BB | SB folded stack 99.5 BB | BB Qd 9h stack 97 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 3 BB · BTN calls 3 BB · SB folds · BB calls 2 BB more · Flop: BB checks · CO checks · BTN checks · Turn: BB checks · CO checks · BTN checks · River: BB checks · CO all-in 4 BB · BTN calls 4 BB
   + [correct] Call using the chance of beating both — Correct. You beat both hands in two of the four scenarios. The 50% share clears the 18.6% price. “Call because you beat three of CO’s four hands” ignores BTN’s call. Call EV: (2/4)×21.5−4 = +6.75 BB.
@@ -7838,7 +7838,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG raises to 3 BB · HJ folds
   + [correct] Fold — Correct. UTG raises with QQ or better and AK. Fold QJo because calling 3 BB puts QJ in a pot with stronger hands and three seats still to act.
   - [wrong] Call 3 BB to win chips back — Look again. Calling 3 BB risks facing stronger hands with QJ against QQ or better and AK. Folding avoids spending chips to chase a past loss.
     BETTER ANSWER: Fold
-  - [wrong] All-in to 28 BB — Look again. Shoving QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify a shove.
+  - [wrong] All-in to 28 BB — Look again. Going all-in with QJo risks 28 BB for the 4.5 BB pot. QQ+/AK tells you what UTG opens, and BTN and both blinds still act. Fold here. Without those players’ responses, you cannot count on enough folds to justify going all-in.
     BETTER ANSWER: Fold
 
 TASK w12_checkpoint_discipline_line [drill] Discipline line
@@ -11055,7 +11055,7 @@ EFFECTIVE: CO 46 · BB 46
 REASONING: principle value_vs_worse · alt call_2_bb · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 60 BB | HJ folded stack 61 BB | CO stack 52.5 BB raise 2.5 BB | BTN folded dealer stack 52 BB | SB Ad Kd stack 45.5 BB post 0.5 BB | BB stack 54 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds
-  + [correct] 3-bet to 9 BB — Correct. Raise AKs to 9 BB for value against AQ, AJ and KQ. BB tends to fold to a 3-bet. If you call 2 BB, BB can come along for 1.5 BB more.
+  + [correct] 3-bet to 9 BB — Correct. Raise AKs to 9 BB because CO calls 3-bets with AQ, AJ and KQ. BB tends to fold to a 3-bet. If you call 2 BB, BB can come along for 1.5 BB more.
   - [suboptimal] Call 2 BB — Look again. AKs plays well as a call, but it misses value from CO weaker aces and can let BB into the pot while you’re out of position.
     BETTER ANSWER: 3-bet to 9 BB
   - [wrong] Fold — Look again. AKs dominates the weaker aces and KQ in CO’s calling range. Folding misses the chance to get paid by those hands.
@@ -11605,3 +11605,19 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · C
   - [wrong] Wait for a win before you check your play — Look again. You can read the 2 BB flop price now. Waiting on luck delays the check you need.
     BETTER ANSWER: Pause and judge the bet in the new hand
     FEEDBACK TABLE: Flop | You Ks Td | Board Kc 7h 6d | Pot 7.5 BB | Seat BB | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor straight
+
+===== WORLD 12 · LESSON w10_w12_summary_block · Putting your table reads together =====
+
+TASK spaced_review_w12_w10_w12_summary_block_misread_mindset_discipline_v1 [drill] Review decision
+DAY 7 FAMILY: misread_mindset_discipline
+CAPTION: HJ bets 3 BB on the river. You lost the last pot.
+Q: Which note would help you judge the new call later?
+HINT [hidden]: (none)
+TABLE: River | You Qh 9c | Board Qs 8d 4s 2h 3c | Pot 8.5 BB | To call 3 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
+SEATS: UTG folded stack 100 BB | HJ stack 94.5 BB bet 3 BB | CO folded stack 100 BB | BTN folded stack 100 BB | SB folded stack 99.5 BB | BB Qh 9c stack 97.5 BB
+TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ raises to 2.5 BB · CO folds · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks · HJ checks · Turn: BB checks · HJ checks · River: BB checks · HJ bets 3 BB
+  - [wrong] The size of the last loss — Look again. The past loss gives no information about the new 3 BB price. Save the current bet and the hands it might contain.
+    BETTER ANSWER: The price and the share of bets you beat
+  + [correct] The price and the share of bets you beat — Correct. A 3 BB call makes an 11.5 BB pot, so you need about 26.1% wins. Record the share of HJ’s bets you beat to test the decision.
+  - [wrong] The result of this hand — Look again. A win can follow a poor call. A loss can follow a sound call. Keep the price and the hands you beat to judge the choice.
+    BETTER ANSWER: The price and the share of bets you beat

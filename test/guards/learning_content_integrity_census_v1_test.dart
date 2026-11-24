@@ -858,6 +858,12 @@ void main() {
             );
             expect(admittedContract.canClaimIndependentApplication, isFalse);
             expect(admittedContract.canClaimMatchedRecheck, isFalse);
+            if (cur04bSummaryChoicesV1.containsKey(row.task.taskId)) {
+              expect(admittedContract.mappingType, 'intentional_exact');
+              expect(admittedContract.targetTaskId, row.task.taskId);
+              expect(admittedContract.targetLessonId, row.lessonId);
+              expect(admittedContract.targetWorldId, row.worldId);
+            }
           } else {
             admitted.add(key);
           }
@@ -966,8 +972,29 @@ void main() {
           if (option[2] == false)
             '${entry[0]}/${entry[1]}/${entry[2]}/${option[0]}',
     };
+    final summaryWrongChoices = {
+      for (final entry in cur04bSummaryChoicesV1.entries)
+        for (final (choiceId, _, correct) in entry.value)
+          if (!correct)
+            'world_12/$cur04bSummaryLessonIdV1/${entry.key}/$choiceId',
+    };
+    final summaryRows = rows.where(
+      (row) => row.lessonId == cur04bSummaryLessonIdV1,
+    );
+    expect(
+      summaryRows.map((row) => row.task.taskId).toSet(),
+      cur04bSummaryChoicesV1.keys.toSet(),
+    );
+    expect(
+      foundationDefaults.intersection(summaryWrongChoices),
+      summaryWrongChoices,
+    );
     final expectedRows =
-        367 + addedContracts.length + currentLate.length - previousLateCount;
+        367 +
+        addedContracts.length +
+        cur04bSummaryChoicesV1.length +
+        currentLate.length -
+        previousLateCount;
     expect(rows, hasLength(expectedRows));
     expect(
       allChoices
@@ -977,7 +1004,7 @@ void main() {
                 !y5dNewChoicesV1.containsKey(key.split('/')[2]),
           )
           .toSet(),
-      currentLateWrong,
+      {...currentLateWrong, ...summaryWrongChoices},
     );
     expect(rows.map((r) => r.task.taskId).toSet(), hasLength(expectedRows));
     expect(
@@ -987,6 +1014,7 @@ void main() {
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length +
+            summaryWrongChoices.length +
             _archivedWave4WrongCount(addedContracts) +
             currentLateWrong.length -
             previousLateWrong,
@@ -1070,6 +1098,7 @@ void main() {
             w4AddedOptionQualityV1.length +
             w5AddedOptionQualityV1.length +
             addedWrongChoices.length +
+            summaryWrongChoices.length +
             _archivedWave4WrongCount(addedContracts) +
             currentLateWrong.length -
             previousLateWrong,

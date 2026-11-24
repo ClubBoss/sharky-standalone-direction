@@ -11,7 +11,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "process_over_outcome",
     caption:
-        "You lost the last river call. Here BB bets the rest. For this exercise the bet contains only these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.",
+        "You lost the last river call. Here BB bets the rest. Suppose the bet contains these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.",
     question: "Which decision earns more in this hand?",
     teach: '',
     choices: const [
@@ -111,7 +111,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "price_vs_equity",
     caption:
-        "BB showed one bluff after your last fold. Use only these equally likely hands for the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.",
+        "BB showed one bluff after your last fold. Suppose these equally likely hands make up the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.",
     question: "Which response has the higher expected value?",
     teach: '',
     choices: const [
@@ -119,7 +119,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
         "call_6_bb",
         "Call 6 BB because BB showed a bluff",
         Act0FeedbackQualityV1.wrong,
-        "The missed diamonds win you one bet in five. That share falls short of the price."
+        "The missed diamonds win you one bet in five. Fold because that share falls short of the price."
             " Call EV: (1/5)×18.5−6 = −2.30 BB.",
       ),
       (
@@ -211,7 +211,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "multiway_tighten",
     caption:
-        "Study model: CO has 9s 9c, BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.",
+        "Suppose CO has 9s 9c and BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.",
     question: "Do the rivers that win against both players cover this price?",
     teach: '',
     choices: const [
@@ -220,14 +220,14 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
         "Fold",
         Act0FeedbackQualityV1.correct,
         "Only five hearts win against both players. That is 5 of 42 rivers, short of the 16.2% price."
-            " BTN calls with two hearts. CO wins on 3h and 9h. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.",
+            " BTN calls with two hearts. If 3h or 9h comes, CO wins. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.",
       ),
       (
         "call_3_bb",
         "Call 3 BB",
         Act0FeedbackQualityV1.wrong,
         "Two hearts are in BTN’s hand. Two other hearts give CO a full house or quads. Calling loses about 0.80 BB."
-            " The winning rivers are 2h, 4h, 6h, 7h and Th. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.",
+            " If those are their hands, you win on 2h, 4h, 6h, 7h and Th. Call 3 BB EV: (5/42)×18.5−3 ≈ −0.80 BB.",
       ),
     ],
     table: _day7TableV1(
@@ -329,7 +329,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "process_over_outcome",
     caption:
-        "Your session goal is to review one river call. Use these equally likely BB all-in hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.",
+        "Your session goal is to review one river call. Suppose BB goes all-in with these equally likely hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.",
     question:
         "Which choice and review note fit both the price and your session goal?",
     teach: '',
@@ -339,11 +339,11 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
         "Call and log the seat, price and hands you beat",
         Act0FeedbackQualityV1.correct,
         "Your kings beat two hands BB bets. Save BTN, the 5 BB call into 11.5 BB and the hands you beat so you can test the read later."
-            " “Call and log only whether you won” misses BB’s range. EV: (2/5)×16.5−5=+1.60 BB.",
+            " “Call and log the result” misses BB’s range. EV: (2/5)×16.5−5=+1.60 BB.",
       ),
       (
         "call_log_result",
-        "Call and log only whether you won",
+        "Call and log the result",
         Act0FeedbackQualityV1.wrong,
         "The call pays in this model. A win or loss alone leaves out the price and hands you beat, so you cannot replay the decision."
             " That note misses the review goal. Call EV: (2/5)×16.5−5 = +1.60 BB.",
@@ -523,7 +523,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "value_vs_worse",
     caption:
-        "BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. Facing a 10 BB bet for its remaining stack, BB calls only with 6c 6d. After a check or call, go to showdown.",
+        "Suppose BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. If you bet its last 10 BB, BB calls with 6c 6d alone. After a check or call, go to showdown.",
     question: "Which play earns most under these responses?",
     teach: '',
     choices: const [
@@ -618,7 +618,7 @@ final _w12SummaryBlockTasksV1 = <Act0LessonTaskV1>[
     xp: 0,
     signal: "multiway_tighten",
     caption:
-        "The four remaining hand pairs are equally likely. In CO/BTN order they are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.",
+        "The four remaining hand pairs are equally likely. Suppose the CO/BTN pairs are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.",
     question: "Which decision uses the chance of beating both players?",
     teach: '',
     choices: const [

@@ -1159,10 +1159,10 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "fold",
     edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
     opponentRead:
-        "BB jams missed spades as well as stronger queens and sets. Count each stated hand once.",
+        "BB goes all-in with missed spades as well as stronger queens and sets. Count each stated hand once.",
     stackMatters: false,
     preChoiceAssumption:
-        "You lost the last river call. Here BB bets the rest. For this exercise the bet contains only these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.",
+        "You lost the last river call. Here BB bets the rest. Suppose the bet contains these equally likely hands: As Js, Ks Js, Ad Qc, Kd Qd, 6c 6d and 8c 8d.",
     edgeBb: 0.8333333333333334,
   ),
   "w12_cur04b_ignore_one_show": Act0DecisionReasoningV1(
@@ -1175,7 +1175,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
         "The bet contains one missed draw, two stronger jacks and two sets under the stated model.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB showed one bluff after your last fold. Use only these equally likely hands for the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.",
+        "BB showed one bluff after your last fold. Suppose these equally likely hands make up the current all-in: Ad Td, Ah Js, Kd Jh, 8c 8h and 5c 5h.",
     edgeBb: 2.3,
   ),
   "w12_cur04b_both_opponents": Act0DecisionReasoningV1(
@@ -1188,7 +1188,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
         "CO bets a set. BTN calls with a lower heart draw, using up two otherwise live hearts.",
     stackMatters: false,
     preChoiceAssumption:
-        "Study model: CO has 9s 9c, BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.",
+        "Suppose CO has 9s 9c and BTN has Qh Jh. After a call everyone checks the river. Each remaining river is equally likely. Compare call and fold.",
     edgeBb: 0.7976190476190477,
   ),
   "w12_cur04b_log_price_not_result": Act0DecisionReasoningV1(
@@ -1198,10 +1198,10 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "call_log_result",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     opponentRead:
-        "BB jams two unpaired hands and three hands that beat top pair.",
+        "BB goes all-in with two unpaired hands and three hands that beat top pair.",
     stackMatters: false,
     preChoiceAssumption:
-        "Your session goal is to review one river call. Use these equally likely BB all-in hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.",
+        "Your session goal is to review one river call. Suppose BB goes all-in with these equally likely hands: Ad Qd, Qh Jh, As Kh, 9c 9h and 6c 6h. The result is still hidden.",
   ),
   "w12_cur04b_small_steal_reset": Act0DecisionReasoningV1(
     taskId: "w12_cur04b_small_steal_reset",
@@ -1226,7 +1226,7 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
         "All four hands call small. Only the set calls the stack-sized bet.",
     stackMatters: true,
     preChoiceAssumption:
-        "BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. Facing a 10 BB bet for its remaining stack, BB calls only with 6c 6d. After a check or call, go to showdown.",
+        "Suppose BB checks with one of four equally likely hands: Ad 8h, Ah 9c, 7c 8c or 6c 6d. BB calls a 3 BB bet with all four. If you bet its last 10 BB, BB calls with 6c 6d alone. After a check or call, go to showdown.",
     stackNote:
         "BB can match only 10 BB. The two tested sizes use different portions of that effective stack.",
     edgeBb: 1.5,
@@ -1241,6 +1241,6 @@ const act0DecisionReasoningW10W12V1 = <String, Act0DecisionReasoningV1>{
         "One of CO’s three losing hands is paired with a stronger BTN queen.",
     stackMatters: false,
     preChoiceAssumption:
-        "The four remaining hand pairs are equally likely. In CO/BTN order they are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.",
+        "The four remaining hand pairs are equally likely. Suppose the CO/BTN pairs are As Js / Jd Jh, Ks Ts / Ad Qh, 8s Ts / 8d 8c, and 7c 7d / Td Th. Compare call and fold. A call closes the action.",
   ),
 };

@@ -397,6 +397,7 @@ act0ConceptErrorDefinitionsV1 = <Act0ConceptErrorDefinitionV1>[
       'world_12/confidence_and_discipline',
       'world_12/confidence_river_discipline',
       'world_12/mindset_bridge_checkpoint',
+      'world_12/w10_w12_summary_block',
     },
     legacyAliases: <String>{
       'missed_table_read',
