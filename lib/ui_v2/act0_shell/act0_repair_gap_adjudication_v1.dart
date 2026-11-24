@@ -1220,6 +1220,22 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   ),
   Act0RepairGoalContractV1(
     sourceWorldId: "world_1",
+    sourceLessonId: "what_poker_is",
+    sourceTaskId: "what_poker_is_find_hero",
+    sourceChoiceId: "random",
+    sourceCorrectChoiceId: "bottom",
+    sourceFingerprint:
+        "a181b1dcb91facb86b8088c045760b4aa53f1e41a2cb98476af6aefe74df5b6c",
+    sourceQuestion: "Which cards belong to you alone?",
+    sourceChoiceReason: "The cards at the other seats belong to those players.",
+    sourceChoiceLabel: "The cards at the other seats",
+    sourceChoiceQuality: "wrong",
+    goalId: "shared_board_vs_private_cards",
+    misconceptionId: "other_players_cards_as_own",
+    relationId: "selected_w1_002_random_v1",
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_1",
     sourceLessonId: "cards_ranks_suits",
     sourceTaskId: "cards_ranks_suits_rank_drill",
     sourceChoiceId: "king",

@@ -153,7 +153,7 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
         : 'Step $position of $total';
     return Act0SkinDarkAreaV1(
       maxContentWidth: _T.historyMaxWidth,
-      child: ListView(
+      child: SingleChildScrollView(
         key: const Key('act0_attempt_replay_screen'),
         padding: const EdgeInsets.fromLTRB(
           _T.historyGutter,
@@ -161,116 +161,119 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
           _T.historyGutter,
           _T.gapXl,
         ),
-        children: [
-          Act0SkinScreenHeaderV1(
-            backKey: const Key('act0_attempt_replay_back_to_archive'),
-            onBack: widget.onClose,
-            title: attempt == null
-                ? 'Own hand · ${widget.hand!.isManual ? 'Manual entry' : 'PokerStars'}'
-                : attempt.taskLabel ?? attempt.evidence.taskId,
-          ),
-          const SizedBox(height: _T.gapMd),
-          if (widget.practice case final practice?) practice,
-          if (total == 0)
-            const Text(
-              'No event history was saved for this attempt.',
-              style: _T.secondary,
-            )
-          else ...[
-            Semantics(
-              liveRegion: true,
-              child: Text(
-                status,
-                semanticsLabel: history.isEmpty
-                    ? status
-                    : '$status. ${history.last}',
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Act0SkinScreenHeaderV1(
+              backKey: const Key('act0_attempt_replay_back_to_archive'),
+              onBack: widget.onClose,
+              title: attempt == null
+                  ? 'Own hand · ${widget.hand!.isManual ? 'Manual entry' : 'PokerStars'}'
+                  : attempt.taskLabel ?? attempt.evidence.taskId,
+            ),
+            const SizedBox(height: _T.gapMd),
+            if (widget.practice case final practice?) practice,
+            if (total == 0)
+              const Text(
+                'No event history was saved for this attempt.',
                 style: _T.secondary,
-              ),
-            ),
-            Wrap(
-              spacing: _T.gapXs,
-              children: [
-                TextButton(
-                  key: const Key('act0_attempt_replay_previous'),
-                  onPressed: _replay.position == 0
-                      ? null
-                      : () => _update(_replay.back()),
-                  child: const Text('Previous'),
-                ),
-                TextButton(
-                  key: const Key('act0_attempt_replay_next'),
-                  onPressed: _replay.atEnd
-                      ? null
-                      : () => _update(_replay.pause().forward()),
-                  child: const Text('Next'),
-                ),
-                TextButton(
-                  key: const Key('act0_attempt_replay_play_pause'),
-                  onPressed: _replay.atEnd ? null : _togglePlayback,
-                  child: Text(_replay.isPlaying ? 'Pause' : 'Play'),
-                ),
-                TextButton(
-                  key: const Key('act0_attempt_replay_reset'),
-                  onPressed: _replay.position == 0 && !_replay.isPlaying
-                      ? null
-                      : () => _update(_replay.reset()),
-                  child: const Text('Reset'),
-                ),
-              ],
-            ),
-            if (streets.length > 1 || summary != null)
-              Act0SkinStreetSummaryStripV1(
-                jumps: streets,
-                position: position,
-                onJump: (step) => _update(_replay.seek(step)),
-                lines: _summaryLines(
-                  summary,
-                  streets,
-                  position,
-                  table?.boardCards.length ?? 0,
-                  atEnd: _replay.atEnd,
+              )
+            else ...[
+              Semantics(
+                liveRegion: true,
+                child: Text(
+                  status,
+                  semanticsLabel: history.isEmpty
+                      ? status
+                      : '$status. ${history.last}',
+                  style: _T.secondary,
                 ),
               ),
-            if (table != null && tableAvailable)
-              Align(
-                alignment: AlignmentDirectional.topStart,
-                child: Act0TableSceneV1(
-                  key: const Key('act0_attempt_replay_table'),
-                  table: table,
-                  config: Act0TablePresentationConfigV1(
-                    animateActiveCommitment:
-                        (frame?.newCommitment ?? false) && _visible,
+              Wrap(
+                spacing: _T.gapXs,
+                children: [
+                  TextButton(
+                    key: const Key('act0_attempt_replay_previous'),
+                    onPressed: _replay.position == 0
+                        ? null
+                        : () => _update(_replay.back()),
+                    child: const Text('Previous'),
+                  ),
+                  TextButton(
+                    key: const Key('act0_attempt_replay_next'),
+                    onPressed: _replay.atEnd
+                        ? null
+                        : () => _update(_replay.pause().forward()),
+                    child: const Text('Next'),
+                  ),
+                  TextButton(
+                    key: const Key('act0_attempt_replay_play_pause'),
+                    onPressed: _replay.atEnd ? null : _togglePlayback,
+                    child: Text(_replay.isPlaying ? 'Pause' : 'Play'),
+                  ),
+                  TextButton(
+                    key: const Key('act0_attempt_replay_reset'),
+                    onPressed: _replay.position == 0 && !_replay.isPlaying
+                        ? null
+                        : () => _update(_replay.reset()),
+                    child: const Text('Reset'),
+                  ),
+                ],
+              ),
+              if (streets.length > 1 || summary != null)
+                Act0SkinStreetSummaryStripV1(
+                  jumps: streets,
+                  position: position,
+                  onJump: (step) => _update(_replay.seek(step)),
+                  lines: _summaryLines(
+                    summary,
+                    streets,
+                    position,
+                    table?.boardCards.length ?? 0,
+                    atEnd: _replay.atEnd,
                   ),
                 ),
-              )
-            else
-              const Text(
-                'Table playback is unavailable for this attempt.',
-                style: _T.secondary,
-              ),
-            if (history.isNotEmpty) ...[
-              Text(
-                history.last,
-                key: const Key('act0_attempt_replay_current_event'),
-                style: _T.body,
-              ),
-              if (history.length > 1)
-                ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  title: const Text('Earlier steps'),
-                  collapsedTextColor: _T.onSurface,
-                  textColor: _T.onSurface,
-                  children: [
-                    for (final event in history.take(history.length - 1))
-                      ListTile(
-                        contentPadding: EdgeInsets.zero,
-                        title: Text(event, style: _T.body),
-                      ),
-                  ],
+              if (table != null && tableAvailable)
+                Align(
+                  alignment: AlignmentDirectional.topStart,
+                  child: Act0TableSceneV1(
+                    key: const Key('act0_attempt_replay_table'),
+                    table: table,
+                    config: Act0TablePresentationConfigV1(
+                      animateActiveCommitment:
+                          (frame?.newCommitment ?? false) && _visible,
+                    ),
+                  ),
+                )
+              else
+                const Text(
+                  'Table playback is unavailable for this attempt.',
+                  style: _T.secondary,
                 ),
+              if (history.isNotEmpty) ...[
+                Text(
+                  history.last,
+                  key: const Key('act0_attempt_replay_current_event'),
+                  style: _T.body,
+                ),
+                if (history.length > 1)
+                  ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    title: const Text('Earlier steps'),
+                    collapsedTextColor: _T.onSurface,
+                    textColor: _T.onSurface,
+                    children: [
+                      for (final event in history.take(history.length - 1))
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(event, style: _T.body),
+                        ),
+                    ],
+                  ),
+              ],
             ],
           ],
-        ],
+        ),
       ),
     );
   }
