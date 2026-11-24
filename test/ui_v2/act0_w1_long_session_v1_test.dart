@@ -123,9 +123,13 @@ final _tapLog = <String>[];
 Future<bool> _tapFirst(WidgetTester t, List<Finder> finders) async {
   for (final f in finders) {
     if (f.evaluate().isEmpty) continue;
-    await t.ensureVisible(f.first);
-    await _settle(t, 'scrolling to $f');
     final hit = f.hitTestable();
+    if (hit.evaluate().isEmpty) {
+      // Align inside the viewport instead of moving the control to its edge,
+      // where the runner chrome or the action shelf fade can cover it.
+      await Scrollable.ensureVisible(t.element(f.first), alignment: 0.5);
+      await _settle(t, 'scrolling to $f');
+    }
     if (hit.evaluate().isEmpty) continue;
     _tapLog.add(RegExp(r"'([a-z0-9_]+)'").firstMatch('$f')?.group(1) ?? '?');
     await t.tap(hit.first, warnIfMissed: false);
@@ -2273,7 +2277,13 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   ),
                 ],
               ]);
-              expect(tapped, isTrue, reason: '$taskId: no answer');
+              expect(
+                tapped,
+                isTrue,
+                reason:
+                    'Step $step: answer ${choice.id} is unreachable. '
+                    '${_routeLocation(t, shell)}',
+              );
               if (runner.sizingConfig.isEnabled) {
                 expect(
                   await _tapFirst(t, [
@@ -2344,13 +2354,13 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           }
           // The course traversal uses Learn to pick up required practice and
           // the next unfinished task after a lesson Result.
-          final resultClose = find.descendant(
-            of: find.byKey(const Key('act0_shell_result_close')),
-            matching: find.byType(IconButton),
-          );
+          final resultClose = find.byKey(const Key('act0_shell_result_close'));
           if (resultClose.evaluate().isNotEmpty) {
             expect(
-              await _tapFirst(t, [resultClose]),
+              await _tapFirst(t, [
+                find.byKey(const Key('act0_shell_block_summary_home_cta')),
+                find.byKey(const Key('act0_shell_block_summary_map_cta')),
+              ]),
               isTrue,
               reason: 'Step $step: Result close control is unreachable',
             );
@@ -2365,8 +2375,24 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             }
             continue;
           }
+          if (activeShell != null) {
+            final review = activeShell.runner.phase == Act0LessonPhaseV1.review;
+            final continued = await _tapFirst(t, [
+              if (review)
+                find.byKey(const Key('act0_shell_feedback_continue_cta'))
+              else
+                find.byKey(const Key('act0_shell_theory_continue_cta')),
+              find.byKey(const Key('act0_shell_continue_cta')),
+            ]);
+            expect(
+              continued,
+              isTrue,
+              reason:
+                  'Step $step: no runner CTA. ${_routeLocation(t, activeShell)}',
+            );
+            continue;
+          }
           var moved = await _tapFirst(t, [
-            find.byKey(const Key('act0_shell_theory_continue_cta')),
             for (final key in _continueKeys) find.byKey(Key(key)),
           ]);
           final mission = find.byKey(
@@ -2378,7 +2404,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   .byKey(const Key('act0_academy_review_leaf'))
                   .evaluate()
                   .isNotEmpty) {
-            await _tapFirst(t, [find.text('Learn').last]);
+            moved = await _tapFirst(t, [find.text('Learn').last]);
           }
           if (!moved && levels.evaluate().isNotEmpty) {
             routeSnapshot ??= await _saved(t);
