@@ -1,3 +1,4 @@
+import 'skin/act0_skin_tokens_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:poker_analyzer/ui/settings/privacy_terms.dart';
@@ -203,6 +204,9 @@ Widget act0AcademyReviewRuntimeV1(
 
 Widget act0AcademyYouRuntimeV1(
   BuildContext context, {
+  required List<Act0WorldCardV1> worlds,
+  required int independentAnswers,
+  required int repairedAnswers,
   List<Act0W14SkillStateV1> skills = const [],
   bool passedW1RulesCheck = false,
   required Act0ProfileShellV1 legacy,
@@ -222,6 +226,9 @@ Widget act0AcademyYouRuntimeV1(
     return legacy;
   return Act0AcademyYouLeafV1(
     input: Act0AcademyYouLeafInputV1(
+      worlds: worlds,
+      independentAnswers: independentAnswers,
+      repairedAnswers: repairedAnswers,
       skills: skills,
       checkedW1Topics: passedW1RulesCheck
           ? act0W1RulesQuestionsV1
@@ -303,14 +310,42 @@ class _AcademySettingsRouteV1 extends StatefulWidget {
       _AcademySettingsRouteV1State();
 }
 
-class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
+class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
+    with WidgetsBindingObserver {
   var _loadState = Act0AcademySettingsLoadStateV1.loading;
   bool _savingReminder = false;
+  bool _reminderPermissionDenied = false;
+  int _permissionRequest = 0;
   late final _version = Act0ReleaseSupportV1.version();
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _load();
+    _refreshReminderPermission();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshReminderPermission();
+  }
+
+  Future<void> _refreshReminderPermission() async {
+    final request = ++_permissionRequest;
+    try {
+      final denied = await Act0PracticeReminderV1.permissionDenied();
+      if (mounted && request == _permissionRequest) {
+        setState(() => _reminderPermissionDenied = denied);
+      }
+    } catch (_) {
+      // An unavailable platform channel does not establish a denial.
+    }
   }
 
   Future<void> _load() async {
@@ -328,18 +363,8 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
   Future<void> _setPracticeReminder(bool enabled) async {
     setState(() => _savingReminder = true);
     try {
-      final scheduled = await Act0PracticeReminderV1.setEnabled(enabled);
-      if (mounted &&
-          Act0SettingsViewModelV1.showReminderPermissionNotice(
-            enabled: enabled,
-            scheduled: scheduled,
-          )) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Allow Sharky notifications in iPhone Settings.'),
-          ),
-        );
-      }
+      await Act0PracticeReminderV1.setEnabled(enabled);
+      if (mounted) await _refreshReminderPermission();
     } catch (_) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -375,7 +400,7 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
         savingReminder: _savingReminder,
       );
       return Scaffold(
-        backgroundColor: Act0AcademyLeafPaletteV1.ink,
+        backgroundColor: Act0SkinTokensV1.background,
         body: SafeArea(
           child: Act0AcademySettingsLeafV1(
             input: Act0AcademySettingsLeafInputV1(
@@ -383,6 +408,7 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1> {
               version: view.version,
               hapticsEnabled: view.hapticsEnabled,
               practiceReminderEnabled: view.practiceReminderEnabled,
+              reminderPermissionDenied: _reminderPermissionDenied,
               onPracticeReminderChanged: view.canChangeReminder
                   ? _setPracticeReminder
                   : null,

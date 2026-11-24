@@ -2312,7 +2312,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
               onPressed: () =>
                   Navigator.pop(dialogContext, _requestDeleteLocalDataV1),
-              child: const Text('Delete local data'),
+              child: const Text('Delete learner data'),
             ),
           ],
         ),
@@ -2493,60 +2493,20 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       sheetAnimationStyle: MediaQuery.disableAnimationsOf(context)
           ? AnimationStyle.noAnimation
           : null,
-      backgroundColor: Act0AcademyLeafPaletteV1.inkRaised,
+      backgroundColor: Act0SkinTokensV1.surface,
       useSafeArea: true,
       isScrollControlled: true,
-      builder: (sheetContext) => SafeArea(
-        top: false,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Text(
-                'Delete local data?',
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.text,
-                  fontSize: 22,
-                  fontWeight: FontWeight.w800,
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'This permanently erases your learning progress, answers, XP, '
-                'practice history, recovery copies and preferences on this device. '
-                'You will start again. It cannot be undone. '
-                'Apple backups and TestFlight feedback are managed separately by Apple.',
-                style: TextStyle(
-                  color: Act0AcademyLeafPaletteV1.textMuted,
-                  fontSize: 15,
-                  height: 1.35,
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextButton(
-                key: const Key('act0_delete_data_cancel'),
-                onPressed: () => Navigator.pop(sheetContext, false),
-                style: TextButton.styleFrom(
-                  foregroundColor: Act0AcademyLeafPaletteV1.aquaSoft,
-                  minimumSize: const Size(48, 48),
-                ),
-                child: const Text('Cancel'),
-              ),
-              FilledButton(
-                key: const Key('act0_delete_data_confirm'),
-                onPressed: () => Navigator.pop(sheetContext, true),
-                style: FilledButton.styleFrom(
-                  foregroundColor: Act0AcademyLeafPaletteV1.ink,
-                  backgroundColor: Act0ShellTokensV1.danger,
-                  minimumSize: const Size(48, 48),
-                ),
-                child: const Text('Delete'),
-              ),
-            ],
-          ),
-        ),
+      builder: (sheetContext) => Act0SkinConfirmSheetV1(
+        title: 'Delete learner data?',
+        description:
+            'This permanently erases your learning progress, answers, XP, '
+            'practice history, recovery copies and preferences on this device. '
+            'You will start again. It cannot be undone. '
+            'Apple backups and TestFlight feedback are managed separately by Apple.',
+        cancelKey: const Key('act0_delete_data_cancel'),
+        confirmKey: const Key('act0_delete_data_confirm'),
+        onCancel: () => Navigator.pop(sheetContext, false),
+        onConfirm: () => Navigator.pop(sheetContext, true),
       ),
     );
     if (!mounted) return;
@@ -3592,9 +3552,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
     final shell = Scaffold(
       key: const Key('act0_shell_preview_screen'),
-      backgroundColor: _tab == Act0ShellTabV1.review && _showAttemptArchiveV1
+      backgroundColor:
+          (_tab == Act0ShellTabV1.review && _showAttemptArchiveV1) ||
+              _showWelcome ||
+              (_tab == Act0ShellTabV1.profile && premiumAcademy)
           ? Act0SkinTokensV1.background
-          : premiumAcademy || _showWelcome || _showPlacement
+          : premiumAcademy || _showPlacement
           ? Act0AcademyLeafPaletteV1.ink
           : academySurface
           ? Act0AcademyDesignTokensV1.pageSurface
@@ -5465,6 +5428,22 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         onDeleteLocalData: _usesPersistedProgress
                             ? _requestDeleteLocalDataV1
                             : null,
+                        worlds: state.worlds,
+                        independentAnswers: _learningEvidenceHistoryV1.records
+                            .where(
+                              (record) =>
+                                  !record.isPlacementAssessment &&
+                                  record.isIndependentCorrect,
+                            )
+                            .length,
+                        repairedAnswers: _learningEvidenceHistoryV1.records
+                            .where(
+                              (record) =>
+                                  !record.isPlacementAssessment &&
+                                  !record.isDiagnosticLearningEntry &&
+                                  record.isRepaired,
+                            )
+                            .length,
                         skills: act0W14SkillStatesV1(
                           worlds: state.worlds,
                           history: _learningEvidenceHistoryV1,

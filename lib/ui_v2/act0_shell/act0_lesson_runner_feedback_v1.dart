@@ -181,13 +181,6 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : (isSuboptimal
               ? const Key('act0_shell_feedback_icon_suboptimal')
               : const Key('act0_shell_feedback_icon_correct'));
-    final sharkyTone = hasProofEarnedState
-        ? Act0ShellTokensV1.gold
-        : isWrong
-        ? missedCueTone
-        : isSuboptimal
-        ? Act0ShellTokensV1.gold
-        : Act0ShellTokensV1.primary;
     final resolvedTitle = _hasRepairedFeedback
         ? _fixedFeedbackLabelV1(context, lessonRetry: isLessonRetryFeedback)
         : isAssistedDecision && !isWrong
@@ -234,10 +227,16 @@ class Act0FeedbackShellV1 extends StatelessWidget {
         : isWrong
         ? 'Start with the table clue, then choose the action.'
         : '';
-    // Sharky coaches a miss and acknowledges proven recovery only. Ordinary
-    // correct and repair feedback keep the learning scene calm.
+    final sharkyMoment = isRecoveredSourceRecheck || _hasRepairedFeedback
+        ? Act0SkinSharkyMomentV1.selfFix
+        : isWrong && !isCompactRefinedFeedback
+        ? Act0SkinSharkyMomentV1.mistake
+        : isAssistedDecision && !isWrong
+        ? Act0SkinSharkyMomentV1.hint
+        : null;
     final showSharkyCompanion =
-        isRecoveredSourceRecheck || (!isCompactRefinedFeedback && isWrong);
+        sharkyMoment != null &&
+        (!sceneOwnsFeedbackExplanation || isRecoveredSourceRecheck);
     final showVerdictTitle = resolvedTitle.isNotEmpty;
     final actionPrefix = act0RuntimeFeedbackActionPrefixV1(
       context,
@@ -737,15 +736,11 @@ class Act0FeedbackShellV1 extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (showSharkyCompanion) ...[
-                          Act0SharkyMascotV1(
+                          Act0SkinSharkyExpressionV1(
                             key: feedbackSharkySlotKey,
-                            mood: sharkyMood,
-                            tone: sharkyTone,
-                            size: isCompactRefinedFeedback
-                                ? 30
-                                : (refined ? 46 : 50),
+                            moment: sharkyMoment,
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: Act0SkinTokensV1.gapSm),
                         ] else if (!isCompactRefinedFeedback) ...[
                           Container(
                             key: const Key('act0_shell_feedback_state_mark'),

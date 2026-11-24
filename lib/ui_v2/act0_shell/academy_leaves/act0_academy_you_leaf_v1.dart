@@ -1,10 +1,10 @@
+import '../skin/act0_skin_components_v1.dart';
+import '../skin/act0_skin_tokens_v1.dart';
+import '../act0_shell_state_v1.dart';
 import '../act0_learning_record_card_v1.dart';
 import '../act0_w14_skill_state_v1.dart';
 import '../act0_profile_evidence_projection_v1.dart';
 import 'package:flutter/material.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_components_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_club_night_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_projection_v1.dart';
 
@@ -49,13 +49,15 @@ class Act0AcademyYouLeafInputV1 {
     this.reinforcedRepairCount = 0,
     this.openRepairCount = 0,
     this.dueReviewCount = 0,
+    this.worlds = const [],
+    this.independentAnswers = 0,
+    this.repairedAnswers = 0,
     this.skills = const <Act0W14SkillStateV1>[],
     this.checkedW1Topics = const <String>[],
     this.onOpenReview,
     this.onOpenPractice,
     this.onOpenLearn,
     this.onOpenSettings,
-    this.onRecoveryOptions,
   });
 
   final String? displayName;
@@ -69,13 +71,15 @@ class Act0AcademyYouLeafInputV1 {
   final int reinforcedRepairCount;
   final int openRepairCount;
   final int dueReviewCount;
+  final List<Act0WorldCardV1> worlds;
+  final int independentAnswers;
+  final int repairedAnswers;
   final List<Act0W14SkillStateV1> skills;
   final List<String> checkedW1Topics;
   final VoidCallback? onOpenReview;
   final VoidCallback? onOpenPractice;
   final VoidCallback? onOpenLearn;
   final VoidCallback? onOpenSettings;
-  final VoidCallback? onRecoveryOptions;
 }
 
 String _plural(int n, String one, String many) => n == 1 ? one : many;
@@ -86,485 +90,248 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
 
   final Act0AcademyYouLeafInputV1 input;
 
-  static const _text = Act0ClubNightTokensV1.text;
-  static const _muted = Act0ClubNightTokensV1.text2;
-  static const _gold = Act0ClubNightTokensV1.brass;
-
   @override
   Widget build(BuildContext context) {
     final moments = input.earnedMoments
         .where((m) => !act0AcademyYouOpenMistakeSeedIdsV1.contains(m.seedId))
-        .toList(growable: false);
-    // Fresh only on an explicit zero record (donor #322 used "0 of ..."). An
-    // unknown count never hides a supplied level or XP line.
+        .toList();
     final fresh =
-        moments.isEmpty &&
-        input.practiceDaysLastWeek == 0 &&
         input.completedTaskCount == 0 &&
+        input.practiceDaysLastWeek == 0 &&
+        input.independentAnswers == 0 &&
+        input.repairedAnswers == 0 &&
+        input.bankedRepairCount == 0 &&
+        input.reinforcedRepairCount == 0 &&
         input.openRepairCount == 0 &&
-        input.dueReviewCount == 0;
-    final name = input.displayName?.trim() ?? '';
-    final subtitleParts = [
+        input.dueReviewCount == 0 &&
+        input.checkedW1Topics.isEmpty &&
+        moments.isEmpty &&
+        !input.skills.any((skill) => skill.answeredTasks > 0) &&
+        !(input.learningRecord?.studiedTopics.isNotEmpty ?? false);
+    final activity = [
       input.levelLabel.trim(),
       input.xpLine.trim(),
-    ].where((s) => s.isNotEmpty).toList();
+    ].where((value) => value.isNotEmpty).join(' - ');
+    final name = input.displayName?.trim() ?? '';
     return ColoredBox(
       key: const Key('act0_academy_you_leaf'),
-      color: Act0ClubNightTokensV1.wall,
-      child: Act0ClubTextScaleV1(
-        child: ListView(
-          key: const Key('act0_academy_you_leaf_scroll'),
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          children: [
-            Act0ClubScreenHeaderV1(
-              title: 'You',
-              trailing: input.onOpenSettings == null
-                  ? null
-                  : IconButton(
-                      style: const ButtonStyle(
-                        splashFactory: InkRipple.splashFactory,
-                      ),
-                      key: const Key('act0_academy_you_leaf_settings'),
-                      tooltip: 'Settings',
-                      onPressed: input.onOpenSettings,
-                      constraints: const BoxConstraints.tightFor(
-                        width: 44,
-                        height: 44,
-                      ),
-                      icon: const Act0AcademyLeafGlyphV1(
-                        kind: Act0AcademyLeafGlyphKindV1.settings,
-                        color: _muted,
-                      ),
+      color: Act0SkinTokensV1.background,
+      child: ListView(
+        key: const Key('act0_academy_you_leaf_scroll'),
+        padding: const EdgeInsets.all(Act0SkinTokensV1.screenGutter),
+        children: [
+          Act0SkinScreenHeaderV1(
+            title: 'You',
+            trailing: input.onOpenSettings == null
+                ? null
+                : IconButton(
+                    key: const Key('act0_academy_you_leaf_settings'),
+                    tooltip: 'Settings',
+                    onPressed: input.onOpenSettings,
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: Act0SkinTokensV1.muted,
                     ),
-            ),
-            const SizedBox(height: 6),
-            Act0ClubCardV1(
-              padding: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(14),
-                child: Row(
-                  children: [
-                    _medallion(Act0AcademyLeafGlyphKindV1.you, _gold, 48),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            fresh
-                                ? 'Your journey'
-                                : name.isEmpty || name == 'New player'
-                                ? 'Your poker journey'
-                                : name,
-                            key: const Key('act0_academy_you_leaf_name'),
-                            style: const TextStyle(
-                              color: _text,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          if (fresh || subtitleParts.isNotEmpty) ...[
-                            const SizedBox(height: 4),
-                            Text(
-                              fresh
-                                  ? 'Build your first poker read'
-                                  : subtitleParts.join(' - '),
-                              key: const Key('act0_academy_you_leaf_level'),
-                              style: const TextStyle(
-                                color: _muted,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                          if (input.practiceDaysLastWeek > 0)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                '${input.practiceDaysLastWeek} '
-                                '${_plural(input.practiceDaysLastWeek, 'day', 'days')}'
-                                ' practiced in the last 7 days',
-                                key: const Key('act0_academy_you_leaf_streak'),
-                                style: const TextStyle(
-                                  color: _gold,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            if (!fresh &&
-                (subtitleParts.isNotEmpty || input.practiceDaysLastWeek > 0))
-              Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
-                child: Text(
-                  input.xpLine.trim().isEmpty
-                      ? 'This tracks your practice. Try new hands without help to see what you remember.'
-                      : 'Level, XP, and practice days track your activity. Try new hands without help to see what you remember.',
-                  key: const Key('act0_academy_you_leaf_activity_boundary'),
-                  style: const TextStyle(color: _muted, fontSize: 12),
-                ),
-              ),
-            if (input.skills.isNotEmpty) ...[
-              const SizedBox(height: 12),
-              Act0ClubCardV1(
-                padding: EdgeInsets.zero,
-                child: ExpansionTile(
-                  key: const Key('act0_w14_skills'),
-                  textColor: _text,
-                  collapsedTextColor: _text,
-                  iconColor: _muted,
-                  collapsedIconColor: _muted,
-                  expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
-                  title: const Text('Skills · W1–W$act0SkillMapLastWorldV1'),
-                  subtitle: Text(
-                    input.checkedW1Topics.isNotEmpty
-                        ? 'W1 skipped by rules check'
-                        : 'Saved answers, not a mastery score.',
-                    style: TextStyle(color: _muted),
                   ),
-                  children: [
-                    if (input.checkedW1Topics.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Topics checked in the W1 rules check',
-                              style: TextStyle(
-                                color: _text,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              input.checkedW1Topics.join(' · '),
-                              style: const TextStyle(color: _muted),
-                            ),
-                          ],
-                        ),
-                      ),
-                    for (final skill in input.skills)
-                      Padding(
-                        key: Key('act0_w14_skill_${skill.label}'),
-                        padding: const EdgeInsets.fromLTRB(16, 6, 16, 14),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              skill.label,
-                              style: const TextStyle(
-                                color: _text,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              skill.stateLabel,
-                              style: const TextStyle(color: _gold),
-                            ),
-                            Text(
-                              skill.explanation,
-                              style: const TextStyle(color: _muted),
-                            ),
-                            Text(
-                              '${skill.lessonCount} ${_plural(skill.lessonCount, 'lesson', 'lessons')} · ${skill.taskCount} tasks',
-                              style: const TextStyle(
-                                color: _muted,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                  ],
-                ),
+          ),
+          const SizedBox(height: Act0SkinTokensV1.gapSm),
+          if (fresh)
+            const Act0SkinCardV1(
+              child: Act0SkinEmptyStateV1(
+                title: 'Your journey',
+                titleKey: Key('act0_academy_you_leaf_name'),
+                description:
+                    'Your world and skill progress, independent answers, and repairs will appear here.',
               ),
-            ],
-            if (input.onRecoveryOptions != null)
-              TextButton.icon(
-                key: const Key('act0_profile_recovery_options'),
-                onPressed: input.onRecoveryOptions,
-                icon: const Icon(Icons.restore, color: _muted),
-                label: const Text(
-                  'Recovery options',
-                  style: TextStyle(color: _muted),
-                ),
-              ),
-            const SizedBox(height: 12),
-            _heading(
-              moments.isEmpty ? 'Your first earned moment' : 'Earned moments',
-              moments.isEmpty ? 'Not earned yet' : '${moments.length} earned',
-            ),
-            const SizedBox(height: 9),
-            if (moments.isEmpty)
-              Act0ClubCardV1(
-                padding: EdgeInsets.zero,
-                key: const Key('act0_academy_you_leaf_not_earned'),
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
-                    children: [
-                      _medallion(
-                        Act0AcademyLeafGlyphKindV1.practice,
-                        _muted,
-                        64,
-                      ),
-                      const SizedBox(width: 14),
-                      const Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'NOT EARNED YET',
-                              style: TextStyle(
-                                color: _muted,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1.4,
-                              ),
-                            ),
-                            SizedBox(height: 6),
-                            Text(
-                              'First correct read',
-                              style: TextStyle(
-                                color: _text,
-                                fontSize: 17,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(height: 5),
-                            Text(
-                              'Answer your first question correctly without help.',
-                              style: TextStyle(color: _muted, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              )
-            else
-              for (var i = 0; i < moments.length; i++) ...[
-                if (i > 0) const SizedBox(height: 8),
-                _moment(moments[i], featured: i == 0),
-              ],
-            if (input.dueReviewCount > 0 || input.openRepairCount > 0) ...[
-              const SizedBox(height: 12),
-              _entry(
-                key: const Key('act0_academy_you_leaf_review'),
-                title: input.dueReviewCount > 0
-                    ? 'Ready for a recheck'
-                    : 'Spots to repair',
-                subtitle: [
-                  if (input.dueReviewCount > 0)
-                    '${input.dueReviewCount} '
-                        '${_plural(input.dueReviewCount, 'review', 'reviews')} due',
-                  if (input.openRepairCount > 0)
-                    '${input.openRepairCount} '
-                        '${_plural(input.openRepairCount, 'spot', 'spots')}'
-                        ' to repair',
-                ].join(' - '),
-                glyph: Act0AcademyLeafGlyphKindV1.review,
-                onTap: input.onOpenReview,
-              ),
-            ],
-            const SizedBox(height: 10),
-            _heading(
-              fresh ? 'Your record begins here' : 'Your record',
-              'Saved as you learn',
-            ),
-            if (!fresh)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(4, 8, 4, 0),
-                child: Wrap(
-                  spacing: 14,
-                  runSpacing: 5,
-                  children: [
+            )
+          else
+            Act0SkinCardV1(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (name.isNotEmpty && name != 'New player')
                     Text(
-                      input.completedTaskCount == null
-                          ? 'Your learning, saved'
-                          : '${input.completedTaskCount} '
-                                '${_plural(input.completedTaskCount!, 'task', 'tasks')}'
-                                ' completed',
-                      key: const Key('act0_academy_you_leaf_tasks'),
-                      style: const TextStyle(color: _text, fontSize: 15),
+                      name,
+                      key: const Key('act0_academy_you_leaf_name'),
+                      style: Act0SkinTokensV1.secondary,
                     ),
-                    if (input.bankedRepairCount > 0)
-                      Text(
-                        '${input.bankedRepairCount} '
-                        '${_plural(input.bankedRepairCount, 'mistake', 'mistakes')} corrected',
-                        key: const Key('act0_academy_you_leaf_banked'),
-                        style: const TextStyle(color: _muted, fontSize: 15),
-                      ),
-                    if (input.reinforcedRepairCount > 0)
-                      Text(
-                        '${input.reinforcedRepairCount} with later supporting '
-                        'evidence',
-                        key: const Key('act0_academy_you_leaf_reinforced'),
-                        style: const TextStyle(color: _muted, fontSize: 13),
-                      ),
-                  ],
-                ),
+                  Text(
+                    'Course progress',
+                    key: name.isEmpty || name == 'New player'
+                        ? const Key('act0_academy_you_leaf_name')
+                        : null,
+                    style: Act0SkinTokensV1.headline,
+                  ),
+                  const SizedBox(height: Act0SkinTokensV1.gapSm),
+                  Text(
+                    input.completedTaskCount == null
+                        ? 'Your learning, saved'
+                        : '${input.completedTaskCount} ${_plural(input.completedTaskCount!, 'task', 'tasks')} completed',
+                    key: const Key('act0_academy_you_leaf_tasks'),
+                    style: Act0SkinTokensV1.body,
+                  ),
+                  if (input.worlds.isNotEmpty)
+                    _progressDetails('Worlds', [
+                      for (final world in input.worlds)
+                        ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            world.title,
+                            style: Act0SkinTokensV1.body,
+                          ),
+                          subtitle: Text(
+                            world.progressLabel,
+                            style: Act0SkinTokensV1.secondary,
+                          ),
+                        ),
+                    ]),
+                  if (input.skills.isNotEmpty) _skillsDetails(),
+                  Act0SkinStatTileV1(
+                    label: 'Recent saved decisions',
+                    compact: true,
+                    value:
+                        '${input.independentAnswers} correct without help · ${input.repairedAnswers} repaired',
+                  ),
+                  if (input.bankedRepairCount > 0)
+                    Text(
+                      '${input.bankedRepairCount} ${_plural(input.bankedRepairCount, 'mistake', 'mistakes')} corrected',
+                      key: const Key('act0_academy_you_leaf_banked'),
+                      style: Act0SkinTokensV1.secondary,
+                    ),
+                  if (input.reinforcedRepairCount > 0)
+                    Text(
+                      '${input.reinforcedRepairCount} with later supporting evidence',
+                      key: const Key('act0_academy_you_leaf_reinforced'),
+                      style: Act0SkinTokensV1.secondary,
+                    ),
+                ],
               ),
-            if (input.onOpenLearn != null) ...[
-              const SizedBox(height: 12),
-              _entry(
-                key: const Key('act0_academy_you_leaf_learn'),
-                title: fresh ? 'Start learning' : 'Open Learn',
-                subtitle: 'Return to your learning path',
-                glyph: Act0AcademyLeafGlyphKindV1.learn,
-                onTap: input.onOpenLearn,
-              ),
-            ],
-            if (input.learningRecord != null) ...[
-              const SizedBox(height: 12),
-              Act0LearningRecordCardV1(
-                projection: input.learningRecord!,
-                onOpenPractice: input.onOpenPractice,
-              ),
-            ],
+            ),
+          if (fresh && input.skills.isNotEmpty)
+            Act0SkinCardV1(child: _skillsDetails()),
+          if (activity.isNotEmpty) ...[
+            const SizedBox(height: Act0SkinTokensV1.gapMd),
+            Text(
+              activity,
+              key: const Key('act0_academy_you_leaf_level'),
+              style: Act0SkinTokensV1.captionStyle,
+            ),
           ],
-        ),
+          if (input.practiceDaysLastWeek > 0)
+            Text(
+              '${input.practiceDaysLastWeek} ${_plural(input.practiceDaysLastWeek, 'day', 'days')} practiced in the last 7 days',
+              key: const Key('act0_academy_you_leaf_streak'),
+              style: Act0SkinTokensV1.captionStyle,
+            ),
+          if (!fresh && (activity.isNotEmpty || input.practiceDaysLastWeek > 0))
+            Text(
+              input.xpLine.trim().isEmpty
+                  ? 'This tracks your practice. Try new hands without help to see what you remember.'
+                  : 'Level, XP, and practice days track your activity. Try new hands without help to see what you remember.',
+              key: const Key('act0_academy_you_leaf_activity_boundary'),
+              style: Act0SkinTokensV1.captionStyle,
+            ),
+          const SizedBox(height: Act0SkinTokensV1.gapMd),
+          if (!fresh)
+            Text(
+              moments.isEmpty ? 'Not earned yet' : '${moments.length} earned',
+              style: Act0SkinTokensV1.sectionLabel,
+            ),
+          for (final moment in moments)
+            Act0SkinListRowV1(
+              controlKey: Key('act0_academy_you_leaf_moment_${moment.seedId}'),
+              title: moment.label,
+              subtitle: '',
+              onTap: null,
+            ),
+          if (input.dueReviewCount > 0 || input.openRepairCount > 0)
+            Act0SkinListRowV1(
+              controlKey: const Key('act0_academy_you_leaf_review'),
+              title: input.dueReviewCount > 0
+                  ? 'Ready for a recheck'
+                  : 'Spots to repair',
+              subtitle: [
+                if (input.dueReviewCount > 0)
+                  '${input.dueReviewCount} ${_plural(input.dueReviewCount, 'review', 'reviews')} due',
+                if (input.openRepairCount > 0)
+                  '${input.openRepairCount} ${_plural(input.openRepairCount, 'spot', 'spots')} to repair',
+              ].join(' - '),
+              icon: Icons.history,
+              onTap: input.onOpenReview,
+            ),
+          if (input.onOpenLearn != null)
+            Act0SkinListRowV1(
+              controlKey: const Key('act0_academy_you_leaf_learn'),
+              title: fresh ? 'Start learning' : 'Open Learn',
+              subtitle: 'Return to your learning path',
+              icon: Icons.school_outlined,
+              onTap: input.onOpenLearn,
+            ),
+          if (!fresh && input.learningRecord != null) ...[
+            const SizedBox(height: Act0SkinTokensV1.gapMd),
+            Act0LearningRecordCardV1(
+              projection: input.learningRecord!,
+              onOpenPractice: input.onOpenPractice,
+            ),
+          ],
+        ],
       ),
     );
   }
 
-  Widget _medallion(Act0AcademyLeafGlyphKindV1 kind, Color tone, double size) =>
-      Container(
-        width: size,
-        height: size,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: tone.withValues(alpha: 0.10),
-          border: Border.all(color: tone.withValues(alpha: 0.45)),
+  Widget _skillsDetails() => _progressDetails(
+    'Skills · W1–W$act0SkillMapLastWorldV1',
+    [
+      if (input.checkedW1Topics.isNotEmpty) ...[
+        const Text(
+          'Topics checked in the W1 rules check',
+          style: Act0SkinTokensV1.body,
         ),
-        alignment: Alignment.center,
-        child: Act0AcademyLeafGlyphV1(kind: kind, color: tone, size: size * .5),
-      );
-
-  Widget _heading(String title, String trailing) => Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 4),
-    child: Row(
-      children: [
-        Expanded(
-          child: Text(
-            title,
-            style: const TextStyle(
-              color: _text,
-              fontSize: 17,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+        Text(
+          input.checkedW1Topics.join(' · '),
+          style: Act0SkinTokensV1.secondary,
         ),
-        Text(trailing, style: const TextStyle(color: _muted, fontSize: 12)),
       ],
-    ),
+      for (final skill in input.skills)
+        ListTile(
+          key: Key('act0_w14_skill_${skill.label}'),
+          title: Text(skill.label, style: Act0SkinTokensV1.body),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(skill.stateLabel, style: Act0SkinTokensV1.secondary),
+              Text(skill.explanation, style: Act0SkinTokensV1.secondary),
+              Text(
+                '${skill.lessonCount} ${_plural(skill.lessonCount, 'lesson', 'lessons')} · ${skill.taskCount} tasks',
+                style: Act0SkinTokensV1.captionStyle,
+              ),
+            ],
+          ),
+        ),
+    ],
+    key: const Key('act0_w14_skills'),
+    subtitle: input.checkedW1Topics.isNotEmpty
+        ? 'W1 skipped by rules check'
+        : 'Saved answers, not a mastery score.',
   );
 
-  Widget _moment(
-    Act0AchievementMomentViewModelV1 m, {
-    required bool featured,
-  }) => Act0ClubCardV1(
-    padding: EdgeInsets.zero,
-    key: Key('act0_academy_you_leaf_moment_${m.seedId}'),
-    emphasized: featured,
-    child: Padding(
-      padding: const EdgeInsets.all(14),
-      child: Row(
-        children: [
-          _medallion(
-            Act0AcademyLeafGlyphKindV1.placement,
-            _gold,
-            featured ? 56 : 40,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'EARNED',
-                  style: TextStyle(
-                    color: _gold,
-                    fontSize: 13,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  m.label,
-                  style: TextStyle(
-                    color: _text,
-                    fontSize: featured ? 17 : 15,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
-
-  Widget _entry({
-    required Key key,
-    required String title,
-    required String subtitle,
-    required Act0AcademyLeafGlyphKindV1 glyph,
-    VoidCallback? onTap,
-  }) => Act0ClubCardV1(
-    padding: EdgeInsets.zero,
-    child: TextButton(
-      key: key,
-      onPressed: onTap,
-      style: TextButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        minimumSize: const Size(0, 64),
-        foregroundColor: _text,
-        disabledForegroundColor: _text,
-      ),
-      child: Row(
-        children: [
-          Act0AcademyLeafGlyphV1(
-            kind: glyph,
-            color: Act0ClubNightTokensV1.brass,
-            size: 26,
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 3),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: _muted, fontSize: 12),
-                ),
-              ],
-            ),
-          ),
-          if (onTap != null)
-            const Act0AcademyLeafGlyphV1(
-              kind: Act0AcademyLeafGlyphKindV1.forward,
-              color: _muted,
-              size: 18,
-            ),
-        ],
-      ),
-    ),
+  Widget _progressDetails(
+    String title,
+    List<Widget> children, {
+    Key? key,
+    String? subtitle,
+  }) => ExpansionTile(
+    key: key,
+    tilePadding: EdgeInsets.zero,
+    shape: const Border(),
+    collapsedShape: const Border(),
+    iconColor: Act0SkinTokensV1.muted,
+    collapsedIconColor: Act0SkinTokensV1.muted,
+    title: Text(title, style: Act0SkinTokensV1.body),
+    subtitle: subtitle == null
+        ? null
+        : Text(subtitle, style: Act0SkinTokensV1.secondary),
+    expandedCrossAxisAlignment: CrossAxisAlignment.stretch,
+    children: children,
   );
 }

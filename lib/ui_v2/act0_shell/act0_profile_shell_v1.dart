@@ -9,7 +9,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_profile_evidence_consumer_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_transfer_measurement_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_proof_icon_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
@@ -526,44 +525,6 @@ class _ProfileHeroCardV1 extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                key: const Key('act0_shell_profile_sharky_identity'),
-                width: 64,
-                height: 64,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      Act0AcademyReadingStyleV1.primary.withOpacity(0.32),
-                      Act0AcademyReadingStyleV1.surface2.withOpacity(0.94),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Act0AcademyReadingStyleV1.primary.withOpacity(0.28),
-                  ),
-                  boxShadow: <BoxShadow>[
-                    BoxShadow(
-                      color: Act0AcademyReadingStyleV1.primary.withOpacity(
-                        0.22,
-                      ),
-                      blurRadius: 22,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(18),
-                  child: const Act0SharkyPresenceMascotV1(
-                    mood: Act0SharkyMoodV1.neutral,
-                    tone: Act0AcademyReadingStyleV1.primary,
-                    size: 56,
-                  ),
-                ),
-              ),
-              const SizedBox(width: Act0ShellTokensV1.gapMd),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -3397,15 +3358,6 @@ void _showFirstStartToolsSheetV1(
                   color: Act0AcademyReadingStyleV1.info,
                 ),
               ),
-              const SizedBox(height: Act0ShellTokensV1.gapXs),
-              Text(
-                _profileCopyV1(
-                  context,
-                  atomId: 'profile_first_start_tools_body',
-                  fallback: 'Check the W1 rules to choose your starting world.',
-                ),
-                style: Act0AcademyReadingStyleV1.muted,
-              ),
               const SizedBox(height: Act0ShellTokensV1.gapMd),
               Wrap(
                 spacing: Act0ShellTokensV1.gapSm,
@@ -3452,8 +3404,8 @@ void _showFirstStartToolsSheetV1(
                       label: Text(
                         _profileCopyV1(
                           context,
-                          atomId: 'profile_first_start_retake_placement',
-                          fallback: 'Take the W1 rules check',
+                          en: 'Retake placement',
+                          ru: 'Пройти размещение заново',
                         ),
                       ),
                     ),

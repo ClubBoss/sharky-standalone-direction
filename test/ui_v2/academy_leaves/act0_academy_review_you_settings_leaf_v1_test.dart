@@ -328,7 +328,7 @@ void main() {
       expect(tester.takeException(), isNull);
     });
 
-    testWidgets('explicit zero record is fresh: no XP, tasks or debt', (
+    testWidgets('explicit zero record shows empty state and the saved XP row', (
       tester,
     ) async {
       await _pump(
@@ -350,7 +350,7 @@ void main() {
         find.byKey(const Key('act0_academy_you_leaf_review')),
         findsNothing,
       );
-      expect(find.textContaining('XP'), findsNothing);
+      expect(find.text('Level 1 - 0 XP'), findsOneWidget);
     });
 
     testWidgets('unknown task count never hides a supplied level or XP', (

@@ -1,3 +1,4 @@
+import 'skin/act0_skin_tokens_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_scene_salience_v1.dart';
@@ -201,6 +202,15 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
       Act0LearningScenePhaseV3.feedbackSuboptimal => Act0ShellTokensV1.info,
       Act0LearningScenePhaseV3.theory ||
       Act0LearningScenePhaseV3.tableTask => null,
+    };
+    final sharkyMoment = switch (phase) {
+      Act0LearningScenePhaseV3.feedbackWrong => Act0SkinSharkyMomentV1.mistake,
+      Act0LearningScenePhaseV3.feedbackCorrect
+          when feedbackGrade == Act0SkinFeedbackGradeV1.repaired =>
+        Act0SkinSharkyMomentV1.selfFix,
+      Act0LearningScenePhaseV3.feedbackCorrect when isAssistedFeedback =>
+        Act0SkinSharkyMomentV1.hint,
+      _ => null,
     };
     final showSpokenSurface =
         showCoach && feedbackRingTone != null && isEvidenceBacked;
@@ -408,27 +418,12 @@ class Act0LearningSceneGuideV3 extends StatelessWidget {
     final guideBody = Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (showCoach && feedbackRingTone != null) ...[
-          ExcludeSemantics(
-            child: Container(
-              key: const Key('act0_shell_learning_scene_sharky_avatar'),
-              width: 56,
-              height: 56,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(color: feedbackRingTone, width: 2),
-              ),
-              child: Act0SharkyPresenceMascotV1(
-                mood: act0SharkyMoodForCompanionStateV1(
-                  Act0SharkyCompanionStateV1.neutral,
-                ),
-                tone: feedbackRingTone,
-                size: 44,
-              ),
-            ),
+        if (showCoach && sharkyMoment != null) ...[
+          Act0SkinSharkyExpressionV1(
+            key: const Key('act0_shell_learning_scene_sharky_avatar'),
+            moment: sharkyMoment,
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: Act0SkinTokensV1.gapSm),
         ],
         Expanded(
           child: showSpokenSurface && !compactFeedback

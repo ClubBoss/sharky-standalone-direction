@@ -7,7 +7,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_design_tokens_v1.da
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_content_copy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_instruction_content_policy_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_sharky_presence_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 
 import 'act0_placement_view_model_v1.dart';
@@ -631,14 +630,6 @@ class Act0PlacementShellV1 extends StatelessWidget {
                               color: Act0AcademyLeafPaletteV1.textMuted,
                             ),
                           ),
-                          KeyedSubtree(
-                            key: Key('act0_shell_placement_brand_sharky'),
-                            child: Act0SharkyPresenceMascotV1(
-                              mood: Act0SharkyMoodV1.happy,
-                              tone: Act0AcademyLeafPaletteV1.aqua,
-                              size: 58,
-                            ),
-                          ),
                         ],
                       ),
                     ),
@@ -1103,25 +1094,6 @@ class _PlacementBrandBeatV1 extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Container(
-            key: const Key('act0_shell_placement_brand_sharky'),
-            width: 70,
-            height: 70,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                color: Act0AcademyDesignTokensV1.focus.withValues(alpha: 0.22),
-              ),
-            ),
-            child: const Act0SharkyPresenceMascotV1(
-              mood: Act0SharkyMoodV1.happy,
-              tone: Act0AcademyDesignTokensV1.focus,
-              size: 58,
-            ),
-          ),
-          const SizedBox(width: Act0ShellTokensV1.gapMd),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,

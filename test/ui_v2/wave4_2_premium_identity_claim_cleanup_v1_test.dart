@@ -6,7 +6,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 void main() {
   testWidgets(
-    'Profile uses Sharky mascot identity instead of XP header economy',
+    'Legacy Profile shows the learner identity without a mascot or an XP header',
     (tester) async {
       final sample = Act0ShellStateV1.sample.profile;
 
@@ -44,11 +44,11 @@ void main() {
 
       expect(
         find.byKey(const Key('act0_shell_profile_sharky_identity')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_sharky_presence_mascot_neutral')),
-        findsOneWidget,
+        findsNothing,
       );
       expect(
         find.byKey(const Key('act0_shell_profile_xp_progress_bar')),

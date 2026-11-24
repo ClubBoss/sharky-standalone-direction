@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/skin/act0_skin_components_v1.dart';
 import '../support/act0_shell_presentation_finders_v1.dart';
 import '../support/act0_route_practice_runner_test_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -25,7 +26,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -703,21 +703,26 @@ void main() {
         final question = find.byKey(const Key('act0_shell_review_question'));
         expect(question.hitTestable(), findsOneWidget);
         expect(tester.widget<Text>(question).data, originalQuestion);
-        expect(avatar.hitTestable(), findsOneWidget);
-        expect(tester.getSize(avatar), const Size.square(56));
-        final ring =
-            tester.widget<Container>(avatar).decoration as BoxDecoration;
-        expect(ring.shape, BoxShape.circle);
-        expect((ring.border as Border).top.color, switch (feedbackCase) {
-          'wrong' => Act0ShellTokensV1.repairAttention,
-          'assisted' => Act0ShellTokensV1.info,
-          _ => Act0ShellTokensV1.successProof,
-        });
-        final reason = find.byKey(const Key('act0_learning_scene_v3_support'));
-        expect(
-          tester.getRect(avatar).right,
-          lessThan(tester.getRect(reason).left),
-        );
+        if (feedbackCase == 'correct') {
+          expect(avatar, findsNothing);
+        } else {
+          expect(avatar.hitTestable(), findsOneWidget);
+          expect(tester.getSize(avatar), const Size.square(56));
+          final expression = tester.widget<Act0SkinSharkyExpressionV1>(avatar);
+          expect(
+            expression.moment,
+            feedbackCase == 'wrong'
+                ? Act0SkinSharkyMomentV1.mistake
+                : Act0SkinSharkyMomentV1.hint,
+          );
+          final reason = find.byKey(
+            const Key('act0_learning_scene_v3_support'),
+          );
+          expect(
+            tester.getRect(avatar).right,
+            lessThan(tester.getRect(reason).left),
+          );
+        }
 
         await _expectFeedbackClearance(tester);
         final record = _rows(
