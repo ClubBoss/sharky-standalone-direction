@@ -1125,22 +1125,21 @@ void main() {
     expect(detail, isNot(contains('This read will help')));
   });
 
-  testWidgets('RU primary and secondary Summary CTA labels are native', (
-    tester,
-  ) async {
+  testWidgets('RU Result offers one localized forward CTA', (tester) async {
     await _pump(tester, summary: _cleanSummary, earnedNow: true, ru: true);
+    final primary = find.byKey(
+      const Key('act0_shell_block_summary_continue_cta'),
+    );
+    expect(primary, findsOneWidget);
+    expect(
+      find.descendant(of: primary, matching: find.text('Продолжить обучение')),
+      findsOneWidget,
+    );
+    expect(find.text('К карте уроков'), findsNothing);
+    expect(find.text('Step 2 of 9'), findsNothing);
     expect(find.text('Replay for perfect'), findsNothing);
     expect(find.text('Back to map'), findsNothing);
     expect(find.text('What improved'), findsNothing);
-    if (_cleanSummary.secondaryCtaLabel != null) {
-      expect(find.text('Replay for perfect'), findsNothing);
-    }
-    expect(
-      find.text(
-        '\u041a \u043a\u0430\u0440\u0442\u0435 \u0443\u0440\u043e\u043a\u043e\u0432',
-      ),
-      findsOneWidget,
-    );
   });
 
   testWidgets('RU unknown independent evidence never invents a clean result', (

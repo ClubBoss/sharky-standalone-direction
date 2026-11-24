@@ -656,15 +656,15 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(_T.courseProgressRadius),
-            child: LinearProgressIndicator(
-              value: total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
-              minHeight: _T.courseProgressHeight,
-              semanticsLabel: 'Lesson progress',
-              semanticsValue: count,
-              backgroundColor: _T.courseProgressTrack,
-              color: _T.courseProgressFill,
+          child: Semantics(
+            label: 'Lesson progress',
+            value: count,
+            child: CustomPaint(
+              size: const Size(0, _T.courseProgressHeight),
+              painter: _TaskHeaderProgressPainterV1(
+                total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
+                Directionality.of(context),
+              ),
             ),
           ),
         ),
@@ -695,6 +695,43 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
       ],
     );
   }
+}
+
+// Task progress is determinate. Paint the track and fill in one render object
+// so each task transition skips the Material progress indicator subtree.
+class _TaskHeaderProgressPainterV1 extends CustomPainter {
+  const _TaskHeaderProgressPainterV1(this.fraction, this.direction);
+
+  final double fraction;
+  final TextDirection direction;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final bounds = Offset.zero & size;
+    final track = RRect.fromRectAndRadius(
+      bounds,
+      const Radius.circular(_T.courseProgressRadius),
+    );
+    final paint = Paint()..color = _T.courseProgressTrack;
+    canvas.drawRRect(track, paint);
+    final fillWidth = size.width * fraction;
+    canvas.save();
+    canvas.clipRRect(track);
+    canvas.drawRect(
+      Rect.fromLTWH(
+        direction == TextDirection.rtl ? size.width - fillWidth : 0,
+        0,
+        fillWidth,
+        size.height,
+      ),
+      paint..color = _T.courseProgressFill,
+    );
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(_TaskHeaderProgressPainterV1 oldDelegate) =>
+      fraction != oldDelegate.fraction || direction != oldDelegate.direction;
 }
 
 enum Act0SkinFeedbackGradeV1 {

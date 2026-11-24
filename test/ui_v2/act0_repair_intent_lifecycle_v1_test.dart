@@ -105,6 +105,15 @@ void main() {
       await tester.tap(forward);
       await tester.pumpAndSettle();
 
+      // The lesson queues a final check for the original miss.
+      expect(find.byKey(const Key('act0_shell_continue_cta')), findsOneWidget);
+      await tester.pump(const Duration(seconds: 1));
+      await _advanceTeachingToDrill(tester);
+      await _answerCorrectly(tester);
+      await tester.ensureVisible(forward);
+      await tester.tap(forward);
+      await tester.pumpAndSettle();
+
       expect(find.byType(Act0BlockCompletionShellV1), findsOneWidget);
       final result = tester.widget<Act0BlockCompletionShellV1>(
         find.byType(Act0BlockCompletionShellV1),
@@ -129,7 +138,7 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('act0_review_open_attempts')));
       await tester.pumpAndSettle();
-      expect(find.textContaining('· Repaired'), findsOneWidget);
+      expect(find.textContaining('· Repaired'), findsWidgets);
       await tester.tap(find.byKey(const Key('act0_attempt_archive_back')));
       await tester.pumpAndSettle();
       await tester.tap(tab('You'));
