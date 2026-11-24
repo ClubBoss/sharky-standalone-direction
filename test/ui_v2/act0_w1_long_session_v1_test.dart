@@ -2193,6 +2193,13 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             );
           }
           Map<String, dynamic>? routeSnapshot;
+          // A Learn visit can close a learning run on the next route entry;
+          // its payoff recap is modal, so the learner finishes it first.
+          if (await _tapFirst(t, [
+            find.byKey(const Key('act0_learning_run_payoff_complete_cta')),
+          ])) {
+            continue;
+          }
           if (act0RoutePracticeFinder.evaluate().isNotEmpty) {
             final runner = t
                 .widget<Act0LessonRunnerShellV1>(
@@ -2372,9 +2379,16 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             complete = !checkNextWorld && completed.containsAll(taskWorld.keys);
             if (complete) break;
           }
-          // The course traversal uses Learn to pick up required practice and
-          // the next unfinished task after a lesson Result.
+          // A lesson Result has one primary next step (B36). The learner takes
+          // it, as on main; header close is only the fallback when no primary
+          // is offered.
           final resultClose = find.byKey(const Key('act0_shell_result_close'));
+          if (resultClose.evaluate().isNotEmpty &&
+              await _tapFirst(t, [
+                find.byKey(const Key('act0_shell_block_summary_continue_cta')),
+              ])) {
+            continue;
+          }
           if (resultClose.evaluate().isNotEmpty) {
             expect(
               await _tapFirst(t, [

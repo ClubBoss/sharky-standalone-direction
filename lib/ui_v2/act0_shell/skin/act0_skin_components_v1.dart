@@ -657,58 +657,66 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final count = progressLabel ?? '$step of $total';
-    return Row(
-      children: [
-        SizedBox(
-          width: 48,
-          height: 48,
-          child: IconButton(
-            style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
-            key: const Key('act0_shell_runner_back'),
-            tooltip: closeLabel,
-            onPressed: onClose,
-            icon: const Icon(Icons.close_rounded),
-          ),
-        ),
-        Expanded(
-          child: Semantics(
-            label: 'Lesson progress',
-            value: count,
-            child: CustomPaint(
-              size: const Size(0, _T.courseProgressHeight),
-              painter: _TaskHeaderProgressPainterV1(
-                total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
-                Directionality.of(context),
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: _T.gapMd),
-        if (modeLabel case final mode?)
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(count, style: _T.captionStyle),
-              Text(mode, style: _T.tag.copyWith(color: _T.accent)),
-            ],
-          )
-        else
-          Text(count, style: _T.captionStyle),
-        if (onHelp != null)
+    // Fixed height: the mode label must never change the header's layout.
+    return SizedBox(
+      height: 48,
+      child: Row(
+        children: [
           SizedBox(
             width: 48,
             height: 48,
             child: IconButton(
               style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
-              key: const Key('act0_shell_runner_glossary'),
-              tooltip: 'Glossary',
-              onPressed: onHelp,
-              icon: const Icon(Icons.menu_book_rounded, size: 22),
+              key: const Key('act0_shell_runner_back'),
+              tooltip: closeLabel,
+              onPressed: onClose,
+              icon: const Icon(Icons.close_rounded),
             ),
-          )
-        else
-          const SizedBox(width: 48),
-      ],
+          ),
+          Expanded(
+            child: Semantics(
+              label: 'Lesson progress',
+              value: count,
+              child: CustomPaint(
+                size: const Size(0, _T.courseProgressHeight),
+                painter: _TaskHeaderProgressPainterV1(
+                  total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
+                  Directionality.of(context),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: _T.gapMd),
+          if (modeLabel case final mode?)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(count, style: _T.captionStyle),
+                Text(mode, style: _T.tag.copyWith(color: _T.accent)),
+              ],
+            )
+          else
+            Text(count, style: _T.captionStyle),
+          if (onHelp != null)
+            SizedBox(
+              width: 48,
+              height: 48,
+              child: IconButton(
+                style: const ButtonStyle(
+                  splashFactory: InkRipple.splashFactory,
+                ),
+                key: const Key('act0_shell_runner_glossary'),
+                tooltip: 'Glossary',
+                onPressed: onHelp,
+                icon: const Icon(Icons.menu_book_rounded, size: 22),
+              ),
+            )
+          else
+            const SizedBox(width: 48),
+        ],
+      ),
     );
   }
 }
