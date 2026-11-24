@@ -127,6 +127,7 @@ Future<int> _openSavedCourseTask(
   Set<String>? legacyCompletedIds,
   bool restoreActive = false,
   bool finishTeaching = true,
+  bool persistSeed = false,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -153,36 +154,47 @@ Future<int> _openSavedCourseTask(
               if (legacyCompletedIds.contains(task.taskId)) task,
         ];
   final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+  const progressKey = 'act0_shell_progress_v1';
+  final payload = jsonEncode({
+    'schemaVersion': 20,
+    'pendingDecisionAssistance': <Object>[],
+    'learningEvidenceHistory': <Object>[],
+    'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
+        .lineagePayload(),
+    'durableRetentionHistory': <Object>[],
+    'completedTaskIds': completed.map((task) => task.taskId).toList(),
+    'completedLessonIds': legacyCompletedIds == null
+        ? earlierLessons.map((lesson) => lesson.lessonId).toList()
+        : <String>[],
+    'skippedTaskIds': <String>[],
+    'earnedXp': xp,
+    'selectedWorldId': worldId,
+    'selectedLessonId': legacyLessonId ?? lesson.lessonId,
+    'selectedTaskId': legacyTaskId ?? taskId,
+    if (restoreActive) ...{
+      'resumeInRunner': true,
+      'resumePhase': 'drill',
+      'resumeTeachingStepIndex': lesson.courseTaskList
+          .singleWhere((task) => task.taskId == taskId)
+          .runner
+          .teachingSteps
+          .length,
+    },
+  });
   SharedPreferences.setMockInitialValues({
     'act0_welcome_completed_v1': true,
     'intake_completed_v1': true,
-    'act0_shell_progress_v1': jsonEncode({
-      'schemaVersion': 20,
-      'pendingDecisionAssistance': <Object>[],
-      'learningEvidenceHistory': <Object>[],
-      'learningEvidenceLineage': const Act0LearningEvidenceHistoryV1()
-          .lineagePayload(),
-      'durableRetentionHistory': <Object>[],
-      'completedTaskIds': completed.map((task) => task.taskId).toList(),
-      'completedLessonIds': legacyCompletedIds == null
-          ? earlierLessons.map((lesson) => lesson.lessonId).toList()
-          : <String>[],
-      'skippedTaskIds': <String>[],
-      'earnedXp': xp,
-      'selectedWorldId': worldId,
-      'selectedLessonId': legacyLessonId ?? lesson.lessonId,
-      'selectedTaskId': legacyTaskId ?? taskId,
-      if (restoreActive) ...{
-        'resumeInRunner': true,
-        'resumePhase': 'drill',
-        'resumeTeachingStepIndex': lesson.courseTaskList
-            .singleWhere((task) => task.taskId == taskId)
-            .runner
-            .teachingSteps
-            .length,
-      },
-    }),
+    if (!persistSeed) progressKey: payload,
   });
+  if (persistSeed) {
+    final saved = await t.runAsync(() {
+      return Act0ProgressStoreV1(
+        key: progressKey,
+        isValidPayload: (candidate) => candidate == payload,
+      ).save(payload);
+    });
+    expect(saved, isTrue);
+  }
   t.view.physicalSize = const Size(393, 852);
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.reset);
@@ -1859,6 +1871,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             worldId: 'world_$firstWorld',
             taskId: worlds.first.lessons.first.courseTaskList.first.taskId,
             finishTeaching: tierARange == null,
+            persistSeed: tierARange != null,
           );
         } else {
           await _mount(t, firstRun: true);
