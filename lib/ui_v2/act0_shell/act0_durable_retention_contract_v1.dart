@@ -2,7 +2,6 @@ import 'act0_action_reason_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'dart:convert';
 
-import 'act0_completed_decision_contract_v1.dart';
 import 'act0_durable_learning_time_contract_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
@@ -361,11 +360,7 @@ class Act0DurableRetentionFamilyV1 {
           Act0DurableLearningTimingV1.firstToSecondReview,
         );
       }
-    } else if (priorDebt &&
-        nextDue == null &&
-        (record.isIndependentCorrect ||
-            (record.isRepaired &&
-                record.assistanceKind == Act0DecisionAssistanceV1.none))) {
+    } else if (priorDebt && nextDue == null && record.isIndependentCorrect) {
       state = Act0RetentionStateV1.recoveredPendingSpacedReview;
       nextDue = recordedAt.add(
         Act0DurableLearningTimingV1.recoveryToFirstReview,

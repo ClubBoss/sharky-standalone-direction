@@ -117,22 +117,7 @@ class Act0ProgressStoreV1 {
     );
   });
 
-  Future<bool> save(
-    String payload, {
-    void Function()? onWriteStarted,
-    void Function(bool acknowledged)? onWriteFinished,
-  }) => _serial(() async {
-    onWriteStarted?.call();
-    var acknowledged = false;
-    try {
-      acknowledged = await _saveSnapshot(payload);
-      return acknowledged;
-    } finally {
-      onWriteFinished?.call(acknowledged);
-    }
-  });
-
-  Future<bool> _saveSnapshot(String payload) async {
+  Future<bool> save(String payload) => _serial(() async {
     if (!isWriteLeaseCurrent || !isValidPayload(payload)) return false;
     try {
       final prefs = await SharedPreferences.getInstance();
@@ -154,7 +139,7 @@ class Act0ProgressStoreV1 {
     } catch (_) {
       return false; // Preserve unreadable bytes; never replace them with defaults.
     }
-  }
+  });
 
   /// An explicit user reset is itself an ordered durable tombstone. Removing
   /// keys one by one would allow an interrupted reset to resurrect old awards.

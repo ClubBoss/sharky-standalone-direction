@@ -21,7 +21,6 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dar
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_scene_v3.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/skin/act0_skin_components_v1.dart';
 
 import '../support/act0_authored_repair_goal_fixture_v1.dart';
 import '../support/act0_source_choreography_test_wait_v1.dart';
@@ -340,17 +339,6 @@ void main() {
     await _tap(t, 'act0_shell_current_mission_cta');
     final source = _runner(t).runner;
     final step = 'Step ${source.beatIndex} of ${source.beatCount}';
-
-    void expectExtraPracticeHeader() {
-      final header = find.byType(Act0SkinTaskHeaderV1);
-      for (final label in [step, 'Extra practice']) {
-        expect(
-          find.descendant(of: header, matching: find.text(label)),
-          findsOneWidget,
-        );
-      }
-    }
-
     expect(find.text(step), findsOneWidget);
     await _choice(t, subject.wrong, subject.task);
     expect(find.text(step), findsOneWidget);
@@ -365,9 +353,9 @@ void main() {
     expect(before['completedTaskIds'], isNot(contains(subject.task)));
     await _tap(t, 'act0_shell_feedback_continue_cta');
     expect(_runner(t).selectedTaskId, target);
-    expectExtraPracticeHeader();
+    expect(find.text('$step\nExtra practice'), findsOneWidget);
     await _choice(t, 'utg', target);
-    expectExtraPracticeHeader();
+    expect(find.text('$step\nExtra practice'), findsOneWidget);
     await _tap(t, 'act0_shell_feedback_continue_cta');
     expect(_runner(t).selectedTaskId, subject.task);
     expect(find.text(step), findsOneWidget);

@@ -49,17 +49,29 @@ void main() {
     }
   });
 
-  testWidgets('Retry uses the secondary action beside the primary', (
-    tester,
-  ) async {
-    await _pumpGoldSummary(tester);
-    final button = find.byKey(
-      const Key('act0_shell_session_summary_practice_cta'),
-    );
-    expect(tester.widget(button), isA<OutlinedButton>());
-    expect(find.text('Retry the mistake'), findsOneWidget);
-    expect(find.text('Practice this next'), findsNothing);
-  });
+  testWidgets(
+    'Practice this next is an inline action without a second border',
+    (tester) async {
+      await _pumpGoldSummary(tester);
+
+      final button = tester.widget<TextButton>(
+        find.byKey(const Key('act0_shell_session_summary_practice_cta')),
+      );
+      final resolvedForeground = button.style!.foregroundColor!.resolve(
+        <WidgetState>{},
+      );
+
+      expect(resolvedForeground, Act0AcademyReadingStyleV1.info);
+      expect(
+        find.ancestor(
+          of: find.text('Practice this next'),
+          matching: find.byType(OutlinedButton),
+        ),
+        findsNothing,
+      );
+      expect(find.text('Practice this next'), findsOneWidget);
+    },
+  );
 
   testWidgets(
     'Session Summary proof and Sharky ceremony still render with gold hero',

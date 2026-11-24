@@ -61,8 +61,6 @@ class Act0CompletedDecisionV1 {
   final String decisionTimeBucket;
   final Act0TaskFamilyV1? taskFamily;
   final String resultKind;
-
-  static const repairedResultKind = 'repaired';
   final String? conceptFamilyId;
   final String? errorType;
   final String? skillAtomId;
