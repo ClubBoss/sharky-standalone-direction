@@ -4,160 +4,18 @@ import 'act0_authored_source_proof_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
+import 'act0_task_skill_map_v1.dart' as task_skills;
+
+export 'act0_task_skill_map_v1.dart' show act0W14LessonSkillsV1;
 
 const act0SkillMapLastWorldV1 = act0LastCurriculumWorldV1;
 
-// Explicit curriculum ownership, independent of task-name substring guesses.
-// These are lesson topics; individual tasks can have a narrower topic.
-const act0W14LessonSkillsV1 = <String, List<String>>{
-  'what_poker_is': ['Table sense', 'Board reading'],
-  'chips_in_the_middle': ['Table sense'],
-  'first_table_guide': ['Table sense', 'Betting decisions'],
-  'what_poker_is_content': ['Table sense'],
-  'cards_ranks_suits': ['Hand reading', 'Board reading'],
-  'your_first_hand': ['Table sense', 'Board reading'],
-  'fold_check_call_raise': ['Betting decisions'],
-  'blinds_action_order': ['Blind play', 'Table sense'],
-  'blinds_order_practice': ['Blind play', 'Table sense'],
-  'positions': ['Position play'],
-  'hand_rankings_table': ['Hand reading', 'Board reading'],
-  'hand_rankings_sequences': ['Hand reading', 'Board reading'],
-  'hand_rankings_upper': ['Hand reading', 'Board reading'],
-  'hand_rankings_comparisons': ['Hand reading', 'Board reading'],
-  'showdown_winning': ['Hand reading'],
-  'hand_discipline_buckets': ['Hand reading', 'Betting decisions'],
-  'fold_discipline': ['Hand reading', 'Betting decisions'],
-  'weak_ace_warning': ['Hand reading'],
-  'continue_or_let_go': ['Hand reading', 'Betting decisions'],
-  'w2_narrow_three_bet': ['Hand reading', 'Betting decisions'],
-  'hand_discipline_apply': ['Hand reading', 'Betting decisions'],
-  'discipline_checkpoint': ['Hand reading', 'Betting decisions'],
-  'position_six_seats': ['Position play'],
-  'button_advantage': ['Position play'],
-  'early_vs_late': ['Position play'],
-  'same_hand_different_seat': ['Position play'],
-  'position_apply': ['Position play'],
-  'w3_play_from_blinds': ['Position play', 'Betting decisions'],
-  'position_checkpoint': ['Position play'],
-  'why_bets_happen': ['Betting decisions'],
-  'value_bets': ['Betting decisions'],
-  'bluff_pressure': ['Betting decisions'],
-  'protection_and_denial': ['Betting decisions', 'Board reading'],
-  'call_price': ['Betting decisions'],
-  'small_half_pot': ['Betting decisions'],
-  'price_checkpoint': ['Betting decisions'],
-};
-
-const _extensionLessonSkills = <String, List<String>>{
-  if (act0CurriculumPilotEnabledV1) ...{
-    "range_advantage": ["Range reading"],
-    "nut_advantage": ["Range reading"],
-    "equity_vs_range": ["Range reading"],
-    "equity_realization": ["Range reading"],
-    "backdoor_draws": ["Range reading"],
-    "initiative_cbet_checkpoint": ["Range reading"],
-    "merged_underbet": ["Betting decisions"],
-    "polarized_sizing": ["Betting decisions"],
-    "read_sizing_and_abstraction": ["Betting decisions"],
-    "w14_spr_and_commitment": ["Stack decisions"],
-    "pot_geometry": ["Stack decisions", "Betting decisions"],
-    "induce_and_checkpoint": ["Betting decisions"],
-    "texture_and_frequency": ["Board reading", "Betting decisions"],
-    "w15_protection_and_denial": ["Betting decisions"],
-    "check_back_and_slowplay": ["Betting decisions"],
-    "monotone_and_paired": ["Board reading"],
-    "leads_and_stabs": ["Betting decisions"],
-    "check_raise_and_checkpoint": ["Betting decisions"],
-    "barrel_and_runout": ["Betting decisions", "Board reading"],
-    "commitment_and_defense": ["Stack decisions"],
-    "streets_of_value": ["Betting decisions"],
-    "check_and_reopen": ["Betting decisions"],
-    "pressure_and_blocking": ["Betting decisions"],
-    "commitment_checkpoint": ["Stack decisions"],
-  },
-  'board_texture_basics': ['Board reading'],
-  'connected_boards': ['Board reading'],
-  'flush_draws': ['Board reading'],
-  'straight_draws': ['Board reading'],
-  'outs_improvement': ['Board reading'],
-  'w5_semi_bluff': ['Board reading', 'Betting decisions'],
-  'turn_river_changes': ['Board reading'],
-  'range_bucket_basics': ['Range reading'],
-  'range_board_fit': ['Range reading'],
-  'w6_continuation_bet': ['Range reading'],
-  'range_pressure_lines': ['Range reading'],
-  'range_combo_counts': ['Range reading'],
-  'range_thinking_checkpoint': ['Range reading'],
-  'range_reading_review': ['Range reading'],
-  'range_thinking_lite_combo_density': ['Range reading'],
-  'w7_visible_cards_and_price': ['Betting decisions'],
-  'w7_visible_cards_range_checkpoint': ['Range reading', 'Betting decisions'],
-  'effective_stack_basics': ['Stack decisions'],
-  'same_hand_different_depth': ['Stack decisions'],
-  'spr_and_commitment': ['Stack decisions'],
-  'short_stack_spots': ['Stack decisions'],
-  'format_pressure': ['Position play'],
-  'survival_pressure_basics': ['Tournament decisions'],
-  'm_ratio_zones_lite': ['Tournament decisions'],
-  'bubble_risk_premium': ['Tournament decisions'],
-  'tournament_pressure_checkpoint': ['Tournament decisions'],
-  'player_type_basics': ['Player adjustment'],
-  'adjust_one_lever': ['Player adjustment'],
-  'exploit_guardrails': ['Player adjustment'],
-  'player_adjustment_checkpoint': ['Player adjustment'],
-  'session_plan_basics': ['Session routine'],
-  'session_plan_bankroll_followup': ['Session routine'],
-  'table_trigger_reads': ['Session routine'],
-  'table_trigger_multiway_and_spr': ['Session routine'],
-  'post_session_review_loop': ['Session routine'],
-  'real_play_transfer_checkpoint': ['Session routine'],
-  'decision_over_outcome': ['Mental game'],
-  'decision_price_and_clean_outs': ['Mental game'],
-  'tilt_reset_protocol': ['Mental game'],
-  'confidence_and_discipline': ['Mental game'],
-  'confidence_river_discipline': ['Mental game'],
-  'mindset_bridge_checkpoint': ['Mental game'],
-};
-
-const _skillOverridesByTaskId = <String, List<String>>{
-  'positions_theory': ['Position play'],
-  'positions_button': ['Position play'],
-  'positions_utg': ['Position play'],
-  'positions_cutoff': ['Position play'],
-  'w7_count_winning_rivers': ['Board reading'],
-  'w7_clean_outs_lower_price': ['Board reading', 'Betting decisions'],
-  'w7_clean_outs_higher_price': ['Board reading', 'Betting decisions'],
-  'w7_format_table_notice': ['Stack decisions'],
-  'w8_guided_short_read': ['Stack decisions'],
-  'w8_unguided_short_read': ['Stack decisions'],
-  'w7_stack_checkpoint': ['Stack decisions'],
-  'outs_improvement_w5_table_outs_flush_transfer': [
-    'Board reading',
-    'Betting decisions',
-  ],
-  'outs_improvement_w5_table_outs_straight_transfer': [
-    'Board reading',
-    'Betting decisions',
-  ],
-  'w11_trigger_small_price_continue': ['Session routine', 'Betting decisions'],
-  'w11_trigger_bad_price_fold': ['Session routine', 'Betting decisions'],
-  'w11_checkpoint_intro': ['Session routine', 'Betting decisions'],
-  'w11_checkpoint_mixed_table_line': ['Session routine', 'Betting decisions'],
-  'w11_checkpoint_review': ['Session routine', 'Betting decisions'],
-  'asm05_new_known_holes_turn_call_10': ['Betting decisions'],
-  'asm05_new_known_holes_turn_call_40': ['Betting decisions'],
-  'w12_pretty_hand_bad_price_fold': ['Mental game', 'Betting decisions'],
-  'w12_checkpoint_intro': ['Mental game', 'Betting decisions'],
-  'w12_checkpoint_process_line': ['Mental game', 'Betting decisions'],
-  'w12_checkpoint_discipline_line': ['Mental game', 'Betting decisions'],
-  'w12_checkpoint_full_loop_line': ['Mental game', 'Betting decisions'],
-};
-
 List<String> act0SkillsForTaskV1(String lessonId, String taskId) =>
-    _skillOverridesByTaskId[taskId] ??
-    act0W14LessonSkillsV1[lessonId] ??
-    _extensionLessonSkills[lessonId] ??
-    const <String>[];
+    task_skills.act0SkillsForTaskV1(
+      lessonId,
+      taskId,
+      includeCurriculumPilot: act0CurriculumPilotEnabledV1,
+    );
 
 class Act0W14SkillStateV1 {
   const Act0W14SkillStateV1({
