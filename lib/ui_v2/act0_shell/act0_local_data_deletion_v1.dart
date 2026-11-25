@@ -40,7 +40,7 @@ class Act0LocalDataDeletionV1 {
     if (prefs.getBool(pendingKey) != true) {
       throw StateError('Deletion intent could not be verified');
     }
-    await Act0PracticeReminderV1.setEnabled(false);
+    await Act0PracticeReminderV1.setEnabled(false, reset: true);
     // Includes the compatibility mirror, twins, damaged archive, recovery
     // intent, onboarding, preferences and old learning projections.
     for (final key in prefs.getKeys().where((key) => key != pendingKey)) {

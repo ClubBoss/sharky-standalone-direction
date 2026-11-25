@@ -25,6 +25,8 @@ class Act0AcademySettingsLeafInputV1 {
     this.practiceReminderEnabled,
     this.reminderPermissionDenied = false,
     this.onPracticeReminderChanged,
+    this.reminderTime,
+    this.onPickReminderTime,
     this.onRetryLoad,
     this.onOpenBetaMetrics,
     this.onOpenSupport,
@@ -47,6 +49,8 @@ class Act0AcademySettingsLeafInputV1 {
   final bool? practiceReminderEnabled;
   final bool reminderPermissionDenied;
   final ValueChanged<bool>? onPracticeReminderChanged;
+  final String? reminderTime;
+  final VoidCallback? onPickReminderTime;
   final VoidCallback? onRetryLoad;
   final VoidCallback? onOpenBetaMetrics;
   final VoidCallback? onOpenSupport;
@@ -112,7 +116,7 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
                           Act0SkinListRowV1(
                             title: 'Practice reminder',
                             subtitle:
-                                'One reminder at 6 pm local time when practice is available.',
+                                'At most one on a day without practice, when repeats or drills are ready.',
                             icon: Icons.notifications_outlined,
                             controlKey: const Key(
                               'act0_academy_settings_practice_reminder',
@@ -120,6 +124,17 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
                             toggle: input.practiceReminderEnabled,
                             onChanged: input.onPracticeReminderChanged,
                             onTap: null,
+                          ),
+                        if (input.practiceReminderEnabled != null &&
+                            input.reminderTime != null)
+                          Act0SkinListRowV1(
+                            title: 'Reminder time',
+                            subtitle: input.reminderTime!,
+                            icon: Icons.schedule,
+                            controlKey: const Key(
+                              'act0_practice_reminder_time',
+                            ),
+                            onTap: input.onPickReminderTime,
                           ),
                         if (input.practiceReminderEnabled != null &&
                             input.reminderPermissionDenied)

@@ -72,9 +72,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     }
     if (_lessonResumeV1?.taskId == _selectedTaskId) _lessonResumeV1 = null;
     _persistProgress();
-    if (!alreadyCompleted &&
-        selectedTask.phase == Act0LessonPhaseV1.drill &&
-        Act0PracticeReminderV1.enabled.value) {
+    if (Act0PracticeReminderV1.isSupported) {
       _syncPracticeReminderV1();
     }
   }

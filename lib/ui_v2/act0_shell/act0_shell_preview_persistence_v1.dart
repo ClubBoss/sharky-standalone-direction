@@ -1492,7 +1492,11 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           () => Act0BetaMetricsStoreV1.recordPracticeStep(recordedAtUtc),
         );
       }
+      // Suppress the current day's pending request immediately, even for an
+      // incorrect or assisted answer. The canonical day key excludes placement
+      // and diagnostic attempts.
       if (generatedDaily) {
+        if (day != null) _syncPracticeReminderV1();
         _pendingReviewKindV1 = null;
         return;
       }
@@ -1518,6 +1522,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             completedReasonRepair: lucky,
           )
           .refreshedAt(recordedAtUtc);
+      if (day != null) _syncPracticeReminderV1();
       if (widget.telemetrySink != null) {
         try {
           for (final event in act0EvidenceTelemetryEventsV1(

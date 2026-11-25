@@ -86,6 +86,13 @@ void main() {
   testWidgets(
     'due review is primary beside an unfinished lesson and counts today',
     (tester) async {
+      final calls = <MethodCall>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(_reminders, (call) async {
+        calls.add(call);
+        return false;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(_reminders, null));
       final now = _dayOne.add(const Duration(days: 1));
       const reviewTask = 'what_poker_is_find_hero';
       const interruptedTask = 'what_poker_is_table_read_transfer';
@@ -148,6 +155,9 @@ void main() {
         findsOneWidget,
       );
       expect(find.textContaining('1 due'), findsOneWidget);
+      expect(calls.last.arguments['schedule'], 'nextEvening');
+      expect(calls.last.arguments['body'], '1 repeat ready in Review.');
+      calls.clear();
       await _tap(tester, 'act0_academy_home_leaf_cta');
       expect(find.byKey(const Key('act0_academy_review_leaf')), findsOneWidget);
       await _tap(tester, 'act0_academy_home_leaf_cta');
@@ -162,6 +172,14 @@ void main() {
           .options
           .singleWhere((option) => option.isCorrect);
       await _tap(tester, 'act0_shell_option_${answer.id}');
+      final afterAnswer = calls.where((call) => call.method == 'sync');
+      expect(afterAnswer, isNotEmpty);
+      expect(
+        afterAnswer.every(
+          (call) => call.arguments['schedule'] != 'nextEvening',
+        ),
+        isTrue,
+      );
       await _tap(tester, 'act0_shell_feedback_continue_cta');
       expect(find.byKey(const Key('act0_academy_review_leaf')), findsOneWidget);
       final homeTab = find.descendant(
@@ -180,75 +198,69 @@ void main() {
       expect(resumed.runner.activeTeachingStep, isNull);
       expect(tester.takeException(), isNull);
     },
+    variant: const TargetPlatformVariant({TargetPlatform.iOS}),
   );
 
-  for (final enableReminder in [true, false]) {
-    testWidgets(
-      'lesson counts today and reminder choice is explicit ($enableReminder)',
-      (tester) async {
-        SharedPreferences.setMockInitialValues(<String, Object>{});
-        final calls = <MethodCall>[];
-        final messenger = tester.binding.defaultBinaryMessenger;
-        messenger.setMockMethodCallHandler(_reminders, (call) async {
-          calls.add(call);
-          return call.method == 'setEnabled';
-        });
-        addTearDown(() => messenger.setMockMethodCallHandler(_reminders, null));
-        tester.view.physicalSize = const Size(393, 852);
-        tester.view.devicePixelRatio = 1;
-        addTearDown(tester.view.reset);
+  testWidgets(
+    'lesson counts today without prompting for notifications',
+    (tester) async {
+      SharedPreferences.setMockInitialValues(<String, Object>{});
+      final calls = <MethodCall>[];
+      final messenger = tester.binding.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(_reminders, (call) async {
+        calls.add(call);
+        return call.method == 'setEnabled';
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(_reminders, null));
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
 
-        await _mount(tester, _dayOne);
-        await _finishFirstLesson(tester);
-        expect(calls.where((call) => call.method == 'setEnabled'), isEmpty);
-        await _tap(
-          tester,
-          enableReminder
-              ? 'act0_first_lesson_reminder_yes'
-              : 'act0_first_lesson_reminder_no',
-        );
-        expect(
-          calls.where((call) => call.method == 'setEnabled'),
-          hasLength(enableReminder ? 1 : 0),
-        );
-        expect((await _snapshot())['firstLessonReminderAnswered'], isTrue);
-        await _tap(tester, 'act0_shell_block_summary_home_cta');
-        expect(find.text('Today’s goal complete'), findsOneWidget);
-        expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
+      await _mount(tester, _dayOne);
+      await _finishFirstLesson(tester);
+      expect(calls.where((call) => call.method == 'setEnabled'), isEmpty);
+      expect(
+        find.byKey(const Key('act0_first_lesson_reminder_yes')),
+        findsNothing,
+      );
+      expect(
+        find.byKey(const Key('act0_first_lesson_reminder_no')),
+        findsNothing,
+      );
+      await _tap(tester, 'act0_shell_block_summary_home_cta');
+      expect(find.text('Today’s goal complete'), findsOneWidget);
+      expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
 
-        await _tap(tester, 'act0_academy_home_leaf_cta');
-        final lesson = tester
+      await _tap(tester, 'act0_academy_home_leaf_cta');
+      final lesson = tester
+          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
+          .selectedLessonId;
+      await _tap(tester, 'act0_shell_runner_back');
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+
+      await _mount(tester, _dayOne.add(const Duration(days: 2)));
+      expect(find.text('Welcome back'), findsOneWidget);
+      expect(find.text('Today’s goal: one lesson or review'), findsOneWidget);
+      final resume = find.byKey(const Key('act0_home_resume_lesson'));
+      await _tap(
+        tester,
+        resume.evaluate().isNotEmpty
+            ? 'act0_home_resume_lesson'
+            : 'act0_academy_home_leaf_cta',
+      );
+      expect(
+        tester
             .widget<Act0LessonRunnerShellV1>(
               find.byType(Act0LessonRunnerShellV1),
             )
-            .selectedLessonId;
-        await _tap(tester, 'act0_shell_runner_back');
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pumpAndSettle();
-
-        await _mount(tester, _dayOne.add(const Duration(days: 2)));
-        expect(find.text('Welcome back'), findsOneWidget);
-        expect(find.text('Today’s goal: one lesson or review'), findsOneWidget);
-        final resume = find.byKey(const Key('act0_home_resume_lesson'));
-        await _tap(
-          tester,
-          resume.evaluate().isNotEmpty
-              ? 'act0_home_resume_lesson'
-              : 'act0_academy_home_leaf_cta',
-        );
-        expect(
-          tester
-              .widget<Act0LessonRunnerShellV1>(
-                find.byType(Act0LessonRunnerShellV1),
-              )
-              .selectedLessonId,
-          lesson,
-        );
-        expect(tester.takeException(), isNull);
-        await tester.pumpWidget(const SizedBox.shrink());
-        await tester.pumpAndSettle();
-      },
-      variant: const TargetPlatformVariant({TargetPlatform.iOS}),
-    );
-  }
+            .selectedLessonId,
+        lesson,
+      );
+      expect(tester.takeException(), isNull);
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    },
+    variant: const TargetPlatformVariant({TargetPlatform.iOS}),
+  );
 }

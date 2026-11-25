@@ -2073,20 +2073,34 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
 
   void _syncPracticeReminderV1() {
     if (!Act0PracticeReminderV1.isSupported) return;
-    _ensureDailyCountDayV1();
-    final canPractice = _dailyDeckEntries(_catalogStateV1).isNotEmpty;
-    final done =
-        _dailyCompletedRepCount >= 3 ||
-        (_dailyPracticeQueue.taskIds.isNotEmpty &&
-            _dailyPracticeQueue.nextTaskId == null);
-    final schedule = !canPractice
-        ? Act0PracticeReminderScheduleV1.none
-        : done
-        ? Act0PracticeReminderScheduleV1.tomorrowEvening
-        : Act0PracticeReminderScheduleV1.nextEvening;
+    if (!_usesPersistedProgress ||
+        !_progressRestoredV1 ||
+        _progressLoadFailed ||
+        _recoveryBusyV1)
+      return;
+    final base = _catalogStateV1;
+    final state = _stateWithProgress(base, _progressSnapshot(base));
+    final review = _reviewState(state.review);
+    final plan = act0PracticeReminderPlanV1(
+      practicedToday:
+          _savedPracticeDaysV1.contains(_todayDateString()) ||
+          _lastShortSessionDayV1 == _todayDateString(),
+      dueRepeats:
+          _dueReviewItemsV1().length +
+          review.mistakes
+              .where(
+                (mistake) =>
+                    _isMistakeClearableInReviewV1(mistake.taskId, state: state),
+              )
+              .length,
+      warmupCount: widget.warmupV1
+          ? _warmupSelectionV1(state, review).drills.length
+          : 0,
+    );
     unawaited(
       Act0PracticeReminderV1.sync(
-        schedule,
+        plan.schedule,
+        body: plan.body,
       ).then<void>((_) {}, onError: (Object _, StackTrace _) {}),
     );
   }
@@ -4190,21 +4204,6 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : _openMistakeCountForLessonV1(
                                         selectedLesson,
                                       ),
-                                onFirstLessonReminder:
-                                    useDailyHome &&
-                                        !_firstLessonReminderAnsweredV1 &&
-                                        Act0PracticeReminderV1.isSupported &&
-                                        selectedLesson.lessonId ==
-                                            baseState
-                                                .worlds
-                                                .first
-                                                .lessons
-                                                .first
-                                                .lessonId &&
-                                        _blockCompletionSummary!
-                                            .curriculumCompleted
-                                    ? _finishFirstLessonReminderV1
-                                    : null,
                                 firstCorrectEarnedThisRun:
                                     _firstCorrectReadEarnedInCurrentLessonRunV1(),
                                 nextUsefulHand: _summaryHomeHandoffV1(

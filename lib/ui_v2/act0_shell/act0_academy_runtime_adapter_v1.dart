@@ -1,4 +1,5 @@
 import 'skin/act0_skin_tokens_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
 import 'package:poker_analyzer/ui/settings/privacy_terms.dart';
@@ -353,6 +354,11 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
     setState(() => _loadState = Act0AcademySettingsLoadStateV1.loading);
     try {
       await AppSettingsService.instance.load();
+      try {
+        await Act0PracticeReminderV1.refreshTime();
+      } catch (_) {
+        // The platform may be unavailable; keep the default time.
+      }
       if (mounted)
         setState(() => _loadState = Act0AcademySettingsLoadStateV1.ready);
     } catch (_) {
@@ -379,6 +385,31 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
     }
   }
 
+  Future<void> _pickReminderTime() async {
+    final selected = await showTimePicker(
+      context: context,
+      initialTime: Act0PracticeReminderV1.time.value,
+      builder: (_, child) =>
+          Act0SkinDarkAreaV1(paintBackground: false, child: child!),
+    );
+    if (!mounted || selected == null) return;
+    setState(() => _savingReminder = true);
+    try {
+      await Act0PracticeReminderV1.setTime(selected);
+      if (mounted) await _refreshReminderPermission();
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('The reminder time could not be saved.'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _savingReminder = false);
+    }
+  }
+
   void _returnToShell(VoidCallback action) {
     Navigator.of(context).pop();
     action();
@@ -389,6 +420,7 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
     listenable: Listenable.merge([
       AppSettingsService.instance.changes,
       Act0PracticeReminderV1.enabled,
+      Act0PracticeReminderV1.time,
     ]),
     builder: (context, _) {
       final view = Act0SettingsViewModelV1(
@@ -410,6 +442,10 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
               hapticsEnabled: view.hapticsEnabled,
               practiceReminderEnabled: view.practiceReminderEnabled,
               reminderPermissionDenied: _reminderPermissionDenied,
+              reminderTime: Act0PracticeReminderV1.time.value.format(context),
+              onPickReminderTime: view.canChangeReminder
+                  ? _pickReminderTime
+                  : null,
               onPracticeReminderChanged: view.canChangeReminder
                   ? _setPracticeReminder
                   : null,

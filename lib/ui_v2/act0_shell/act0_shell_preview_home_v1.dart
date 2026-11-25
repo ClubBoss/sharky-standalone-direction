@@ -2042,29 +2042,6 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     _persistProgress();
   }
 
-  void _finishFirstLessonReminderV1(bool enable) {
-    if (_firstLessonReminderAnsweredV1) return;
-    final epoch = _recoveryEpochV1;
-    _setStateV1(() => _firstLessonReminderAnsweredV1 = true);
-    _persistProgress();
-    if (!enable) return;
-    _syncPracticeReminderV1();
-    unawaited(
-      Act0PracticeReminderV1.setEnabled(true).then<void>(
-        (_) {},
-        onError: (Object _) {
-          if (mounted && epoch == _recoveryEpochV1) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('The reminder could not be enabled.'),
-              ),
-            );
-          }
-        },
-      ),
-    );
-  }
-
   void _startHomeNextAction(Act0WorldCardV1 selectedWorld) {
     final firstValueCarry = _actionableFirstValueReceiptCarryV1;
     if (firstValueCarry != null &&

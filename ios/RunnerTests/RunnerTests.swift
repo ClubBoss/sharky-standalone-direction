@@ -19,4 +19,29 @@ class RunnerTests: XCTestCase {
       XCTAssertEqual(date.timeIntervalSince(now), Double(expectedHours * 3600))
     }
   }
+  func testPracticeReminderUsesSelectedTimeAndSkipsTodayWhenNeeded() throws {
+    let calendar = Calendar(identifier: .gregorian)
+    let now = try XCTUnwrap(calendar.date(from: DateComponents(
+      year: 2026, month: 11, day: 25, hour: 10
+    )))
+    let sameDay = try XCTUnwrap(practiceReminderEvening(
+      tomorrow: false, now: now, calendar: calendar, hour: 12, minute: 30
+    ))
+    XCTAssertEqual(sameDay.day, 25)
+    XCTAssertEqual(sameDay.hour, 12)
+    XCTAssertEqual(sameDay.minute, 30)
+    let practiced = try XCTUnwrap(practiceReminderEvening(
+      tomorrow: true, now: now, calendar: calendar, hour: 12, minute: 30
+    ))
+    XCTAssertEqual(practiced.day, 26)
+    let timePassed = try XCTUnwrap(practiceReminderEvening(
+      tomorrow: false, now: now, calendar: calendar, hour: 9, minute: 15
+    ))
+    XCTAssertEqual(timePassed.day, 26)
+    let alreadyReminded = try XCTUnwrap(practiceReminderEvening(
+      tomorrow: false, now: now, calendar: calendar, hour: 12, minute: 30,
+      lastReminderAt: now.addingTimeInterval(-3600)
+    ))
+    XCTAssertEqual(alreadyReminded.day, 26)
+  }
 }
