@@ -226,6 +226,7 @@ void main() {
         'selectedWorldId': worldId,
         'selectedLessonId': lessonId,
         'selectedTaskId': targetId,
+        'pendingDecisionAssistance': <Object>[],
         'learningEvidenceHistory': history.toPayload(),
         'learningEvidenceLineage': history.lineagePayload(),
         'attemptArchive': archive.toPayload(snapshotRecords: history.records),
