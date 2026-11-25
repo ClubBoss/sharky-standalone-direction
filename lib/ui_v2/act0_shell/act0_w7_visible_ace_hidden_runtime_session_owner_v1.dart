@@ -300,7 +300,8 @@ act0W7VisibleAceHiddenTaskSpecsV1 = <Act0W7VisibleAceHiddenTaskSpecV1>[
         'but they do not remove every strong hand or prove one exact hand.',
     incorrectFeedback: <String, String>{
       'pair_does_not_change_combos':
-          'Paired visible cards change which combinations remain.',
+          'The two sevens on the board cannot be in the opponent’s hand, '
+          'so fewer hands with a seven remain possible.',
       'opponent_always_has_trips':
           'Trips are important, but a paired board changes counts instead '
           'of proving one exact hand.',
