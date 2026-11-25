@@ -1,3 +1,4 @@
+import 'skin/act0_skin_components_v1.dart';
 import 'skin/act0_skin_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_academy_folio_v1.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +103,7 @@ class Act0HomeShellV1 extends StatelessWidget {
     this.sharkyOverride,
     this.onOpenDevMenu,
     this.onStartDailyDrill,
+    this.onStartWarmup,
     this.showChecklist,
     this.goalRoute,
     this.completionEarnedStreak = false,
@@ -137,6 +139,7 @@ class Act0HomeShellV1 extends StatelessWidget {
   final Act0SharkyCueV1? sharkyOverride;
   final VoidCallback? onOpenDevMenu;
   final VoidCallback? onStartDailyDrill;
+  final VoidCallback? onStartWarmup;
   final bool? showChecklist;
   final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
   final bool completionEarnedStreak;
@@ -204,6 +207,11 @@ class Act0HomeShellV1 extends StatelessWidget {
                 ),
                 const SizedBox(height: Act0VisualMetricsV1.sectionGap),
                 missionCard,
+                if (onStartWarmup != null)
+                  Act0SkinSecondaryButtonV1(
+                    label: 'Warm-up · 5 min',
+                    onPressed: onStartWarmup,
+                  ),
                 const SizedBox(height: Act0VisualMetricsV1.sectionGap),
                 _isDailyGoalDoneValue(goalValue)
                     ? _HomeCompletionSurfaceV1(

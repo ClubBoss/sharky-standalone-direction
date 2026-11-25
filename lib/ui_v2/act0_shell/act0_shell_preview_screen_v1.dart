@@ -8,6 +8,7 @@ import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
+import 'act0_warmup_v1.dart';
 import 'act0_path_progress_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
 import 'dart:async';
@@ -1232,6 +1233,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.debugLegacyPlacementOnStart = false,
     this.numberEntryV1 = const bool.fromEnvironment('numberEntryV1'),
     this.goalRouteV1 = const bool.fromEnvironment('goalRouteV1'),
+    this.warmupV1 = const bool.fromEnvironment('warmupV1'),
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
     this.telemetrySink,
@@ -1253,6 +1255,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool debugLegacyPlacementOnStart;
   final bool numberEntryV1;
   final bool goalRouteV1;
+  final bool warmupV1;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
@@ -1569,6 +1572,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   int? _dailyDealCacheDayV1;
   int _dailyCompletedRepCount = 0;
   bool _rapidPracticeLoop = false;
+  List<Act0WarmupDrillV1> _warmupQueueV1 = [];
+  bool _warmupActiveV1 = false;
   int _persistedStreakDays = 0;
   // Date of the last earned 3/3 set, never merely the last app save.
   String _lastDailyDate = '';
@@ -2975,6 +2980,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final progress = _progressSnapshot(baseState);
     final state = _stateWithProgress(baseState, progress);
     final reviewState = _reviewState(state.review);
+    final warmup = widget.warmupV1 && _tab == Act0ShellTabV1.home
+        ? _warmupSelectionV1(state, reviewState)
+        : null;
     late final reviewCoaching = _reviewPatternCoachingProjectionV1();
     final personalizedNextStep = _personalizedNextStepV1(reviewState);
     final useDailyHome =
@@ -3514,6 +3522,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       callbackDiagnosticEntryV1,
       callbackDiagnosticRunIdV1,
       () {
+        _warmupQueueV1 = [];
+        _warmupActiveV1 = false;
         if (_isReplayDrillV1) {
           _finishReplayDrillV1();
           return;
@@ -3746,6 +3756,13 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 _ => Act0AcademyHomePhaseV1.learn,
                               },
                         legacy: Act0HomeShellV1(
+                          onStartWarmup:
+                              warmup != null && warmup.drills.isNotEmpty
+                              ? () => setState(() {
+                                  _warmupQueueV1 = warmup.drills.toList();
+                                  _launchNextWarmupV1();
+                                })
+                              : null,
                           state: state,
                           goalRoute: goalRoute,
                           showChecklist: _showHomeChecklistV1(),
@@ -5118,6 +5135,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                               const <String>[];
                                           _selectedOptionId = null;
                                           _phase = Act0LessonPhaseV1.drill;
+                                          _warmupQueueV1 = [];
+                                          _warmupActiveV1 = false;
                                           // Preserve the source recheck launcher's skipTeaching sentinel.
                                           _rapidPracticeLoop = false;
                                           return;
@@ -5139,6 +5158,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _phase = Act0LessonPhaseV1.theory;
                                       _teachingStepIndex = 0;
                                       _rapidPracticeLoop = false;
+                                      if (_warmupActiveV1)
+                                        _launchNextWarmupV1();
                                       return;
                                     }
                                     // Ungraded recap pages retain the same
@@ -5154,6 +5175,14 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                                     _choiceAssistanceV1 ==
                                                         Act0DecisionAssistanceV1
                                                             .none)));
+                                    if (_warmupActiveV1 && _rapidPracticeLoop) {
+                                      _completeCurrentTask(
+                                        playSelectedTask,
+                                        awardXp: awardXp,
+                                      );
+                                      _launchNextWarmupV1();
+                                      return;
+                                    }
                                     if (_rapidPracticeLoop &&
                                         _activePracticeGroupId == 'daily') {
                                       _completeCurrentTask(
@@ -5647,6 +5676,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     if (_diagnosticLearningEntryV1 != null) {
       _returnFromDiagnosticLearningEntryV1();
     }
+    _warmupQueueV1 = [];
+    _warmupActiveV1 = false;
     final preserveRepairBridge = _shouldPreserveLearningRunForRepairBridgeV1(
       currentTab: _tab,
       requestedTab: tab,

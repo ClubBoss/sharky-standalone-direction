@@ -35,6 +35,7 @@ Act0AcademyHomeLeafInputV1 _input({
   Act0AcademyHomePhaseV1? phase,
   int streakDays = 0,
   ImageProvider? backdrop,
+  VoidCallback? onStartWarmup,
 }) => Act0AcademyHomeLeafInputV1(
   courseTitle: 'Poker Basics',
   streakDays: streakDays,
@@ -44,9 +45,24 @@ Act0AcademyHomeLeafInputV1 _input({
   courseLessonCount: total,
   phase: phase,
   backdrop: backdrop,
+  onStartWarmup: onStartWarmup,
 );
 
 void main() {
+  testWidgets('warm-up is optional and forwards its secondary action', (
+    tester,
+  ) async {
+    await _pumpHome(tester, _input());
+    expect(find.text('Warm-up · 5 min'), findsNothing);
+    var presses = 0;
+    await _pumpHome(tester, _input(onStartWarmup: () => presses++));
+    final entry = find.text('Warm-up · 5 min');
+    expect(entry, findsOneWidget);
+    await tester.ensureVisible(entry);
+    await tester.tap(entry);
+    expect(presses, 1);
+  });
+
   testWidgets('renders the source-owned next action and forwards the press', (
     tester,
   ) async {

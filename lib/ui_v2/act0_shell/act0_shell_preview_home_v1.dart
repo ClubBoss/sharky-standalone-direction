@@ -1,6 +1,125 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
 extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
+  Act0WarmupSelectionV1 _warmupSelectionV1(
+    Act0ShellStateV1 state,
+    Act0ReviewStateV1 review,
+  ) {
+    final latest = <String, DateTime>{};
+    final everMissed = <String>{};
+    for (final record in _learningEvidenceHistoryV1.records) {
+      if (record.isCorrect) continue;
+      everMissed.add(record.taskId);
+      final at = record.recordedAtUtc;
+      if (at != null && (latest[record.taskId]?.isBefore(at) ?? true)) {
+        latest[record.taskId] = at;
+      }
+    }
+    everMissed.addAll(_mistakeRecords.keys);
+    final coaching = _reviewPatternCoachingProjectionV1();
+    return selectAct0WarmupV1(
+      misses: [
+        for (final mistake in review.mistakes)
+          if (!mistake.resolved && !_isMistakeDischargedV1(mistake.taskId))
+            (
+              at: latest[mistake.taskId],
+              skills: act0SkillsForTaskV1(mistake.lessonId, mistake.taskId),
+              repair: _warmupRepairV1(mistake, coaching),
+            ),
+      ],
+      practicePool: [
+        for (final entry in _dailyDeckEntries(state))
+          if (!everMissed.contains(entry.taskId) &&
+              act0DailyDealRecipeV1(entry.taskId) == null)
+            (
+              worldId: entry.worldId,
+              lessonId: entry.lessonId,
+              taskId: entry.taskId,
+              repairSourceTaskId: null,
+              skills: act0SkillsForTaskV1(entry.lessonId, entry.taskId),
+            ),
+      ],
+    );
+  }
+
+  Act0WarmupDrillV1? _warmupRepairV1(
+    Act0MistakeCardV1 mistake,
+    Act0ReviewPatternCoachingProjectionV1 coaching,
+  ) {
+    final source = mistake.taskId;
+    final patterns = coaching.patterns.where(
+      (pattern) =>
+          pattern.isRepeatedIndependentMiss &&
+          pattern.patternState == act0ReviewPatternStateActiveV1 &&
+          pattern.sourceTaskIds.contains(source),
+    );
+    final target =
+        patterns
+            .map((pattern) => _repeatedMistakeTargetV1(pattern, source))
+            .whereType<_Act0OpenRepairIntentTargetV1>()
+            .firstOrNull ??
+        _openRepairIntentTargetForSourceTaskV1(source, includeOwed: true);
+    if (target == null) return null;
+    return (
+      worldId: target.target.worldId,
+      lessonId: target.target.lessonId,
+      taskId: target.target.taskId,
+      repairSourceTaskId: source,
+      skills: act0SkillsForTaskV1(mistake.lessonId, source),
+    );
+  }
+
+  void _launchNextWarmupV1() {
+    final state = _catalogStateV1;
+    while (_warmupQueueV1.isNotEmpty) {
+      final drill = _warmupQueueV1.removeAt(0);
+      final world = _worldById(_progressedWorlds(state), drill.worldId);
+      if (drill.repairSourceTaskId case final source?) {
+        final mistake = _reviewState(
+          state.review,
+        ).mistakes.where((card) => card.taskId == source).firstOrNull;
+        final target = _openRepairIntentTargetForSourceTaskV1(
+          source,
+          includeOwed: true,
+        );
+        if (mistake == null || target?.target.taskId != drill.taskId) continue;
+        _startMistakeRepair(
+          world,
+          mistake,
+          returnToPlayHub: true,
+          skipTeaching: true,
+        );
+        if (_tab != Act0ShellTabV1.play ||
+            _showPlayHub ||
+            _selectedTaskId != drill.taskId) {
+          _warmupQueueV1 = [];
+          _warmupActiveV1 = false;
+          return;
+        }
+      } else {
+        if (!_startTaskByIds(
+          world,
+          drill.lessonId,
+          drill.taskId,
+          skipTeaching: true,
+          allowDrillBypass: true,
+          rapidPracticeLoop: true,
+          evidenceRunKind: 'practice',
+          evidenceStartedBy: 'practice_daily',
+        ))
+          continue;
+      }
+      _warmupActiveV1 = true;
+      return;
+    }
+    _warmupActiveV1 = false;
+    _rapidPracticeLoop = false;
+    _selectedOptionId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _returnToRunnerOriginV1(Act0ShellTabV1.home);
+    _persistProgress();
+  }
+
   List<Act0WorldCardV1> _progressWorlds(Act0ShellStateV1 state) {
     return _progressWorldsWithTaskIds(state, _pathClosedTaskIds);
   }

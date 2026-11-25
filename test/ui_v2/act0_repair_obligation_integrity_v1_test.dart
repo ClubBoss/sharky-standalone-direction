@@ -112,7 +112,11 @@ Map<String, Object?> _fixture(String lessonId, String taskId) {
   };
 }
 
-Future<void> _mount(WidgetTester tester, Act0ShellTabV1 tab) async {
+Future<void> _mount(
+  WidgetTester tester,
+  Act0ShellTabV1 tab, {
+  bool warmup = false,
+}) async {
   await tester.pumpWidget(const SizedBox.shrink());
   await tester.pumpAndSettle();
   await _store.flush();
@@ -120,6 +124,7 @@ Future<void> _mount(WidgetTester tester, Act0ShellTabV1 tab) async {
     MaterialApp(
       home: Act0ShellPreviewScreenV1(
         showPlacementOnStart: false,
+        warmupV1: warmup,
         initialTab: tab == Act0ShellTabV1.play ? Act0ShellTabV1.learn : tab,
       ),
     ),
@@ -413,6 +418,51 @@ Finder _openDebtCaption(int count) => act0AcademyReviewPreviewV1
     : find.text('$count ${count == 1 ? 'miss' : 'misses'} to fix');
 
 void main() {
+  testWidgets(
+    'flagged warm-up uses the real repair grade and existing reward',
+    (tester) async {
+      await _setup(tester, _actionLesson, _actionSource);
+      await _mount(tester, Act0ShellTabV1.home, warmup: true);
+      expect(find.text('Warm-up · 5 min'), findsNothing);
+      await _startTask(tester, _actionLesson, _actionSource);
+      await _answer(tester, 'fold');
+      final missed = await _saved(tester);
+      final xpBefore = missed['earnedXp'] as int;
+      await _mount(tester, Act0ShellTabV1.home);
+      expect(find.text('Warm-up · 5 min'), findsNothing);
+      await _mount(tester, Act0ShellTabV1.home, warmup: true);
+      final entry = find.text('Warm-up · 5 min');
+      expect(entry, findsOneWidget);
+      await tester.ensureVisible(entry);
+      await tester.tap(entry);
+      await tester.pumpAndSettle();
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.isRepairAttempt, isTrue);
+      await _answer(tester, 'check');
+      final repaired = await _saved(tester);
+      final evidence = _rows(repaired, 'learningEvidenceHistory').last;
+      expect(
+        evidence['resultKind'],
+        Act0CompletedDecisionV1.repairedResultKind,
+      );
+      expect(evidence['runKind'], 'repair');
+      await _continue(tester);
+      final after = await _saved(tester);
+      final task = Act0ShellStateV1.sample
+          .worldById('world_1')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == _actionLesson)
+          .taskList
+          .singleWhere((task) => task.taskId == _actionRepair);
+      expect(
+        after['earnedXp'] as int,
+        inInclusiveRange(xpBefore, xpBefore + task.rewardXp),
+      );
+    },
+  );
+
   for (final refusal in ['head', 'backup']) {
     testWidgets(
       'G05 $refusal refusal stays visible; retry saves current debt and route state once',
