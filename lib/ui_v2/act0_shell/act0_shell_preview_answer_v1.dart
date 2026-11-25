@@ -1546,12 +1546,16 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
   void _confirmSizingPresetAnswerV1({
     required Act0LessonCardV1 selectedLesson,
     required Act0LessonTaskV1 selectedTask,
+    List<Act0RunnerOptionV1>? projectedOptions,
   }) {
     final presetId = _activeSelectedPresetIdV1(selectedTask);
     if (presetId == null) {
       return;
     }
-    final option = _optionById(selectedTask.runner.options, presetId);
+    final option = _optionById(
+      projectedOptions ?? selectedTask.runner.options,
+      presetId,
+    );
     if (option == null) {
       return;
     }

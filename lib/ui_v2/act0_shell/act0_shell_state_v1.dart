@@ -670,6 +670,7 @@ class Act0LessonTaskV1 {
     this.summary,
     this.lockedSummary,
     this.multiStreet,
+    this.betSize,
   });
 
   final String taskId;
@@ -695,6 +696,7 @@ class Act0LessonTaskV1 {
   final String? summary;
   final String? lockedSummary;
   final Act0MultiStreetV1? multiStreet;
+  final Act0BetSizeV1? betSize;
 
   List<Act0ReasonV1>? get reasons => act0ActionReasonPilotsV1[taskId]?.reasons;
 
@@ -703,6 +705,16 @@ class Act0LessonTaskV1 {
 
   Act0RunnerCompositionFamilyV1 get resolvedCompositionFamily =>
       act0RunnerCompositionFamilyForTaskIdV1(taskId);
+}
+
+/// Opt-in answer format. Grades and feedback belong to the existing authored
+/// options with these IDs; only the pot fractions are new authored data.
+class Act0BetSizeV1 {
+  const Act0BetSizeV1(this.fractions);
+
+  static const answerType = 'bet_size';
+
+  final Map<String, ({int numerator, int denominator})> fractions;
 }
 
 /// Source-owned table presentation behavior for one canonical task.

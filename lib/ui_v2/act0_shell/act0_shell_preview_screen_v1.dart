@@ -17,6 +17,7 @@ import 'act0_path_progress_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
 import 'dart:async';
 import 'act0_number_entry_runner_v1.dart';
+import 'act0_bet_size_runner_v1.dart';
 import 'act0_number_entry_v1.dart';
 import 'act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/services/app_settings_service.dart';
@@ -3238,6 +3239,19 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     final useNumberEntry =
         numberEntry != null &&
         (_phase == Act0LessonPhaseV1.drill || numberAnswer != null);
+    final betSizeProjection =
+        sourcePlayRunner != null &&
+            playSelectedTask != null &&
+            !useNumberEntry &&
+            !_placementDiagnosticActive &&
+            _diagnosticLearningEntryV1 == null
+        ? act0ProjectBetSizeV1(
+            enabled: widget.numberEntryV1,
+            task: playSelectedTask,
+            source: sourcePlayRunner,
+          )
+        : null;
+    final useBetSize = betSizeProjection?.active ?? false;
     final playRunner = useNumberEntry
         ? sourcePlayRunner!.copyWith(
             question: numberEntry.spec.question,
@@ -3250,7 +3264,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 numberAnswer,
             ],
           )
-        : sourcePlayRunner;
+        : betSizeProjection?.runner ?? sourcePlayRunner;
     final placementDiagnosticSignalId = _placementDiagnosticActive
         ? _placementDiagnosticSpotsV1[_placementDiagnosticIndex].signalId
         : null;
@@ -3284,6 +3298,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : playRunner;
     final accessibilityPrototypeStep =
         !useNumberEntry &&
+            !useBetSize &&
             activePlayRunner != null &&
             activePlayRunner.phase != Act0LessonPhaseV1.theory &&
             (activePlayRunner.phase == Act0LessonPhaseV1.review ||
@@ -4344,8 +4359,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                 numberEntry: useNumberEntry
                                     ? numberEntry
                                     : null,
+                                betSize: useBetSize,
                                 preserveSourceOwnedQuestion:
                                     _placementDiagnosticActive ||
+                                    useBetSize ||
                                     multiStreet != null,
                                 worldNumber: selectedWorld.worldNumber,
                                 selectedWorldId: selectedWorld.worldId,
@@ -4716,6 +4733,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         _confirmSizingPresetAnswerV1(
                                           selectedLesson: selectedLesson,
                                           selectedTask: playSelectedTask,
+                                          projectedOptions: useBetSize
+                                              ? activePlayRunner.options
+                                              : null,
                                         );
                                       },
                                     ),
@@ -5674,11 +5694,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
               onSelected: _selectShellTabV1,
             ),
     );
-    // W4 number entry uses the shared launch, resume and feedback controls.
-    // Keep their ink consistent with the keypad and the production app theme.
+    // Number entry and bet size share the flag and existing ink treatment.
+    // Keep their controls consistent with the production app theme.
     final useNumberEntryInk =
         (widget.numberEntryV1 && selectedWorld.worldNumber == 4) ||
-        useNumberEntry;
+        useNumberEntry ||
+        useBetSize;
     final themedShell = useNumberEntryInk
         ? Theme(
             data: Theme.of(
