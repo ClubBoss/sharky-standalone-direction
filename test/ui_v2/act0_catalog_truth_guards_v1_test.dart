@@ -550,26 +550,7 @@ void main() {
       final findings = [
         for (final row in rows) ...catalogRubricFindingsV1(row.task),
       ];
-      // These inherited Day 7 labels can only disappear from the baseline.
-      const terminology = {
-        'spaced_review_w5_flush_draws_board_cards_v1|hole card',
-        'spaced_review_w5_turn_river_changes_board_cards_v1|hole card',
-        'spaced_review_w6_range_board_fit_hero_cards_board_pot_v1|hole card',
-        'spaced_review_w6_range_pressure_lines_hero_cards_board_pot_v1|hole card',
-        'spaced_review_w8_same_hand_different_depth_pot_to_call_v1|shove',
-        'spaced_review_w8_format_pressure_hero_cards_board_pot_v1|shove',
-        'w11_day7_review_repair|shove',
-        'spaced_review_w11_table_trigger_reads_board_cards_v1|hole card',
-        'w12_day7_tilt_badbeat|shove',
-        'w12_day7_tilt_after_error|shove',
-        'w12_day7_fatigue_no_bluff|shove',
-      };
-      final added = findings.where(
-        (hit) =>
-            hit.rule != 'E11' ||
-            !terminology.contains('${hit.task}|${hit.detail}'),
-      );
-      expect(added, isEmpty, reason: added.join('\n'));
+      expect(findings, isEmpty, reason: findings.join('\n'));
     });
 
     test('rejects hidden premises, explicit answers, filler and jargon', () {
@@ -683,12 +664,24 @@ TASK river [decision] River
           'suboptimal: avoid thin calls but skip sound steals → avoid thin calls but skip good raises to win the blinds',
         ),
       };
+      // B87 replaces the jargon «shove» (E11) with the glossary «go all-in».
+      const b87ApprovedCopy = {
+        (
+          'spaced_review_w8_same_hand_different_depth_pot_to_call_v1',
+          'wrong: shove 24 bb → go all-in for 24 bb',
+        ),
+        (
+          'spaced_review_w8_format_pressure_hero_cards_board_pot_v1',
+          'wrong: shove 18 bb → go all-in for 18 bb',
+        ),
+      };
       final findings =
           catalogOptionLabelChangesV1(previous, renderCatalogSnapshot())
               .where(
                 (finding) =>
                     !b78ApprovedCopy.contains((finding.task, finding.detail)) &&
-                    !b79ApprovedCopy.contains((finding.task, finding.detail)),
+                    !b79ApprovedCopy.contains((finding.task, finding.detail)) &&
+                    !b87ApprovedCopy.contains((finding.task, finding.detail)),
               )
               .toList();
       expect(findings, isEmpty, reason: findings.join('\n'));
