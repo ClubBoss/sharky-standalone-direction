@@ -421,7 +421,7 @@ void main() {
         .singleWhere(
           (row) =>
               row.lesson.lessonId == 'w6_continuation_bet' &&
-              row.task.taskId == 'dry_size',
+              row.task.taskId == 'w6_continuation_bet_dry_size',
         )
         .task;
     Act0LessonTaskV1 fixture({bool four = false}) {
