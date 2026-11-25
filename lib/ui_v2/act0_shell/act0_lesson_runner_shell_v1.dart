@@ -7,6 +7,7 @@ import 'package:flutter/semantics.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_glossary_sheet_v1.dart';
+import 'act0_starting_hands_reference_v1.dart';
 import 'act0_task_help_policy_v1.dart';
 import 'act0_growth_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
@@ -3165,6 +3166,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       tools: tools,
       initialFromFlop: runner.table.boardCards.length != 4,
       allowHandRanks: !isAttempt,
+      startingHandsSeat: act0StartingHandsSeatForResultV1(runner),
       // Definitions can directly solve a terminology/recognition assessment.
       // In such questions keep only genuinely applicable numeric tools.
       allowGlossary: !isAttempt || !act0TaskHelpTestsDefinitionV1(question),

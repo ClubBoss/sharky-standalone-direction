@@ -198,3 +198,12 @@ Act0ChartActionV1 act0ChartActionV1(
   }
   return fold;
 }
+
+/// Standard 13×13 arrangement: pairs on the diagonal, suited above it,
+/// offsuit below.
+String act0StartingHandsCellV1(int row, int column) {
+  final ranks = act0ChartRanksV1;
+  if (row == column) return '${ranks[row]}${ranks[column]}';
+  if (row < column) return '${ranks[row]}${ranks[column]}s';
+  return '${ranks[column]}${ranks[row]}o';
+}
