@@ -54,6 +54,7 @@ TIER_A_COMMANDS = [
             "flutter",
             "test",
             "test/guards/canonical_truth_map_v1_contract_test.dart",
+            "test/guards/act0_release_profile_guard_v1_test.dart",
             "-r",
             "compact",
         ],
