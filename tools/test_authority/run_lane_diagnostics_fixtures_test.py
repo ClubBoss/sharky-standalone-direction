@@ -52,6 +52,19 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
         full_route = "test/ui_v2/act0_main01_app_root_cycle_v1_test.dart"
         self.assertIn(full_route, min(assigned, key=len))
 
+    def test_vol2_census_runs_with_truth_guards_but_in_separate_process(self):
+        commands = run_lane_v1.TIER_A_COMMANDS
+        for count in (1, 2, 3, 4):
+            shards = [run_lane_v1._tier_a_shard(commands, index, count)
+                      for index in range(count)]
+            for shard in shards:
+                names = {c["name"] for c in shard}
+                self.assertEqual("repair intent" in names, "Vol2 pilot G1 census" in names)
+        truth = next(c["cmd"] for c in commands if c["name"] == "repair intent")
+        census = next(c["cmd"] for c in commands if c["name"] == "Vol2 pilot G1 census")
+        self.assertNotIn("--dart-define=SHARKY_W13_PLUS_PILOT=true", truth)
+        self.assertIn("--dart-define=SHARKY_W13_PLUS_PILOT=true", census)
+
     def test_long_session_budgets_are_scoped_and_larger_overrides_still_apply(self):
         names = (
             "Long-session focused save and replay cases",

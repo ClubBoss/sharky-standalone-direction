@@ -154,6 +154,17 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        # Separate process: the existing truth guards must keep the pilot OFF.
+        "name": "Vol2 pilot G1 census",
+        "shard_with": "repair intent",
+        "cmd": [
+            "flutter", "test",
+            "--dart-define=SHARKY_W13_PLUS_PILOT=true",
+            "test/ui_v2/act0_catalog_vol2_census_v1_test.dart",
+            "-r", "compact",
+        ],
+    },
+    {
         "name": "durable learner truth and assessment interaction (LDR-01)",
         "cmd": [
             "flutter",
@@ -423,13 +434,16 @@ def _shard_owners(
 
 def _tier_a_shard(commands: list[dict[str, object]], index: int, count: int) -> list[dict[str, object]]:
     owner = _shard_owners(
-        [str(command["name"]) for command in commands],
+        [str(command["name"]) for command in commands if "shard_with" not in command],
         count,
         TIER_A_WEIGHTS,
         default_weight=10,
         pinned_shard_zero=TIER_A_SHARD0,
     )
-    return [command for command in commands if owner[str(command["name"])] == index]
+    return [
+        command for command in commands
+        if owner[str(command.get("shard_with", command["name"]))] == index
+    ]
 
 
 def _run_tier_a(timeout: int, smoke: bool) -> list[dict[str, object]]:
