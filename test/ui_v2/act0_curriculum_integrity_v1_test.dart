@@ -371,6 +371,32 @@ void main() {
       },
     );
 
+    test('W7 paired-board unchanged-count feedback explains card removal', () {
+      final runner = task('world_7', 'paired_board_texture_lite_intro').runner;
+      final options = {for (final option in runner.options) option.id: option};
+      final unchanged = options['pair_does_not_change_combos']!;
+      expect(
+        unchanged.feedbackReason,
+        'The two sevens on the board cannot be in the opponent’s hand, '
+        'so fewer hands with a seven remain possible.',
+      );
+      expect(options.map((id, option) => MapEntry(id, option.quality)), {
+        'pair_does_not_change_combos': Act0FeedbackQualityV1.wrong,
+        'seven_combos_reduced_trips_still_possible':
+            Act0FeedbackQualityV1.correct,
+        'opponent_always_has_trips': Act0FeedbackQualityV1.wrong,
+      });
+      expect(
+        runner.options.singleWhere((option) => option.isCorrect).id,
+        'seven_combos_reduced_trips_still_possible',
+      );
+      expect(
+        options['opponent_always_has_trips']!.feedbackReason,
+        'Trips are important, but a paired board changes counts instead '
+        'of proving one exact hand.',
+      );
+    });
+
     test('W8 side-pot intro uses one contribution ledger', () {
       final runner = task('world_8', 'what_poker_is_side_pot_intro').runner;
       final seats = <String, Act0SeatStateV1>{

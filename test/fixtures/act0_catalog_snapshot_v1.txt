@@ -4986,7 +4986,7 @@ HINT [theoryOnly]: Start from what is still possible.
 TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Center 772 rainbow | Facts one pair, rainbow, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kh 9s stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises to 2.5 BB · BTN folds · SB folds · BB calls 1.5 BB more · Flop: BB checks
-  - [wrong] The paired board leaves seven-containing combinations unchanged. — Recheck the visible cards. Paired visible cards change which combinations remain.
+  - [wrong] The paired board leaves seven-containing combinations unchanged. — Recheck the visible cards. The two sevens on the board cannot be in the opponent’s hand, so fewer hands with a seven remain possible.
     BETTER ANSWER: Fewer seven-containing hands remain, but trips are still possible.
     FEEDBACK TABLE: Flop | You Kh 9s | Board 7h 7c 2d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center 772 rainbow | Facts one pair, rainbow, paired board
   + [correct] Fewer seven-containing hands remain, but trips are still possible. — Paired-board read. The two visible sevens reduce seven-containing private hands, but they do not remove every strong hand or prove one exact hand.
