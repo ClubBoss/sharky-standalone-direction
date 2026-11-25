@@ -940,6 +940,7 @@ Widget _buildRunnerProgressV1(
   final total = progress?.total ?? runner.beatCount;
   final russian = act0AcademyLanguageV1(context) == 'ru';
   return Act0SkinTaskHeaderV1(
+    key: const ValueKey('act0_runner_task_header'),
     step: step,
     total: total,
     onClose: onBack,

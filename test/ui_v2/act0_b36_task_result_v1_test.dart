@@ -11,6 +11,7 @@ void main() {
       tester.view.devicePixelRatio = 1;
       addTearDown(tester.view.reset);
       final mode = ValueNotifier(false);
+      final calls = <String>[];
       addTearDown(mode.dispose);
       await tester.pumpWidget(
         MaterialApp(
@@ -27,9 +28,9 @@ void main() {
               builder: (_, extra, __) => Act0SkinTaskHeaderV1(
                 step: 11,
                 total: 12,
-                onClose: () {},
+                onClose: () => calls.add(extra ? 'extra close' : 'close'),
                 modeLabel: extra ? 'Extra practice' : null,
-                onHelp: extra ? () {} : null,
+                onHelp: extra ? () => calls.add('extra help') : null,
               ),
             ),
           ),
@@ -53,6 +54,14 @@ void main() {
       }
       final help = tester.getRect(find.byTooltip('Glossary'));
       expect(help.right, before.right);
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      await tester.tap(find.byTooltip('Glossary'));
+      expect(calls, ['extra close', 'extra help']);
+      mode.value = false;
+      await tester.pump();
+      expect(find.byTooltip('Glossary'), findsNothing);
+      await tester.tap(find.byKey(const Key('act0_shell_runner_back')));
+      expect(calls, ['extra close', 'extra help', 'close']);
       expect(tester.takeException(), isNull);
     });
   }

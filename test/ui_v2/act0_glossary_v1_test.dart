@@ -265,14 +265,31 @@ void main() {
         expect(find.text('Price Bar and pot odds'), findsOneWidget);
         expect(find.text('BB and chips'), findsNothing);
         expect(find.text('Outs to percentage'), findsNothing);
-        expect(find.byKey(const Key('act0_glossary_term_pot')), findsOneWidget);
+        final sheet = find.byKey(const Key('act0_glossary_sheet'));
+        final scrollable = find.descendant(
+          of: sheet,
+          matching: find.byType(Scrollable),
+        );
+        final potTerm = find.byKey(const Key('act0_glossary_term_pot'));
+        // The filtered glossary is scrollable: terms below the fold need not
+        // be mounted until the learner scrolls to them.
+        await tester.scrollUntilVisible(potTerm, 100, scrollable: scrollable);
+        await tester.pump();
+        expect(potTerm.hitTestable(), findsOneWidget);
         expect(
           find.byKey(const Key('act0_glossary_term_showdown')),
           findsNothing,
         );
         expect(requests, 0);
         if (assisted) {
-          await tester.tap(find.text('Price Bar and pot odds'));
+          final calculator = find.text('Price Bar and pot odds');
+          await tester.scrollUntilVisible(
+            calculator,
+            -100,
+            scrollable: scrollable,
+          );
+          await tester.pump();
+          await tester.tap(calculator.hitTestable());
           await tester.pump();
           expect(requests, 1);
           expect(
@@ -367,17 +384,22 @@ void main() {
             initialPhase: Act0LessonPhaseV1.drill,
             showPlacementOnStart: false,
             state: state,
-            debugHarnessEntry: Act0ShellDebugHarnessEntryV1(
-              mode: Act0ControlledDemoCaptureModeV1.directState,
-              surface: Act0ControlledDemoCaptureSurfaceV1.runnerDrill,
-              worldId: world.worldId,
-              lessonId: lesson.lessonId,
-              taskId: task.taskId,
-            ),
+            // A capture-only harness disables durable progress. Use the real
+            // persistence path so the calculator must receive a genuine ack.
+            debugPersistFixtureProgress: true,
+            enableBetaMetrics: false,
           ),
         ),
       );
-      await _pumpTransition(tester);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        task.taskId,
+      );
       await pumpSourceChoreographyToDecisionV1(tester, task.runner.table);
       Future<void> tap(Finder target) async {
         await tester.ensureVisible(target);
