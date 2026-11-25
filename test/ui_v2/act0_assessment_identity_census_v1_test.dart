@@ -794,6 +794,28 @@ void main() {
     }
     // Compare the new W9 identities separately. Reconstruct the old view for
     // the earlier frozen hashes so those hashes still witness their own source.
+    // B79 reverses only the approved task-local display and preferred labels
+    // before the W9 hash, which precedes the pre-atlas fixture substitution.
+    const b79CopyLabels = <String, Map<String, String>>{
+      'w9_survival_recap': {
+        'Avoid thin calls but skip good raises to win the blinds':
+            'Avoid thin calls but skip sound steals',
+      },
+    };
+    for (final entry in b79CopyLabels.entries) {
+      final row = entries.singleWhere((row) => row[2] == entry.key);
+      final currentOptions = (row[5] as List).cast<List<Object?>>();
+      final labels = entry.value;
+      expect(
+        currentOptions.map((option) => option[1]),
+        containsAll(labels.keys),
+        reason: entry.key,
+      );
+      for (final option in currentOptions) {
+        option[1] = labels[option[1]] ?? option[1];
+        option[4] = labels[option[4]] ?? option[4];
+      }
+    }
     expect(
       sha256
           .convert(

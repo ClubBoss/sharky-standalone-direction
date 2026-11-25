@@ -676,11 +676,19 @@ TASK river [decision] River
           'correct: less room, more commitment pressure → a bet leaves fewer chips for later',
         ),
       };
+      // B79 is an approved wording repair (W9 steal before W10 gloss)
+      const b79ApprovedCopy = {
+        (
+          'w9_survival_recap',
+          'suboptimal: avoid thin calls but skip sound steals → avoid thin calls but skip good raises to win the blinds',
+        ),
+      };
       final findings =
           catalogOptionLabelChangesV1(previous, renderCatalogSnapshot())
               .where(
                 (finding) =>
-                    !b78ApprovedCopy.contains((finding.task, finding.detail)),
+                    !b78ApprovedCopy.contains((finding.task, finding.detail)) &&
+                    !b79ApprovedCopy.contains((finding.task, finding.detail)),
               )
               .toList();
       expect(findings, isEmpty, reason: findings.join('\n'));
