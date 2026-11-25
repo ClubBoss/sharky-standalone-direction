@@ -98,24 +98,18 @@ void main() {
       expect(families, everyElement('1'));
     });
 
-    test(
-      'Flutter startup locks portrait before runApp',
-      () {
-        final startup = _parse('lib/main.dart').declarations
-            .whereType<FunctionDeclaration>()
-            .singleWhere((function) => function.name.lexeme == 'main');
-        expect(
-          _compact(startup.functionExpression.body),
-          matches(
-            r'awaitSystemChrome\.setPreferredOrientations\((?:const)?'
-            r'\[(?:DeviceOrientation\.portraitUp),?\]\);.*runApp\(',
-          ),
-        );
-      },
-      skip:
-          'OWNER: No Flutter startup portrait lock on current main; '
-          'iOS Info.plist already restricts portrait.',
-    );
+    test('Flutter startup locks portrait before runApp', () {
+      final startup = _parse('lib/main.dart').declarations
+          .whereType<FunctionDeclaration>()
+          .singleWhere((function) => function.name.lexeme == 'main');
+      expect(
+        _compact(startup.functionExpression.body),
+        matches(
+          r'awaitSystemChrome\.setPreferredOrientations\((?:const)?'
+          r'\[(?:DeviceOrientation\.portraitUp),?\]\);.*runApp\(',
+        ),
+      );
+    });
   });
 
   group('A8.flags default release flags OFF (no dart-defines)', () {
