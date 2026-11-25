@@ -196,24 +196,39 @@ void main() {
           ),
         ),
       );
-      final all = find.byKey(const Key('act0_you_skill_see_all'));
+      // Tap the header, not the center of the expanded tile and its rows.
+      final all = find.descendant(
+        of: find.byKey(const Key('act0_you_skill_see_all')),
+        matching: find.widgetWithText(ListTile, 'See all'),
+      );
       await tester.ensureVisible(all);
+      await tester.pumpAndSettle();
       expect(find.text('Not enough answers yet'), findsOneWidget);
-      await tester.tap(all);
+      expect(all.hitTestable(), findsOneWidget);
+      await tester.tap(all, warnIfMissed: true);
       await tester.pumpAndSettle();
       expect(
         find.textContaining('Not enough answers yet (8 more)'),
         findsWidgets,
       );
       expect(find.textContaining('0%'), findsNothing);
-      await tester.tap(all);
+      await tester.ensureVisible(all);
       await tester.pumpAndSettle();
+      expect(all.hitTestable(), findsOneWidget);
+      await tester.tap(all, warnIfMissed: true);
+      await tester.pumpAndSettle();
+      expect(
+        find.textContaining('Not enough answers yet (8 more)'),
+        findsNothing,
+      );
       final link = find.byKey(const Key('act0_you_skill_leak_dashboard'));
       expect(link, enabled ? findsOneWidget : findsNothing);
       expect(builds, 0);
       if (enabled) {
         await tester.ensureVisible(link);
-        await tester.tap(link);
+        await tester.pumpAndSettle();
+        expect(link.hitTestable(), findsOneWidget);
+        await tester.tap(link, warnIfMissed: true);
         await tester.pumpAndSettle();
         expect(builds, 1);
         expect(find.byType(BottomSheet), findsOneWidget);
