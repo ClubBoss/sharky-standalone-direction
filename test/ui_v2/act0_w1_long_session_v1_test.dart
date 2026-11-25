@@ -709,7 +709,6 @@ void _registerFocusedCases() {
     (t) async {
       const taskId = 'w6_continuation_bet_dry_size';
       final semantics = t.ensureSemantics();
-      addTearDown(semantics.dispose);
       final xp = await _openSavedCourseTask(
         t,
         worldId: 'world_6',
@@ -829,6 +828,7 @@ void _registerFocusedCases() {
         completed.fold(0, (sum, id) => sum + rewards[id]!),
       );
       expect(t.takeException(), isNull);
+      semantics.dispose();
     },
   );
 
@@ -836,7 +836,6 @@ void _registerFocusedCases() {
     t,
   ) async {
     final semantics = t.ensureSemantics();
-    addTearDown(semantics.dispose);
     await _openSavedCourseTask(
       t,
       worldId: 'world_5',
@@ -874,6 +873,7 @@ void _registerFocusedCases() {
       isTrue,
     );
     expect(t.takeException(), isNull);
+    semantics.dispose();
   });
 
   testWidgets('pre-split first lesson resumes the card read with its XP', (
