@@ -397,6 +397,70 @@ void main() {
     variant: TargetPlatformVariant.only(TargetPlatform.iOS),
   );
 
+  testWidgets(
+    'reminder time is editable while off and only the toggle requests opt-in',
+    (tester) async {
+      const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
+      final messenger = tester.binding.defaultBinaryMessenger;
+      final calls = <MethodCall>[];
+      var enabled = false;
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        calls.add(call);
+        if (call.method == 'getTime') return [9, 15];
+        if (call.method == 'permissionDenied') return false;
+        if (call.method == 'setEnabled') {
+          enabled = call.arguments['enabled'] as bool;
+        }
+        return enabled;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      SharedPreferences.setMockInitialValues({
+        'onboardingCompleted': true,
+        'act0_welcome_completed_v1': true,
+      });
+      await tester.pumpWidget(const AppRoot(debugLegacyPlacementOnStart: true));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_shell_nav_profile')));
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+      await tester.pumpAndSettle();
+      final reminder = find.byKey(
+        const Key('act0_academy_settings_practice_reminder'),
+      );
+      expect(tester.widget<Switch>(reminder).value, isFalse);
+      expect(calls.where((call) => call.method == 'setEnabled'), isEmpty);
+      final time = find.byKey(const Key('act0_practice_reminder_time'));
+      await tester.tap(time);
+      await tester.pumpAndSettle();
+      expect(
+        tester
+            .widget<TimePickerDialog>(find.byType(TimePickerDialog))
+            .initialTime,
+        const TimeOfDay(hour: 9, minute: 15),
+      );
+      await tester.tap(find.text('OK'));
+      await tester.pumpAndSettle();
+      final saved = calls.singleWhere((call) => call.method == 'setTime');
+      expect(saved.arguments['hour'], 9);
+      expect(saved.arguments['minute'], 15);
+      expect(calls.where((call) => call.method == 'setEnabled'), isEmpty);
+      expect(tester.widget<Switch>(reminder).value, isFalse);
+      await tester.tap(reminder);
+      await tester.pumpAndSettle();
+      expect(tester.widget<Switch>(reminder).value, isTrue);
+      await tester.tap(reminder);
+      await tester.pumpAndSettle();
+      expect(tester.widget<Switch>(reminder).value, isFalse);
+      expect(
+        calls
+            .where((call) => call.method == 'setEnabled')
+            .map((call) => call.arguments['enabled']),
+        [true, false],
+      );
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+  );
+
   test('reminders need explicit opt-in and deletion disables them', () async {
     debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     addTearDown(() => debugDefaultTargetPlatformOverride = null);
@@ -446,6 +510,7 @@ void main() {
     await Act0LocalDataDeletionV1.erase();
     expect(calls.last.method, 'setEnabled');
     expect(calls.last.arguments['enabled'], isFalse);
+    expect(calls.last.arguments['reset'], isTrue);
     expect(Act0PracticeReminderV1.enabled.value, isFalse);
     expect((await SharedPreferences.getInstance()).getKeys(), isEmpty);
   });

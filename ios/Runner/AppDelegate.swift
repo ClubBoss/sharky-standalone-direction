@@ -105,6 +105,10 @@ import UserNotifications
 private extension AppDelegate {
   static let practiceReminderId = "sharky.practice-reminder"
   static let practiceReminderOptIn = "sharky.practice-reminder.opt-in"
+  static let practiceReminderHour = "sharky.practice-reminder.hour"
+  static let practiceReminderMinute = "sharky.practice-reminder.minute"
+  static let practiceReminderPendingDate = "sharky.practice-reminder.pending-date"
+  static let practiceReminderLastDate = "sharky.practice-reminder.last-date"
 
   func registerPracticeReminders(_ messenger: FlutterBinaryMessenger) {
     let channel = FlutterMethodChannel(
@@ -119,6 +123,7 @@ private extension AppDelegate {
       let defaults = UserDefaults.standard
       let arguments = call.arguments as? [String: Any]
       let schedule = arguments?["schedule"] as? String ?? "none"
+      let body = arguments?["body"] as? String
       switch call.method {
       case "permissionDenied":
         UNUserNotificationCenter.current().getNotificationSettings { settings in
@@ -126,12 +131,28 @@ private extension AppDelegate {
             (settings.authorizationStatus == .authorized && settings.alertSetting != .enabled)
           DispatchQueue.main.async { result(denied) }
         }
+      case "getTime":
+        result([defaults.object(forKey: Self.practiceReminderHour) as? Int ?? 18,
+                defaults.integer(forKey: Self.practiceReminderMinute)])
+      case "setTime":
+        guard let hour = arguments?["hour"] as? Int, (0..<24).contains(hour),
+              let minute = arguments?["minute"] as? Int, (0..<60).contains(minute) else {
+          result(FlutterError(code: "invalid_arguments", message: nil, details: nil))
+          return
+        }
+        defaults.set(hour, forKey: Self.practiceReminderHour)
+        defaults.set(minute, forKey: Self.practiceReminderMinute)
+        guard defaults.bool(forKey: Self.practiceReminderOptIn) else {
+          result(false)
+          return
+        }
+        self.schedulePracticeReminder(schedule, body: body, result)
       case "sync":
         guard defaults.bool(forKey: Self.practiceReminderOptIn) else {
           result(false)
           return
         }
-        self.schedulePracticeReminder(schedule, result)
+        self.schedulePracticeReminder(schedule, body: body, result)
       case "setEnabled":
         guard let enabled = arguments?["enabled"] as? Bool else {
           result(FlutterError(code: "invalid_arguments", message: nil, details: nil))
@@ -143,7 +164,7 @@ private extension AppDelegate {
               if error != nil {
                 result(FlutterError(code: "permission_unavailable", message: nil, details: nil))
               } else if granted {
-                self.schedulePracticeReminder(schedule, result)
+                self.schedulePracticeReminder(schedule, body: body, result)
               } else {
                 self.cancelPracticeReminder()
                 result(false)
@@ -152,6 +173,12 @@ private extension AppDelegate {
           }
         } else {
           self.cancelPracticeReminder()
+          if arguments?["reset"] as? Bool == true {
+            for key in [Self.practiceReminderHour, Self.practiceReminderMinute,
+                        Self.practiceReminderPendingDate, Self.practiceReminderLastDate] {
+              defaults.removeObject(forKey: key)
+            }
+          }
           result(false)
         }
       default:
@@ -160,7 +187,20 @@ private extension AppDelegate {
     }
   }
 
-  func schedulePracticeReminder(_ schedule: String, _ result: @escaping FlutterResult) {
+  // Record a possibly delivered request before replacing/cancelling it. Do not
+  // re-alert on the same local day after editing the time or toggling back on.
+  func clearPendingPracticeReminder(now: Date) {
+    let defaults = UserDefaults.standard
+    if let pending = defaults.object(forKey: Self.practiceReminderPendingDate) as? Date,
+       pending <= now {
+      defaults.set(pending, forKey: Self.practiceReminderLastDate)
+    }
+    defaults.removeObject(forKey: Self.practiceReminderPendingDate)
+    UNUserNotificationCenter.current().removePendingNotificationRequests(
+      withIdentifiers: [Self.practiceReminderId])
+  }
+
+  func schedulePracticeReminder(_ schedule: String, body: String?, _ result: @escaping FlutterResult) {
     let center = UNUserNotificationCenter.current()
     center.getNotificationSettings { settings in
       DispatchQueue.main.async {
@@ -170,25 +210,30 @@ private extension AppDelegate {
           result(false)
           return
         }
-        if schedule == "none" {
-          center.removePendingNotificationRequests(withIdentifiers: [Self.practiceReminderId])
+        let now = Date()
+        self.clearPendingPracticeReminder(now: now)
+        let defaults = UserDefaults.standard
+        guard schedule != "none", let body, !body.isEmpty else {
           UserDefaults.standard.set(true, forKey: Self.practiceReminderOptIn)
           result(true)
           return
         }
         let content = UNMutableNotificationContent()
         content.title = "Sharky Poker"
-        content.body = "A short practice whenever you feel ready."
+        content.body = body
         guard let evening = practiceReminderEvening(
           tomorrow: schedule == "tomorrowEvening",
-          now: Date(),
-          calendar: .current
+          now: now,
+          calendar: .current,
+          hour: defaults.object(forKey: Self.practiceReminderHour) as? Int ?? 18,
+          minute: defaults.integer(forKey: Self.practiceReminderMinute),
+          lastReminderAt: defaults.object(forKey: Self.practiceReminderLastDate) as? Date
         ) else {
           result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
           return
         }
         let trigger = UNCalendarNotificationTrigger(dateMatching: evening, repeats: false)
-        guard trigger.nextTriggerDate() != nil else {
+        guard let fireDate = trigger.nextTriggerDate() else {
           result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
           return
         }
@@ -202,7 +247,8 @@ private extension AppDelegate {
               result(FlutterError(code: "schedule_unavailable", message: nil, details: nil))
               return
             }
-            UserDefaults.standard.set(true, forKey: Self.practiceReminderOptIn)
+            defaults.set(fireDate, forKey: Self.practiceReminderPendingDate)
+            defaults.set(true, forKey: Self.practiceReminderOptIn)
             result(true)
           }
         }
@@ -213,16 +259,32 @@ private extension AppDelegate {
   func cancelPracticeReminder() {
     UserDefaults.standard.removeObject(forKey: Self.practiceReminderOptIn)
     let center = UNUserNotificationCenter.current()
-    center.removePendingNotificationRequests(withIdentifiers: [Self.practiceReminderId])
+    clearPendingPracticeReminder(now: Date())
     center.removeDeliveredNotifications(withIdentifiers: [Self.practiceReminderId])
   }
 }
 
-func practiceReminderEvening(tomorrow: Bool, now: Date, calendar: Calendar) -> DateComponents? {
-  if !tomorrow { return DateComponents(hour: 18, minute: 0) }
-  guard let nextDay = calendar.date(byAdding: .day, value: 1, to: now) else { return nil }
-  var evening = calendar.dateComponents([.year, .month, .day], from: nextDay)
-  evening.hour = 18
-  evening.minute = 0
-  return evening
+func practiceReminderEvening(
+  tomorrow: Bool, now: Date, calendar: Calendar, hour: Int = 18, minute: Int = 0,
+  lastReminderAt: Date? = nil
+) -> DateComponents? {
+  guard let today = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: now) else {
+    return nil
+  }
+  // Use a dated, non-repeating request. A time already passed goes to the next
+  // local day, never another time today. Calendar matching handles DST.
+  let target: Date
+  let alreadyRemindedToday = lastReminderAt.map {
+    calendar.isDate($0, inSameDayAs: now)
+  } ?? false
+  if tomorrow || alreadyRemindedToday || today <= now || !calendar.isDate(today, inSameDayAs: now) {
+    guard let nextDay = calendar.date(byAdding: .day, value: 1, to: calendar.startOfDay(for: now)),
+          let next = calendar.date(bySettingHour: hour, minute: minute, second: 0, of: nextDay) else {
+      return nil
+    }
+    target = next
+  } else {
+    target = today
+  }
+  return calendar.dateComponents([.year, .month, .day, .hour, .minute], from: target)
 }
