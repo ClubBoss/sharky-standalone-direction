@@ -1,6 +1,57 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
 extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
+  Map<String, VoidCallback> _profileSkillPracticeV1(int callbackEpoch) {
+    final worlds = _progressedWorlds(_catalogStateV1);
+    final pool = _dailyDeckEntries(_catalogStateV1).where((entry) {
+      if (!_completedTaskIds.contains(entry.taskId)) return false;
+      final lesson = _lessonById(
+        _worldById(worlds, entry.worldId).lessons,
+        entry.lessonId,
+      );
+      final task = lesson.taskList
+          .where((task) => task.taskId == entry.taskId)
+          .firstOrNull;
+      return task != null &&
+          !task.repairOnly &&
+          _runnerAllowedByNineSeatGateV1(task.runner);
+    }).toList();
+    final tasks = pool.map(
+      (entry) => (lessonId: entry.lessonId, taskId: entry.taskId),
+    );
+    final history = _attemptArchiveV1.attempts.map(
+      (attempt) => (
+        taskId: attempt.evidence.taskId,
+        createdOrder: attempt.evidence.createdOrder,
+      ),
+    );
+    final result = <String, VoidCallback>{};
+    for (final skill in {
+      for (final entry in pool)
+        ...act0SkillsForTaskV1(entry.lessonId, entry.taskId),
+    }) {
+      final selection = resolveSkillDrillV1(skill, tasks, history);
+      final target = pool
+          .where((entry) => entry.taskId == selection.taskId)
+          .firstOrNull;
+      if (target == null) continue;
+      result[skill] = () => _setStateForRecoveryV1(callbackEpoch, () {
+        if (_tab != Act0ShellTabV1.profile) return;
+        _startTaskByIds(
+          _worldById(worlds, target.worldId),
+          target.lessonId,
+          target.taskId,
+          skipTeaching: true,
+          allowDrillBypass: true,
+          rapidPracticeLoop: true,
+          evidenceRunKind: 'practice',
+          evidenceStartedBy: 'practice_weak_spots',
+        );
+      });
+    }
+    return result;
+  }
+
   Act0ReviewStateV1 _reviewState(Act0ReviewStateV1 base) {
     final open = _debugReviewEmptyV1
         ? const <Act0MistakeCardV1>[]

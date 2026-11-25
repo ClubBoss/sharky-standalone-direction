@@ -19,6 +19,19 @@ const _boardDrill = (
 const _unknown = (lessonId: 'retired_lesson', taskId: 'retired_task');
 
 void main() {
+  test('explicit skill uses only matching completed drills', () {
+    final result = resolveSkillDrillV1(
+      'Board reading',
+      [_goodPrice, _winningRivers, _boardDrill],
+      [(taskId: _winningRivers.taskId, createdOrder: 4)],
+    );
+    expect(result.taskId, _boardDrill.taskId);
+    expect(
+      resolveSkillDrillV1('Board reading', [_goodPrice], []).taskId,
+      isNull,
+    );
+  });
+
   test('uses the first wrong decision and its task-level skill override', () {
     final result = resolveReplaySkillDrillV1(
       (

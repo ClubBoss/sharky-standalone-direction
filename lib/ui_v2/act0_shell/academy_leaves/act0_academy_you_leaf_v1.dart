@@ -3,6 +3,8 @@ import '../skin/act0_skin_tokens_v1.dart';
 import '../act0_shell_state_v1.dart';
 import '../act0_learning_record_card_v1.dart';
 import '../act0_w14_skill_state_v1.dart';
+import '../act0_skill_progress_v1.dart';
+import '../act0_leak_dashboard_v1.dart';
 import '../act0_profile_evidence_projection_v1.dart';
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_achievement_seed_consumer_v1.dart';
@@ -53,6 +55,9 @@ class Act0AcademyYouLeafInputV1 {
     this.independentAnswers = 0,
     this.repairedAnswers = 0,
     this.skills = const <Act0W14SkillStateV1>[],
+    this.skillProgress = const [],
+    this.skillPractice = const {},
+    this.openLeakDashboard,
     this.checkedW1Topics = const <String>[],
     this.onOpenReview,
     this.onOpenPractice,
@@ -75,6 +80,9 @@ class Act0AcademyYouLeafInputV1 {
   final int independentAnswers;
   final int repairedAnswers;
   final List<Act0W14SkillStateV1> skills;
+  final List<Act0SkillProgressV1> skillProgress;
+  final Map<String, VoidCallback> skillPractice;
+  final Act0LeakDashboardV1? Function()? openLeakDashboard;
   final List<String> checkedW1Topics;
   final VoidCallback? onOpenReview;
   final VoidCallback? onOpenPractice;
@@ -209,6 +217,10 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
             ),
           if (fresh && input.skills.isNotEmpty)
             Act0SkinCardV1(child: _skillsDetails()),
+          if (input.skillProgress.isNotEmpty) ...[
+            const SizedBox(height: Act0SkinTokensV1.gapMd),
+            _skillProgressCard(context),
+          ],
           if (activity.isNotEmpty) ...[
             const SizedBox(height: Act0SkinTokensV1.gapMd),
             Text(
@@ -275,6 +287,94 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+
+  Widget _skillProgressCard(BuildContext context) {
+    final weak = Act0SkillProgressV1.topNeedsWork(input.skillProgress);
+    return Act0SkinCardV1(
+      key: const Key('act0_you_skill_progress'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          const Text('Skills', style: Act0SkinTokensV1.headline),
+          const Text(
+            'Saved answers, not a mastery score.',
+            style: Act0SkinTokensV1.secondary,
+          ),
+          if (weak.isEmpty)
+            Text(
+              input.skillProgress.every((skill) => skill.answersNeeded > 0)
+                  ? 'Not enough answers yet'
+                  : 'No sufficiently sampled skills with misses yet.',
+              style: Act0SkinTokensV1.body,
+            )
+          else
+            for (final skill in weak) _skillRow(skill, 'top'),
+          _progressDetails('See all', [
+            for (final skill in input.skillProgress) _skillRow(skill, 'all'),
+          ], key: const Key('act0_you_skill_see_all')),
+          if (input.openLeakDashboard != null)
+            Act0SkinListRowV1(
+              controlKey: const Key('act0_you_skill_leak_dashboard'),
+              title: Act0LeakDashboardV1.title,
+              onTap: () {
+                final dashboard = input.openLeakDashboard!();
+                if (dashboard != null) _showLeakDashboard(context, dashboard);
+              },
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _skillRow(Act0SkillProgressV1 skill, String section) {
+    final launch = skill.needsWork ? input.skillPractice[skill.skill] : null;
+    return Act0SkinListRowV1(
+      controlKey: Key('act0_you_skill_${section}_${skill.skill}'),
+      title: skill.skill,
+      subtitle: [
+        skill.status,
+        skill.counts,
+        if (skill.needsWork && launch == null) 'No unlocked drill yet',
+      ].join('\n'),
+      onTap: launch,
+    );
+  }
+
+  void _showLeakDashboard(BuildContext context, Act0LeakDashboardV1 dashboard) {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Act0SkinTokensV1.background,
+      builder: (context) => SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(Act0SkinTokensV1.screenGutter),
+          children: [
+            const Act0SkinSheetHeaderV1(title: Act0LeakDashboardV1.title),
+            if (dashboard.overall.accuracy == null)
+              const Act0SkinEmptyStateV1(
+                title: Act0LeakDashboardV1.insufficientDataLabel,
+                description: 'More independent first answers are needed.',
+              ),
+            for (final dimension in Act0LeakDimensionV1.values)
+              if (dashboard.breakdown.keys.any(
+                (key) => key.$1 == dimension,
+              )) ...[
+                Text(dimension.name, style: Act0SkinTokensV1.sectionLabel),
+                for (final entry in dashboard.breakdown.entries)
+                  if (entry.key.$1 == dimension)
+                    Act0SkinListRowV1(
+                      title: entry.key.$2,
+                      subtitle: entry.value.accuracy == null
+                          ? Act0LeakDashboardV1.insufficientDataLabel
+                          : '${entry.value.correctFirstAttempts} of '
+                                '${entry.value.firstAttempts} first answers correct',
+                      onTap: null,
+                    ),
+              ],
+          ],
+        ),
       ),
     );
   }
