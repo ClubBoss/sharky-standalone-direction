@@ -931,7 +931,7 @@ Widget _buildRunnerProgressV1(
   BuildContext context, {
   required Act0RunnerStateV1 runner,
   required VoidCallback onBack,
-  required bool showGlossary,
+  VoidCallback? onHelp,
   ({int step, int total})? extraPracticeProgress,
   String? progressLabel,
 }) {
@@ -952,12 +952,7 @@ Widget _buildRunnerProgressV1(
         : russian
         ? 'Ещё практика'
         : 'Extra practice',
-    onHelp: showGlossary
-        ? () => showAct0GlossarySheetV1(
-            context,
-            taskText: act0GlossaryTaskTextV1(runner),
-          )
-        : null,
+    onHelp: onHelp,
   );
 }
 

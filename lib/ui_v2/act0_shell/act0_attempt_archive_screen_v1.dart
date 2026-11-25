@@ -270,6 +270,7 @@ class _Act0AttemptArchiveScreenV1State
                 'Correct',
                 'Wrong',
                 'Repaired',
+                'Assisted',
               }, (value) => _view.outcome = value),
             ],
           ),
@@ -427,7 +428,10 @@ class _Act0AttemptArchiveScreenV1State
     final usedWorkedMath =
         act0IsNumberEntryChoiceV1(evidence.choiceId) &&
         evidence.assistanceKind == Act0DecisionAssistanceV1.quickHint;
-    final result = Act0AttemptArchiveViewModelV1.outcomeFor(attempt);
+    final outcome = Act0AttemptArchiveViewModelV1.outcomeFor(attempt);
+    final result = evidence.hasKnownAssistance && !evidence.isAssistedCorrect
+        ? '$outcome · Assisted'
+        : outcome;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
