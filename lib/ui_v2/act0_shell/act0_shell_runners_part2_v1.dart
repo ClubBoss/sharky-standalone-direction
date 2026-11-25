@@ -4657,7 +4657,7 @@ final _w1DisciplineApplyHjMediumRunner = _world3ButtonOpenRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Medium hand, middle seat.',
       body:
-          'KQo is not the same as early weak. In HJ with an unopened pot, the clean decision is to open rather than limp.',
+          'KQo is not the same as early weak. A limp means calling just the big blind before anyone has raised. In HJ with an unopened pot, the clean decision is to open rather than limp.',
       focusSeatIds: <String>['hj'],
       focusCardIds: <String>['hero_0', 'hero_1'],
       focusLabels: <String>['KQo', 'HJ', 'Open'],

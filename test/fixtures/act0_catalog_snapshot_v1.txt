@@ -131,7 +131,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · Another pl
 
 TASK first_table_guide_first_decision [drill] Decide with your coach
 CAPTION: The player before you raised to 2.5 BB.
-TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
+TEACH: Three choices. Fold gives up; call matches the bet and raise increases it. Raise to an amount means your total bet for the round. A reraise means raising an earlier raise; the first reraise is called a 3-bet. Two aces are the strongest starting hand, so raise to build the pot.
 Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
@@ -344,7 +344,7 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
 
 TASK hand_rankings_theory [theory] Hands use five cards
 CAPTION: Hand rank names describe made hands.
-TEACH: Ranking ladder. Learn the first four ranks in order: high card, a pair, two pair, and three of a kind.
+TEACH: Ranking ladder. Learn the first four ranks in order: high card, a pair, two pair, and three of a kind. High card means no matching ranks or stronger combination. A pair means two cards of one rank. Two pair means two separate pairs. Three of a kind means three cards of one rank.
 TEACH LABELS: High card, Pair, Two pair, Three of a kind
 Q: What do hand rankings compare?
 HINT [theoryOnly]: Start with high card, a pair, two pair, and three of a kind.
@@ -512,7 +512,7 @@ SEATS: UTG | HJ | CO 8c 9s | BTN dealer Kh Qh | SB | BB
 TASK hand_rankings_full_house_drill [drill] Hand ranking question
 AUTHORED TITLE: Full house shape
 CAPTION: A full house is three of one rank plus two of another.
-TEACH: A full house has three of one rank and two of another. The board gives you three aces, and your pocket sevens add the pair. That makes a full house, which outranks a flush.
+TEACH: A full house has three of one rank and two of another. Four of a kind means four cards of one rank. The board gives you three aces, and your pocket sevens add the pair. That makes a full house, which outranks a flush.
 TEACH LABELS: A-A-A, 7-7
 Q: What hand do you have here?
 HINT [theoryOnly]: Trips plus a pair make a full house.
@@ -898,7 +898,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB
 
 TASK positions_late_seat [drill] Late seat meaning
 CAPTION: All six players are still in the hand. No one has acted on the flop yet. Read the first pass around the table.
-TEACH: The first pass after the flop. From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass.
+TEACH: The first pass after the flop. From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass. Check means passing without betting when no bet is facing you.
 TEACH LABELS: Street, Recorded actions, Chips behind
 TEACH TABLE: Flop | Board 7h 8s 2c | Pot 6 BB | Seat CO | Decision sb | Seat focus co | Tap btn, utg, bb | Center First pass on the flop | Facts rainbow
 Q: Who can use the information if UTG checks before their turn?
@@ -2039,7 +2039,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · 
 
 TASK apply_hj_decision [drill] HJ, medium hand
 CAPTION: HJ. Pot unopened. You hold K♦ Q♣.
-TEACH: Medium hand, middle seat. KQo is not the same as early weak. In HJ with an unopened pot, the clean decision is to open rather than limp.
+TEACH: Medium hand, middle seat. KQo is not the same as early weak. A limp means calling just the big blind before anyone has raised. In HJ with an unopened pot, the clean decision is to open rather than limp.
 TEACH LABELS: KQo, HJ, Open
 Q: By the Sharky starting chart, what is the clean action?
 HINT [theoryOnly]: Medium hand, middle seat, unopened pot. Open with a clear reason.
@@ -2166,7 +2166,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO opens 2.5
 
 TASK position_six_seats_positions_theory [theory] Six seat labels
 CAPTION: Six seats, one order.
-TEACH: All six seats matter. Clockwise from UTG: HJ, CO, BTN, SB, BB.
+TEACH: All six seats matter. Clockwise from UTG: HJ, CO, BTN, SB, BB. MP means middle position; this six-seat table labels the seat before CO as HJ.
 TEACH LABELS: UTG, HJ, CO, BTN, SB, BB
 Q: Read the seat order.
 HINT [theoryOnly]: Use the table labels first. Button and blinds are only part of the map.
