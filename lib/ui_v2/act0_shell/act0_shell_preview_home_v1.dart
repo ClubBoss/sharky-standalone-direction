@@ -380,6 +380,87 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     ];
   }
 
+  List<String>? _returnRefreshPlanForHomeV1(
+    Act0ShellStateV1 state, {
+    String? lastActiveDay,
+  }) {
+    if (_returnRefreshOfferDayV1 != _todayDateString()) return null;
+    final worlds = _progressedWorlds(state);
+    final pool = <String, Iterable<String>>{};
+    for (final entry in _dailyDeckEntries(state)) {
+      if (!_completedTaskIds.contains(entry.taskId)) continue;
+      final lesson = _lessonById(
+        _worldById(worlds, entry.worldId).lessons,
+        entry.lessonId,
+      );
+      final task = lesson.taskList
+          .where((task) => task.taskId == entry.taskId)
+          .firstOrNull;
+      if (task == null ||
+          task.repairOnly ||
+          task.multiStreet != null ||
+          task.runner.options.isEmpty ||
+          !_runnerAllowedByNineSeatGateV1(task.runner))
+        continue;
+      pool[entry.taskId] = act0SkillsForTaskV1(entry.lessonId, entry.taskId);
+    }
+    final history = <String, DateTime>{};
+    final now = widget.clock.nowUtc();
+    for (final record in _learningEvidenceHistoryV1.records) {
+      final at = record.recordedAtUtc;
+      final id =
+          act0DailyDealRecipeV1(record.taskId)?.sourceTaskId ??
+          record.sourceTaskId;
+      if (at == null || at.isAfter(now) || !pool.containsKey(id)) continue;
+      if (history[id]?.isAfter(at) != true) history[id] = at;
+    }
+    if (lastActiveDay != null) {
+      return act0ReturnRefreshPlanV1(
+        lastActiveDay: lastActiveDay,
+        today: _todayDateString(),
+        finishedDrills: pool,
+        lastSeenByDrill: history,
+      );
+    }
+    return act0ReturnRefreshDrillsV1(pool, history);
+  }
+
+  void _startReturnRefreshV1(List<String> plan) {
+    if (_returnRefreshOfferDayV1 != _todayDateString()) return;
+    if (_learningRunV1 != null) _closeLearningRunForLearnExitV1();
+    _returnRefreshSelectionV1 = (
+      worldId: _selectedWorldId,
+      lessonId: _selectedLessonId,
+      taskId: _selectedTaskId,
+    );
+    _returnRefreshQueueV1 = Act0DailyPracticeQueueV1(taskIds: plan);
+    if (!_launchDailyPracticeQueueTaskV1()) {
+      _endReturnRefreshV1(finished: false);
+    }
+  }
+
+  void _endReturnRefreshV1({required bool finished}) {
+    if (finished) _returnRefreshOfferDayV1 = '';
+    _pendingReviewKindV1 = null;
+    final selection = _returnRefreshSelectionV1;
+    if (selection != null) {
+      _selectedWorldId = selection.worldId;
+      _selectedLessonId = selection.lessonId;
+      _selectedTaskId = selection.taskId;
+    }
+    _returnRefreshSelectionV1 = null;
+    _returnRefreshQueueV1 = null;
+    _activePracticeGroupId = null;
+    _activeLearningEvidenceRunKeyV1 = null;
+    _activeActionSequenceStageV1 = null;
+    _rapidPracticeLoop = false;
+    _selectedOptionId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _teachingStepIndex = 0;
+    _returnToRunnerOriginV1(Act0ShellTabV1.home);
+    _persistProgress();
+  }
+
   Act0DailyPracticeQueueV1 _dailyPracticeQueueForDeckV1(
     List<_Act0DailyDeckEntryV1> deck,
   ) {

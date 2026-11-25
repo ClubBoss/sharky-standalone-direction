@@ -81,6 +81,7 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
     _activeActionSequenceStageV1 =
         actionSequence == null ||
             diagnosticLearningEntry != null ||
+            _returnRefreshQueueV1 != null ||
             spacedReview
         ? null
         : actionSequence.stageForTask(task.taskId);

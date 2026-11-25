@@ -595,7 +595,7 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
 
   bool _launchDailyPracticeQueueTaskV1() {
     _ensureDailyCountDayV1();
-    final taskId = _dailyPracticeQueue.nextTaskId;
+    final taskId = _activeDailyQueueV1.nextTaskId;
     if (taskId == null) return false;
     final state = _catalogStateV1;
     final entries = _dailyDeckEntries(

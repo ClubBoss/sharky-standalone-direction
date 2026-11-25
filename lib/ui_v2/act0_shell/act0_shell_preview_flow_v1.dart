@@ -46,6 +46,7 @@ extension _PreviewFlowV1 on _Act0ShellPreviewScreenV1State {
     bool awardXp = true,
   }) {
     if (_diagnosticLearningEntryV1 != null ||
+        _returnRefreshQueueV1 != null ||
         act0DailyDealRecipeV1(selectedTask.taskId) != null)
       return;
     final taskId = _selectedTaskId;

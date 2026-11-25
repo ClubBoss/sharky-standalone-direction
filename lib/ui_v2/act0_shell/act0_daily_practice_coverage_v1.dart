@@ -70,6 +70,21 @@ Act0DailyPracticeExhaustionV1 exhaustionV1(
       ? Act0DailyPracticeExhaustionStatusV1.exhausted
       : Act0DailyPracticeExhaustionStatusV1.recycling;
 
+  return (
+    status: status,
+    recommendedDrillIds: act0OldestSeenIdsV1(
+      ids,
+      recentHistory,
+    ).take(3).toList(),
+  );
+}
+
+/// Shared ordering for both daily practice and return refresh.
+List<String> act0OldestSeenIdsV1(
+  Iterable<String> pool,
+  Map<String, DateTime> recentHistory,
+) {
+  final ids = pool.toSet().toList();
   ids.sort((left, right) {
     final leftSeen = recentHistory[left];
     final rightSeen = recentHistory[right];
@@ -82,5 +97,5 @@ Act0DailyPracticeExhaustionV1 exhaustionV1(
     return left.compareTo(right);
   });
 
-  return (status: status, recommendedDrillIds: ids.take(3).toList());
+  return ids;
 }
