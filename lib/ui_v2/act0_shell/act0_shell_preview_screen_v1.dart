@@ -10,6 +10,8 @@ import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
 import 'act0_skill_progress_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
+import 'act0_civil_days_v1.dart';
+import 'act0_return_refresh_v1.dart';
 import 'act0_warmup_v1.dart';
 import 'act0_path_progress_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
@@ -111,6 +113,8 @@ import 'act0_practice_reminder_v1.dart';
 import 'act0_growth_v1.dart';
 import 'act0_growth_links_v1.dart';
 
+export 'act0_civil_days_v1.dart' show act0AreConsecutiveCivilDaysV1;
+
 part 'act0_shell_preview_telemetry_v1.dart';
 part 'act0_shell_preview_copy_v1.dart';
 part 'act0_shell_preview_debug_surfaces_v1.dart';
@@ -129,29 +133,6 @@ part 'act0_shell_preview_growth_v1.dart';
 
 @visibleForTesting
 bool act0DevMenuEnabledV1({required bool isReleaseMode}) => !isReleaseMode;
-
-/// Consecutive *local calendar* days, independent of elapsed UTC hours.
-///
-/// Both inputs are local YYYY-MM-DD keys produced by _todayDateString().
-/// Normalizing civil dates to UTC prevents a 23-hour spring DST day from
-/// incorrectly breaking a completed daily-practice streak.
-@visibleForTesting
-bool act0AreConsecutiveCivilDaysV1(String previousDay, String today) {
-  if (previousDay.isEmpty) return false;
-  try {
-    final previous = DateTime.parse(previousDay);
-    final current = DateTime.parse(today);
-    final previousCivil = DateTime.utc(
-      previous.year,
-      previous.month,
-      previous.day,
-    );
-    final currentCivil = DateTime.utc(current.year, current.month, current.day);
-    return currentCivil.difference(previousCivil) == const Duration(days: 1);
-  } catch (_) {
-    return false;
-  }
-}
 
 Act0RepairIntentV1 _migratePersistedW1HeroButtonIntentV1(
   Act0RepairIntentV1 intent,
@@ -1236,6 +1217,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.numberEntryV1 = const bool.fromEnvironment('numberEntryV1'),
     this.goalRouteV1 = const bool.fromEnvironment('goalRouteV1'),
     this.warmupV1 = const bool.fromEnvironment('warmupV1'),
+    this.returnRefreshV1 = const bool.fromEnvironment('returnRefreshV1'),
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
     this.telemetrySink,
@@ -1258,6 +1240,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool numberEntryV1;
   final bool goalRouteV1;
   final bool warmupV1;
+  final bool returnRefreshV1;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
   final Act0TelemetrySinkV1? telemetrySink;
@@ -1581,6 +1564,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String _lastDailyDate = '';
   String _lastShortSessionDayV1 = '';
   bool _returningAfterBreakV1 = false;
+  String _returnRefreshOfferDayV1 = '';
+  Act0DailyPracticeQueueV1? _returnRefreshQueueV1;
+  ({String worldId, String lessonId, String taskId})? _returnRefreshSelectionV1;
+  Act0DailyPracticeQueueV1 get _activeDailyQueueV1 =>
+      _returnRefreshQueueV1 ?? _dailyPracticeQueue;
   bool _firstLessonReminderAnsweredV1 = false;
   _Act0LessonResumeV1? _lessonResumeV1;
   final _multiStreetRunsV1 = <String, _Act0MultiStreetRunV1>{};
@@ -3185,6 +3173,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         _completedTaskIds.contains(playSelectedTask.taskId);
     final playTaskAwardXp =
         openedAsSpacedReview ||
+            _returnRefreshQueueV1 != null ||
             _diagnosticLearningEntryV1 != null ||
             playSelectedTask == null ||
             (playTaskAlreadyCompleted &&
@@ -3280,7 +3269,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : null;
     final dailyQueueIndex =
         isPlayRunner && _activePracticeGroupId == 'daily' && _rapidPracticeLoop
-        ? _dailyPracticeQueue.taskIds.indexOf(_selectedTaskId)
+        ? _activeDailyQueueV1.taskIds.indexOf(_selectedTaskId)
         : -1;
     final activePlayRunner = placementSource != null
         ? placementSource.runner.copyWith(
@@ -3290,7 +3279,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         : dailyQueueIndex >= 0
         ? playRunner?.copyWith(
             beatIndex: dailyQueueIndex + 1,
-            beatCount: _dailyPracticeQueue.taskIds.length,
+            beatCount: _activeDailyQueueV1.taskIds.length,
           )
         : playRunner;
     final accessibilityPrototypeStep =
@@ -3518,7 +3507,26 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         }
       },
     );
-    final repeatedMissSource = _isReplayDrillV1
+    final refreshPlan =
+        widget.returnRefreshV1 &&
+            useDailyHome &&
+            _tab == Act0ShellTabV1.home &&
+            !_showPlacement &&
+            !_showWelcome
+        ? _returnRefreshPlanForHomeV1(state)
+        : null;
+    final refreshAction = refreshPlan == null
+        ? null
+        : Act0AcademyHomeNextActionV1(
+            title: 'Refresh your skills',
+            subtitle: 'Practice a few familiar tasks before your next lesson.',
+            ctaLabel: 'Quick refresh (${refreshPlan.length} tasks)',
+            onPressed: () => _setStateForRecoveryV1(callbackEpochV1, () {
+              if (_tab == Act0ShellTabV1.home)
+                _startReturnRefreshV1(refreshPlan);
+            }),
+          );
+    final repeatedMissSource = _isReplayDrillV1 || _returnRefreshQueueV1 != null
         ? null
         : _secondLessonMissSourceV1(playSelectedTask, playRunner);
     final nextExample = repeatedMissSource == null
@@ -3540,6 +3548,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       () {
         _warmupQueueV1 = [];
         _warmupActiveV1 = false;
+        if (_returnRefreshQueueV1 != null) {
+          _endReturnRefreshV1(finished: false);
+          return;
+        }
         if (_isReplayDrillV1) {
           _finishReplayDrillV1();
           return;
@@ -3762,7 +3774,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                   )
                                   .length,
                         totalLessons: selectedWorld.lessons.length,
-                        dailyAction: dailyHomeAction,
+                        dailyAction: refreshAction ?? dailyHomeAction,
+                        onSkipRefresh: refreshAction == null
+                            ? null
+                            : () {
+                                if (_tab != Act0ShellTabV1.home) return;
+                                setState(() => _returnRefreshOfferDayV1 = '');
+                                _persistProgress();
+                                dailyHomeAction.onPressed();
+                              },
                         dayGoalDone: useDailyHome
                             ? _lastShortSessionDayV1 == _todayDateString()
                             : null,
@@ -4982,6 +5002,16 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       );
                                       return;
                                     }
+                                    if (_returnRefreshQueueV1 != null) {
+                                      if (_launchDailyPracticeQueueTaskV1())
+                                        return;
+                                      _endReturnRefreshV1(
+                                        finished:
+                                            _returnRefreshQueueV1!.nextTaskId ==
+                                            null,
+                                      );
+                                      return;
+                                    }
                                     if (sameSessionLearningDelta != null) {
                                       _emitSameSessionLearningDeltaCompletedV1(
                                         sameSessionLearningDelta,
@@ -5696,6 +5726,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     }
     _warmupQueueV1 = [];
     _warmupActiveV1 = false;
+    if (_returnRefreshQueueV1 != null) _endReturnRefreshV1(finished: false);
     final preserveRepairBridge = _shouldPreserveLearningRunForRepairBridgeV1(
       currentTab: _tab,
       requestedTab: tab,
@@ -6635,6 +6666,7 @@ class _Act0PersistedProgressV1 {
     this.profileSkillValues = const <String, int>{},
     this.recentSkillGains = const <Act0SkillGainV1>[],
     this.lastActiveDay = '',
+    this.returnRefreshOfferDay = '',
     this.lastShortSessionDay = '',
     this.firstLessonReminderAnswered = false,
     this.lessonResume,
@@ -6694,6 +6726,7 @@ class _Act0PersistedProgressV1 {
   final Map<String, int> profileSkillValues;
   final List<Act0SkillGainV1> recentSkillGains;
   final String lastActiveDay;
+  final String returnRefreshOfferDay;
   final String lastShortSessionDay;
   final bool firstLessonReminderAnswered;
   final _Act0LessonResumeV1? lessonResume;
@@ -6778,6 +6811,8 @@ class _Act0PersistedProgressV1 {
           },
       ],
       'lastActiveDay': lastActiveDay,
+      if (returnRefreshOfferDay.isNotEmpty)
+        'returnRefreshOfferDay': returnRefreshOfferDay,
       'lastShortSessionDay': lastShortSessionDay,
       'firstLessonReminderAnswered': firstLessonReminderAnswered,
       if (multiStreetRuns.isNotEmpty)
@@ -7084,6 +7119,7 @@ class _Act0PersistedProgressV1 {
       profileSkillValues: profileSkillValues,
       recentSkillGains: recentSkillGains,
       lastActiveDay: lastActiveDay,
+      returnRefreshOfferDay: (map['returnRefreshOfferDay'] ?? '').toString(),
       lastShortSessionDay: (map['lastShortSessionDay'] ?? '').toString(),
       firstLessonReminderAnswered: map['firstLessonReminderAnswered'] == true,
       lessonResume: _parseLessonResumeV1(map['lessonResume']),

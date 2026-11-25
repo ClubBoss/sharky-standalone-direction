@@ -54,6 +54,7 @@ class Act0AcademyHomeLeafInputV1 {
     this.onStartWarmup,
     this.dayGoalDone,
     this.returningAfterBreak = false,
+    this.onSkipRefresh,
     this.resumeLabel,
     this.onResumeLesson,
     this.goalRoute,
@@ -72,6 +73,7 @@ class Act0AcademyHomeLeafInputV1 {
   final VoidCallback? onStartWarmup;
   final bool? dayGoalDone;
   final bool returningAfterBreak;
+  final VoidCallback? onSkipRefresh;
   final String? resumeLabel;
   final VoidCallback? onResumeLesson;
   final Act0GoalRouteViewModelV1<Act0WorldCardV1>? goalRoute;
@@ -152,6 +154,12 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
             Act0AcademyNextActionCardV1(action: next),
             const SizedBox(height: 10),
           ],
+          if (input.onSkipRefresh != null)
+            Act0SkinSecondaryButtonV1(
+              label: 'Skip to next lesson',
+              controlKey: const Key('act0_home_skip_refresh'),
+              onPressed: input.onSkipRefresh,
+            ),
           if (input.onResumeLesson != null && input.resumeLabel != null)
             TextButton(
               style: const ButtonStyle(splashFactory: InkRipple.splashFactory),

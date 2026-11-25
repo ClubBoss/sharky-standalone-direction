@@ -85,6 +85,7 @@ Widget act0AcademyHomeRuntimeV1(
   Act0AcademyHomeNextActionV1? dailyAction,
   bool? dayGoalDone,
   bool returningAfterBreak = false,
+  VoidCallback? onSkipRefresh,
   String? resumeLabel,
   VoidCallback? onResumeLesson,
 }) {
@@ -117,6 +118,7 @@ Widget act0AcademyHomeRuntimeV1(
           : null,
       dayGoalDone: dayGoalDone,
       returningAfterBreak: returningAfterBreak,
+      onSkipRefresh: _guard(isCurrent, onSkipRefresh),
       resumeLabel: resumeLabel,
       onResumeLesson: _guard(isCurrent, onResumeLesson),
     ),

@@ -705,6 +705,9 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _completedTaskIds = <String>{};
       _lastShortSessionDayV1 = '';
       _returningAfterBreakV1 = false;
+      _returnRefreshOfferDayV1 = '';
+      _returnRefreshQueueV1 = null;
+      _returnRefreshSelectionV1 = null;
       _firstLessonReminderAnsweredV1 = false;
       _lessonResumeV1 = null;
       _multiStreetRunsV1.clear();

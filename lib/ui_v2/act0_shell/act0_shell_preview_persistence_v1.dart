@@ -450,6 +450,14 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           parsed.lastActiveDay.isNotEmpty &&
           isNewDay &&
           !act0AreConsecutiveCivilDaysV1(parsed.lastActiveDay, today);
+      _returnRefreshQueueV1 = null;
+      _returnRefreshSelectionV1 = null;
+      _returnRefreshOfferDayV1 =
+          widget.returnRefreshV1 &&
+              (parsed.returnRefreshOfferDay == today ||
+                  (act0CivilDayGapV1(parsed.lastActiveDay, today) ?? -1) >= 7)
+          ? today
+          : '';
       _firstLessonReminderAnsweredV1 = parsed.firstLessonReminderAnswered;
       final restoredPhase = Act0LessonPhaseV1.values
           .where((phase) => phase.name == parsed.resumePhase)
@@ -623,6 +631,16 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         _dailyPracticeQueue = const Act0DailyPracticeQueueV1();
         _dailyCompletedRepCount = 0;
         _rapidPracticeLoop = false;
+      }
+      if (_returnRefreshOfferDayV1 == today &&
+          _returnRefreshPlanForHomeV1(
+                state,
+                lastActiveDay: parsed.returnRefreshOfferDay == today
+                    ? null
+                    : parsed.lastActiveDay,
+              ) ==
+              null) {
+        _returnRefreshOfferDayV1 = '';
       }
     });
     final restoredLastSession = parsed.lastSessionLearnerState;
@@ -1139,6 +1157,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     final returnSelection =
         _diagnosticLearningReturnV1 ??
         _spacedReviewReturnV1 ??
+        _returnRefreshSelectionV1 ??
         (lessonExampleSource == null
             ? null
             : (
@@ -1163,6 +1182,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       profileSkillValues: _profileSkillValues,
       recentSkillGains: _recentSkillGains,
       lastActiveDay: today,
+      returnRefreshOfferDay: _returnRefreshOfferDayV1,
       lastShortSessionDay: _lastShortSessionDayV1,
       firstLessonReminderAnswered: _firstLessonReminderAnsweredV1,
       lessonResume: _lessonResumeV1,
@@ -1479,7 +1499,14 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             .toList(growable: false);
       }
       if (_activePracticeGroupId == 'daily') _ensureDailyCountDayV1();
-      if (_activePracticeGroupId == 'daily' &&
+      if (_returnRefreshQueueV1 case final refresh?) {
+        if (latestRecord.runKind == 'practice') {
+          _returnRefreshQueueV1 = refresh.answer(
+            latestRecord.taskId,
+            independentCorrect: latestRecord.isIndependentCorrect,
+          );
+        }
+      } else if (_activePracticeGroupId == 'daily' &&
           latestRecord.runKind == 'practice' &&
           _dailyPracticeQueue.nextTaskId == latestRecord.taskId) {
         _dailyPracticeQueue = _dailyPracticeQueue.answer(
