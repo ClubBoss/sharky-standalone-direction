@@ -108,6 +108,7 @@ Widget act0AcademyHomeRuntimeV1(
             onPressed: _guard(isCurrent, legacy.onContinue)!,
           ),
       onOpenDevMenu: _guard(isCurrent, legacy.onOpenDevMenu),
+      onStartWarmup: _guard(isCurrent, legacy.onStartWarmup),
       onStartDailyPractice: dayGoalDone == null
           ? _guard(isCurrent, legacy.onStartDailyDrill)
           : null,

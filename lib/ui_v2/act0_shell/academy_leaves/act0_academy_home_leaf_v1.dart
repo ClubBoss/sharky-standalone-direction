@@ -51,6 +51,7 @@ class Act0AcademyHomeLeafInputV1 {
     this.backdrop,
     this.onOpenDevMenu,
     this.onStartDailyPractice,
+    this.onStartWarmup,
     this.dayGoalDone,
     this.returningAfterBreak = false,
     this.resumeLabel,
@@ -68,6 +69,7 @@ class Act0AcademyHomeLeafInputV1 {
   final ImageProvider? backdrop;
   final VoidCallback? onOpenDevMenu;
   final VoidCallback? onStartDailyPractice;
+  final VoidCallback? onStartWarmup;
   final bool? dayGoalDone;
   final bool returningAfterBreak;
   final String? resumeLabel;
@@ -168,6 +170,11 @@ class Act0AcademyHomeLeafV1 extends StatelessWidget {
                   fontSize: 14,
                 ),
               ),
+            ),
+          if (input.onStartWarmup != null)
+            Act0SkinSecondaryButtonV1(
+              label: 'Warm-up · 5 min',
+              onPressed: input.onStartWarmup,
             ),
           if (input.onStartDailyPractice != null)
             Align(
