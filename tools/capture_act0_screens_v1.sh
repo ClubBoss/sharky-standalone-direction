@@ -4,8 +4,22 @@ set -euo pipefail
 surface_request="${1:-}"
 device="${2:-}"
 
+# V9 uses the production shell's widget route at the reference phone viewport,
+# not the destructive install/restart lane below. Save a report even on failure.
+if [[ "$surface_request" == "v9" && "$device" == "walkthrough" ]]; then
+  root="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+  cd "$root"
+  mkdir -p build/v9
+  # Delete only previous walkthrough artifacts, not other capture lanes.
+  rm -rf build/v9/w{01..12} build/v9/REPORT.md
+  status=0
+  flutter test tools/v9_walkthrough_v1.dart --reporter expanded || status=$?
+  python3 tools/v9_report_v1.py || exit 1
+  exit "$status"
+fi
+
 if [[ "$device" != "compact" ]]; then
-  echo 'Usage: ./tools/capture_act0_screens_v1.sh <home|learn|practice|review|profile|all> compact' >&2
+  echo 'Usage: ./tools/capture_act0_screens_v1.sh <home|learn|practice|review|profile|all> compact | v9 walkthrough' >&2
   exit 64
 fi
 
@@ -17,7 +31,7 @@ case "$surface_request" in
     surfaces=(home learn practice review profile)
     ;;
   *)
-    echo 'Usage: ./tools/capture_act0_screens_v1.sh <home|learn|practice|review|profile|all> compact' >&2
+    echo 'Usage: ./tools/capture_act0_screens_v1.sh <home|learn|practice|review|profile|all> compact | v9 walkthrough' >&2
     exit 64
     ;;
 esac

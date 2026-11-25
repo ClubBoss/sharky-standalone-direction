@@ -96,26 +96,38 @@ Future<void> _mount(
   bool firstRun = false,
   bool numberEntryV1 = false,
   double? textScale,
+  bool capture = false,
 }) async {
-  await t.pumpWidget(
-    MaterialApp(
-      theme: act0WidgetTestThemeV1,
-      locale: const Locale('en'),
-      builder: textScale == null
-          ? null
-          : (context, child) => MediaQuery(
-              data: MediaQuery.of(
-                context,
-              ).copyWith(textScaler: TextScaler.linear(textScale)),
-              child: child!,
-            ),
-      home: Act0ShellPreviewScreenV1(
-        key: UniqueKey(),
-        initialTab: Act0ShellTabV1.home,
-        showPlacementOnStart: firstRun,
-        numberEntryV1: numberEntryV1,
-      ),
+  final app = MaterialApp(
+    theme: capture
+        ? ThemeData.dark(
+            useMaterial3: true,
+          ).copyWith(splashFactory: InkRipple.splashFactory)
+        : act0WidgetTestThemeV1,
+    debugShowCheckedModeBanner: !capture,
+    locale: const Locale('en'),
+    builder: textScale == null
+        ? null
+        : (context, child) => MediaQuery(
+            data: MediaQuery.of(
+              context,
+            ).copyWith(textScaler: TextScaler.linear(textScale)),
+            child: child!,
+          ),
+    home: Act0ShellPreviewScreenV1(
+      key: UniqueKey(),
+      initialTab: Act0ShellTabV1.home,
+      showPlacementOnStart: firstRun,
+      numberEntryV1: numberEntryV1,
     ),
+  );
+  await t.pumpWidget(
+    capture
+        ? RepaintBoundary(
+            key: const Key('act0_walkthrough_capture'),
+            child: app,
+          )
+        : app,
   );
   await _settle(t, 'mount');
 }
@@ -217,6 +229,7 @@ Future<int> _openSavedCourseTask(
   bool persistSeed = false,
   bool numberEntryV1 = false,
   double? textScale,
+  bool capture = false,
 }) async {
   final state = Act0ShellStateV1.sample;
   final world = state.worldById(worldId);
@@ -287,7 +300,12 @@ Future<int> _openSavedCourseTask(
   t.view.physicalSize = const Size(393, 852);
   t.view.devicePixelRatio = 1;
   addTearDown(t.view.reset);
-  await _mount(t, numberEntryV1: numberEntryV1, textScale: textScale);
+  await _mount(
+    t,
+    numberEntryV1: numberEntryV1,
+    textScale: textScale,
+    capture: capture,
+  );
   await t.runAsync(() async {
     await Future<void>.delayed(const Duration(milliseconds: 50));
   });
@@ -2312,7 +2330,48 @@ void _registerFocusedCases() {
   });
 }
 
-void registerLongSessionRoutes({({int first, int last})? tierARange}) {
+/// Optional capture observer. The ordinary long-session tests keep their
+/// original assertions and restart/negative-control behavior.
+abstract class Act0LongSessionObserverV1 {
+  void start(int world, Set<String> tasks, int priorXp);
+  Future<void> screen(WidgetTester tester);
+  Future<void> wrongAnswer(WidgetTester tester);
+  Future<void> finalResult(WidgetTester tester);
+  void snapshot(Map<String, dynamic> progress);
+  void failure(Object error);
+  void finish();
+}
+
+Future<void> Function(WidgetTester) _withWalkthroughV1(
+  Act0LongSessionObserverV1? observer,
+  Future<void> Function(WidgetTester) route,
+) {
+  if (observer == null) return route;
+  return (tester) async {
+    try {
+      await route(tester);
+    } catch (error) {
+      observer.failure(error);
+      try {
+        observer.snapshot(await _saved(tester));
+      } catch (_) {
+        // The app may have failed before its first save; preserve the error.
+      }
+      rethrow;
+    } finally {
+      observer.finish();
+    }
+  };
+}
+
+void registerLongSessionRoutes({
+  ({int first, int last})? tierARange,
+  Act0LongSessionObserverV1? walkthrough,
+}) {
+  assert(
+    walkthrough == null ||
+        (tierARange != null && tierARange.first == tierARange.last),
+  );
   final fullRoute =
       tierARange == null &&
       const bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
@@ -2339,13 +2398,16 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
-    final useRulesCheck = firstWorld == 2;
+    final useRulesCheck = walkthrough == null && firstWorld == 2;
     final restoreSaved =
         w7ToW8 || pilot || (tierARange != null && firstWorld > 1);
-    final checkNextWorld = tierARange != null && lastWorld < 7;
+    final checkNextWorld =
+        walkthrough == null && tierARange != null && lastWorld < 7;
     testWidgets(
-      'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
-      (t) async {
+      walkthrough != null
+          ? 'V9 walkthrough W$firstWorld'
+          : 'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
+      _withWalkthroughV1(walkthrough, (t) async {
         _tapLog.clear();
         SharedPreferences.setMockInitialValues(<String, Object>{});
         t.view.physicalSize = const Size(393, 852);
@@ -2402,8 +2464,22 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
         final restartedWorlds = <int>{};
         final enteredWorlds = <int>{};
         var complete = false;
+        var finalResultAdvanced = false;
         const w7Checkpoint = 'w7_checkpoint_river_card_excludes_hand';
         var priorXp = 0;
+        if (walkthrough != null) {
+          t.platformDispatcher.systemFontFamily = 'Roboto';
+          addTearDown(t.platformDispatcher.resetSystemFontFamily);
+        }
+        walkthrough?.start(
+          firstWorld,
+          taskWorld.keys.toSet(),
+          catalog.worlds
+              .where((w) => w.worldNumber < firstWorld)
+              .expand((w) => w.lessons)
+              .expand((l) => l.courseTaskList)
+              .fold(0, (sum, task) => sum + task.rewardXp),
+        );
         if (restoreSaved) {
           priorXp = await _openSavedCourseTask(
             t,
@@ -2411,9 +2487,11 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             taskId: worlds.first.lessons.first.courseTaskList.first.taskId,
             finishTeaching: tierARange == null,
             persistSeed: tierARange != null,
+            capture: walkthrough != null,
           );
         } else {
-          await _mount(t, firstRun: true);
+          await _mount(t, firstRun: true, capture: walkthrough != null);
+          await walkthrough?.screen(t);
           await _onboard(t, useRulesCheck: useRulesCheck);
         }
 
@@ -2427,6 +2505,22 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           final activeShell = t
               .widgetList<Act0LessonRunnerShellV1>(runnerFinder)
               .firstOrNull;
+          final decisionPrepared =
+              walkthrough != null &&
+              activeShell != null &&
+              activeShell.runner.phase == Act0LessonPhaseV1.drill &&
+              activeShell.runner.activeTeachingStep == null &&
+              find
+                  .byKey(const Key('act0_shell_result_close'))
+                  .evaluate()
+                  .isEmpty;
+          if (decisionPrepared) {
+            await pumpSourceChoreographyToDecisionV1(
+              t,
+              activeShell.runner.table,
+            );
+          }
+          await walkthrough?.screen(t);
           final activeTask = activeShell?.selectedTaskId;
           final attempts = activeTask == null
               ? ++navigationAttempts
@@ -2461,7 +2555,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                 )
                 .runner;
             if (runner.phase == Act0LessonPhaseV1.drill) {
-              await answerAct0RoutePracticeV1(t, correct: false);
+              await answerAct0RoutePracticeV1(t, correct: walkthrough != null);
             } else {
               await tapAct0RoutePracticeKeyV1(
                 t,
@@ -2477,7 +2571,18 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             final world = atNextWorld
                 ? lastWorld + 1
                 : taskWorld[taskId] ?? repairWorld[taskId];
-            if (world == null) break; // Never answer a future-world task.
+            if (world == null) {
+              // A final result may lead directly into the next world. Do not
+              // answer any of its tasks in this independently scoped run.
+              if (walkthrough != null) {
+                final snapshot = await _saved(t);
+                walkthrough.snapshot(snapshot);
+                complete = (snapshot['completedTaskIds'] as List)
+                    .toSet()
+                    .containsAll(taskWorld.keys);
+              }
+              break;
+            }
             if (repairWorld.containsKey(taskId)) {
               expect(confirmedMisses, contains(world), reason: taskId);
             }
@@ -2524,8 +2629,15 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                 runner.selectedOptionId == null &&
                 runner.options.isNotEmpty;
             if (deciding) {
-              await pumpSourceChoreographyToDecisionV1(t, runner.table);
-              final wrong = runner.options.where((o) => !o.isCorrect).toList();
+              if (!decisionPrepared)
+                await pumpSourceChoreographyToDecisionV1(t, runner.table);
+              final wrong = runner.options
+                  .where(
+                    (o) => walkthrough == null
+                        ? !o.isCorrect
+                        : o.quality == Act0FeedbackQualityV1.wrong,
+                  )
+                  .toList();
               final b19Miss =
                   pilot &&
                   b19MissTasks.contains(taskId) &&
@@ -2534,11 +2646,13 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   b19Miss ||
                   (!missedWorlds.contains(world) &&
                       wrong.isNotEmpty &&
-                      (world != 7 || taskId == w7Checkpoint));
+                      (walkthrough != null ||
+                          world != 7 ||
+                          taskId == w7Checkpoint));
               final choice = injectMiss
                   ? wrong.first
                   : runner.options.firstWhere(
-                      pilot
+                      pilot || walkthrough != null
                           ? act0RunnerOptionIsPreferredV1
                           : (o) => o.isCorrect,
                     );
@@ -2576,6 +2690,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   findsOneWidget,
                   reason: '$taskId should show a way to continue from feedback',
                 );
+                await walkthrough?.wrongAnswer(t);
                 final missSnapshot = await _saved(t);
                 final evidence =
                     (missSnapshot['learningEvidenceHistory'] as List)
@@ -2586,7 +2701,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   ),
                   isTrue,
                 );
-                if (taskId == w7Checkpoint) {
+                if (walkthrough == null && taskId == w7Checkpoint) {
                   expect(
                     find.textContaining('The 2♠ is on the board').last,
                     findsOneWidget,
@@ -2602,7 +2717,8 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
               final worldTotal = taskWorld.values
                   .where((n) => n == world)
                   .length;
-              if (!restartedWorlds.contains(world) &&
+              if (walkthrough == null &&
+                  !restartedWorlds.contains(world) &&
                   (world == 7
                       ? taskId == w7Checkpoint && injectMiss
                       : worldAnswered >= worldTotal ~/ 2)) {
@@ -2627,17 +2743,35 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             final completed = (routeSnapshot['completedTaskIds'] as List)
                 .cast<String>()
                 .toSet();
-            complete = !checkNextWorld && completed.containsAll(taskWorld.keys);
+            walkthrough?.snapshot(routeSnapshot);
+            complete =
+                !checkNextWorld &&
+                completed.containsAll(taskWorld.keys) &&
+                (walkthrough == null ||
+                    find
+                        .byKey(const Key('act0_shell_result_close'))
+                        .evaluate()
+                        .isEmpty);
             if (complete) break;
           }
           // A lesson Result has one primary next step (B36). The learner takes
           // it, as on main; header close is only the fallback when no primary
           // is offered.
           final resultClose = find.byKey(const Key('act0_shell_result_close'));
+          var isFinalResult = false;
+          if (walkthrough != null && resultClose.evaluate().isNotEmpty) {
+            final saved = await _saved(t);
+            walkthrough.snapshot(saved);
+            isFinalResult = (saved['completedTaskIds'] as List)
+                .toSet()
+                .containsAll(taskWorld.keys);
+            if (isFinalResult) await walkthrough.finalResult(t);
+          }
           if (resultClose.evaluate().isNotEmpty &&
               await _tapFirst(t, [
                 find.byKey(const Key('act0_shell_block_summary_continue_cta')),
               ])) {
+            if (isFinalResult) finalResultAdvanced = true;
             continue;
           }
           if (resultClose.evaluate().isNotEmpty) {
@@ -2649,6 +2783,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
               isTrue,
               reason: 'Step $step: Result close control is unreachable',
             );
+            if (isFinalResult) finalResultAdvanced = true;
             expect(
               resultClose,
               findsNothing,
@@ -2758,6 +2893,12 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
             );
           }
         }
+        if (walkthrough != null)
+          expect(
+            complete && finalResultAdvanced,
+            isTrue,
+            reason: 'Walkthrough must exit the final result',
+          );
         if (!complete && step == routeStepLimit) {
           fail(
             'Route reached its $routeStepLimit-step limit. '
@@ -2765,6 +2906,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           );
         }
         final snapshot = await _saved(t);
+        walkthrough?.snapshot(snapshot);
         final completed = (snapshot['completedTaskIds'] as List)
             .cast<String>()
             .toSet();
@@ -2804,16 +2946,17 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
                   w3BlindVsBlindChoicesV1.length +
                   y5bNewChoicesV1.length +
                   (fullRoute ? y5cNewChoicesV1.length : y5cTasksInWorldV1(7));
-        expect(
-          tierARange != null
-              ? catalog.worlds
-                    .where((world) => world.worldNumber <= 7)
-                    .expand((world) => world.lessons)
-                    .expand((lesson) => lesson.courseTaskList)
-                    .length
-              : taskWorld.length,
-          useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
-        );
+        if (walkthrough == null)
+          expect(
+            tierARange != null
+                ? catalog.worlds
+                      .where((world) => world.worldNumber <= 7)
+                      .expand((world) => world.lessons)
+                      .expand((lesson) => lesson.courseTaskList)
+                      .length
+                : taskWorld.length,
+            useRulesCheck ? expectedCount - w1Ids.length : expectedCount,
+          );
         if (useRulesCheck) expect(completed.intersection(w1Ids), isEmpty);
         if (fullRoute && !w7ToW8 && !pilot) {
           expect(completed, contains('w12_checkpoint_full_loop_line'));
@@ -2821,7 +2964,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           expect(completed, containsAll(cur04bSummaryChoicesV1.keys));
         }
         expect(missedWorlds, expectedWorlds);
-        expect(restartedWorlds, expectedWorlds);
+        if (walkthrough == null) expect(restartedWorlds, expectedWorlds);
         expect(snapshot['skippedTaskIds'], isEmpty);
         expect(
           snapshot['earnedXp'],
@@ -2842,7 +2985,7 @@ void registerLongSessionRoutes({({int first, int last})? tierARange}) {
           expect(restored['earnedXp'], snapshot['earnedXp']);
         }
         expect(t.takeException(), isNull);
-      },
+      }),
       timeout: Timeout(
         Duration(minutes: fullRoute ? 8 : (tierARange != null ? 6 : 5)),
       ),
