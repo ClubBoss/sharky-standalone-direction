@@ -124,3 +124,52 @@ class Act0StreetSummaryV1 {
     );
   }
 }
+
+/// A read-only replay of only the authored decision prefix. No attempt,
+/// answer, future street or inferred action is used to build this journal.
+class Act0TaskStreetReplayV1 {
+  Act0TaskStreetReplayV1(Act0HandTimelinePrefixV1? source, this.decisionStreet)
+    : prefix = source?.takeEvents(
+        source.events
+            .takeWhile((event) => event.street.index <= decisionStreet.index)
+            .length,
+      );
+
+  Act0StreetSummaryV1 get summary =>
+      Act0StreetSummaryV1(prefix, decisionStreet: decisionStreet);
+
+  final Act0HandTimelinePrefixV1? prefix;
+  final PokerStreet decisionStreet;
+
+  Iterable<Act0HandEventV1> get _events =>
+      (prefix?.events ?? const <Act0HandEventV1>[]).takeWhile(
+        (event) => event.street.index <= decisionStreet.index,
+      );
+
+  List<String> get labels => [
+    for (final event in _events)
+      switch (event) {
+        Act0HandDealV1(:final street, :final cards) =>
+          '${pokerStreetToString(street)}: ${cards.join(' ')}',
+        Act0HandActionV1(
+          :final street,
+          :final seat,
+          :final verb,
+          :final chipsAdded,
+        ) =>
+          '${pokerStreetToString(street)}: $seat · ${verb.name}'
+              '${chipsAdded == 0 ? '' : ' ${chipsAdded / prefix!.bigBlind} BB'}',
+      },
+  ];
+
+  Map<String, int> get streetPositions => {
+    'Preflop': 0,
+    for (final (index, event) in _events.indexed)
+      if (event is Act0HandDealV1) pokerStreetToString(event.street): index + 1,
+  };
+
+  List<String> boardAt(int position) => [
+    for (final event in _events.take(position))
+      if (event is Act0HandDealV1) ...event.cards,
+  ];
+}

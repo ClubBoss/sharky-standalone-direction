@@ -16,6 +16,7 @@ import 'act0_predecision_card_focus_v1.dart';
 import 'act0_prechoice_answer_cue_policy_v1.dart';
 import 'act0_street_summary_preview_v1.dart';
 import 'act0_street_summary_v1.dart';
+import 'act0_attempt_replay_screen_v1.dart';
 import 'act0_scene_profile_v1.dart';
 import 'act0_f7_scene_source_v1.dart';
 import 'act0_f7_scene_gate_v1.dart';
@@ -1311,17 +1312,27 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
 
   final Act0RunnerStateV1 runner;
 
-  Act0StreetSummaryV1? get streetSummary {
+  Act0TaskStreetReplayV1? get taskStreetReplay {
     if (!act0StreetSummaryPreviewV1) return null;
     final table = runner.table;
+    final street = PokerStreet.values
+        .where((street) => pokerStreetToString(street) == table.streetLabel)
+        .firstOrNull;
+    return street == null
+        ? null
+        : Act0TaskStreetReplayV1(table.handTimelinePrefix, street);
+  }
+
+  Act0StreetSummaryV1? get streetSummary {
+    final history = taskStreetReplay;
+    if (history == null) return null;
+    final table = runner.table;
     return Act0StreetSummaryV1(
-      table.handTimelinePrefix,
+      history.prefix,
       heroSeat:
           table.heroSeatId ??
           table.seats.where((seat) => seat.isHero).firstOrNull?.seatId,
-      decisionStreet: PokerStreet.values
-          .where((street) => pokerStreetToString(street) == table.streetLabel)
-          .firstOrNull,
+      decisionStreet: history.decisionStreet,
     );
   }
 
@@ -4492,39 +4503,80 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       );
     }
 
+    final taskHistory = widget.taskStreetReplay;
+    final pastStreets =
+        taskHistory?.summary.streets ?? const <Act0StreetSummaryRowV1>[];
+    final pastStreetEntry =
+        isDrill &&
+            !isTeaching &&
+            _heroDecisionReady &&
+            taskHistory != null &&
+            taskHistory.decisionStreet != PokerStreet.preflop
+        ? Act0SkinPrimaryButtonV1(
+            compact: true,
+            controlKey: const Key('act0_task_open_street_replay'),
+            label: pastStreets.isEmpty
+                ? 'Past streets · History unavailable'
+                : 'Past streets · ${pastStreets.map((row) => pokerStreetToString(row.name) + (row.potAfterBb == null ? '' : ' ${row.potAfterBb} BB')).join(' / ')}',
+            onPressed: () {
+              final navigator = Navigator.of(context);
+              navigator.push(
+                MaterialPageRoute<void>(
+                  builder: (_) => Scaffold(
+                    body: SafeArea(
+                      child: Act0AttemptReplayScreenV1.task(
+                        taskHistory: taskHistory,
+                        onClose: () => navigator.pop(),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          )
+        : null;
+
     if (widget.numberEntry == null &&
         widget.tablePresentation ==
             Act0TaskTablePresentationV1.stablePractice &&
         ((isDrill && !isTeaching) || isReview) &&
         !usesSharedActiveRunnerAllocation) {
+      final presentation = _TaskOwnedStablePracticePresentationV1(
+        runner: runner,
+        table: table,
+        isReview: isReview,
+        isRepaired: isRepairedFeedback,
+        isLessonRetryFeedback: widget.isLessonRetryFeedback,
+        question: question,
+        onBack: _handleRunnerBackV1,
+        onChooseOption: _handleChooseOptionTelemetry,
+        onContinueReview: widget.onContinueReview,
+        forwardCtaLabel: widget.feedbackForwardCtaLabel,
+        recallLabel: decisionHint != null && widget.theoryRecallStep != null
+            ? act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
+                  ? act0AcademyW1CtaV1(context, 'Need a hint?')
+                  : 'Need a hint?'
+            : null,
+        onRecall: decisionHint != null && widget.theoryRecallStep != null
+            ? _openTheoryRecallPeek
+            : null,
+        hintPeek: _showTheoryPeek ? theoryRecallPeek : null,
+        actionRecommendation: widget.actionRecommendation,
+        actionPayoff: widget.actionPayoff,
+        tableHeight: 460,
+        lowerPanelHeight: 282,
+        compactFeedback: false,
+      );
       return KeyedSubtree(
         key: const Key('act0_shell_runner_screen'),
-        child: _TaskOwnedStablePracticePresentationV1(
-          runner: runner,
-          table: table,
-          isReview: isReview,
-          isRepaired: isRepairedFeedback,
-          isLessonRetryFeedback: widget.isLessonRetryFeedback,
-          question: question,
-          onBack: _handleRunnerBackV1,
-          onChooseOption: _handleChooseOptionTelemetry,
-          onContinueReview: widget.onContinueReview,
-          forwardCtaLabel: widget.feedbackForwardCtaLabel,
-          recallLabel: decisionHint != null && widget.theoryRecallStep != null
-              ? act0AcademyW1InstructionTaskV1(widget.selectedTaskId)
-                    ? act0AcademyW1CtaV1(context, 'Need a hint?')
-                    : 'Need a hint?'
-              : null,
-          onRecall: decisionHint != null && widget.theoryRecallStep != null
-              ? _openTheoryRecallPeek
-              : null,
-          hintPeek: _showTheoryPeek ? theoryRecallPeek : null,
-          actionRecommendation: widget.actionRecommendation,
-          actionPayoff: widget.actionPayoff,
-          tableHeight: 460,
-          lowerPanelHeight: 282,
-          compactFeedback: false,
-        ),
+        child: pastStreetEntry == null
+            ? presentation
+            : Column(
+                children: [
+                  pastStreetEntry,
+                  Expanded(child: presentation),
+                ],
+              ),
       );
     }
 
@@ -4785,6 +4837,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       return Column(
         key: const Key('act0_shell_runner_screen'),
         children: [
+          if (pastStreetEntry != null) pastStreetEntry,
           SizedBox.shrink(
             key: Key('act0_shell_runner_interaction_${interactionMode.name}'),
           ),

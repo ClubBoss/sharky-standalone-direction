@@ -57,6 +57,27 @@ Act0HandTimelinePrefixV1 _prefix(
 }
 
 void main() {
+  test('task replay bounds a full source at every decision and frame', () {
+    final full = _prefix(6, PokerStreet.river);
+    for (final street in PokerStreet.values) {
+      final replay = Act0TaskStreetReplayV1(full, street);
+      final maxBoard = const [0, 3, 4, 5][street.index];
+      expect(replay.boardAt(replay.labels.length), _cards.take(maxBoard));
+      for (var position = 0; position <= replay.labels.length; position++) {
+        final board = replay.boardAt(position);
+        expect(board, _cards.take(board.length));
+        expect(board.length, lessThanOrEqualTo(maxBoard));
+        for (final card in _cards.skip(board.length)) {
+          expect(replay.labels.take(position).join(' '), isNot(contains(card)));
+        }
+      }
+      expect(
+        replay.streetPositions.keys,
+        PokerStreet.values.take(street.index + 1).map(pokerStreetToString),
+      );
+    }
+  });
+
   for (final seats in [6, 9]) {
     for (final street in PokerStreet.values) {
       test('$seats seats, ${street.name} decision', () {

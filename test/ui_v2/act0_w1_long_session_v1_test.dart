@@ -1630,8 +1630,54 @@ void _registerFocusedCases() {
       if (act0StreetSummaryPreviewV1) {
         expect(taskSummary!.streets.map((row) => row.potAfterBb), [6, 10]);
         expect(taskSummary.frameAt(PokerStreet.turn), isNull);
+        final beforeReplay = await _saved(t);
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_task_open_street_replay')),
+          ]),
+          isTrue,
+        );
+        final screen = t.widget<Act0AttemptReplayScreenV1>(
+          find.byType(Act0AttemptReplayScreenV1),
+        );
+        expect(screen.taskHistory!.decisionStreet, PokerStreet.turn);
+        expect(
+          screen.taskHistory!.boardAt(screen.taskHistory!.labels.length),
+          prefix.board,
+        );
+        expect(
+          screen.taskHistory!.streetPositions.keys,
+          isNot(contains('River')),
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_attempt_replay_previous')),
+          ]),
+          isTrue,
+        );
+        expect(
+          await _tapFirst(t, [
+            find.byKey(const Key('act0_attempt_replay_back_to_archive')),
+          ]),
+          isTrue,
+        );
+        final returned = t.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        expect(returned.selectedTaskId, taskId);
+        expect(returned.runner.beatIndex, runner.beatIndex);
+        expect(returned.runner.selectedOptionId, runner.selectedOptionId);
+        expect(
+          returned.runner.table.handTimelinePrefix?.toPayload(),
+          prefix.toPayload(),
+        );
+        expect(await _saved(t), beforeReplay);
       } else {
         expect(taskSummary, isNull);
+        expect(
+          find.byKey(const Key('act0_task_open_street_replay')),
+          findsNothing,
+        );
       }
       expect(
         await _tapFirst(t, [find.byKey(const Key('act0_shell_option_fold'))]),
