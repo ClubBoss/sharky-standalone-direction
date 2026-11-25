@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'act0_poker_reference_tools_v1.dart';
 import 'act0_task_help_policy_v1.dart';
+import 'act0_starting_chart_v1.dart';
+import 'act0_starting_hands_reference_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
 import 'skin/act0_skin_tokens_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
@@ -47,6 +49,7 @@ Future<void> showAct0GlossarySheetV1(
   bool allowGlossary = true,
   bool initialFromFlop = true,
   bool allowHandRanks = false,
+  Act0ChartSeatV1? startingHandsSeat,
   List<String> assessmentOptions = const [],
 }) {
   return showModalBottomSheet<void>(
@@ -64,6 +67,7 @@ Future<void> showAct0GlossarySheetV1(
       allowGlossary: allowGlossary,
       initialFromFlop: initialFromFlop,
       allowHandRanks: allowHandRanks,
+      startingHandsSeat: startingHandsSeat,
       assessmentOptions: assessmentOptions,
     ),
   );
@@ -78,6 +82,7 @@ class Act0GlossarySheetV1 extends StatelessWidget {
     this.allowGlossary = true,
     this.initialFromFlop = true,
     this.allowHandRanks = false,
+    this.startingHandsSeat,
     this.assessmentOptions = const [],
   });
 
@@ -87,6 +92,7 @@ class Act0GlossarySheetV1 extends StatelessWidget {
   final bool allowGlossary;
   final bool initialFromFlop;
   final bool allowHandRanks;
+  final Act0ChartSeatV1? startingHandsSeat;
   final List<String> assessmentOptions;
 
   @override
@@ -149,6 +155,15 @@ class Act0GlossarySheetV1 extends StatelessWidget {
                     key: const Key('act0_glossary_sheet'),
                     controller: controller,
                     children: [
+                      if (startingHandsSeat != null)
+                        Act0SkinListRowV1(
+                          title: 'Starting hands',
+                          controlKey: const Key('act0_help_starting_hands'),
+                          onTap: () => showAct0StartingHandsReferenceV1(
+                            context,
+                            taskSeat: startingHandsSeat,
+                          ),
+                        ),
                       if (tools.isNotEmpty)
                         Act0PokerReferenceToolsV1(
                           tools: tools,
@@ -181,7 +196,10 @@ class Act0GlossarySheetV1 extends StatelessWidget {
                             'act0_glossary_rank_${slug(rank.name)}',
                           ),
                       ],
-                      if (tools.isEmpty && inTask.isEmpty && !showRanks)
+                      if (tools.isEmpty &&
+                          inTask.isEmpty &&
+                          !showRanks &&
+                          startingHandsSeat == null)
                         const Text(
                           'Use the question and visible facts to make your decision.',
                           style: Act0SkinTokensV1.secondary,

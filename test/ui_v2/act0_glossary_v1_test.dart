@@ -9,6 +9,8 @@ import '../support/act0_source_choreography_test_wait_v1.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_sheet_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_task_help_policy_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_chart_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_starting_hands_reference_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_completed_decision_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_glossary_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -84,6 +86,196 @@ Future<void> _checkNumericTools(WidgetTester tester, Finder sheet) async {
 }
 
 void main() {
+  test('starting hands fail closed until a six-max preflop answer', () {
+    final task = _rows
+        .singleWhere((r) => r.task.taskId == 'w3_button_open')
+        .task;
+    final runner = task.runner.copyWith(phase: Act0LessonPhaseV1.drill);
+    expect(act0StartingHandsSeatForResultV1(runner), isNull);
+    expect(
+      act0StartingHandsSeatForResultV1(
+        runner.copyWith(phase: Act0LessonPhaseV1.review),
+      ),
+      isNull,
+    );
+    expect(
+      act0StartingHandsSeatForResultV1(
+        runner.copyWith(phase: Act0LessonPhaseV1.review, selectedOptionId: ''),
+      ),
+      isNull,
+    );
+    final result = runner.copyWith(
+      phase: Act0LessonPhaseV1.review,
+      selectedOptionId: runner.options.first.id,
+    );
+    expect(act0StartingHandsSeatForResultV1(result), Act0ChartSeatV1.btn);
+    expect(
+      act0StartingHandsSeatForResultV1(
+        result.copyWith(table: result.table.copyWith(streetLabel: 'Flop')),
+      ),
+      isNull,
+    );
+    expect(
+      act0StartingHandsSeatForResultV1(
+        result.copyWith(
+          table: result.table.copyWith(
+            tableFormat: Act0TableFormatV1.nineMax,
+            playerCount: 9,
+          ),
+        ),
+      ),
+      isNull,
+    );
+    expect(
+      act0StartingHandsSeatForResultV1(
+        result.copyWith(table: result.table.copyWith(playerCount: 2)),
+      ),
+      isNull,
+    );
+    expect(
+      act0StartingHandsSeatForResultV1(
+        result.copyWith(phase: Act0LessonPhaseV1.drill),
+      ),
+      isNull,
+    );
+  });
+
+  testWidgets('Help withholds chart until real chart decision is answered', (
+    tester,
+  ) async {
+    final row = _rows.singleWhere((r) => r.task.taskId == 'w3_button_open');
+    final task = row.task;
+    var runner = task.runner.copyWith(
+      phase: Act0LessonPhaseV1.drill,
+      teachingStepIndex: task.runner.teachingSteps.length,
+    );
+    tester.view.physicalSize = const Size(393, 852);
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData.dark().copyWith(
+          splashFactory: InkRipple.splashFactory,
+        ),
+        home: Scaffold(
+          body: StatefulBuilder(
+            builder: (context, setState) => Act0LessonRunnerShellV1(
+              runner: runner,
+              worldNumber: row.world.worldNumber,
+              selectedWorldId: row.world.worldId,
+              selectedLessonId: row.lesson.lessonId,
+              selectedTaskId: task.taskId,
+              selectedTaskTitle: task.title,
+              selectedTaskFamily: task.resolvedTaskFamily,
+              compositionFamily: task.resolvedCompositionFamily,
+              tablePresentation: task.tablePresentation,
+              onBack: () {},
+              onContinueTheory: () {},
+              onChooseOption: (option) => setState(() {
+                runner = runner.copyWith(
+                  phase: Act0LessonPhaseV1.review,
+                  selectedOptionId: option.id,
+                );
+              }),
+              onContinueReview: () {},
+            ),
+          ),
+        ),
+      ),
+    );
+    await pumpSourceChoreographyToDecisionV1(tester, runner.table);
+    final help = find.byKey(const Key('act0_shell_runner_glossary'));
+    final chartEntry = find.byKey(const Key('act0_help_starting_hands'));
+    await tester.tap(help);
+    await _pumpTransition(tester);
+    expect(chartEntry, findsNothing);
+    await tester.tap(find.byKey(const Key('act0_glossary_close')));
+    await _pumpTransition(tester);
+    final option = find.byKey(
+      Key('act0_shell_option_${runner.options.first.id}'),
+    );
+    await tester.ensureVisible(option);
+    await tester.tap(option);
+    await _pumpTransition(tester);
+    expect(runner.phase, Act0LessonPhaseV1.review);
+    await tester.tap(help);
+    await _pumpTransition(tester);
+    expect(chartEntry, findsOneWidget);
+    await tester.tap(chartEntry);
+    await _pumpTransition(tester);
+    expect(find.text('6-max · BTN · First in'), findsOneWidget);
+    final chart = tester.widget<Act0StartingHandsReferenceV1>(
+      find.byType(Act0StartingHandsReferenceV1),
+    );
+    expect(chart.taskSeat, Act0ChartSeatV1.btn);
+    for (final hand in act0ChartHandsV1) {
+      final cell = tester.widget<Text>(
+        find.byKey(Key('act0_starting_hand_$hand')),
+      );
+      final action = act0ChartActionV1(
+        hand,
+        Act0ChartSeatV1.btn,
+        Act0ChartPrefixV1.unopened,
+      );
+      expect(cell.data, '$hand\n${action.name}');
+    }
+    final answered = runner;
+    await tester.tap(find.byKey(const Key('act0_starting_hands_close')));
+    await _pumpTransition(tester);
+    expect(chartEntry, findsOneWidget);
+    await tester.tap(find.byKey(const Key('act0_glossary_close')));
+    await _pumpTransition(tester);
+    expect(runner, same(answered));
+  });
+
+  testWidgets(
+    'Learn reference browses positions without inventing blind ranges',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(splashFactory: InkRipple.splashFactory),
+          home: Act0ShellPreviewScreenV1(
+            state: Act0ShellStateV1.sample,
+            debugLegacyPlacementOnStart: true,
+            initialTab: Act0ShellTabV1.learn,
+            showPlacementOnStart: false,
+            enableBetaMetrics: false,
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('act0_learn_starting_hands')));
+      await _pumpTransition(tester);
+      expect(find.text('6-max · UTG · First in'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('act0_starting_hand_KTs')))
+            .data,
+        'KTs\nfold',
+      );
+      await tester.tap(find.byKey(const Key('act0_starting_hands_seat_btn')));
+      await tester.pump();
+      expect(find.text('6-max · BTN · First in'), findsOneWidget);
+      expect(
+        tester
+            .widget<Text>(find.byKey(const Key('act0_starting_hand_KTs')))
+            .data,
+        'KTs\nraise',
+      );
+      await tester.tap(find.byKey(const Key('act0_starting_hands_seat_sb')));
+      await tester.pump();
+      expect(
+        find.text('The first-in chart does not cover this blind position.'),
+        findsOneWidget,
+      );
+      expect(find.byKey(const Key('act0_starting_hand_AA')), findsNothing);
+    },
+  );
+
   test('every term the glossary shows for a W1–W12 task is defined', () {
     final names = act0GlossaryTermsV1.map((t) => t.name).toList();
     expect(names.toSet().length, names.length, reason: 'duplicate terms');

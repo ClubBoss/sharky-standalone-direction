@@ -1,5 +1,6 @@
 import 'act0_action_reason_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
+import 'act0_starting_hands_reference_v1.dart';
 import 'skin/act0_skin_tokens_v1.dart';
 import 'act0_shell_next_step_v1.dart';
 import 'act0_shell_chrome_v1.dart';
@@ -3628,16 +3629,21 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                 ),
               ),
             if (showTopBar && _tab == Act0ShellTabV1.learn)
-              const ColoredBox(
+              ColoredBox(
                 color: Act0SkinTokensV1.surface,
                 child: Padding(
-                  padding: EdgeInsets.symmetric(
+                  padding: const EdgeInsets.symmetric(
                     horizontal: Act0SkinTokensV1.screenGutter,
                     vertical: Act0SkinTokensV1.gapSm,
                   ),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text('Learn', style: Act0SkinTokensV1.title),
+                  child: Act0SkinSheetHeaderV1(
+                    title: 'Learn',
+                    trailing: Act0SkinChipV1(
+                      key: const Key('act0_learn_starting_hands'),
+                      label: 'Starting hands',
+                      onPressed: () =>
+                          showAct0StartingHandsReferenceV1(context),
+                    ),
                   ),
                 ),
               ),

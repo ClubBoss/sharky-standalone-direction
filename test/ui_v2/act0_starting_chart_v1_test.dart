@@ -14,6 +14,19 @@ final _tasks = [
 void main() {
   final chart = CatalogStartingChart.foundation();
 
+  test('reference matrix contains each F1 hand exactly once', () {
+    final hands = [
+      for (var row = 0; row < act0ChartRanksV1.length; row++)
+        for (var col = 0; col < act0ChartRanksV1.length; col++)
+          act0StartingHandsCellV1(row, col),
+    ];
+    expect(hands, hasLength(169));
+    expect(hands.toSet(), act0ChartHandsV1);
+    expect(act0StartingHandsCellV1(0, 0), 'AA');
+    expect(act0StartingHandsCellV1(0, 1), 'AKs');
+    expect(act0StartingHandsCellV1(1, 0), 'AKo');
+  });
+
   test('Six-max hand groups and first-in rows match the original chart', () {
     const groups = {
       Act0ChartGroupV1.premium: {'AA', 'KK', 'QQ', 'AKs'},
