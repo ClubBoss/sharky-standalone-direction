@@ -28,12 +28,14 @@ void main() {
       final teaching = tasks[intro].runner.teachingSteps
           .map((step) => step.body)
           .join(' ');
+      expect(teaching, contains('Commitment means using much of your stack'));
+      expect(teaching, contains('few chips for later bets'));
       expect(
         teaching,
-        contains('Commitment means using much of your stack'),
+        contains(
+          'Low SPR means fewer chips remain relative to the pot, but it does not force an all-in.',
+        ),
       );
-      expect(teaching, contains('few chips for later bets'));
-      expect(teaching, contains('Low SPR alone does not force an all-in.'));
     });
 
     const sprCopy = {

@@ -5443,7 +5443,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK w7_spr_intro [theory] Low room vs high room
 CAPTION: SPR tells you how much room is left after the flop.
-TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4. Commitment means using much of your stack, leaving few chips for later bets. Low SPR alone does not force an all-in.
+TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4. Commitment means using much of your stack, leaving few chips for later bets. Low SPR means fewer chips remain relative to the pot, but it does not force an all-in.
 TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does low SPR usually mean?
 HINT [theoryOnly]: Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.

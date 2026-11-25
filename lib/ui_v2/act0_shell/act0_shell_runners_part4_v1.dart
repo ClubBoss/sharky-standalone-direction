@@ -591,7 +591,7 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
           'SPR is the stack-to-pot ratio: effective stack divided by the current pot. '
           'Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4. '
           'Commitment means using much of your stack, leaving few chips for later bets. '
-          'Low SPR alone does not force an all-in.',
+          'Low SPR means fewer chips remain relative to the pot, but it does not force an all-in.',
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
