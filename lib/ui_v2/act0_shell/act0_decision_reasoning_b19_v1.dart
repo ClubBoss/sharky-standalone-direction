@@ -17,7 +17,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "lead",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "The review shows a dealer correction. BB led 4 BB as the first turn bet. BTN announced a raise to 6 BB with enough chips for a full raise and was asked to make it at least 8.",
+        "Review the actions with enough chips for a full raise. BB led on the turn. Only one annotation breaks the betting rule.",
   ),
   "mistake_already_committed": Act0DecisionReasoningV1(
     taskId: "mistake_already_committed",
@@ -98,7 +98,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Qh turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_heart_pairs_board": Act0DecisionReasoningV1(
     taskId: "turn_heart_pairs_board",
@@ -107,7 +107,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 3h turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare a Qh turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_straight_completes": Act0DecisionReasoningV1(
     taskId: "turn_straight_completes",
@@ -116,7 +116,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AsAd AcAs QhQc, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Td turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AsAd AcAs QhQc, with equal weight per legal combo on each street. Compare a 2d turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_overcard_beats_pair": Act0DecisionReasoningV1(
     taskId: "turn_overcard_beats_pair",
@@ -125,7 +125,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AcKc AdKd AcTd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Ah turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AcKc AdKd AcTd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_remove_high_draw": Act0DecisionReasoningV1(
     taskId: "turn_remove_high_draw",
@@ -134,7 +134,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AhKc AhJc ThTc Ah9h, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 9h turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AhKc AhJc ThTc Ah9h, with equal weight per legal combo on each street. Compare a As turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_counterfeit_two_pair": Act0DecisionReasoningV1(
     taskId: "turn_counterfeit_two_pair",
@@ -143,7 +143,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AcAd AsAh QcQd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Kh turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AcAd AsAh QcQd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_redraw_good": Act0DecisionReasoningV1(
     taskId: "turn_redraw_good",
@@ -152,7 +152,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AhJh AhTh QhJh, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 5s turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AhJh AhTh QhJh, with equal weight per legal combo on each street. Compare a 2h turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_board_four_to_straight": Act0DecisionReasoningV1(
     taskId: "turn_board_four_to_straight",
@@ -161,7 +161,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is JdTd JcTh Tc5c, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 7s turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is JdTd JcTh Tc5c, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_dead_draw": Act0DecisionReasoningV1(
     taskId: "turn_dead_draw",
@@ -170,7 +170,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "good",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is Js8s JsTs Js9s, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 2d turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is Js8s JsTs Js9s, with equal weight per legal combo on each street. Compare a 3c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "turn_turn_makes_set": Act0DecisionReasoningV1(
     taskId: "turn_turn_makes_set",
@@ -179,7 +179,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "unchanged",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "BB’s study range is AhQh AsKd AcJd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 5c turns. No further bets are modeled; ties earn half.",
+        "BB’s study range is AhQh AsKd AcJd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.",
   ),
   "harder_dirty_flush": Act0DecisionReasoningV1(
     taskId: "harder_dirty_flush",

@@ -3,32 +3,27 @@ part of 'act0_shell_state_v1.dart';
 final _b19PilotLessons = [
   _act0PilotLessonV1("where_is_the_mistake", "Where is the mistake in this hand?", [
     // B17 source world: 4.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_half_pot",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "You told a study partner you would bet half the river pot. Review these annotated actions. BTN opens to 2.75 BB and BB calls. The flop and turn then check through.",
       question: "Which annotated action misses the stated sizing plan?",
-      explanation:
-          "P = 2.75 (BTN) + 0.5 (SB) + 2.75 (BB) = 6 BB. Final commitments = 2.75+0.5+2.75=6 BB. 6/2=3; 2/6=1/3.",
       choices: const [
         (
           "river_bet",
           "River · bet 2 BB",
-          Act0FeedbackQualityV1.correct,
           "Half of this 6 BB pot is 3 BB. The reviewed bet is only one third.",
         ),
         (
           "open",
           "Preflop · open to 2.75 BB",
-          Act0FeedbackQualityV1.wrong,
           "That is the earlier open. The plan applies to a fraction of the river pot.",
         ),
         (
           "bb_call",
           "Preflop · BB calls 1.75 BB more",
-          Act0FeedbackQualityV1.wrong,
           "The blind already put in one BB, so this call correctly matches the open.",
         ),
       ],
@@ -70,32 +65,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 4.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_minimum_raise",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "The review shows a dealer correction. BB led 4 BB as the first turn bet. BTN announced a raise to 6 BB with enough chips for a full raise and was asked to make it at least 8.",
+          "Review the actions with enough chips for a full raise. BB led on the turn. Only one annotation breaks the betting rule.",
       question: "Which annotated action was illegal at the stated depth?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. With 4 BB offered, price = 4/13.5 = 29.6%. BB opens the turn for 4 BB. To 6 adds 2 BB, less than 4; minimum total=4+4=8.",
       choices: const [
         (
           "short_raise",
           "Turn · announce raise to 6 BB",
-          Act0FeedbackQualityV1.correct,
           "The full raise has to add at least the opening 4 BB to the current 4 BB. Eight BB is the minimum total.",
         ),
         (
           "lead",
           "Turn · BB leads 4 BB",
-          Act0FeedbackQualityV1.wrong,
           "A first turn bet of 4 BB exceeds the one-BB minimum.",
         ),
         (
           "btn_flop",
           "Flop · check back",
-          Act0FeedbackQualityV1.wrong,
           "BB checked on the flop and gave BTN the option to check back.",
         ),
       ],
@@ -137,32 +127,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 4.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_already_committed",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "The replay pauses before BTN responds to the flop raise. Both players can afford the full match. The three annotations include one claimed amount.",
       question: "Where did BTN incorrectly track the chips?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Before the flop bets, P=5.5. Flop contributions are BTN=3 and BB=9. Pot at decision=5.5+3+9=17.5; call=9−3=6; price=6/23.5.",
       choices: const [
         (
           "price",
           "Flop · count another 9 BB to call",
-          Act0FeedbackQualityV1.correct,
           "Nine BB is the total wager. Your 3 BB already in reduce the call to 6 BB.",
         ),
         (
           "first_bet",
           "Flop · bet 3 BB",
-          Act0FeedbackQualityV1.wrong,
           "The first wager is legal. Those chips now count toward matching a raise.",
         ),
         (
           "raise",
           "Flop · BB raises to 9 BB",
-          Act0FeedbackQualityV1.wrong,
           "From a bet of 3 BB, a full raise can add 3 BB or more. Adding six is legal.",
         ),
       ],
@@ -208,32 +193,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 5.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_turn_straight_call",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "Replay stops before the river. Under the teaching model the legal winning rivers are the four fives and four tens. You know your cards and the turn board, no ties or later chips. BB led 4 BB on the turn.",
       question: "Which choice is the mistake in the reviewed line?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. With 4 BB offered, price = 4/13.5 = 29.6%. Price=4/(5.5+4+4)=4/13.5≈29.6%. EV(call)=8/46×13.5−4≈−1.65217 BB. Fold=0.",
       choices: const [
         (
           "bad_call",
           "Turn · call 4 BB",
-          Act0FeedbackQualityV1.correct,
           "Eight of 46 rivers fall below the call price. Folding saves the modeled loss.",
         ),
         (
           "check",
           "Flop · check behind",
-          Act0FeedbackQualityV1.wrong,
           "The mistake being priced is on the turn. The replay makes no claim that the flop check loses chips.",
         ),
         (
           "count",
           "Turn · identify eight straight completions",
-          Act0FeedbackQualityV1.wrong,
           "Both ends complete the straight. The error was using those eight winners to justify this price.",
         ),
       ],
@@ -275,32 +255,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 5.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_turn_flush_fold",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "The study model counts all nine unseen hearts as winning rivers and the other rivers as losses. There are no ties, raises or later betting. BB leads 1 BB on the turn.",
       question: "Which annotated choice gives up positive chip EV?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. With 1 BB offered, price = 1/7.5 = 13.3%. Call requirement=1/(5.5+2)=13.3%. E=9/46≈19.6%. EV(call)=9/46×7.5−1≈+0.46739 BB.",
       choices: const [
         (
           "fold",
           "Turn · fold to 1 BB",
-          Act0FeedbackQualityV1.correct,
           "The nine winning hearts give enough equity for a one-BB call. Folding leaves that gain unrealized.",
         ),
         (
           "count",
           "Turn · count nine winning hearts",
-          Act0FeedbackQualityV1.wrong,
           "Four hearts are visible, so the model has nine remaining winners.",
         ),
         (
           "match",
           "Turn · note an extra 1 BB is needed",
-          Act0FeedbackQualityV1.wrong,
           "BB’s lead sets the price. You have added nothing on this street yet.",
         ),
       ],
@@ -342,32 +317,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 6.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_worse_calls",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "For this replay only, BB calls a 3 BB river bet with K-J or K-T and folds Q-J. Weight every legal combination equally. The earlier checks are given history.",
       question: "Where does the reviewed plan leave chips on the table?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. All KJ and KT combos call: 2×4+2×4=16. QJ has 3×4=12 combos. EV(bet)−EV(check)=3×16/28=12/7 BB.",
       choices: const [
         (
           "check",
           "River · check K-Q behind",
-          Act0FeedbackQualityV1.correct,
           "K-Q beats every modeled holding. Betting 3 BB earns extra from the weaker kings that call.",
         ),
         (
           "flop",
           "Flop · BB checks first",
-          Act0FeedbackQualityV1.wrong,
           "BB acts first postflop. This is a legal check by the opponent, outside the river comparison.",
         ),
         (
           "note",
           "River · identify K-J and K-T as weaker calls",
-          Act0FeedbackQualityV1.wrong,
           "Your queen beats both listed kickers after the shared pair of kings.",
         ),
       ],
@@ -409,32 +379,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 6.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_bluff_calls",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "BB checks the river. At 3 BB and 7 BB the equally weighted teaching roster calls KcQd 8h9h 7h7c 4s5s KcJc 8hTc and folds Ah7h Qs7s Qd9d As9s. Your hand loses to every holding on a showdown. Review BTN’s proposed line.",
       question: "Which annotated river action is worse than checking?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Check=0. EV(3)=(4×5.5−6×3)/10=+0.4. EV(7)=(4×5.5−6×7)/10=−2 BB.",
       choices: const [
         (
           "big",
           "River · bluff for 7 BB",
-          Act0FeedbackQualityV1.correct,
           "Four folds in ten cannot fund the seven-BB losses on six calls. The 3 BB bluff earns more.",
         ),
         (
           "price",
           "River · note the pot is 5.5 BB",
-          Act0FeedbackQualityV1.wrong,
           "The pot includes both 2.5 BB preflop contributions and the dead half blind.",
         ),
         (
           "fold_list",
           "River · keep the same four folds at both sizes",
-          Act0FeedbackQualityV1.wrong,
           "The supplied response gives the same fold set at both sizes.",
         ),
       ],
@@ -476,32 +441,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 7.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_known_blocker",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "The river review compares all K-Q combinations without suit restrictions. Ks is on the board and Kh is in your hand. No queen is visible. These are notes made before a choice; there is no result shown.",
       question: "Which note counts too many opponent combinations?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Available kings={Kc,Kd}; queens={Qc,Qd,Qh,Qs}; all legal pairings give 2×4=8. Board-only count=3×4=12.",
       choices: const [
         (
           "count",
           "River · record twelve possible K-Q hands",
-          Act0FeedbackQualityV1.correct,
           "Twelve removes only the board king. Remove your king too and count two kings times four queens.",
         ),
         (
           "board",
           "River · exclude the king on the board",
-          Act0FeedbackQualityV1.wrong,
-          "Ks cannot be dealt as an opponent hole card.",
+          "Ks cannot be dealt as an opponent’s private card.",
         ),
         (
           "queen",
-          "River · keep all four queens available",
-          Act0FeedbackQualityV1.wrong,
+          "River · keep four queens available",
           "No queen is visible, so each legal king can pair with all four queens.",
         ),
       ],
@@ -543,32 +503,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 8.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_matched_amount",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "After preflop BTN and BB each contributed 2.5 BB. On the river BB pushes its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.",
       question: "Which note is wrong for this heads-up pot?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. With 6 BB offered, price = 6/17.5 = 34.3%. Prior pot=5.5. Matched= min(6,15)=6; uncalled return=15−6=9; eligible pot after call and return=5.5+6+6=17.5.",
       choices: const [
         (
           "all",
           "River · count all 15 BB as matched",
-          Act0FeedbackQualityV1.correct,
           "Only your remaining 6 BB can match BB. The 9 BB excess comes back to the opponent.",
         ),
         (
           "dead_sb",
           "Preflop · keep the folded small blind in the pot",
-          Act0FeedbackQualityV1.wrong,
           "The small blind’s half BB remains as dead money after the fold.",
         ),
         (
           "effective",
           "River · use your remaining stack as the cap",
-          Act0FeedbackQualityV1.wrong,
           "The smaller remaining stack is the greatest amount that both players can match.",
         ),
       ],
@@ -613,32 +568,27 @@ final _b19PilotLessons = [
       ),
     ),
     // B17 source world: 8.
-    _b19DrillV1(
+    _b92MistakeDrillV1(
       id: "mistake_implied_cap",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
           "Study replay: BB leads 3 BB on the turn. After a matching call, BB has 3 BB left. BTN has at least that much. The model treats nine rivers as clean and lets BB pay its whole remaining stack on each hit.",
       question: "Where does the review invent a payoff the table cannot pay?",
-      explanation:
-          "P = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. With 3 BB offered, price = 3/11.5 = 26.1%. BB starts with 8.5 BB and has posted/called to 2.5 BB preflop. After leading 3 BB, 3 BB remain. Later payment≤min(3, BTN’s remaining stack).",
       choices: const [
         (
           "extra",
           "Turn · plan to collect 8 BB extra on a hit",
-          Act0FeedbackQualityV1.correct,
-          "BB has only 3 BB left after the call. Even certain payment cannot exceed that stack.",
+          "BB cannot pay more than its remaining stack.",
         ),
         (
           "call",
           "Turn · record a 3 BB call price",
-          Act0FeedbackQualityV1.wrong,
           "The call matches BB’s 3 BB lead from the same street.",
         ),
         (
           "good",
           "Turn · use the nine stated winning rivers",
-          Act0FeedbackQualityV1.wrong,
           "The exercise supplies nine clean hits. The disputed number is the chips those hits can collect.",
         ),
       ],
@@ -680,43 +630,20 @@ final _b19PilotLessons = [
       ),
     ),
   ]),
-  _act0PilotLessonV1("turn_card_impact", "Is this turn card good or bad for you?", [
+  _act0PilotLessonV1("turn_card_impact", "Which turn card changes the decision?", [
     // B17 source world: 5.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_heart_completes",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Qh turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=732/0/2238; E=(W+T/2)/2970=122/495 (24.6%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=102/0/30; E=(W+T/2)/132=17/22 (77.3%).",
-      choices: const [
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The queen completes your ace-high flush. Sets retain river redraws, but the remaining showdown share rises. Flop 24.6%, turn 77.3%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "KsKd KcKd 8s8d",
+      reference: "2c",
+      candidates: const {"bad": "4c", "good": "Qh", "unchanged": "7c"},
+      mechanism:
+          "The queen completes your ace-high flush. Sets retain river redraws, but the remaining showdown share rises.",
       table: _b19TableV1(
         hero: "btn",
         hand: "Ah 6h",
-        board: "Kh 8h 3c Qh",
-        street: PokerStreet.turn,
+        board: "Kh 8h 3c",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -738,7 +665,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -748,45 +674,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 7.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_heart_pairs_board",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 3h turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=732/0/2238; E=(W+T/2)/2970=122/495 (24.6%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=0/0/132; E=(W+T/2)/132=0 (0.0%).",
-      choices: const [
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "You complete a flush as the board pairs. Every modeled set makes a full house, which drops your remaining showdown share. Flop 24.6%, turn 0.0%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not rise against the modeled range.",
-        ),
-      ],
+      rangeText: "KsKd KcKd 8s8d",
+      reference: "Qh",
+      candidates: const {"good": "2h", "bad": "3h", "unchanged": "4h"},
+      mechanism:
+          "You complete a flush as the board pairs. Every modeled set makes a full house, which drops your remaining showdown share.",
       table: _b19TableV1(
         hero: "btn",
         hand: "Ah 6h",
-        board: "Kh 8h 3c 3h",
-        street: PokerStreet.turn,
+        board: "Kh 8h 3c",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -808,7 +710,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -818,45 +719,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 5.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_straight_completes",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AsAd AcAs QhQc, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Td turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=1001/0/1969; E=(W+T/2)/2970=91/270 (33.7%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=128/0/4; E=(W+T/2)/132=32/33 (97.0%).",
-      choices: const [
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The ten completes your straight. More rivers now preserve the win against the listed overpairs than before the turn was known. Flop 33.7%, turn 97.0%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "AsAd AcAs QhQc",
+      reference: "2d",
+      candidates: const {"bad": "3c", "good": "Td", "unchanged": "4c"},
+      mechanism:
+          "The ten completes your straight. More rivers now preserve the win against the listed overpairs than before the turn was known.",
       table: _b19TableV1(
         hero: "btn",
         hand: "7d 6c",
-        board: "9h 8s 2c Td",
-        street: PokerStreet.turn,
+        board: "9h 8s 2c",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -878,7 +755,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -888,45 +764,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 5.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_overcard_beats_pair",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AcKc AdKd AcTd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Ah turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=2286/0/684; E=(W+T/2)/2970=127/165 (77.0%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=6/0/126; E=(W+T/2)/132=1/22 (4.5%).",
-      choices: const [
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The turn pairs every ace in the range. Those aces overtake pocket queens and cut your showdown share. Flop 77.0%, turn 4.5%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not rise against the modeled range.",
-        ),
-      ],
+      rangeText: "AcKc AdKd AcTd",
+      reference: "2c",
+      candidates: const {"good": "4c", "bad": "Ah", "unchanged": "7c"},
+      mechanism:
+          "The turn pairs every ace in the range. Those aces overtake pocket queens and cut your showdown share.",
       table: _b19TableV1(
         hero: "btn",
         hand: "Qs Qd",
-        board: "Jh 8s 3d Ah",
-        street: PokerStreet.turn,
+        board: "Jh 8s 3d",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -948,7 +800,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -958,45 +809,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 7.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_remove_high_draw",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AhKc AhJc ThTc Ah9h, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 9h turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 4 legal opponent combos × C(45,2) runouts = 3960. W/T/L=2580/0/1380; E=(W+T/2)/3960=43/66 (65.2%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=111/0/21; E=(W+T/2)/132=37/44 (84.1%).",
-      choices: const [
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "You make a flush, and the turn removes Ah9h. The surviving higher hearts can outdraw you, but the current lead improves your share. Flop 65.2%, turn 84.1%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "AhKc AhJc ThTc Ah9h",
+      reference: "As",
+      candidates: const {"bad": "Ac", "good": "9h", "unchanged": "Ad"},
+      mechanism:
+          "You make a flush, and the turn removes Ah9h. The surviving higher hearts can outdraw you, but the current lead improves your share.",
       table: _b19TableV1(
         hero: "btn",
         hand: "8h 7h",
-        board: "Qh 7s 2h 9h",
-        street: PokerStreet.turn,
+        board: "Qh 7s 2h",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1018,7 +845,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1028,45 +854,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 6.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_counterfeit_two_pair",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AcAd AsAh QcQd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after Kh turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=2214/0/756; E=(W+T/2)/2970=41/55 (74.5%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=12/0/120; E=(W+T/2)/132=1/11 (9.1%).",
-      choices: const [
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The turn pairs the king. BB’s overpairs can use both board kings, overtaking your two pair from the flop. Flop 74.5%, turn 9.1%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not rise against the modeled range.",
-        ),
-      ],
+      rangeText: "AcAd AsAh QcQd",
+      reference: "2c",
+      candidates: const {"good": "3c", "bad": "Kh", "unchanged": "4c"},
+      mechanism:
+          "The turn pairs the king. BB’s overpairs can use both board kings, overtaking your two pair from the flop.",
       table: _b19TableV1(
         hero: "btn",
         hand: "8c 6s",
-        board: "8h 6d Ks Kh",
-        street: PokerStreet.turn,
+        board: "8h 6d Ks",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1088,7 +890,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1098,45 +899,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 8.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_redraw_good",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AhJh AhTh QhJh, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 5s turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=2202/0/768; E=(W+T/2)/2970=367/495 (74.1%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=132/0/0; E=(W+T/2)/132=1 (100.0%).",
-      choices: const [
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The paired turn makes your full house. The modeled draws cannot beat it with a flush on the river. Flop 74.1%, turn 100.0%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "AhJh AhTh QhJh",
+      reference: "2h",
+      candidates: const {"bad": "3h", "good": "5s", "unchanged": "6h"},
+      mechanism:
+          "The paired turn makes your full house. The modeled draws cannot beat it with a flush on the river.",
       table: _b19TableV1(
         hero: "btn",
         hand: "9d 9c",
-        board: "9s 5h 4h 5s",
-        street: PokerStreet.turn,
+        board: "9s 5h 4h",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1158,7 +935,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1168,45 +944,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 6.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_board_four_to_straight",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is JdTd JcTh Tc5c, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 7s turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=2043/12/915; E=(W+T/2)/2970=683/990 (69.0%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=0/3/129; E=(W+T/2)/132=1/88 (1.1%).",
-      choices: const [
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "The seven gives every holding in the range a straight. Bare aces lose most of their flop-average showdown share. Flop 69.0%, turn 1.1%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not rise against the modeled range.",
-        ),
-      ],
+      rangeText: "JdTd JcTh Tc5c",
+      reference: "2c",
+      candidates: const {"good": "3c", "bad": "7s", "unchanged": "4c"},
+      mechanism:
+          "The seven gives every holding in the range a straight. Bare aces lose most of their flop-average showdown share.",
       table: _b19TableV1(
         hero: "btn",
         hand: "Ad Ac",
-        board: "9c 8d 6h 7s",
-        street: PokerStreet.turn,
+        board: "9c 8d 6h",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1228,7 +980,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1238,45 +989,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 7.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_dead_draw",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is Js8s JsTs Js9s, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 2d turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=0/0/2970; E=(W+T/2)/2970=0 (0.0%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=0/0/132; E=(W+T/2)/132=0 (0.0%).",
-      choices: const [
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.correct,
-          "Every specified hand starts with quads. Neither the deuce nor the two-street runouts give you a way to beat that. Flop 0.0%, turn 0.0%.",
-        ),
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not rise against the modeled range.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "Js8s JsTs Js9s",
+      reference: "3c",
+      candidates: const {"good": "Qc", "unchanged": null, "bad": "2d"},
+      mechanism:
+          "Every possible opponent hand already has four jacks. Neither offered turn nor its remaining rivers can beat that in this matchup.",
       table: _b19TableV1(
         hero: "btn",
         hand: "Ac Ks",
-        board: "Jd Jh Jc 2d",
-        street: PokerStreet.turn,
+        board: "Jd Jh Jc",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1298,7 +1025,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1308,45 +1034,21 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
     // B17 source world: 8.
-    _b19DrillV1(
+    _b92TurnDrillV1(
       id: "turn_turn_makes_set",
-      lesson: "turn_card_impact",
-      lessonTitle: "Is this turn card good or bad for you?",
-      caption:
-          "BB’s study range is AhQh AsKd AcJd, with equal weight per legal combo on each street. Compare your flop-average showdown share with your share after 5c turns. No further bets are modeled; ties earn half.",
-      question:
-          "Did the turn help, hurt or leave your showdown share unchanged against that range?",
-      explanation:
-          "P = 4.5 (BTN) + 0.5 (SB) + 4.5 (BB) = 9.5 BB. Flop: 3 legal opponent combos × C(45,2) runouts = 2970. W/T/L=308/0/2662; E=(W+T/2)/2970=14/135 (10.4%). Turn: 3 surviving combos × 44 rivers = 132. W/T/L=132/0/0; E=(W+T/2)/132=1 (100.0%).",
-      choices: const [
-        (
-          "good",
-          "Good for your showdown share",
-          Act0FeedbackQualityV1.correct,
-          "Your set overtakes every top-pair holding in this range. Every legal river keeps you ahead in the modeled matchup. Flop 10.4%, turn 100.0%.",
-        ),
-        (
-          "unchanged",
-          "Unchanged showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The full flop average and this conditional turn rate differ. Compare their wins and half-ties.",
-        ),
-        (
-          "bad",
-          "Bad for your showdown share",
-          Act0FeedbackQualityV1.wrong,
-          "The remaining win and half-tie rate does not fall against the modeled range.",
-        ),
-      ],
+      rangeText: "AhQh AsKd AcJd",
+      reference: "2c",
+      candidates: const {"bad": "3c", "good": "5c", "unchanged": "4c"},
+      mechanism:
+          "Your set overtakes every top-pair holding in this range. Every legal river keeps you ahead in the modeled matchup.",
       table: _b19TableV1(
         hero: "btn",
         hand: "5h 5s",
-        board: "Ad 9c 2h 5c",
-        street: PokerStreet.turn,
+        board: "Ad 9c 2h",
+        street: PokerStreet.flop,
         stacks: const {
           "utg": 100,
           "hj": 100,
@@ -1368,7 +1070,6 @@ final _b19PilotLessons = [
           "flop: BB checks",
           "flop: BTN bets 2",
           "flop: BB calls 2",
-          "turn: BB checks",
         ],
         entries: const [
           (PokerStreet.preflop, "sb", Act0ContributionKindV1.blind, 0.5),
@@ -1378,7 +1079,6 @@ final _b19PilotLessons = [
           (PokerStreet.flop, "btn", Act0ContributionKindV1.wager, 2.0),
           (PokerStreet.flop, "bb", Act0ContributionKindV1.wager, 2.0),
         ],
-        highlightTurn: true,
       ),
     ),
   ]),
@@ -2144,3 +1844,337 @@ Act0TableStateV1 _b19TableV1({
       showDecisionPremise: true,
       highlightedCardIds: highlightTurn ? const ['board_3'] : const [],
     );
+
+Act0LessonTaskV1 _b92TurnDrillV1({
+  required String id,
+  required String rangeText,
+  required String reference,
+  required Map<String, String?> candidates,
+  required String mechanism,
+  required Act0TableStateV1 table,
+}) {
+  final range = rangeText
+      .split(' ')
+      .map((combo) => [combo.substring(0, 2), combo.substring(2)])
+      .toList();
+  final price = act0B92TurnPriceV1(
+    table.handContributions!,
+    seats: table.seats.map((seat) => seat.seatId).toSet(),
+    hero: table.heroSeat.seatId,
+    opponent: 'bb',
+  );
+  final result = act0B92TurnChoicesV1(
+    hero: table.heroCards.map((card) => card.label).toList(),
+    flop: table.boardCards.map((card) => card.label).toList(),
+    range: range,
+    reference: reference,
+    candidates: candidates,
+    price: price.price,
+  );
+  final correctId = result.changingIds.single;
+  String pct(double value) => '${(100 * value).toStringAsFixed(1)}%';
+  String play(double share) => share > price.price ? 'Call' : 'Fold';
+  final correctCard = candidates[correctId];
+  final reason =
+      '${correctCard == null ? 'None of these cards: $mechanism' : 'If $correctCard turns: $mechanism'} '
+      'If $reference turns, you have ${pct(result.referenceShare)} showdown share '
+      '(${play(result.referenceShare)}). '
+      '${correctCard == null ? 'Neither offered card changes that decision.' : 'If $correctCard turns, you have ${pct(result.shares[correctId]!)} (${play(result.shares[correctId]!)}).'} '
+      'The call needs ${pct(price.price)}.';
+  // Rotate the existing choice identities so there is no position giveaway.
+  final rows = candidates.entries.toList();
+  final offset =
+      id.codeUnits.fold<int>(0, (sum, code) => sum + code) % rows.length;
+  return _b19DrillV1(
+    id: id,
+    lesson: 'turn_card_impact',
+    lessonTitle: 'Which turn card changes the decision?',
+    caption:
+        'Imagine BB could hold $rangeText, with equal weight per legal '
+        'combination. Imagine BB bets ${_act0BbLabelV1(price.bet)} on the turn '
+        'into the ${_act0BbLabelV1(price.pot - price.due)} pot. '
+        'If you call, go straight to showdown after the river; ties earn half. '
+        'Compare each offered turn with a $reference turn. Choose call only '
+        'when it earns more than folding.',
+    question: switch (id) {
+      'turn_heart_completes' => 'Which turn lets you call instead of folding?',
+      'turn_heart_pairs_board' =>
+        'Which turn makes folding better than calling?',
+      'turn_straight_completes' => 'Which new card makes the call profitable?',
+      'turn_overcard_beats_pair' =>
+        'Which turn forces you to fold at this price?',
+      'turn_remove_high_draw' =>
+        'Which alternative turn changes a fold into a call?',
+      'turn_counterfeit_two_pair' =>
+        'Which card makes a once-profitable call lose chips?',
+      'turn_redraw_good' =>
+        'Which turn gives you enough showdown share to call?',
+      'turn_board_four_to_straight' =>
+        'Which card leaves too little showdown share to call?',
+      'turn_dead_draw' => 'Can either offered turn make a call profitable?',
+      'turn_turn_makes_set' => 'Which card changes the correct play to a call?',
+      _ => throw ArgumentError.value(id),
+    },
+    explanation: reason,
+    choices: [
+      for (var i = 0; i < rows.length; i++)
+        (() {
+          final entry = rows[(i + offset) % rows.length];
+          final card = entry.value;
+          final correct = entry.key == correctId;
+          return (
+            entry.key,
+            card ?? 'None of these',
+            correct
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            correct
+                ? reason
+                : '${card == null ? 'One card does change the decision.' : 'If $card turns, you have ${pct(result.shares[entry.key]!)} (${play(result.shares[entry.key]!)}), the same decision as $reference.'} $reason',
+          );
+        })(),
+    ],
+    table: table,
+  );
+}
+
+/// The reviewed annotations are separate from the actual, legal C1 replay.
+/// Compare each assertion against the ledger/model, not its authored grade.
+({Map<String, bool> mistakes, String correction}) act0B92MistakeTruthV1(
+  String id,
+  Act0TableStateV1 table,
+) {
+  final ledger = table.handContributions!;
+  final hero = table.heroSeat.seatId;
+  final amounts = ledger.amounts(
+    seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+    actorSeatId: hero,
+  );
+  final due = amounts.toCallBb!;
+  double contributed(String seat, [PokerStreet? street]) => ledger.entries
+      .where((e) => e.seatId == seat && (street == null || e.street == street))
+      .fold(0.0, (sum, e) => sum + e.netAmountBb);
+  double behind(String seat) =>
+      ledger.startingStackBbBySeat[seat]! - contributed(seat);
+  double blind(String seat) => ledger.entries
+      .singleWhere(
+        (e) => e.seatId == seat && e.kind == Act0ContributionKindV1.blind,
+      )
+      .amountBb;
+  double firstWager(PokerStreet street, String seat) => ledger.entries
+      .firstWhere(
+        (e) =>
+            e.street == street &&
+            e.seatId == seat &&
+            e.kind == Act0ContributionKindV1.wager,
+      )
+      .amountBb;
+  bool hasAction(String action) =>
+      table.actionTrail.any((e) => e.label == action);
+  final visible = [
+    ...table.heroCards,
+    ...table.boardCards,
+  ].map((c) => c.label).toSet();
+  final unseen = act0B19DeckV1.where((c) => !visible.contains(c)).toList();
+  int countRank(String rank) => unseen.where((c) => c.startsWith(rank)).length;
+  int countHearts() => unseen.where((c) => c.endsWith('h')).length;
+  String bb(num n) => _act0BbLabelV1(n);
+  String pct(double n) => '${(n * 100).toStringAsFixed(1)}%';
+  double equity(int outs) => act0OneCardOutsV1(outs, unseen.length)!;
+  double price() => act0CallPriceV1(amounts.potBb, due)!.equity;
+  switch (id) {
+    case 'mistake_half_pot':
+      final half = amounts.potBb / 2;
+      return (
+        mistakes: {
+          'river_bet': 2 != half,
+          'open': contributed(hero, PokerStreet.preflop) != 2.75,
+          'bb_call':
+              contributed('bb', PokerStreet.preflop) - blind('bb') != 1.75,
+        },
+        correction:
+            'Bet ${bb(half)}, half of the ${bb(amounts.potBb)} river pot, instead.',
+      );
+    case 'mistake_minimum_raise':
+      final lead = firstWager(PokerStreet.turn, 'bb');
+      return (
+        mistakes: {
+          'short_raise': 6 < 2 * lead,
+          'lead': lead != 4 || lead < blind('bb'),
+          'btn_flop':
+              !hasAction('flop: BB checks') || !hasAction('flop: BTN checks'),
+        },
+        correction:
+            'Raise to at least ${bb(2 * lead)}: match the ${bb(lead)} lead and add at least that much again.',
+      );
+    case 'mistake_already_committed':
+      final first = firstWager(PokerStreet.flop, hero);
+      final raised = contributed('bb', PokerStreet.flop);
+      return (
+        mistakes: {
+          'price': 9 != due,
+          'first_bet': first != 3 || first < blind('bb'),
+          'raise': raised != 9 || raised < 2 * first,
+        },
+        correction:
+            'Count ${bb(due)} more to call, subtracting your ${bb(first)} from the ${bb(raised)} raise total.',
+      );
+    case 'mistake_turn_straight_call':
+      final outs = countRank('5') + countRank('T');
+      return (
+        mistakes: {
+          'bad_call': due != 4 || equity(outs) < price(),
+          'check':
+              !hasAction('flop: BB checks') || !hasAction('flop: BTN checks'),
+          'count': outs != 8,
+        },
+        correction:
+            'Fold: $outs winning rivers out of ${unseen.length} give ${pct(equity(outs))}, below the ${pct(price())} required to call ${bb(due)}.',
+      );
+    case 'mistake_turn_flush_fold':
+      final outs = countHearts();
+      return (
+        mistakes: {
+          'fold': due != 1 || equity(outs) > price(),
+          'count': outs != 9,
+          'match': due != 1,
+        },
+        correction:
+            'Call ${bb(due)}: $outs of ${unseen.length} rivers win (${pct(equity(outs))}), above the ${pct(price())} price.',
+      );
+    case 'mistake_worse_calls':
+      final calling = countRank('K') * (countRank('J') + countRank('T'));
+      final folding = countRank('Q') * countRank('J');
+      final gain = 3 * calling / (calling + folding);
+      final board = table.boardCards.map((c) => c.label).toList();
+      final held = solver.Hand.solveHand([
+        ...board,
+        ...table.heroCards.map((c) => c.label),
+      ]);
+      bool beats(String a, String b) {
+        final opponent = solver.Hand.solveHand([...board, a, b]);
+        final winners = solver.Hand.winners([held, opponent]);
+        return winners.length == 1 && winners.single == held;
+      }
+      final weaker = [
+        for (final king in unseen.where((c) => c.startsWith('K')))
+          for (final kicker in unseen.where(
+            (c) => c.startsWith('J') || c.startsWith('T'),
+          ))
+            beats(king, kicker),
+        for (final queen in unseen.where((c) => c.startsWith('Q')))
+          for (final jack in unseen.where((c) => c.startsWith('J')))
+            beats(queen, jack),
+      ].every((wins) => wins);
+      return (
+        mistakes: {
+          'check': weaker && gain > 0 && behind(hero) >= 3 && behind('bb') >= 3,
+          'flop': !hasAction('flop: BB checks'),
+          'note': !weaker,
+        },
+        correction:
+            'Bet 3 BB: the $calling weaker king combinations call and the $folding queen-jack combinations fold. Checking gives up ${gain.toStringAsFixed(2)} BB on average.',
+      );
+    case 'mistake_bluff_calls':
+      // The supplied response roster is identical at both sizes.
+      const foldRoster = ['Ah7h', 'Qs7s', 'Qd9d', 'As9s'];
+      const callRoster = ['KcQd', '8h9h', '7h7c', '4s5s', 'KcJc', '8hTc'];
+      bool legalCombo(String combo) =>
+          unseen.contains(combo.substring(0, 2)) &&
+          unseen.contains(combo.substring(2));
+      final folds = foldRoster.where(legalCombo).length;
+      final calls = callRoster.where(legalCombo).length;
+      if (folds != foldRoster.length || calls != callRoster.length) {
+        throw StateError('Study response contains a blocked holding');
+      }
+      final small = (folds * amounts.potBb - calls * 3) / (folds + calls);
+      final large = (folds * amounts.potBb - calls * 7) / (folds + calls);
+      return (
+        mistakes: {
+          'big': large < 0 && small > large,
+          'price': amounts.potBb != 5.5,
+          'fold_list': folds != 4,
+        },
+        correction:
+            'Bluff for 3 BB instead: it earns ${small.toStringAsFixed(2)} BB, while 7 BB earns ${large.toStringAsFixed(2)} BB against the same response range.',
+      );
+    case 'mistake_known_blocker':
+      final kings = countRank('K'), queens = countRank('Q');
+      return (
+        mistakes: {
+          'count': kings * queens != 12,
+          'board': !table.boardCards.any((c) => c.rank == 'K'),
+          'queen': queens != 4,
+        },
+        correction:
+            'Count ${kings * queens} possible K-Q hands: $kings unseen kings times $queens unseen queens. Remove both the board king and your private king.',
+      );
+    case 'mistake_matched_amount':
+      final announced =
+          ledger.startingStackBbBySeat['bb']! -
+          contributed('bb', PokerStreet.preflop);
+      return (
+        mistakes: {
+          'all': announced != due,
+          'dead_sb': contributed('sb') != blind('sb'),
+          'effective': behind(hero) != due,
+        },
+        correction:
+            'Count ${bb(due)} as matched, not ${bb(announced)}. The unmatched ${bb(announced - due)} returns to BB.',
+      );
+    case 'mistake_implied_cap':
+      final cap = math.min(behind('bb'), behind(hero) - due);
+      return (
+        mistakes: {
+          'extra': 8 > cap,
+          'call': due != 3,
+          'good': countHearts() != 9,
+        },
+        correction:
+            'Cap the extra river payment at ${bb(cap)}: neither player can pay more than the smaller stack left after the call.',
+      );
+    default:
+      throw ArgumentError.value(id, 'id', 'Unknown B19 mistake');
+  }
+}
+
+Act0LessonTaskV1 _b92MistakeDrillV1({
+  required String id,
+  required String lesson,
+  required String lessonTitle,
+  required String caption,
+  required String question,
+  required List<(String, String, String)> choices,
+  required Act0TableStateV1 table,
+}) {
+  final truth = act0B92MistakeTruthV1(id, table);
+  final wrongId = truth.mistakes.entries
+      .where((entry) => entry.value)
+      .single
+      .key;
+  final wrongLabel = choices.singleWhere((row) => row.$1 == wrongId).$2;
+  final correction = 'Mistake: $wrongLabel. ${truth.correction}';
+  final offset =
+      id.codeUnits.fold<int>(0, (sum, code) => sum + code) % choices.length;
+  final ordered = [...choices.skip(offset), ...choices.take(offset)];
+  return _b19DrillV1(
+    id: id,
+    lesson: lesson,
+    lessonTitle: lessonTitle,
+    caption: caption,
+    question: question,
+    explanation: correction,
+    choices: [
+      for (final (id, label, feedback) in ordered)
+        (
+          id,
+          label,
+          truth.mistakes[id]!
+              ? Act0FeedbackQualityV1.correct
+              : Act0FeedbackQualityV1.wrong,
+          id == wrongId ? correction : '$feedback $correction',
+        ),
+    ],
+    table: table,
+  );
+}
