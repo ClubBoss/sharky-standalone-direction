@@ -1803,6 +1803,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         _placementDiagnosticActive ||
         _diagnosticLearningEntryV1 != null ||
         _spacedReviewReturnV1 != null ||
+        _isReplayDrillV1 ||
         _lessonExampleSourceTaskIdV1 != null ||
         _rapidPracticeLoop ||
         _activeRepairTaskId != null ||

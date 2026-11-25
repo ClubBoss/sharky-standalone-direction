@@ -23,6 +23,8 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
     required this.onRemove,
     required this.onOwnHandsChanged,
     this.onPracticeCallPrice,
+    this.practiceSpotForAttempt,
+    this.initialReplayAttemptId,
     this.ownHands = false,
   });
 
@@ -32,6 +34,8 @@ class Act0AttemptArchiveScreenV1 extends StatefulWidget {
   final ValueChanged<String> onRemove;
   final ValueChanged<Act0AttemptArchiveV1> onOwnHandsChanged;
   final VoidCallback? onPracticeCallPrice;
+  final VoidCallback? Function(Act0ArchivedAttemptV1)? practiceSpotForAttempt;
+  final String? initialReplayAttemptId;
   final bool ownHands;
 
   @override
@@ -51,6 +55,14 @@ class _Act0AttemptArchiveScreenV1State
   }
 
   final _view = Act0AttemptArchiveViewModelV1();
+
+  @override
+  void initState() {
+    super.initState();
+    _view.replayingAttempt = widget.archive.attempts
+        .where((attempt) => attempt.id == widget.initialReplayAttemptId)
+        .firstOrNull;
+  }
 
   Future<void> _enterHand([Act0ImportedHandV1? previous]) async {
     final hand = await Navigator.of(context).push<Act0ImportedHandV1>(
@@ -195,7 +207,11 @@ class _Act0AttemptArchiveScreenV1State
               )
             : attempt == null
             ? (widget.ownHands ? _ownHandsList(context) : _archiveList(context))
-            : Act0AttemptReplayScreenV1(attempt: attempt, onClose: _back),
+            : Act0AttemptReplayScreenV1(
+                attempt: attempt,
+                onClose: _back,
+                onPracticeSpot: widget.practiceSpotForAttempt?.call(attempt),
+              ),
       ),
     );
   }
