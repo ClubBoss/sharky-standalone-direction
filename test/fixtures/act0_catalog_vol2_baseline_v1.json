@@ -276,12 +276,6 @@
       "harder_straight_price_rises|feedback.fold:7",
       "harder_straight_price_rises|feedback:6",
       "harder_straight_price_rises|feedback:7",
-      "mistake_known_blocker|feedback:0",
-      "mistake_known_blocker|feedback:1",
-      "mistake_known_blocker|feedback:2",
-      "mistake_known_blocker|feedback:3",
-      "mistake_known_blocker|feedback:4",
-      "mistake_known_blocker|feedback:5",
       "w14_3_guided_compare_size_plans|caption:0",
       "w14_3_guided_compare_size_plans|caption:1",
       "w14_3_guided_compare_size_plans|caption:2",
@@ -314,15 +308,13 @@
       "w14_6_guided_bet_to_induce|hero"
     ],
     "16.extreme_wrong_option": [
-      "mistake_known_blocker|queen",
       "w14_1_teach|other",
       "w14_2_read_polar_range|other",
       "w14_3_teach|alternative",
       "w14_5_teach|alternative"
     ],
     "17.single_format_lesson": [
-      "@lesson:slightly_harder|actionDecision",
-      "@lesson:turn_card_impact|statement"
+      "@lesson:slightly_harder|actionDecision"
     ],
     "18.same_format_streak": [
       "harder_dirty_flush|actionDecision",
@@ -336,25 +328,6 @@
     "20.hero_qq_per_world": [
       "turn_overcard_beats_pair|",
       "w14_6_checkpoint_size_and_raise|"
-    ],
-    "21.duplicate_wrong_reason": [
-      "turn_board_four_to_straight|good",
-      "turn_board_four_to_straight|unchanged",
-      "turn_counterfeit_two_pair|good",
-      "turn_counterfeit_two_pair|unchanged",
-      "turn_dead_draw|bad",
-      "turn_dead_draw|good",
-      "turn_heart_pairs_board|unchanged",
-      "turn_overcard_beats_pair|good",
-      "turn_overcard_beats_pair|unchanged",
-      "turn_redraw_good|bad",
-      "turn_redraw_good|unchanged",
-      "turn_remove_high_draw|bad",
-      "turn_remove_high_draw|unchanged",
-      "turn_straight_completes|bad",
-      "turn_straight_completes|unchanged",
-      "turn_turn_makes_set|bad",
-      "turn_turn_makes_set|unchanged"
     ],
     "22.action_amount": [
       "w14_1_day7_keep_weaker_pairs|feedback/bet_2|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
@@ -471,16 +444,8 @@
       "harder_river_value_added|call|117 words",
       "harder_shorter_implied_payment|fold|141 words",
       "harder_straight_price_rises|fold|114 words",
-      "harder_worse_calls_larger|bet_4|179 words"
-    ],
-    "5.semantic_repeat": [
-      "turn_board_four_to_straight|question",
-      "turn_counterfeit_two_pair|question",
-      "turn_overcard_beats_pair|question",
-      "turn_redraw_good|question",
-      "turn_remove_high_draw|question",
-      "turn_straight_completes|question",
-      "turn_turn_makes_set|question"
+      "harder_worse_calls_larger|bet_4|179 words",
+      "turn_remove_high_draw|good|47 words"
     ],
     "8.all_in_kind": [
       "w14_4_day7_low_spr_fold|bb"
@@ -591,12 +556,34 @@
       "w14_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
-      "mistake_known_blocker|hole card",
       "w14_4_day7_low_spr_fold|shoves",
       "w14_4_teach|shoving",
       "w14_4_transfer_effective_shove|shove",
       "w14_4_transfer_effective_shove|shoving",
       "w14_5_day7_two_streets|shove"
+    ],
+    "E19": [
+      "mistake_known_blocker|wrong: river · keep all four queens available → river · keep four queens available",
+      "turn_board_four_to_straight|correct: bad for your showdown share → 7s",
+      "turn_board_four_to_straight|wrong: unchanged showdown share / good for your showdown share → 3c / 4c",
+      "turn_counterfeit_two_pair|correct: bad for your showdown share → kh",
+      "turn_counterfeit_two_pair|wrong: unchanged showdown share / good for your showdown share → 4c / 3c",
+      "turn_dead_draw|correct: unchanged showdown share → none of these",
+      "turn_dead_draw|wrong: good for your showdown share / bad for your showdown share → 2d / qc",
+      "turn_heart_completes|correct: good for your showdown share → qh",
+      "turn_heart_completes|wrong: unchanged showdown share / bad for your showdown share → 4c / 7c",
+      "turn_heart_pairs_board|correct: bad for your showdown share → 3h",
+      "turn_heart_pairs_board|wrong: unchanged showdown share / good for your showdown share → 2h / 4h",
+      "turn_overcard_beats_pair|correct: bad for your showdown share → ah",
+      "turn_overcard_beats_pair|wrong: unchanged showdown share / good for your showdown share → 7c / 4c",
+      "turn_redraw_good|correct: good for your showdown share → 5s",
+      "turn_redraw_good|wrong: unchanged showdown share / bad for your showdown share → 6h / 3h",
+      "turn_remove_high_draw|correct: good for your showdown share → 9h",
+      "turn_remove_high_draw|wrong: unchanged showdown share / bad for your showdown share → ad / ac",
+      "turn_straight_completes|correct: good for your showdown share → td",
+      "turn_straight_completes|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
+      "turn_turn_makes_set|correct: good for your showdown share → 5c",
+      "turn_turn_makes_set|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c"
     ],
     "G1·26": [
       "w14_1_read_underbet|"
