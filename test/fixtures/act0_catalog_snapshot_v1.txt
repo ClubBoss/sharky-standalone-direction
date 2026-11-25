@@ -5883,7 +5883,7 @@ Q: Which plan balances growth and survival?
 HINT [theoryOnly]: (none)
 TABLE: Facts no applicable hand facts
 REASONING: principle risk_premium · alt avoid_thin_calls_but_skip_sound_steals · edge riskPremium · stack_matters unknown · assumption none
-  - [suboptimal] Avoid thin calls but skip sound steals — Look again. Avoiding thin calls protects the stack, but passing the 9 BB SB opportunity also gives up chips available through folds.
+  - [suboptimal] Avoid thin calls but skip good raises to win the blinds — Look again. Avoiding thin calls protects the stack, but passing the 9 BB SB opportunity also gives up chips available through folds.
     BETTER ANSWER: Take risks that improve prize EV
   - [wrong] Wait for AA before entering — Look again. The 9 BB K9s example already offered a sound first-in all-in; waiting for AA lets forced bets consume opportunities.
     BETTER ANSWER: Take risks that improve prize EV
@@ -6195,7 +6195,7 @@ EFFECTIVE: CO 26 · BTN 22 · SB 24 · BB 20
 REASONING: principle smallest_size_same_job · alt raise_to_3_bb · edge cheaperSameResult 0.2 BB · stack_matters false · assumption They all fold 80% of the time to either size.
 SEATS: UTG folded stack 3 BB | HJ Kd Qd stack 55 BB | CO stack 26 BB | BTN dealer stack 22 BB | SB stack 23.5 BB post 0.5 BB | BB stack 19 BB post 1 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds
-  - [suboptimal] Raise to 3 BB — Look again. You choose an allowed HJ hand, but the same 80% fold rate means the larger size loses an extra 1 BB on resistance without adding successful steals.
+  - [suboptimal] Raise to 3 BB — Look again. Both sizes win the blinds 80% of the time with this HJ hand. The larger raise loses an extra 1 BB when someone raises back.
     BETTER ANSWER: Raise to 2 BB
   + [correct] Raise to 2 BB — Correct. Raise to 2 BB from HJ because all four players behind fold 80% of the time at either size. Raising to 3 BB risks another blind on the hands where they resist.
   - [wrong] Fold — Look again. KQs from HJ can gain from the stated 80% joint fold rate; folding passes a profitable small-open opportunity despite covering the opponents behind.

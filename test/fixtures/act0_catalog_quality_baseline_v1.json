@@ -425,7 +425,6 @@
     "W9|w9_cash_vs_tournament|winrate",
     "W9|w9_checkpoint_survival_line|359",
     "W9|w9_checkpoint_survival_line|fold_equity",
-    "W9|w9_checkpoint_table_notice|steal",
     "W9|w9_checkpoint_zone_line|842",
     "W9|w9_ev_two_results|385",
     "W9|w9_ev_two_results|845",
@@ -447,7 +446,6 @@
     "W9|w9_survival_recap|889",
     "W9|w9_survival_recap|bubble",
     "W9|w9_survival_recap|gto",
-    "W9|w9_survival_recap|steal",
     "W9|w9_survival_stack_tradeoff|mtt"
   ],
   "e13_outs_v1": [],

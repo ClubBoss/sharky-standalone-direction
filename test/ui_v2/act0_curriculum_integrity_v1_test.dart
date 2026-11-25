@@ -13,6 +13,41 @@ void main() {
       .firstWhere((task) => task.taskId == taskId);
 
   group('Act0 curriculum integrity', () {
+    test('W9 survival recap describes winning the blinds before W10', () {
+      final runner = task('world_9', 'w9_survival_recap').runner;
+      final option = runner.options.singleWhere(
+        (option) => option.id == 'avoid_thin_calls_but_skip_sound_steals',
+      );
+      expect(
+        option.label,
+        'Avoid thin calls but skip good raises to win the blinds',
+      );
+      expect(option.isCorrect, isFalse);
+      expect(option.quality, Act0FeedbackQualityV1.suboptimal);
+      expect(
+        runner.options.singleWhere((option) => option.isCorrect).id,
+        'take_risks_that_improve_prize_ev',
+      );
+    });
+
+    test('W9 table checkpoint explains equal fold rates in plain words', () {
+      final runner = task('world_9', 'w9_checkpoint_table_notice').runner;
+      final option = runner.options.singleWhere(
+        (option) => option.id == 'raise_to_3_bb',
+      );
+      expect(
+        option.feedbackReason,
+        'Both sizes win the blinds 80% of the time with this HJ hand. '
+        'The larger raise loses an extra 1 BB when someone raises back.',
+      );
+      expect(option.isCorrect, isFalse);
+      expect(option.quality, Act0FeedbackQualityV1.suboptimal);
+      expect(
+        runner.options.singleWhere((option) => option.isCorrect).id,
+        'raise_to_2_bb',
+      );
+    });
+
     test('W8 SPR theory explains commitment before the drills', () {
       final lesson = Act0ShellStateV1.sample
           .worldById('world_8')

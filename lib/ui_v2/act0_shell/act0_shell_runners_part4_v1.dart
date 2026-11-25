@@ -1546,7 +1546,7 @@ final _w9SurvivalRecapRunner = _w7FormatPressureIntroRunner.copyWith(
   options: const [
     Act0RunnerOptionV1(
       id: "avoid_thin_calls_but_skip_sound_steals",
-      label: "Avoid thin calls but skip sound steals",
+      label: "Avoid thin calls but skip good raises to win the blinds",
       isCorrect: false,
       preferredLabel: "Take risks that improve prize EV",
       betterAnswerLabel: "Take risks that improve prize EV",
@@ -3113,7 +3113,7 @@ final _w9TablePressureNoticeRunner = _w7FormatPressureIntroRunner.copyWith(
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: "Look again.",
       feedbackReason:
-          "You choose an allowed HJ hand, but the same 80% fold rate means the larger size loses an extra 1 BB on resistance without adding successful steals.",
+          "Both sizes win the blinds 80% of the time with this HJ hand. The larger raise loses an extra 1 BB when someone raises back.",
     ),
     Act0RunnerOptionV1(
       id: "raise_to_2_bb",
