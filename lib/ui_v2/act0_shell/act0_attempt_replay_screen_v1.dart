@@ -20,6 +20,7 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
     super.key,
     required this.attempt,
     required this.onClose,
+    this.onPracticeSpot,
   }) : hand = null,
        practice = null;
 
@@ -28,12 +29,14 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
     required Act0ImportedHandV1 this.hand,
     required this.onClose,
     this.practice,
-  }) : attempt = null;
+  }) : attempt = null,
+       onPracticeSpot = null;
 
   final Act0ArchivedAttemptV1? attempt;
   final Act0ImportedHandV1? hand;
   final Widget? practice;
   final VoidCallback onClose;
+  final VoidCallback? onPracticeSpot;
 
   Act0StreetSummaryV1? get streetSummary {
     final ownHand = hand;
@@ -173,6 +176,12 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
             ),
             const SizedBox(height: _T.gapMd),
             if (widget.practice case final practice?) practice,
+            if (widget.onPracticeSpot case final onPractice?)
+              Act0SkinPrimaryButtonV1(
+                controlKey: const Key('act0_attempt_replay_practise_spot'),
+                label: 'Practise this spot',
+                onPressed: onPractice,
+              ),
             if (total == 0)
               const Text(
                 'No event history was saved for this attempt.',

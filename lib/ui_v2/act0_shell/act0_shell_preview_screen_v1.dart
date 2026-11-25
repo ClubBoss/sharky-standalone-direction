@@ -21,6 +21,7 @@ import 'act0_attempt_archive_v1.dart';
 import 'act0_leak_archive_projection_v1.dart';
 import 'act0_leak_dashboard_v1.dart';
 import 'act0_attempt_archive_screen_v1.dart';
+import 'act0_replay_skill_drill_v1.dart';
 import 'act0_beta_metrics_v1.dart';
 import 'act0_observability_projection_v1.dart';
 import 'academy_leaves/act0_academy_home_leaf_v1.dart';
@@ -1500,6 +1501,25 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   bool _returnToPlayHubOnBack = false;
   Act0ShellTabV1? _runnerOriginTabV1;
   Act0ShellTabV1? _rulesOriginTabV1;
+
+  String? _replayDrillOriginAttemptIdV1;
+  static const _replayDrillEntryV1 = 'replay_drill';
+
+  bool get _isReplayDrillV1 =>
+      _tab == Act0ShellTabV1.play &&
+      !_showPlayHub &&
+      _runnerOriginTabV1 == Act0ShellTabV1.review &&
+      _activeLearningEvidenceRunKeyV1?.startedBy == _replayDrillEntryV1;
+
+  void _finishReplayDrillV1() {
+    _activeLearningEvidenceRunKeyV1 = null;
+    _pendingReviewKindV1 = null;
+    _selectedOptionId = null;
+    _phase = Act0LessonPhaseV1.theory;
+    _teachingStepIndex = 0;
+    _returnToRunnerOriginV1(Act0ShellTabV1.review);
+    _persistProgress();
+  }
 
   void _recordRunnerOriginV1() {
     if (_tab != Act0ShellTabV1.play || _showPlayHub) {
@@ -3103,14 +3123,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         !openedAsSpacedReview &&
         _activeSameSignalRecheckTaskId != playSelectedTask.taskId;
     final isLessonRetry =
-        canShowRepairFeedback && _isExactLessonRetryV1(playSelectedTask);
-    final isRepairAttempt =
+        !_isReplayDrillV1 &&
         canShowRepairFeedback &&
-        (isLessonRetry ||
-            _activeLessonWrapUpTaskId == playSelectedTask.taskId ||
-            _activeRepairTaskId == playSelectedTask.taskId ||
-            _practiceQueueRepairRequestForTaskV1(playSelectedTask.taskId) !=
-                null);
+        _isExactLessonRetryV1(playSelectedTask);
+    final isRepairAttempt =
+        _isReplayDrillV1 ||
+        (canShowRepairFeedback &&
+            (isLessonRetry ||
+                _activeLessonWrapUpTaskId == playSelectedTask.taskId ||
+                _activeRepairTaskId == playSelectedTask.taskId ||
+                _practiceQueueRepairRequestForTaskV1(playSelectedTask.taskId) !=
+                    null));
     final lastAttempt = _learningEvidenceHistoryV1.records.lastOrNull;
     final restoredRepairFeedback =
         canShowRepairFeedback &&
@@ -3471,10 +3494,9 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         }
       },
     );
-    final repeatedMissSource = _secondLessonMissSourceV1(
-      playSelectedTask,
-      playRunner,
-    );
+    final repeatedMissSource = _isReplayDrillV1
+        ? null
+        : _secondLessonMissSourceV1(playSelectedTask, playRunner);
     final nextExample = repeatedMissSource == null
         ? null
         : _otherLessonExampleV1(
@@ -3492,6 +3514,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       callbackDiagnosticEntryV1,
       callbackDiagnosticRunIdV1,
       () {
+        if (_isReplayDrillV1) {
+          _finishReplayDrillV1();
+          return;
+        }
         if (openedAsSpacedReview) {
           _returnFromSpacedReviewV1(callbackDiagnosticRunIdV1);
           return;
@@ -4390,7 +4416,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                     : repeatedMissSource != null ||
                                           _lessonExampleSourceTaskIdV1 != null
                                     ? 'Continue lesson'
-                                    : _diagnosticLearningEntryV1 != null ||
+                                    : _isReplayDrillV1 ||
+                                          _diagnosticLearningEntryV1 != null ||
                                           _spacedReviewReturnV1 != null
                                     ? 'Back to Review'
                                     : placementForwardCtaLabel ??
@@ -4779,8 +4806,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       decision,
                                       selectedTask: playSelectedTask,
                                     );
-                                    _deriveActionPersonalizationV1(decision);
-                                    _recordLearningRunDecisionV1(decision);
+                                    if (!_isReplayDrillV1) {
+                                      _deriveActionPersonalizationV1(decision);
+                                      _recordLearningRunDecisionV1(decision);
+                                    }
                                   });
                                   _persistProgress();
                                 },
@@ -4877,6 +4906,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       _multiStreetRunsV1.remove(
                                         playSelectedTask.taskId,
                                       );
+                                      if (_isReplayDrillV1) {
+                                        _finishReplayDrillV1();
+                                        return;
+                                      }
                                       if (multiStreetRun.passed &&
                                           multiStreetRun.independent) {
                                         _cleanTaskIds.add(
@@ -4906,6 +4939,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                         );
                                       }
                                       _persistProgress();
+                                      return;
+                                    }
+                                    if (_isReplayDrillV1) {
+                                      _finishReplayDrillV1();
                                       return;
                                     }
                                     if (_diagnosticLearningEntryV1 != null) {
@@ -5268,8 +5305,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                         Act0AttemptArchiveScreenV1(
                           archive: _attemptArchiveV1,
                           ownHands: _showOwnHandsV1,
+                          initialReplayAttemptId: _replayDrillOriginAttemptIdV1,
                           onClose: () => setState(() {
                             _showAttemptArchiveV1 = false;
+                            _replayDrillOriginAttemptIdV1 = null;
                           }),
                           onOwnHandsChanged: (archive) {
                             if (!_acceptRecoveryCallbackV1(callbackEpochV1))
@@ -5277,6 +5316,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                             setState(() => _attemptArchiveV1 = archive);
                             _persistProgress();
                           },
+                          practiceSpotForAttempt: (attempt) =>
+                              _replaySpotPracticeV1(attempt, callbackEpochV1),
                           onPracticeCallPrice: _ownHandCallPricePracticeV1(
                             worlds,
                             callbackEpochV1,
@@ -5622,6 +5663,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _runnerOriginTabV1 = null;
     _tab = tab;
     _showAttemptArchiveV1 = false;
+    _replayDrillOriginAttemptIdV1 = null;
     if (tab == Act0ShellTabV1.play) {
       _showPlayHub = true;
       _blockCompletionSummary = null;

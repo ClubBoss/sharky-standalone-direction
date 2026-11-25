@@ -628,6 +628,62 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     return true;
   }
 
+  VoidCallback? _replaySpotPracticeV1(
+    Act0ArchivedAttemptV1 attempt,
+    int callbackEpoch,
+  ) {
+    final state = _catalogStateV1;
+    final worlds = _progressedWorlds(state);
+    final pool = _dailyDeckEntries(state).where((entry) {
+      // The resolver takes completed exercises, not freshly generated deals.
+      if (!_completedTaskIds.contains(entry.taskId)) return false;
+      final lesson = _lessonById(
+        _worldById(worlds, entry.worldId).lessons,
+        entry.lessonId,
+      );
+      final task = lesson.taskList
+          .where((task) => task.taskId == entry.taskId)
+          .firstOrNull;
+      return task != null &&
+          !task.repairOnly &&
+          _runnerAllowedByNineSeatGateV1(task.runner);
+    }).toList();
+    final evidence = attempt.evidence;
+    final source = (lessonId: evidence.lessonId, taskId: evidence.taskId);
+    final result = resolveReplaySkillDrillV1(
+      (
+        task: source,
+        decisions: [(task: source, isCorrect: evidence.isCorrect)],
+      ),
+      pool.map((entry) => (lessonId: entry.lessonId, taskId: entry.taskId)),
+      _learningEvidenceHistoryV1.provenanceRecords.map(
+        (record) => (taskId: record.taskId, createdOrder: record.createdOrder),
+      ),
+    );
+    final target = pool
+        .where((entry) => entry.taskId == result.taskId)
+        .firstOrNull;
+    if (target == null) return null;
+    return () => _setStateForRecoveryV1(callbackEpoch, () {
+      if (_tab != Act0ShellTabV1.review || !_showAttemptArchiveV1) return;
+      if (_startTaskByIds(
+        _worldById(worlds, target.worldId),
+        target.lessonId,
+        target.taskId,
+        skipTeaching: true,
+        evidenceRunKind: 'repair',
+        evidenceStartedBy: _Act0ShellPreviewScreenV1State._replayDrillEntryV1,
+        persist: false,
+      )) {
+        // A familiar skill rep is not bound to the replayed source
+        // obligation or a new lesson run.
+        _activeActionSequenceStageV1 = null;
+        _replayDrillOriginAttemptIdV1 = attempt.id;
+        _persistProgress();
+      }
+    });
+  }
+
   VoidCallback? _ownHandCallPricePracticeV1(
     List<Act0WorldCardV1> worlds,
     int callbackEpoch,
