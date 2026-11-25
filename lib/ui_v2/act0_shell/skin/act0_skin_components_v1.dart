@@ -941,7 +941,7 @@ class Act0SkinStatTileV1 extends StatelessWidget {
   }
 }
 
-class Act0SkinTaskHeaderV1 extends StatelessWidget {
+class Act0SkinTaskHeaderV1 extends StatefulWidget {
   const Act0SkinTaskHeaderV1({
     super.key,
     required this.step,
@@ -962,24 +962,54 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
   final String? progressLabel;
 
   @override
+  State<Act0SkinTaskHeaderV1> createState() => _Act0SkinTaskHeaderV1State();
+}
+
+class _Act0SkinTaskHeaderV1State extends State<Act0SkinTaskHeaderV1> {
+  // The runner rebuilds for stage and choreography changes. Keep the Material
+  // button subtrees stable; the callbacks still read the latest widget.
+  late Widget _closeButton = _buildCloseButton();
+  late final Widget _helpButton = SizedBox(
+    width: 48,
+    height: 48,
+    child: IconButton(
+      style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+      key: const Key('act0_shell_runner_glossary'),
+      tooltip: 'Glossary',
+      onPressed: () => widget.onHelp?.call(),
+      icon: const Icon(Icons.menu_book_rounded, size: 22),
+    ),
+  );
+
+  Widget _buildCloseButton() => SizedBox(
+    width: 48,
+    height: 48,
+    child: IconButton(
+      style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
+      key: const Key('act0_shell_runner_back'),
+      tooltip: widget.closeLabel,
+      onPressed: () => widget.onClose(),
+      icon: const Icon(Icons.close_rounded),
+    ),
+  );
+
+  @override
+  void didUpdateWidget(covariant Act0SkinTaskHeaderV1 oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.closeLabel != widget.closeLabel) {
+      _closeButton = _buildCloseButton();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final count = progressLabel ?? '$step of $total';
+    final count = widget.progressLabel ?? '${widget.step} of ${widget.total}';
     // Fixed height: the mode label must never change the header's layout.
     return SizedBox(
       height: 48,
       child: Row(
         children: [
-          SizedBox(
-            width: 48,
-            height: 48,
-            child: IconButton(
-              style: const ButtonStyle(splashFactory: InkRipple.splashFactory),
-              key: const Key('act0_shell_runner_back'),
-              tooltip: closeLabel,
-              onPressed: onClose,
-              icon: const Icon(Icons.close_rounded),
-            ),
-          ),
+          _closeButton,
           Expanded(
             child: Semantics(
               label: 'Lesson progress',
@@ -987,14 +1017,16 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
               child: CustomPaint(
                 size: const Size(0, _T.courseProgressHeight),
                 painter: _TaskHeaderProgressPainterV1(
-                  total > 0 ? (step / total).clamp(0.0, 1.0) : 0,
+                  widget.total > 0
+                      ? (widget.step / widget.total).clamp(0.0, 1.0)
+                      : 0,
                   Directionality.of(context),
                 ),
               ),
             ),
           ),
           const SizedBox(width: _T.gapMd),
-          if (modeLabel case final mode?)
+          if (widget.modeLabel case final mode?)
             Column(
               mainAxisSize: MainAxisSize.min,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -1006,22 +1038,7 @@ class Act0SkinTaskHeaderV1 extends StatelessWidget {
             )
           else
             Text(count, style: _T.captionStyle),
-          if (onHelp != null)
-            SizedBox(
-              width: 48,
-              height: 48,
-              child: IconButton(
-                style: const ButtonStyle(
-                  splashFactory: InkRipple.splashFactory,
-                ),
-                key: const Key('act0_shell_runner_glossary'),
-                tooltip: 'Glossary',
-                onPressed: onHelp,
-                icon: const Icon(Icons.menu_book_rounded, size: 22),
-              ),
-            )
-          else
-            const SizedBox(width: 48),
+          if (widget.onHelp != null) _helpButton else const SizedBox(width: 48),
         ],
       ),
     );

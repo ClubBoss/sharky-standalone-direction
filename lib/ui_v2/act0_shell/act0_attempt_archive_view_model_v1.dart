@@ -22,6 +22,7 @@ class Act0AttemptArchiveViewModelV1 {
   static String outcomeFor(Act0ArchivedAttemptV1 attempt) {
     final evidence = attempt.evidence;
     if (evidence.isRepaired) return 'Repaired';
+    if (evidence.isAssistedCorrect) return 'Assisted';
     return evidence.isCorrect ? 'Correct' : 'Wrong';
   }
 

@@ -7,6 +7,7 @@ import 'package:flutter/semantics.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_glossary_sheet_v1.dart';
+import 'act0_task_help_policy_v1.dart';
 import 'act0_growth_v1.dart';
 import 'skin/act0_skin_components_v1.dart';
 import 'skin/act0_skin_tokens_v1.dart';
@@ -3150,6 +3151,40 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
     return '${widget.runner.lessonId}|${widget.runner.beatIndex}|${widget.runner.phase.name}|${widget.runner.teachingStepIndex}|${widget.runner.selectedOptionId ?? ''}';
   }
 
+  Future<void> _openTaskHelpV1() async {
+    final runner = widget.runner;
+    final question = widget.numberEntry?.spec.question ?? runner.question;
+    final isAttempt =
+        runner.phase == Act0LessonPhaseV1.drill && !_decisionSubmittedForTaskV1;
+    final tools = act0TaskHelpToolsForRunnerV1(runner, question: question);
+    final identity = _compositionTaskIdentity(widget);
+    final interaction = _interactionKey(runner);
+    await showAct0GlossarySheetV1(
+      context,
+      taskText: act0GlossaryTaskTextV1(runner, question: question),
+      tools: tools,
+      initialFromFlop: runner.table.boardCards.length != 4,
+      allowHandRanks: !isAttempt,
+      // Definitions can directly solve a terminology/recognition assessment.
+      // In such questions keep only genuinely applicable numeric tools.
+      allowGlossary: !isAttempt || !act0TaskHelpTestsDefinitionV1(question),
+      assessmentOptions: isAttempt
+          ? runner.options.map((option) => option.label).toList()
+          : const [],
+      onNumericHelp: isAttempt
+          ? () async {
+              if (!mounted ||
+                  identity != _compositionTaskIdentity(widget) ||
+                  interaction != _interactionKey(widget.runner))
+                return false;
+              return _exposeDecisionAssistanceV1(
+                Act0DecisionAssistanceV1.quickHint,
+              );
+            }
+          : null,
+    );
+  }
+
   Future<void> _openTheoryRecallSheet() async {
     final step = widget.theoryRecallStep;
     if (step == null) {
@@ -3309,7 +3344,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             context,
             runner: runner,
             onBack: _handleRunnerBackV1,
-            showGlossary: false,
+            onHelp: _openTaskHelpV1,
             progressLabel: widget.progressLabel,
           ),
           Expanded(
@@ -4372,7 +4407,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                   extraPracticeProgress: widget.extraPracticeProgress,
                   progressLabel: widget.progressLabel,
                   onBack: _handleRunnerBackV1,
-                  showGlossary: isTheory || isTeaching || isReview,
+                  onHelp: _openTaskHelpV1,
                 ),
               SizedBox(
                 height: showTopInstructionCard
@@ -4885,7 +4920,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
               extraPracticeProgress: widget.extraPracticeProgress,
               progressLabel: widget.progressLabel,
               onBack: _handleRunnerBackV1,
-              showGlossary: isTheory || isTeaching || isReview,
+              onHelp: _openTaskHelpV1,
             ),
           if (isReview && dockIntegratedFeedbackGuide && question.isNotEmpty)
             Container(

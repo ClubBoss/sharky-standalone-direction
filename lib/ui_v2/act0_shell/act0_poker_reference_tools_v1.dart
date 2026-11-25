@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'act0_poker_reference_math_v1.dart';
-import 'act0_shell_tokens_v1.dart';
+import 'act0_task_help_policy_v1.dart';
+import 'skin/act0_skin_components_v1.dart';
+import 'skin/act0_skin_tokens_v1.dart';
 
 class Act0PokerReferenceToolsV1 extends StatefulWidget {
-  const Act0PokerReferenceToolsV1({super.key});
+  const Act0PokerReferenceToolsV1({
+    super.key,
+    required this.tools,
+    this.onOpen,
+    this.initialFromFlop = true,
+  });
+
+  final Set<Act0TaskHelpToolV1> tools;
+  final Future<bool> Function()? onOpen;
+  final bool initialFromFlop;
 
   @override
   State<Act0PokerReferenceToolsV1> createState() =>
@@ -12,13 +23,70 @@ class Act0PokerReferenceToolsV1 extends StatefulWidget {
 }
 
 class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
+  final _expanded = <Act0TaskHelpToolV1>{};
+  bool _acknowledged = false;
+  bool _pending = false;
+  bool _saveFailed = false;
+
+  Future<void> _toggle(Act0TaskHelpToolV1 tool) async {
+    if (_pending) return;
+    if (_expanded.contains(tool)) {
+      FocusScope.of(context).unfocus();
+      setState(() {
+        _expanded.remove(tool);
+        switch (tool) {
+          case Act0TaskHelpToolV1.potOdds:
+            _pot = _call = null;
+          case Act0TaskHelpToolV1.blindUnits:
+            _amount = _chipsPerBlind = null;
+          case Act0TaskHelpToolV1.outs:
+            _outs = null;
+        }
+      });
+      return;
+    }
+    if (!_acknowledged && widget.onOpen != null) {
+      setState(() {
+        _pending = true;
+        _saveFailed = false;
+      });
+      var saved = false;
+      try {
+        saved = await widget.onOpen!();
+      } catch (_) {
+        /* Fail closed. */
+      }
+      if (!mounted) return;
+      setState(() {
+        _pending = false;
+        _acknowledged = saved;
+        _saveFailed = !saved;
+      });
+      if (!saved) return;
+    }
+    setState(() => _expanded.add(tool));
+  }
+
+  Widget _tool(Act0TaskHelpToolV1 tool, String title, List<Widget> children) =>
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Act0SkinSecondaryButtonV1(
+            label: title,
+            onPressed: _pending ? null : () => _toggle(tool),
+          ),
+          if (_expanded.contains(tool)) ...children,
+          const SizedBox(height: Act0SkinTokensV1.gapSm),
+        ],
+      );
+
   double? _pot;
   double? _call;
   double? _amount;
   double? _chipsPerBlind;
   int? _outs;
   bool _toChips = true;
-  bool _fromFlop = true;
+  late bool _fromFlop = widget.initialFromFlop;
 
   String _percent(double ratio) => '${(ratio * 100).toStringAsFixed(2)}%';
 
@@ -55,15 +123,22 @@ class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
     final inputUnit = _toChips ? 'BB' : 'chips';
     final outputUnit = _toChips ? 'chips' : 'BB';
     return Padding(
-      padding: const EdgeInsets.only(bottom: Act0ShellTokensV1.gapMd),
+      padding: const EdgeInsets.only(bottom: Act0SkinTokensV1.gapMd),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ExpansionTile(
-            maintainState: true,
-            tilePadding: EdgeInsets.zero,
-            title: const Text('Price Bar and pot odds'),
-            children: [
+          if (widget.onOpen != null)
+            const Text(
+              'Opening a calculator counts as help for this attempt.',
+              style: Act0SkinTokensV1.secondary,
+            ),
+          if (_saveFailed)
+            const Text(
+              'Help could not be saved. Try again.',
+              style: Act0SkinTokensV1.secondary,
+            ),
+          if (widget.tools.contains(Act0TaskHelpToolV1.potOdds))
+            _tool(Act0TaskHelpToolV1.potOdds, 'Price Bar and pot odds', [
               const Text(
                 'Enter the pot you can win before adding your call. '
                 'Include only the part of the opposing bet you can match with your remaining chips. '
@@ -101,13 +176,9 @@ class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
                   const Text('Pot odds exceed the displayable range.'),
               ] else
                 const Text('Enter a positive pot and a valid call amount.'),
-            ],
-          ),
-          ExpansionTile(
-            maintainState: true,
-            tilePadding: EdgeInsets.zero,
-            title: const Text('BB and chips'),
-            children: [
+            ]),
+          if (widget.tools.contains(Act0TaskHelpToolV1.blindUnits))
+            _tool(Act0TaskHelpToolV1.blindUnits, 'BB and chips', [
               DropdownButton<bool>(
                 value: _toChips,
                 items: const [
@@ -136,13 +207,9 @@ class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
                     ? 'Enter an amount of zero or more and a positive chips-per-BB rate.'
                     : '${_number(conversion)} $outputUnit',
               ),
-            ],
-          ),
-          ExpansionTile(
-            maintainState: true,
-            tilePadding: EdgeInsets.zero,
-            title: const Text('Outs to percentage'),
-            children: [
+            ]),
+          if (widget.tools.contains(Act0TaskHelpToolV1.outs))
+            _tool(Act0TaskHelpToolV1.outs, 'Outs to percentage', [
               DropdownButton<bool>(
                 value: _fromFlop,
                 items: const [
@@ -170,8 +237,7 @@ class _Act0PokerReferenceToolsV1State extends State<Act0PokerReferenceToolsV1> {
                     : 'Next card ${_percent(nextCard)}',
               ),
               if (byRiver != null) Text('By the river ${_percent(byRiver)}'),
-            ],
-          ),
+            ]),
         ],
       ),
     );

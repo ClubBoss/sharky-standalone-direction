@@ -931,7 +931,7 @@ Widget _buildRunnerProgressV1(
   BuildContext context, {
   required Act0RunnerStateV1 runner,
   required VoidCallback onBack,
-  required bool showGlossary,
+  VoidCallback? onHelp,
   ({int step, int total})? extraPracticeProgress,
   String? progressLabel,
 }) {
@@ -940,6 +940,7 @@ Widget _buildRunnerProgressV1(
   final total = progress?.total ?? runner.beatCount;
   final russian = act0AcademyLanguageV1(context) == 'ru';
   return Act0SkinTaskHeaderV1(
+    key: const ValueKey('act0_runner_task_header'),
     step: step,
     total: total,
     onClose: onBack,
@@ -952,12 +953,7 @@ Widget _buildRunnerProgressV1(
         : russian
         ? 'Ещё практика'
         : 'Extra practice',
-    onHelp: showGlossary
-        ? () => showAct0GlossarySheetV1(
-            context,
-            taskText: act0GlossaryTaskTextV1(runner),
-          )
-        : null,
+    onHelp: onHelp,
   );
 }
 
