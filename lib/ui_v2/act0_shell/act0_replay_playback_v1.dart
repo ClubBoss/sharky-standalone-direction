@@ -35,7 +35,7 @@ class Act0ReplayPlaybackV1 {
   }
 
   void play() {
-    if (currentIndex < stepCount - 1) _isPlaying = true;
+    if (!reduceMotion && currentIndex < stepCount - 1) _isPlaying = true;
   }
 
   void pause() {

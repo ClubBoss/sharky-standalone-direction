@@ -6,6 +6,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'act0_attempt_archive_v1.dart';
 import 'act0_attempt_replay_table_v1.dart';
 import 'act0_imported_hand_v1.dart';
+import 'act0_replay_playback_v1.dart';
 import 'act0_lesson_runner_shell_v1.dart';
 import 'act0_shell_state_v1.dart';
 import 'act0_table_presentation_config_v1.dart';
@@ -22,7 +23,8 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
     required this.onClose,
     this.onPracticeSpot,
   }) : hand = null,
-       practice = null;
+       practice = null,
+       taskHistory = null;
 
   const Act0AttemptReplayScreenV1.ownHand({
     super.key,
@@ -30,8 +32,19 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
     required this.onClose,
     this.practice,
   }) : attempt = null,
+       onPracticeSpot = null,
+       taskHistory = null;
+
+  const Act0AttemptReplayScreenV1.task({
+    super.key,
+    required Act0TaskStreetReplayV1 this.taskHistory,
+    required this.onClose,
+  }) : attempt = null,
+       hand = null,
+       practice = null,
        onPracticeSpot = null;
 
+  final Act0TaskStreetReplayV1? taskHistory;
   final Act0ArchivedAttemptV1? attempt;
   final Act0ImportedHandV1? hand;
   final Widget? practice;
@@ -39,6 +52,7 @@ class Act0AttemptReplayScreenV1 extends StatefulWidget {
   final VoidCallback? onPracticeSpot;
 
   Act0StreetSummaryV1? get streetSummary {
+    if (taskHistory case final history?) return history.summary;
     final ownHand = hand;
     final prefix =
         ownHand?.timeline.beforeDecision ?? attempt?.timelineSnapshot;
@@ -55,12 +69,18 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
     with WidgetsBindingObserver {
   late var _table = _buildReplayTable();
   late var _own = widget.hand == null ? null : _OwnHandReplay(widget.hand!);
-  late var _replay = Act0AttemptReplayV1.events(
-    widget.attempt?.events ?? _own!.events,
-  );
+  List<Act0ActionTrailItemV1> get _events =>
+      widget.attempt?.events ??
+      _own?.events ??
+      [
+        for (final label in widget.taskHistory!.labels)
+          Act0ActionTrailItemV1.note(label: label),
+      ];
+  late Act0ReplayPlaybackV1 _playback;
   Timer? _timer;
-
   bool _visible = true;
+  bool _reduceMotion = false;
+  bool _initialized = false;
 
   Act0AttemptReplayTableV1? _buildReplayTable() {
     final attempt = widget.attempt;
@@ -69,16 +89,36 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
         : Act0AttemptReplayTableV1.fromAttempt(attempt);
   }
 
+  void _configure({required int position, required double speed}) {
+    _timer?.cancel();
+    _timer = null;
+    // Index zero is the unconsumed journal; index n consumes n events.
+    _playback =
+        Act0ReplayPlaybackV1(
+            stepCount: _events.length + 1,
+            reduceMotion: _reduceMotion,
+          )
+          ..seekTo(position)
+          ..setSpeed(speed);
+    _initialized = true;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _visible =
         TickerMode.of(context) && (ModalRoute.isCurrentOf(context) ?? true);
-    if (!_visible && _replay.isPlaying) {
-      _timer?.cancel();
-      _timer = null;
-      _replay = _replay.pause();
+    final reduce = MediaQuery.disableAnimationsOf(context);
+    if (!_initialized || reduce != _reduceMotion) {
+      _reduceMotion = reduce;
+      _configure(
+        position: _initialized
+            ? _playback.currentIndex
+            : (widget.taskHistory == null ? 0 : _events.length),
+        speed: _initialized ? _playback.speed : 1,
+      );
     }
+    if (!_visible) _pause();
   }
 
   @override
@@ -90,44 +130,73 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
   @override
   void didUpdateWidget(Act0AttemptReplayScreenV1 oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.attempt != widget.attempt || oldWidget.hand != widget.hand) {
-      _timer?.cancel();
-      _timer = null;
+    if (oldWidget.attempt != widget.attempt ||
+        oldWidget.hand != widget.hand ||
+        oldWidget.taskHistory != widget.taskHistory) {
       _own = widget.hand == null ? null : _OwnHandReplay(widget.hand!);
-      _replay = Act0AttemptReplayV1.events(
-        widget.attempt?.events ?? _own!.events,
-      );
       _table = _buildReplayTable();
+      _configure(
+        position: widget.taskHistory == null ? 0 : _events.length,
+        speed: 1,
+      );
     }
+  }
+
+  void _pause() {
+    _timer?.cancel();
+    _timer = null;
+    _playback.pause();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state != AppLifecycleState.resumed && _replay.isPlaying) {
-      _update(_replay.pause());
+    if (state != AppLifecycleState.resumed && _initialized) {
+      setState(_pause);
     }
   }
 
-  void _update(Act0AttemptReplayV1 replay) {
-    setState(() => _replay = replay);
-    if (!replay.isPlaying) {
-      _timer?.cancel();
-      _timer = null;
-    }
+  void _seek(int position) {
+    setState(() {
+      _pause();
+      _playback.seekTo(position);
+    });
   }
 
   void _togglePlayback() {
-    if (_replay.isPlaying) {
-      _update(_replay.pause());
-    } else {
-      _update(_replay.play());
-      if (_replay.isPlaying) {
-        _timer = Timer.periodic(
-          const Duration(seconds: 1),
-          (_) => _update(_replay.tick()),
-        );
+    if (_reduceMotion || !_visible) return;
+    setState(() {
+      if (_playback.isPlaying) {
+        _pause();
+      } else {
+        _playback.play();
+        _startTimer();
       }
-    }
+    });
+  }
+
+  Duration get _interval => Duration(
+    microseconds: (_playback.baseStepDuration.inMicroseconds / _playback.speed)
+        .round(),
+  );
+
+  void _startTimer() {
+    _timer?.cancel();
+    if (!_playback.isPlaying) return;
+    final interval = _interval;
+    _timer = Timer.periodic(interval, (_) {
+      if (!mounted) return;
+      setState(() {
+        _playback.tick(interval);
+        if (!_playback.isPlaying) _pause();
+      });
+    });
+  }
+
+  void _setSpeed(double speed) {
+    setState(() {
+      _playback.setSpeed(speed);
+      if (_playback.isPlaying) _startTimer();
+    });
   }
 
   @override
@@ -140,17 +209,27 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
   @override
   Widget build(BuildContext context) {
     final attempt = widget.attempt;
-    final total = _replay.events.length;
-    final history = _replay.textAlternative;
-    final position = _replay.position;
+    final total = _events.length;
+    final position = _playback.currentIndex;
+    final history = _events
+        .take(position)
+        .map((event) => event.learnerLabel)
+        .toList();
+    final atEnd = position == total;
     final frame = _table?.atPosition(position);
     final table = frame?.table ?? _own?.frames[position];
     final tableAvailable = table?.supportsLearnerTable ?? false;
     final streets =
         _table?.streetPositions ??
         _own?.streetPositions ??
+        widget.taskHistory?.streetPositions ??
         const <String, int>{};
     final summary = widget.streetSummary;
+    final speedLabel = _playback.speed == 0.5
+        ? '0.5'
+        : _playback.speed.toInt().toString();
+    final playbackStatus =
+        'Speed $speedLabel× · ${_playback.isPlaying ? 'Playing' : 'Paused'}';
     final status = position == 0
         ? 'Start · 1 of $total'
         : 'Step $position of $total';
@@ -170,7 +249,9 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
             Act0SkinScreenHeaderV1(
               backKey: const Key('act0_attempt_replay_back_to_archive'),
               onBack: widget.onClose,
-              title: attempt == null
+              title: widget.taskHistory != null
+                  ? 'Task history · ${pokerStreetToString(widget.taskHistory!.decisionStreet)}'
+                  : attempt == null
                   ? 'Own hand · ${widget.hand!.isManual ? 'Manual entry' : 'PokerStars'}'
                   : attempt.taskLabel ?? attempt.evidence.taskId,
             ),
@@ -183,8 +264,10 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
                 onPressed: onPractice,
               ),
             if (total == 0)
-              const Text(
-                'No event history was saved for this attempt.',
+              Text(
+                widget.taskHistory == null
+                    ? 'No event history was saved for this attempt.'
+                    : 'No authored history is available for this decision.',
                 style: _T.secondary,
               )
             else ...[
@@ -193,53 +276,74 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
                 child: Text(
                   status,
                   semanticsLabel: history.isEmpty
-                      ? status
-                      : '$status. ${history.last}',
+                      ? '$status. $playbackStatus'
+                      : '$status. $playbackStatus. ${history.last}',
                   style: _T.secondary,
                 ),
               ),
               Wrap(
                 spacing: _T.gapXs,
                 children: [
-                  TextButton(
-                    key: const Key('act0_attempt_replay_previous'),
-                    onPressed: _replay.position == 0
-                        ? null
-                        : () => _update(_replay.back()),
-                    child: const Text('Previous'),
-                  ),
-                  TextButton(
-                    key: const Key('act0_attempt_replay_next'),
-                    onPressed: _replay.atEnd
-                        ? null
-                        : () => _update(_replay.pause().forward()),
-                    child: const Text('Next'),
-                  ),
-                  TextButton(
-                    key: const Key('act0_attempt_replay_play_pause'),
-                    onPressed: _replay.atEnd ? null : _togglePlayback,
-                    child: Text(_replay.isPlaying ? 'Pause' : 'Play'),
-                  ),
-                  TextButton(
-                    key: const Key('act0_attempt_replay_reset'),
-                    onPressed: _replay.position == 0 && !_replay.isPlaying
-                        ? null
-                        : () => _update(_replay.reset()),
-                    child: const Text('Reset'),
-                  ),
+                  for (final (id, label, action)
+                      in <(String, String, VoidCallback?)>[
+                        (
+                          'previous',
+                          'Previous',
+                          position == 0 ? null : () => _seek(position - 1),
+                        ),
+                        (
+                          'next',
+                          'Next',
+                          atEnd ? null : () => _seek(position + 1),
+                        ),
+                        (
+                          'play_pause',
+                          _playback.isPlaying ? 'Pause' : 'Play',
+                          atEnd || _reduceMotion ? null : _togglePlayback,
+                        ),
+                        (
+                          'reset',
+                          'Reset',
+                          position == 0 ? null : () => _seek(0),
+                        ),
+                      ])
+                    IntrinsicWidth(
+                      child: Act0SkinPrimaryButtonV1(
+                        compact: true,
+                        controlKey: Key('act0_attempt_replay_$id'),
+                        label: label,
+                        onPressed: action,
+                      ),
+                    ),
+                ],
+              ),
+              Wrap(
+                spacing: _T.gapXs,
+                children: [
+                  for (final speed in [0.5, 1.0, 2.0])
+                    ConstrainedBox(
+                      constraints: const BoxConstraints(minWidth: _T.minTouch),
+                      child: Act0SkinChipV1(
+                        label: '${speed == 0.5 ? '0.5' : speed.toInt()}×',
+                        selected: _playback.speed == speed,
+                        onPressed: () => _setSpeed(speed),
+                      ),
+                    ),
                 ],
               ),
               if (streets.length > 1 || summary != null)
                 Act0SkinStreetSummaryStripV1(
                   jumps: streets,
                   position: position,
-                  onJump: (step) => _update(_replay.seek(step)),
+                  onJump: _seek,
                   lines: _summaryLines(
                     summary,
                     streets,
                     position,
-                    table?.boardCards.length ?? 0,
-                    atEnd: _replay.atEnd,
+                    table?.boardCards.length ??
+                        widget.taskHistory?.boardAt(position).length ??
+                        0,
+                    atEnd: atEnd,
                   ),
                 ),
               if (table != null && tableAvailable)
@@ -250,9 +354,17 @@ class _Act0AttemptReplayScreenV1State extends State<Act0AttemptReplayScreenV1>
                     table: table,
                     config: Act0TablePresentationConfigV1(
                       animateActiveCommitment:
-                          (frame?.newCommitment ?? false) && _visible,
+                          (frame?.newCommitment ?? false) &&
+                          _visible &&
+                          _playback.shouldAnimate,
                     ),
                   ),
+                )
+              else if (widget.taskHistory case final task?)
+                Text(
+                  'Board: ${task.boardAt(position).join(' ')}',
+                  key: const Key('act0_task_replay_board'),
+                  style: _T.body,
                 )
               else
                 const Text(

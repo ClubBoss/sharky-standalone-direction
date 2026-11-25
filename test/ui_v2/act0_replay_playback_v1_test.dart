@@ -1,4 +1,4 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'package:test/test.dart';
 
 import '../../lib/ui_v2/act0_shell/act0_replay_playback_v1.dart';
 
@@ -82,12 +82,15 @@ void main() {
     expect(playback.currentIndex, 3);
   });
 
-  test('Reduce Motion disables animation hints during playback', () {
+  test('Reduce Motion disables autoplay and manual steps jump', () {
     final playback = Act0ReplayPlaybackV1(stepCount: 2, reduceMotion: true);
     expect(Act0ReplayPlaybackV1(stepCount: 2).shouldAnimate, isTrue);
     playback.play();
     expect(playback.shouldAnimate, isFalse);
     playback.tick(oneSecond);
+    expect(playback.isPlaying, isFalse);
+    expect(playback.currentIndex, 0);
+    playback.stepForward();
     expect(playback.currentIndex, 1);
     expect(playback.shouldAnimate, isFalse);
   });

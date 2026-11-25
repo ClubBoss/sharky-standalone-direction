@@ -504,7 +504,7 @@ void main() {
         final next = find.byKey(const Key('act0_attempt_replay_next'));
 
         expect(find.text('Start · 1 of 2'), findsOneWidget);
-        expect(tester.widget<TextButton>(previous).onPressed, isNull);
+        expect(tester.widget<FilledButton>(previous).onPressed, isNull);
         expect(find.text('CO bets 2 BB'), findsNothing);
 
         await tester.tap(next);
@@ -517,11 +517,13 @@ void main() {
         await tester.pump();
         expect(find.text('Step 2 of 2'), findsOneWidget);
         expect(find.text('Action returns to BB'), findsOneWidget);
-        expect(tester.widget<TextButton>(next).onPressed, isNull);
+        expect(tester.widget<FilledButton>(next).onPressed, isNull);
+        await tester.ensureVisible(find.text('Earlier steps'));
         await tester.tap(find.text('Earlier steps'));
         await tester.pumpAndSettle();
         expect(find.text('CO bets 2 BB'), findsOneWidget);
 
+        await tester.ensureVisible(previous);
         await tester.tap(previous);
         await tester.pumpAndSettle();
         expect(find.text('Step 1 of 2'), findsOneWidget);
@@ -546,6 +548,21 @@ void main() {
       await tester.pump();
       expect(find.text('Start · 1 of 2'), findsOneWidget);
       expect(find.text('CO bets 2 BB'), findsNothing);
+    });
+
+    testWidgets('speed control changes playback interval', (tester) async {
+      await mount(tester, _attempt(1));
+      await tester.ensureVisible(find.text('2×'));
+      await tester.tap(find.text('2×'));
+      await tester.pump();
+      await tester.ensureVisible(find.text('Play'));
+      await tester.tap(find.text('Play'));
+      await tester.pump(const Duration(milliseconds: 499));
+      expect(find.text('Start · 1 of 2'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 1));
+      expect(find.text('Step 1 of 2'), findsOneWidget);
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(find.text('Step 2 of 2'), findsOneWidget);
     });
 
     testWidgets('street jump pauses replay and reveals only that board', (
@@ -584,7 +601,19 @@ void main() {
           await mount(tester, attempt, reduceMotion: reduceMotion);
           expect(find.byType(Act0TableSceneV1), findsOneWidget);
           await tester.ensureVisible(find.text('Play'));
-          await tester.tap(find.text('Play'));
+          if (reduceMotion) {
+            final play = find.byKey(
+              const Key('act0_attempt_replay_play_pause'),
+            );
+            expect(tester.widget<FilledButton>(play).onPressed, isNull);
+            await tester.pump(const Duration(seconds: 2));
+            expect(
+              find.text('Start · 1 of ${attempt.events.length}'),
+              findsOneWidget,
+            );
+          } else {
+            await tester.tap(find.text('Play'));
+          }
           final projection = Act0AttemptReplayTableV1.fromAttempt(attempt)!;
           final firstCommitment =
               Iterable<int>.generate(
@@ -594,7 +623,16 @@ void main() {
                 (position) =>
                     projection.atPosition(position)?.newCommitment ?? false,
               );
-          await tester.pump(Duration(seconds: firstCommitment));
+          if (reduceMotion) {
+            for (var i = 0; i < firstCommitment; i++) {
+              final next = find.byKey(const Key('act0_attempt_replay_next'));
+              await tester.ensureVisible(next);
+              await tester.tap(next);
+              await tester.pump();
+            }
+          } else {
+            await tester.pump(Duration(seconds: firstCommitment));
+          }
           final scene = tester.widget<Act0TableSceneV1>(
             find.byType(Act0TableSceneV1),
           );
