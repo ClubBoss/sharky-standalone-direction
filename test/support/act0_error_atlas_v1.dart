@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import 'act0_catalog_chart_audit_v1.dart';
 import 'act0_catalog_concept_order_v1.dart';
@@ -34,6 +35,8 @@ List<CatalogConceptV1> _concepts() {
               .join('|') +
           r')(?![a-z0-9])',
   };
+  // A chip amount is not a reference to the big-blind seat.
+  patterns['143'] = r'(?<![a-z0-9])(?<![0-9] )(?<!half )BB(?![a-z0-9])';
   for (final exception in exceptions.entries) {
     expect(patterns.remove(exception.key), isNotNull);
     expect(exception.value, isNotEmpty);
@@ -117,7 +120,303 @@ void _writeReport(
   File(path).writeAsStringSync('${lines.join('\n')}\n');
 }
 
+CatalogTask _conceptProbe({
+  required String question,
+  String? teaching,
+  List<Act0RunnerOptionV1> options = const [],
+}) {
+  final row = catalogTasks.first;
+  return (
+    world: row.world,
+    lesson: row.lesson,
+    lessonIndex: row.lessonIndex,
+    task: Act0LessonTaskV1(
+      taskId: 'c5_probe',
+      title: 'Probe',
+      phase: Act0LessonPhaseV1.drill,
+      rewardXp: 0,
+      runner: row.task.runner.copyWith(
+        caption: '',
+        question: question,
+        hintPolicy: Act0HintPolicyV1.hidden,
+        teachingSteps: [
+          if (teaching != null)
+            Act0TeachingStepV1(title: 'Read the term.', body: teaching),
+        ],
+        options: options,
+      ),
+    ),
+  );
+}
+
+void _registerConceptOrderDefinitionTests() {
+  late List<CatalogConceptV1> concepts;
+  setUpAll(() => concepts = _concepts());
+  const cases = <(List<String>, String, String)>[
+    (['141', 'button'], 'BTN is Button.', 'Find BTN, the Button.'),
+    (['139'], 'HJ is Hijack.', 'Tap HJ.'),
+    (['140'], 'CO is Cutoff.', 'Tap CO.'),
+    (
+      ['14', '15', 'blinds'],
+      'Blinds are forced contributions: the small blind puts in 0.5 BB and the big blind puts in 1 BB before anyone chooses.',
+      'Find the small blind and big blind.',
+    ),
+    (
+      ['31', '32', 'rules_hand_flow'],
+      'The flop has three shared cards. The turn is the fourth.',
+      'Compare flop and turn.',
+    ),
+    (
+      ['action_order', '152'],
+      'UTG acts first, right after the big blind.',
+      'Who acts first? Find the first to act.',
+    ),
+    (
+      ['39'],
+      'From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass.',
+      'Who acts last on the flop?',
+    ),
+    (['check'], 'Check passes for free.', 'BB checks.'),
+    (
+      ['starting_chart', 'starting_hand_groups'],
+      'Sharky starting chart.\nPremium: AA.\nStrong: JJ.\nMedium: KQ.\nWeak: 72.',
+      'Read the starting chart and choose the bucket.',
+    ),
+    (
+      ['41'],
+      'High card means no matching ranks or stronger combination.',
+      'Choose high card.',
+    ),
+    (['42'], 'A pair means two cards of one rank.', 'Find the pair.'),
+    (
+      ['44'],
+      'Three of a kind means three cards of one rank.',
+      'Find three of a kind.',
+    ),
+    (
+      ['43', 'two_pair'],
+      'Two pair means two separate pairs.',
+      'Find two pair.',
+    ),
+    (
+      ['47'],
+      'A full house has three of one rank and two of another.',
+      'Find a full house.',
+    ),
+    (
+      ['48'],
+      'Four of a kind uses all four of one rank.',
+      'Find four of a kind.',
+    ),
+    (
+      ['49'],
+      'A straight flush is five ranks in a row in one suit.',
+      'Find a straight flush.',
+    ),
+    (
+      ['one_in_n'],
+      'One win returns 10 BB, so you break even at one in five.',
+      'What is one in five?',
+    ),
+    (
+      ['min_raise', 'min_bet_raise_sizes'],
+      'A full raise must add at least the size of the last bet or full raise.',
+      'For the minimum raise, you must raise to 5 BB.',
+    ),
+    (
+      ['23', 'split_pot'],
+      'A tie means the pot is split.',
+      'When do you split the pot?',
+    ),
+    (
+      ['13'],
+      'BTN marks the Button. The dealer button shows the late seat.',
+      'Find the dealer button.',
+    ),
+    (
+      ['wheel', '57'],
+      'A-2-3-4-5 is the five-high straight, called the wheel.',
+      'Identify the wheel straight.',
+    ),
+    (
+      ['pot_odds'],
+      'To call X into a pot of Y after the bet, you need to win at least X ÷ (X + Y) of the time.',
+      'Compare pot odds.',
+    ),
+    (
+      ['pot_odds'],
+      'A 1.5 BB call for 5.5 BB needs about 27%.',
+      'Does the chance to win clear the price?',
+    ),
+    (
+      ['hand_rankings'],
+      'Ranking ladder. Learn the first four ranks in order: high card, a pair, two pair, and three of a kind.',
+      'What do hand rankings compare?',
+    ),
+    (
+      ['kicker'],
+      'A kicker is a side card that can break a tie.',
+      'Find the kicker.',
+    ),
+    (
+      ['showdown', '11', '34'],
+      'Showdown is when players compare their best five after revealing their cards.',
+      'What happens at showdown?',
+    ),
+    (
+      ['21', 'side_pot'],
+      'A side pot is extra chips matched after someone goes all-in.',
+      'Who can win the side pot?',
+    ),
+    (
+      ['147', 'ip_oop'],
+      'You are in position when you act after the other player.',
+      'Who is in position?',
+    ),
+    (
+      ['169', 'pocket_pair'],
+      'The Strong row lists JJ and TT, which are pocket pairs.',
+      'Find pocket pairs.',
+    ),
+    (
+      ['71', 'top_pair'],
+      'Top pair means a private card matches the highest rank on the board.',
+      'Find top pair.',
+    ),
+    (
+      ['59'],
+      'Sometimes the board plays. You and CO both use the same A-K-Q-J-T straight from the board here, so private cards do not improve either player.',
+      'When does the board play? The board plays.',
+    ),
+    (['33'], 'River adds the fifth.', 'What is the river?'),
+    (
+      ['broadway'],
+      'Broadway ranks are ten, jack, queen, king, and ace.',
+      'What is broadway?',
+    ),
+    (
+      ['position_information'],
+      'Acting later lets you see more moves before you decide.',
+      'Which player has more information?',
+    ),
+    (
+      ['protection'],
+      'Protection makes the next card cost chips.',
+      'What does a protection bet deny?',
+    ),
+    (
+      ['set_trips'],
+      'A set is three of a kind made from a pair in your private cards and one matching card on the board.',
+      'Find a set.',
+    ),
+    (
+      ['423'],
+      'Protection bets make the next card cost something.',
+      'What is a protection bet?',
+    ),
+  ];
+  for (final (ids, teaching, question) in cases) {
+    for (final id in ids) {
+      test('C5 $id definition before: $question', () {
+        final concept = concepts.singleWhere((concept) => concept.id == id);
+        expect(
+          catalogConceptOrderFindingsV1(
+            [_conceptProbe(question: question, teaching: teaching)],
+            [concept],
+          ),
+          isEmpty,
+        );
+        expect(
+          catalogConceptOrderFindingsV1(
+            [_conceptProbe(question: question, teaching: 'Read the example.')],
+            [concept],
+          ).values.single,
+          startsWith('Q:'),
+        );
+      });
+    }
+  }
+  const aliases = <(String, String, String)>[
+    (
+      'equity',
+      'You have a chance to win the blinds.',
+      'You have a 25% chance to win.',
+    ),
+    ('set_trips', 'Keep the two sets of cards apart.', 'Is this a set?'),
+    (
+      'equity',
+      'You have a chance to win the blinds.',
+      'Which hand has more chance to win?',
+    ),
+    (
+      'set_trips',
+      'Keep the two sets of cards apart.',
+      'Which sets of aces are possible?',
+    ),
+    ('143', 'Count 2.5 BB and half BB.', 'Which seat is BB?'),
+    ('button', 'Cards the dealer sets aside.', 'Who is the dealer?'),
+    ('split_pot', 'The ranks tie.', 'How do they split the pot?'),
+    ('pot_odds', 'Read the price to continue.', 'What are the pot odds?'),
+    ('min_bet_raise_sizes', 'Raise to 7.5 BB.', 'You must raise to 5 BB.'),
+  ];
+  for (final (id, nonConcept, conceptQuestion) in aliases) {
+    test('C5 $id alias keeps: $conceptQuestion', () {
+      final concept = concepts.singleWhere((concept) => concept.id == id);
+      expect(
+        catalogConceptOrderFindingsV1(
+          [_conceptProbe(question: nonConcept)],
+          [concept],
+        ),
+        isEmpty,
+      );
+      expect(
+        catalogConceptOrderFindingsV1(
+          [_conceptProbe(question: conceptQuestion)],
+          [concept],
+        ).values.single,
+        startsWith('Q:'),
+      );
+    });
+  }
+  test('C5 a numeric raise option still needs the legal-size rule', () {
+    final concept = concepts.singleWhere(
+      (concept) => concept.id == 'min_bet_raise_sizes',
+    );
+    const option = Act0RunnerOptionV1(
+      id: 'raise',
+      label: 'Raise to 5 BB',
+      isCorrect: true,
+      preferredLabel: 'Raise to 5 BB',
+      quality: Act0FeedbackQualityV1.correct,
+      feedbackTitle: '',
+      feedbackReason: '',
+    );
+    expect(
+      catalogConceptOrderFindingsV1(
+        [
+          _conceptProbe(question: 'Which raise is legal?', options: [option]),
+        ],
+        [concept],
+      ).values.single,
+      startsWith('OPTION:'),
+    );
+    expect(
+      catalogConceptOrderFindingsV1(
+        [
+          _conceptProbe(
+            question: 'Which action increases the pot?',
+            options: [option],
+          ),
+        ],
+        [concept],
+      ),
+      isEmpty,
+    );
+  });
+}
+
 void registerAct0ErrorAtlasV1() {
+  _registerConceptOrderDefinitionTests();
   test('Y7 C5 and E13 catalog baselines admit no regressions', () {
     final route = catalogTasks.where((row) => !row.task.repairOnly);
     final concepts = catalogConceptOrderFindingsV1(route, _concepts());

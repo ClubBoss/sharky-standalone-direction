@@ -364,7 +364,7 @@ final _w1FirstDecisionRunner = Act0RunnerStateV1(
     Act0TeachingStepV1(
       title: 'Three choices.',
       body:
-          'Fold gives up. Call matches the bet. Raise increases it. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
+          'Fold gives up. Call matches the bet. Raise increases it. Raise to an amount means your total for that betting round reaches that amount. A reraise means raising an earlier raise; the first reraise is called a 3-bet. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.',
     ),
   ],
 );

@@ -3055,6 +3055,7 @@ Act0RunnerStateV1 _act0W01ExplicitOrderRunnerV1(
             : 'Preflop starts after the big blind.',
         body: flop
             ? 'From the flop on, the first player still in and able to act clockwise after the Button acts first. If the Button can still act, it goes after all the others on the first pass.'
+                  '${taskId == 'positions_late_seat' ? ' Check means passing without betting when no bet is facing you.' : ''}'
             : 'On the first preflop pass, UTG acts first, right after the big blind. Then the order is HJ, CO, BTN, SB and BB. A raise can bring the action back to earlier seats.',
         focusLabels: const ['Street', 'Recorded actions', 'Chips behind'],
       ),
@@ -3494,7 +3495,8 @@ final _w3SixSeatsIntroRunner = _positionsRunner.copyWith(
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'All six seats matter.',
-      body: 'Clockwise from UTG: HJ, CO, BTN, SB, BB.',
+      body:
+          'Clockwise from UTG: HJ, CO, BTN, SB, BB. MP means middle position; this six-seat table labels the seat before CO as HJ.',
       focusLabels: <String>['UTG', 'HJ', 'CO', 'BTN', 'SB', 'BB'],
     ),
   ],
@@ -3752,7 +3754,7 @@ final _handRankingIntroRunner = _handRankingsRunner.copyWith(
     Act0TeachingStepV1(
       title: 'Ranking ladder.',
       body:
-          'Learn the first four ranks in order: high card, a pair, two pair, and three of a kind.',
+          'Learn the first four ranks in order: high card, a pair, two pair, and three of a kind. High card means no matching ranks or stronger combination. A pair means two cards of one rank. Two pair means two separate pairs. Three of a kind means three cards of one rank.',
       focusLabels: <String>['High card', 'Pair', 'Two pair', 'Three of a kind'],
     ),
   ],
@@ -3889,7 +3891,7 @@ final _fullHouseRankRunner = _riverBoardRunner.copyWith(
     Act0TeachingStepV1(
       title: 'A full house has three of one rank and two of another.',
       body:
-          'The board gives you three aces, and your pocket sevens add the pair. That makes a full house, which outranks a flush.',
+          'Four of a kind means four cards of one rank. The board gives you three aces, and your pocket sevens add the pair. That makes a full house, which outranks a flush.',
       focusCardIds: <String>[
         'board_0',
         'board_1',
