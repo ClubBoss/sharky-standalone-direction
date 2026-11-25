@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../skin/act0_skin_tokens_v1.dart';
+
 /// Premium Academy presentation leaves (isolated, not wired into the shell).
 ///
 /// Provenance: palette from Draft PR #308
@@ -13,16 +15,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 /// action they show is supplied by the caller from accepted source-owned
 /// models.
 abstract final class Act0AcademyLeafPaletteV1 {
-  static const ink = Color(0xFF020E13);
-  static const inkRaised = Color(0xFF071C24);
-  static const tealDeep = Color(0xFF0B3530);
-  static const teal = Color(0xFF177D70);
-  static const aqua = Color(0xFF23E6D2);
-  static const aquaSoft = Color(0xFFB9F5E9);
-  static const text = Color(0xFFF1FBF8);
-  static const textMuted = Color(0xFFB6C8D5);
-  static const rule = Color(0xFF23443F);
-  static const repair = Color(0xFFF2C46B);
+  static const ink = Act0SkinTokensV1.academyBackground;
+  static const inkRaised = Act0SkinTokensV1.academyRaised;
+  static const tealDeep = Act0SkinTokensV1.academyTealDeep;
+  static const teal = Act0SkinTokensV1.academyTeal;
+  static const aqua = Act0SkinTokensV1.academyAccent;
+  static const aquaSoft = Act0SkinTokensV1.academyAccentSoft;
+  static const text = Act0SkinTokensV1.academyOnSurface;
+  static const textMuted = Act0SkinTokensV1.academyMuted;
+  static const rule = Act0SkinTokensV1.academyLine;
+  static const repair = Act0SkinTokensV1.academyWarn;
 }
 
 /// Owner-selected premium leaves are English-first (iPhone 14 Pro EN V1
