@@ -589,7 +589,9 @@ final _w7SprIntroRunner = _w7EffectiveStackIntroRunner.copyWith(
       title: 'Divide the smaller stack by the pot.',
       body:
           'SPR is the stack-to-pot ratio: effective stack divided by the current pot. '
-          'Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.',
+          'Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4. '
+          'Commitment means using much of your stack, leaving few chips for later bets. '
+          'Low SPR means fewer chips remain relative to the pot, but it does not force an all-in.',
       focusLabels: <String>['Low SPR', 'Commitment', 'High SPR', 'Room'],
     ),
   ],
@@ -617,20 +619,20 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'commit',
-      label: 'One bet can commit the hand',
+      label: 'One bet can use much of your stack',
       isCorrect: true,
-      preferredLabel: 'One bet can commit the hand',
+      preferredLabel: 'One bet can use much of your stack',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Excellent spot.',
       feedbackReason:
-          'With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Use your KQ top pair and the price before committing.',
+          'With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Judge your KQ top pair and the price before putting more chips in.',
     ),
     Act0RunnerOptionV1(
       id: 'float',
       label: 'Plenty of chips left for later bets',
       isCorrect: false,
-      preferredLabel: 'One bet can commit the hand',
-      betterAnswerLabel: 'One bet can commit the hand',
+      preferredLabel: 'One bet can use much of your stack',
+      betterAnswerLabel: 'One bet can use much of your stack',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -640,8 +642,8 @@ final _w7LowSprCommitRunner = _w7SprIntroRunner.copyWith(
       id: 'same',
       label: 'It plays the same as SPR 8',
       isCorrect: false,
-      preferredLabel: 'One bet can commit the hand',
-      betterAnswerLabel: 'One bet can commit the hand',
+      preferredLabel: 'One bet can use much of your stack',
+      betterAnswerLabel: 'One bet can use much of your stack',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Not quite.',
       feedbackReason:
@@ -679,7 +681,7 @@ final _w7HighSprRoomRunner = _w7SprIntroRunner.copyWith(
     ),
     Act0RunnerOptionV1(
       id: 'force',
-      label: 'Immediate commitment',
+      label: 'Putting most of your stack in now',
       isCorrect: false,
       preferredLabel: 'More options for later bets',
       betterAnswerLabel: 'More options for later bets',
@@ -721,20 +723,20 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'middle_spr',
-      label: 'Middle ground: some room, some commitment',
+      label: 'Some room, but big bets use chips quickly',
       isCorrect: true,
-      preferredLabel: 'Middle ground: some room, some commitment',
+      preferredLabel: 'Some room, but big bets use chips quickly',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean execution.',
       feedbackReason:
-          'On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves room for later streets, while large bets can commit you quickly.',
+          'On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves chips for later streets, while large bets can use them quickly.',
     ),
     Act0RunnerOptionV1(
       id: 'auto_commit',
-      label: 'Automatic commitment right now',
+      label: 'You must put your whole stack in now',
       isCorrect: false,
-      preferredLabel: 'Middle ground: some room, some commitment',
-      betterAnswerLabel: 'Middle ground: some room, some commitment',
+      preferredLabel: 'Some room, but big bets use chips quickly',
+      betterAnswerLabel: 'Some room, but big bets use chips quickly',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too shallow.',
       feedbackReason:
@@ -744,8 +746,8 @@ final _w7SprFourRunner = _w7SprIntroRunner.copyWith(
       id: 'same_as_eight',
       label: 'The same as SPR 8',
       isCorrect: false,
-      preferredLabel: 'Middle ground: some room, some commitment',
-      betterAnswerLabel: 'Middle ground: some room, some commitment',
+      preferredLabel: 'Some room, but big bets use chips quickly',
+      betterAnswerLabel: 'Some room, but big bets use chips quickly',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Too loose.',
       feedbackReason:
@@ -779,20 +781,20 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
   options: const <Act0RunnerOptionV1>[
     Act0RunnerOptionV1(
       id: 'faster_commitment',
-      label: 'Less room, more commitment pressure',
+      label: 'A bet leaves fewer chips for later',
       isCorrect: true,
-      preferredLabel: 'Less room, more commitment pressure',
+      preferredLabel: 'A bet leaves fewer chips for later',
       quality: Act0FeedbackQualityV1.correct,
       feedbackTitle: 'Clean SPR contrast.',
       feedbackReason:
-          'That is the low-SPR lesson in action. Top pair still needs board discipline, but SPR 2 leaves much less room and makes one bet push the hand closer to commitment.',
+          'At SPR 2, the same bet pushes a larger share of your stack into the pot than at SPR 8. Still judge top pair by the board and price.',
     ),
     Act0RunnerOptionV1(
       id: 'same_as_spr8',
       label: 'Treat it like SPR 8',
       isCorrect: false,
-      preferredLabel: 'Less room, more commitment pressure',
-      betterAnswerLabel: 'Less room, more commitment pressure',
+      preferredLabel: 'A bet leaves fewer chips for later',
+      betterAnswerLabel: 'A bet leaves fewer chips for later',
       quality: Act0FeedbackQualityV1.wrong,
       feedbackTitle: 'Depth changed the job.',
       feedbackReason:
@@ -802,19 +804,19 @@ final _w7TopPairSprTwoRunner = _w7SprIntroRunner.copyWith(
       id: 'ignore_stack_pressure',
       label: 'Top pair matters, so stack pressure can wait',
       isCorrect: false,
-      preferredLabel: 'Less room, more commitment pressure',
-      betterAnswerLabel: 'Less room, more commitment pressure',
+      preferredLabel: 'A bet leaves fewer chips for later',
+      betterAnswerLabel: 'A bet leaves fewer chips for later',
       quality: Act0FeedbackQualityV1.suboptimal,
       feedbackTitle: 'Only part of the picture.',
       feedbackReason:
-          'Top pair is the made hand, but low SPR is the pressure clue. Name the reduced room first, then judge how willing the hand is to keep money flowing.',
+          'Top pair matters, but low SPR means fewer chips are left for later bets. Check the stack and pot before deciding how much to risk.',
     ),
   ],
   teachingSteps: const <Act0TeachingStepV1>[
     Act0TeachingStepV1(
       title: 'Same top pair, tighter room.',
       body:
-          'Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.',
+          'At low SPR, the same bet uses a bigger share of the remaining stack, leaving fewer chips for later bets.',
       focusLabels: <String>['Top pair', 'SPR 2', 'Less room', 'Commitment'],
     ),
   ],

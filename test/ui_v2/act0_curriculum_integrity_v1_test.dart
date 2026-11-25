@@ -13,6 +13,70 @@ void main() {
       .firstWhere((task) => task.taskId == taskId);
 
   group('Act0 curriculum integrity', () {
+    test('W8 SPR theory explains commitment before the drills', () {
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_8')
+          .lessons
+          .singleWhere((lesson) => lesson.lessonId == 'spr_and_commitment');
+      final tasks = lesson.taskList;
+      final intro = tasks.indexWhere((task) => task.taskId == 'w7_spr_intro');
+      final firstDrill = tasks.indexWhere(
+        (task) => task.taskId == 'w7_low_spr_commit',
+      );
+      expect(intro, greaterThanOrEqualTo(0));
+      expect(firstDrill, greaterThan(intro));
+      final teaching = tasks[intro].runner.teachingSteps
+          .map((step) => step.body)
+          .join(' ');
+      expect(teaching, contains('Commitment means using much of your stack'));
+      expect(teaching, contains('few chips for later bets'));
+      expect(
+        teaching,
+        contains(
+          'Low SPR means fewer chips remain relative to the pot, but it does not force an all-in.',
+        ),
+      );
+    });
+
+    const sprCopy = {
+      'w7_low_spr_commit': ('commit', 'One bet can use much of your stack'),
+      'w7_high_spr_room': ('force', 'Putting most of your stack in now'),
+      'w7_spr4_middle': (
+        'middle_spr',
+        'Some room, but big bets use chips quickly',
+      ),
+      'w7_top_pair_spr2_transfer': (
+        'faster_commitment',
+        'A bet leaves fewer chips for later',
+      ),
+    };
+    for (final entry in sprCopy.entries) {
+      test('W8 ${entry.key} choices and feedback use plain stack words', () {
+        final runner = task('world_8', entry.key).runner;
+        final (optionId, expectedLabel) = entry.value;
+        expect(
+          runner.options.singleWhere((option) => option.id == optionId).label,
+          expectedLabel,
+        );
+        final correct = runner.options.singleWhere(
+          (option) => option.isCorrect,
+        );
+        for (final option in runner.options) {
+          expect(option.preferredLabel, correct.label);
+          if (!option.isCorrect) {
+            expect(option.betterAnswerLabel, correct.label);
+          }
+          expect(
+            '${option.label} ${option.feedbackReason}',
+            isNot(matches(RegExp(r'\bcommit', caseSensitive: false))),
+          );
+        }
+        for (final step in runner.teachingSteps) {
+          expect(step.body, isNot(contains('commitment pressure')));
+        }
+      });
+    }
+
     test('W4 sizing-family histories reconcile to the graded 6 BB pot', () {
       const expectedAnswers = <String, List<String>>{
         'w4_bad_bluff': <String>['check'],
