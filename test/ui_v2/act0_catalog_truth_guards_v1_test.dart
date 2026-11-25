@@ -651,10 +651,38 @@ TASK river [decision] River
     test('E19 compares option labels with the previous catalog snapshot', () {
       final previous = previousCatalogSnapshotV1();
       if (previous == null) return;
-      final findings = catalogOptionLabelChangesV1(
-        previous,
-        renderCatalogSnapshot(),
-      ).toList();
+      // B78 is an approved wording repair, not a change in choice meaning.
+      // Permit only the exact old/new labels at the same task and grade.
+      // The assessment census separately pins the option IDs and grades.
+      const b78ApprovedCopy = {
+        (
+          'w7_low_spr_commit',
+          'correct: one bet can commit the hand → one bet can use much of your stack',
+        ),
+        (
+          'w7_high_spr_room',
+          'wrong: immediate commitment → putting most of your stack in now',
+        ),
+        (
+          'w7_spr4_middle',
+          'correct: middle ground: some room, some commitment → some room, but big bets use chips quickly',
+        ),
+        (
+          'w7_spr4_middle',
+          'wrong: automatic commitment right now → you must put your whole stack in now',
+        ),
+        (
+          'w7_top_pair_spr2_transfer',
+          'correct: less room, more commitment pressure → a bet leaves fewer chips for later',
+        ),
+      };
+      final findings =
+          catalogOptionLabelChangesV1(previous, renderCatalogSnapshot())
+              .where(
+                (finding) =>
+                    !b78ApprovedCopy.contains((finding.task, finding.detail)),
+              )
+              .toList();
       expect(findings, isEmpty, reason: findings.join('\n'));
     });
   });

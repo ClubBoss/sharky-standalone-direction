@@ -5443,7 +5443,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.
 
 TASK w7_spr_intro [theory] Low room vs high room
 CAPTION: SPR tells you how much room is left after the flop.
-TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4.
+TEACH: Divide the smaller stack by the pot. SPR is the stack-to-pot ratio: effective stack divided by the current pot. Here the smaller stack is 20 BB and the pot is 5 BB, so the SPR is 4. Commitment means using much of your stack, leaving few chips for later bets. Low SPR alone does not force an all-in.
 TEACH LABELS: Low SPR, Commitment, High SPR, Room
 Q: What does low SPR usually mean?
 HINT [theoryOnly]: Low SPR means less money is left relative to the pot. Check your hand and the price before going all-in.
@@ -5460,12 +5460,12 @@ TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Deci
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kd Qc stack 10 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 12 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
   - [wrong] Plenty of chips left for later bets — Not quite. The 10 BB left is only two times the 5 BB pot. Planning several large bets would use up those chips earlier than expected.
-    BETTER ANSWER: One bet can commit the hand
+    BETTER ANSWER: One bet can use much of your stack
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] One bet can commit the hand — Excellent spot. With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Use your KQ top pair and the price before committing.
+  + [correct] One bet can use much of your stack — Excellent spot. With 10 BB behind and 5 BB in the pot, a large bet can risk most of your remaining stack. Judge your KQ top pair and the price before putting more chips in.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   - [wrong] It plays the same as SPR 8 — Not quite. A pot-sized 5 BB bet would put half of your 10 BB at risk. At SPR 8, it would risk only one eighth of the effective stack.
-    BETTER ANSWER: One bet can commit the hand
+    BETTER ANSWER: One bet can use much of your stack
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kh 7d 3s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_high_spr_room [drill] SPR 8
@@ -5475,7 +5475,7 @@ HINT [theoryOnly]: A lot of stack is still behind.
 TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO As 9c stack 40 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 42 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Immediate commitment — Not quite. Putting in 40 BB right away would risk eight times the 5 BB pot with one pair. You can keep chips for later decisions.
+  - [wrong] Putting most of your stack in now — Not quite. Putting in 40 BB right away would risk eight times the 5 BB pot with one pair. You can keep chips for later decisions.
     BETTER ANSWER: More options for later bets
     FEEDBACK TABLE: Flop | You As 9c | Board Ad 7h 2s | Pot 5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
   + [correct] More options for later bets — Spot on. The 5 BB pot is small next to your 40 BB stack. You can choose a smaller bet or check and keep room for later streets.
@@ -5509,13 +5509,13 @@ HINT [theoryOnly]: Middle SPR is neither pure all-in nor huge freedom.
 TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jd 9d stack 20 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 27 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO raises 2.25 BB · BTN folds · SB folds · BB calls 1.25 BB more · Flop: BB checks
-  - [wrong] Automatic commitment right now — Too shallow. Going all-in for your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.
-    BETTER ANSWER: Middle ground: some room, some commitment
+  - [wrong] You must put your whole stack in now — Too shallow. Going all-in for your 20 BB over the 5 BB pot could risk your entire stack with one pair. A smaller bet preserves other choices.
+    BETTER ANSWER: Some room, but big bets use chips quickly
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
   - [wrong] The same as SPR 8 — Too loose. With 20 BB behind, a pot bet costs one quarter of your stack. Treating it like SPR 8 underestimates how fast two bets can use up those chips.
-    BETTER ANSWER: Middle ground: some room, some commitment
+    BETTER ANSWER: Some room, but big bets use chips quickly
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
-  + [correct] Middle ground: some room, some commitment — Clean execution. On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves room for later streets, while large bets can commit you quickly.
+  + [correct] Some room, but big bets use chips quickly — Clean execution. On J-8-3 you have 20 BB behind and a 5 BB pot. A small bet leaves chips for later streets, while large bets can use them quickly.
     FEEDBACK TABLE: Flop | You Jd 9d | Board Js 8c 3h | Pot 5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow, backdoor straight
 
 TASK what_poker_is_side_pot_intro [drill] Read the short stack limit
@@ -5534,7 +5534,7 @@ TRAIL: UTG folds · HJ folds · SB posts 0.5 BB, then folds · BB post is includ
 
 TASK w7_top_pair_spr2_transfer [drill] Top pair at SPR 2
 CAPTION: Real table. K-7-2 rainbow flop. You have K-Q and SPR is 2.
-TEACH: Same top pair, tighter room. Low SPR keeps less room behind, so commitment pressure becomes part of the first read instead of a later warning.
+TEACH: Same top pair, tighter room. At low SPR, the same bet uses a bigger share of the remaining stack, leaving fewer chips for later bets.
 TEACH LABELS: Top pair, SPR 2, Less room, Commitment
 Q: What does low SPR add to this top-pair spot?
 HINT [theoryOnly]: Compare the smaller stack with the pot. How much is left to bet?
@@ -5543,12 +5543,12 @@ REASONING: principle stack_depth_changes_play · alt same_as_spr8 · edge stackL
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kd Qc stack 16 BB | SB folded stack 99.5 BB | BB stack 18 BB
 TRAIL: SB blind 0.5 BB · BB blind 1 BB · UTG folds · HJ folds · CO folds · BTN raises 3.75 BB · SB folds · BB calls 2.75 BB more · Flop: BB checks
   - [wrong] Treat it like SPR 8 — Depth changed the job. Comparing this with SPR 8 misses how much the same bet uses from a smaller stack. With 16 BB behind and 8 BB in the pot, one bet moves you closer to playing for the whole stack.
-    BETTER ANSWER: Less room, more commitment pressure
+    BETTER ANSWER: A bet leaves fewer chips for later
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  + [correct] Less room, more commitment pressure — Clean SPR contrast. That is the low-SPR lesson in action. Top pair still needs board discipline, but SPR 2 leaves much less room and makes one bet push the hand closer to commitment.
+  + [correct] A bet leaves fewer chips for later — Clean SPR contrast. At SPR 2, the same bet pushes a larger share of your stack into the pot than at SPR 8. Still judge top pair by the board and price.
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
-  - [suboptimal] Top pair matters, so stack pressure can wait — Only part of the picture. Top pair is the made hand, but low SPR is the pressure clue. Name the reduced room first, then judge how willing the hand is to keep money flowing.
-    BETTER ANSWER: Less room, more commitment pressure
+  - [suboptimal] Top pair matters, so stack pressure can wait — Only part of the picture. Top pair matters, but low SPR means fewer chips are left for later bets. Check the stack and pot before deciding how much to risk.
+    BETTER ANSWER: A bet leaves fewer chips for later
     FEEDBACK TABLE: Flop | You Kd Qc | Board Kc 7d 2s | Pot 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Center Stack and pot | Facts one pair, top pair, rainbow
 
 TASK w7_top_pair_spr8_transfer [drill] Top pair at SPR 8

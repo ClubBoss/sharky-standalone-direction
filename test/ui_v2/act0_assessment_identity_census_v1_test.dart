@@ -2306,9 +2306,40 @@ void main() {
         'More room to maneuver',
       ),
     };
+    // B78 changes only the named display and preferred labels. Reverse
+    // those exact task-local strings before the historical comparison.
+    const b78CopyLabels = <String, Map<String, String>>{
+      'w7_low_spr_commit': {
+        'One bet can use much of your stack': 'One bet can commit the hand',
+      },
+      'w7_high_spr_room': {
+        'Putting most of your stack in now': 'Immediate commitment',
+      },
+      'w7_spr4_middle': {
+        'Some room, but big bets use chips quickly':
+            'Middle ground: some room, some commitment',
+        'You must put your whole stack in now':
+            'Automatic commitment right now',
+      },
+      'w7_top_pair_spr2_transfer': {
+        'A bet leaves fewer chips for later':
+            'Less room, more commitment pressure',
+      },
+    };
     for (final row in beforeL1.cast<List<dynamic>>()) {
       row[1] = priorL1LessonIds[row[2]] ?? row[1];
       final currentOptions = (row[5] as List).cast<List<dynamic>>();
+      if (b78CopyLabels[row[2]] case final labels?) {
+        expect(
+          currentOptions.map((option) => option[1]),
+          containsAll(labels.keys),
+          reason: row[2] as String,
+        );
+        for (final option in currentOptions) {
+          option[1] = labels[option[1]] ?? option[1];
+          option[4] = labels[option[4]] ?? option[4];
+        }
+      }
       final revisedChoiceId =
           l2FactualGradeCorrections[row[2]] ??
           fixedDrawRangeAndStackChoicesV1[row[2]];
