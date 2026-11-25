@@ -26,6 +26,13 @@ final _rows = [
       for (final t in l.taskList) (world: w, lesson: l, task: t),
 ];
 
+// The active Button advantage lesson reuses the w3_button_open runner.
+final _buttonOpenRow = _rows.singleWhere(
+  (r) =>
+      r.lesson.lessonId == 'button_advantage' &&
+      r.task.taskId == '${r.lesson.lessonId}_button_open',
+);
+
 // Start the transition on a frame, then advance past the modal or tile motion.
 Future<void> _pumpTransition(WidgetTester tester) async {
   await tester.pump();
@@ -87,9 +94,7 @@ Future<void> _checkNumericTools(WidgetTester tester, Finder sheet) async {
 
 void main() {
   test('starting hands fail closed until a six-max preflop answer', () {
-    final task = _rows
-        .singleWhere((r) => r.task.taskId == 'w3_button_open')
-        .task;
+    final task = _buttonOpenRow.task;
     final runner = task.runner.copyWith(phase: Act0LessonPhaseV1.drill);
     expect(act0StartingHandsSeatForResultV1(runner), isNull);
     expect(
@@ -143,7 +148,7 @@ void main() {
   testWidgets('Help withholds chart until real chart decision is answered', (
     tester,
   ) async {
-    final row = _rows.singleWhere((r) => r.task.taskId == 'w3_button_open');
+    final row = _buttonOpenRow;
     final task = row.task;
     var runner = task.runner.copyWith(
       phase: Act0LessonPhaseV1.drill,
