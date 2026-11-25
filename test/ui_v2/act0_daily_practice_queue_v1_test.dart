@@ -7,6 +7,7 @@ import '../support/act0_y5c_catalog_contract_v1.dart';
 
 import 'package:flutter/material.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_daily_practice_coverage_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
@@ -286,6 +287,167 @@ void main() {
           expect(act0IsPilotDailyDealSourceV1(restored.sourceTaskId), isTrue);
           expect(act0PilotDailyDealTableIsValidV1(next.runner.table), isTrue);
         }
+      },
+    );
+  }
+
+  test(
+    'real queue keeps normal order, fills thin sets by skill, and replays oldest',
+    () {
+      final today = DateTime.utc(2026, 11, 24);
+      final later = today.add(const Duration(hours: 1));
+      final pool = {
+        'z': ['Position play'],
+        'c': ['Position play'],
+        'b': ['Blind play'],
+        'a': ['Board reading'],
+      };
+      Act0DailyPracticeQueueV1 build(
+        Map<String, DateTime> history, [
+        Set<String> practicedToday = const {},
+      ]) => Act0DailyPracticeQueueV1.startCovered(
+        pool,
+        recentHistory: history,
+        todayStartedAt: today,
+        practicedToday: practicedToday,
+      );
+      final normal = build({});
+      expect(normal.taskIds, ['z', 'c', 'b']);
+      expect(normal.poolStatus, Act0DailyPracticeExhaustionStatusV1.fresh);
+      expect(normal.toPayload().containsKey('poolStatus'), isFalse);
+
+      final thin = build({'c': today, 'b': later, 'a': later});
+      expect(thin.taskIds, ['z', 'a', 'b']);
+      expect(thin.poolStatus, Act0DailyPracticeExhaustionStatusV1.recycling);
+      final recycling = build({
+        'z': today.subtract(const Duration(days: 1)),
+        'c': today.subtract(const Duration(days: 2)),
+        'b': today.subtract(const Duration(days: 3)),
+        'a': today.subtract(const Duration(days: 4)),
+      });
+      expect(recycling.taskIds, ['a', 'b', 'c']);
+      expect(recycling.includesRepeats, isTrue);
+
+      final exhausted = build({'z': later, 'c': today, 'b': later, 'a': today});
+      expect(exhausted.taskIds, ['a', 'c', 'b']);
+      expect(exhausted.isExhausted, isTrue);
+      final restored = Act0DailyPracticeQueueV1.tryParse(
+        exhausted.answer('a', independentCorrect: true).toPayload(),
+      )!;
+      expect(restored.nextTaskId, 'c');
+      expect(restored.isExhausted, isTrue);
+
+      final legacy = build({}, pool.keys.toSet());
+      expect(legacy.isExhausted, isTrue);
+      expect(legacy.taskIds, ['a', 'b', 'c']);
+    },
+  );
+
+  for (final exhausted in [false, true]) {
+    testWidgets(
+      'Completed W1–W12 offers ${exhausted ? "exhausted" : "thin"} repeat set without extra XP or streak',
+      (tester) async {
+        await tester.binding.setSurfaceSize(const Size(393, 852));
+        addTearDown(() => tester.binding.setSurfaceSize(null));
+        const progressKey = 'act0_shell_progress_v1';
+        final now = DateTime.utc(2026, 11, 24, 12);
+        final day = act0DailyDealDayV1(now.toLocal());
+        final worlds = Act0ShellStateV1.sample.worlds.take(12).toList();
+        final completed = [
+          for (final world in worlds)
+            for (final lesson in world.lessons) ...lesson.courseTaskList,
+        ];
+        final completedIds = completed.map((task) => task.taskId).toList();
+        const freshTaskId = 'what_poker_is_table_read_transfer';
+        final xp = completed.fold(0, (sum, task) => sum + task.rewardXp);
+        final generatedIds = [
+          for (final world in worlds)
+            for (final lesson in world.lessons)
+              for (final task in lesson.courseTaskList)
+                if (act0DailyDealTemplateForSourceV1(task.taskId)
+                    case final template?)
+                  act0DailyDealIdV1((
+                    day: day,
+                    template: template,
+                    lessonId: lesson.lessonId,
+                    sourceTaskId: task.taskId,
+                  )),
+        ];
+        SharedPreferences.setMockInitialValues({
+          progressKey: jsonEncode({
+            'schemaVersion': 17,
+            'completedTaskIds': completedIds,
+            'selectedWorldId': worlds.last.worldId,
+            'selectedLessonId': worlds.last.lessons.last.lessonId,
+            'selectedTaskId':
+                worlds.last.lessons.last.courseTaskList.last.taskId,
+            'earnedXp': xp,
+            'lastActiveDay': '2026-11-24',
+            'lastEarnedDailyDay': '2026-11-24',
+            'dailyCompletedRepCount': 3,
+            'persistedStreakDays': 4,
+            'dailyCompletedTaskIds': [
+              ...completedIds.where((id) => exhausted || id != freshTaskId),
+              ...generatedIds,
+            ],
+          }),
+        });
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Act0ShellPreviewScreenV1(
+              initialTab: Act0ShellTabV1.home,
+              showPlacementOnStart: false,
+              clock: Act0FixedUtcClockV1(now),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+        await tester.tap(
+          find.descendant(
+            of: find.byKey(const Key('act0_shell_bottom_nav')),
+            matching: find.text('Practice'),
+          ),
+        );
+        await tester.pumpAndSettle();
+        expect(
+          find.text(
+            exhausted
+                ? 'All drills seen today — repeating the ones you saw longest ago.'
+                : 'This set includes repeats to keep your skills fresh.',
+          ),
+          findsWidgets,
+        );
+        final start = find.byKey(const Key('act0_academy_practice_leaf_start'));
+        await tester.ensureVisible(start);
+        await tester.tap(start);
+        await tester.pumpAndSettle();
+        final shell = tester.widget<Act0LessonRunnerShellV1>(
+          find.byType(Act0LessonRunnerShellV1),
+        );
+        final correct = shell.runner.options.singleWhere(
+          (option) => option.isCorrect,
+        );
+        final button = find.byKey(Key('act0_shell_option_${correct.id}'));
+        await tester.ensureVisible(button);
+        await tester.tap(button);
+        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 700));
+        await tester.pumpAndSettle();
+        final prefs = await SharedPreferences.getInstance();
+        final saved = jsonDecode(prefs.getString(progressKey)!) as Map;
+        final queue = Act0DailyPracticeQueueV1.tryParse(
+          saved['dailyPracticeQueue'],
+        )!;
+        expect(queue.isExhausted, exhausted);
+        expect(queue.includesRepeats, isTrue);
+        if (!exhausted) expect(queue.taskIds.first, freshTaskId);
+        expect(queue.taskIds, hasLength(3));
+        expect(queue.answeredTaskIds, contains(shell.selectedTaskId));
+        expect(queue.nextTaskId, isNotNull);
+        expect(saved['completedTaskIds'], unorderedEquals(completedIds));
+        expect(saved['earnedXp'], xp);
+        expect(saved['dailyCompletedRepCount'], 3);
+        expect(saved['persistedStreakDays'], 4);
       },
     );
   }
