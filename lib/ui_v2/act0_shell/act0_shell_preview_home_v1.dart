@@ -145,7 +145,11 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       selectedLesson: selectedLesson,
       preferPracticeAfterThreeLessons: true,
     );
-    final dailyDeckEntry = _nextDailyDeckEntry(state: state);
+    final dailyDeck = _dailyDeckEntries(state);
+    final dailyQueue = _dailyPracticeQueueForDeckV1(dailyDeck);
+    final dailyDeckEntry = dailyDeck
+        .where((entry) => entry.taskId == dailyQueue.nextTaskId)
+        .firstOrNull;
     return <Act0PracticeGroupV1>[
       Act0PracticeGroupV1(
         groupId: 'continue',
@@ -227,7 +231,8 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
             : 'Practice a short set',
         subtitle: dailyDeckEntry == null
             ? 'Unlocks as you work through lessons.'
-            : 'Practice up to three different completed spots. Start a new set when it ends.',
+            : _dailyPracticeRepeatLineV1(dailyQueue) ??
+                  'Practice up to three different completed spots. Start a new set when it ends.',
         ctaLabel: _dailyPracticeQueue.nextTaskId != null
             ? 'Resume practice'
             : _dailyPracticeQueue.taskIds.isNotEmpty
@@ -256,26 +261,61 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     ];
   }
 
-  _Act0DailyDeckEntryV1? _nextDailyDeckEntry({
-    required Act0ShellStateV1 state,
-  }) {
-    final deck = _dailyDeckEntries(state);
-    if (deck.isEmpty) {
-      return null;
-    }
+  Act0DailyPracticeQueueV1 _dailyPracticeQueueForDeckV1(
+    List<_Act0DailyDeckEntryV1> deck,
+  ) {
     final eligible = deck.map((entry) => entry.taskId).toSet();
-    final queue =
+    final isToday = _dailyRepCountDay == _todayDateString();
+    if (isToday &&
         _dailyPracticeQueue.isValidFor(eligible) &&
-            _dailyPracticeQueue.nextTaskId != null
-        ? _dailyPracticeQueue
-        : Act0DailyPracticeQueueV1.start(
-            eligible,
-            practicedToday: _dailyCompletedTaskIds,
-          );
-    final nextTaskId = queue.nextTaskId;
-    return nextTaskId == null
-        ? null
-        : deck.firstWhere((entry) => entry.taskId == nextTaskId);
+        _dailyPracticeQueue.nextTaskId != null) {
+      return _dailyPracticeQueue;
+    }
+    final now = widget.clock.nowUtc();
+    final local = now.toLocal();
+    final today = DateTime(local.year, local.month, local.day);
+    final history = <String, DateTime>{};
+    for (final record in _learningEvidenceHistoryV1.records) {
+      final at = record.recordedAtUtc;
+      if (record.runKind != 'practice' ||
+          !eligible.contains(record.taskId) ||
+          at == null ||
+          at.isAfter(now)) {
+        continue;
+      }
+      final previous = history[record.taskId];
+      if (previous == null || at.isAfter(previous)) {
+        history[record.taskId] = at;
+      }
+    }
+    return Act0DailyPracticeQueueV1.startCovered(
+      {
+        for (final entry in deck)
+          entry.taskId: act0SkillsForTaskV1(
+            entry.lessonId,
+            act0DailyDealRecipeV1(entry.taskId)?.sourceTaskId ?? entry.taskId,
+          ),
+      },
+      recentHistory: history,
+      todayStartedAt: today,
+      practicedToday: isToday ? _dailyCompletedTaskIds : const {},
+    );
+  }
+
+  String? _dailyPracticeRepeatLineV1(Act0DailyPracticeQueueV1 queue) {
+    if (queue.isExhausted) {
+      return _copyV1(
+        en: 'All drills seen today — repeating the ones you saw longest ago.',
+        ru: 'Все задания сегодня уже были — повторяем те, что встречались раньше всего.',
+      );
+    }
+    if (queue.includesRepeats) {
+      return _copyV1(
+        en: 'This set includes repeats to keep your skills fresh.',
+        ru: 'В этой серии есть повторы для закрепления навыков.',
+      );
+    }
+    return null;
   }
 
   List<_Act0DailyDeckEntryV1> _dailyDeckEntries(Act0ShellStateV1 state) {
@@ -590,7 +630,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       );
     }
 
-    final dailyDeckEntry = _nextDailyDeckEntry(state: _catalogStateV1);
+    final dailyDeck = _dailyDeckEntries(_catalogStateV1);
+    final dailyQueue = _dailyPracticeQueueForDeckV1(dailyDeck);
+    final dailyDeckEntry = dailyDeck
+        .where((entry) => entry.taskId == dailyQueue.nextTaskId)
+        .firstOrNull;
+    final repeatLine = _dailyPracticeRepeatLineV1(dailyQueue);
     if (preferPracticeAfterThreeLessons &&
         _dailyCompletedLessonsInWorldCountV1(selectedWorld) >= 3 &&
         _dailyCompletedRepCount < 3 &&
@@ -601,10 +646,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Practice first', ru: 'Сначала практика'),
         title: _copyV1(en: 'Practice a short set', ru: 'Короткая практика'),
-        subtitle: _copyV1(
-          en: 'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
-          ru: 'Ты прошёл 3 урока за сегодня. Закрепи на практике — следующий урок остаётся открыт в Уроках.',
-        ),
+        subtitle:
+            repeatLine ??
+            _copyV1(
+              en: 'You finished 3 lessons today. Practice a short set — the next lesson stays open in Learn.',
+              ru: 'Ты прошёл 3 урока за сегодня. Закрепи на практике — следующий урок остаётся открыт в Уроках.',
+            ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDrill,
         ),
@@ -661,10 +708,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
         kind: _Act0LearningNextActionKindV1.dailyDrill,
         label: _copyV1(en: 'Daily set', ru: 'Дневная серия'),
         title: _copyV1(en: 'Start a short rep', ru: 'Начать короткий повтор'),
-        subtitle: _copyV1(
-          en: 'Choose a short set whenever you’re ready.',
-          ru: 'Пройди три коротких спота, чтобы держать день в ритме.',
-        ),
+        subtitle:
+            repeatLine ??
+            _copyV1(
+              en: 'Choose a short set whenever you’re ready.',
+              ru: 'Пройди три коротких спота, чтобы держать день в ритме.',
+            ),
         ctaLabel: _recommendationCtaLabel(
           _Act0LearningNextActionKindV1.dailyDrill,
         ),

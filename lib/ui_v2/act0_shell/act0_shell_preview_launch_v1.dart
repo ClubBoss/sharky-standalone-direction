@@ -679,15 +679,9 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     }
     if (group.groupId == 'daily') {
       _ensureDailyCountDayV1();
-      final entries = _dailyDeckEntries(_catalogStateV1);
-      final eligible = entries.map((entry) => entry.taskId).toSet();
-      if (!_dailyPracticeQueue.isValidFor(eligible) ||
-          _dailyPracticeQueue.nextTaskId == null) {
-        _dailyPracticeQueue = Act0DailyPracticeQueueV1.start(
-          eligible,
-          practicedToday: _dailyCompletedTaskIds,
-        );
-      }
+      _dailyPracticeQueue = _dailyPracticeQueueForDeckV1(
+        _dailyDeckEntries(_catalogStateV1),
+      );
       _emitPracticeStartedTelemetryV1(practiceGroupId: 'daily');
       _launchDailyPracticeQueueTaskV1();
       return;
@@ -1253,15 +1247,9 @@ extension _PreviewLaunchV1 on _Act0ShellPreviewScreenV1State {
     if (recommendation.kind == _Act0LearningNextActionKindV1.dailyDrill) {
       _ensureDailyCountDayV1();
       final state = _catalogStateV1;
-      final eligible = _dailyDeckEntries(state).map((e) => e.taskId).toSet();
-      if (eligible.isNotEmpty) {
-        if (!_dailyPracticeQueue.isValidFor(eligible) ||
-            _dailyPracticeQueue.nextTaskId == null) {
-          _dailyPracticeQueue = Act0DailyPracticeQueueV1.start(
-            eligible,
-            practicedToday: _dailyCompletedTaskIds,
-          );
-        }
+      final deck = _dailyDeckEntries(state);
+      if (deck.isNotEmpty) {
+        _dailyPracticeQueue = _dailyPracticeQueueForDeckV1(deck);
         _emitPracticeStartedTelemetryV1(practiceGroupId: 'daily');
         if (_launchDailyPracticeQueueTaskV1()) {
           _returnToPlayHubOnBack = returnToPlayHub;
