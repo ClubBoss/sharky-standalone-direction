@@ -1,3 +1,4 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_bet_size_runner_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_number_entry_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_number_entry_runner_v1.dart';
 import 'dart:convert';
@@ -413,6 +414,175 @@ void main() {
     expect(runner.selectedTaskId, next.taskId);
     expect(runner.runner.table.tableFormat, Act0TableFormatV1.sixMax);
     expect(find.text(blocked.title), findsNothing);
+  });
+
+  group('bet_size answer format (B88a)', () {
+    final base = catalogTasks
+        .singleWhere(
+          (row) =>
+              row.lesson.lessonId == 'w6_continuation_bet' &&
+              row.task.taskId == 'dry_size',
+        )
+        .task;
+    Act0LessonTaskV1 fixture({bool four = false}) {
+      const purpose =
+          'A smaller value bet gives weaker queens a price to call.';
+      final options = [
+        for (final (id, grade) in [
+          ('third', Act0FeedbackQualityV1.correct),
+          ('half', Act0FeedbackQualityV1.acceptable),
+          ('pot', Act0FeedbackQualityV1.wrong),
+          if (four) ('over', Act0FeedbackQualityV1.wrong),
+        ])
+          Act0RunnerOptionV1(
+            id: id,
+            label: 'Original $id',
+            isCorrect: grade.passes,
+            preferredLabel: 'Original third',
+            quality: grade,
+            feedbackTitle: 'Value sizing',
+            feedbackReason: purpose,
+          ),
+      ];
+      return Act0LessonTaskV1(
+        taskId: 'fixture_bet_size',
+        title: base.title,
+        phase: Act0LessonPhaseV1.drill,
+        runner: base.runner.copyWith(options: options),
+        rewardXp: base.rewardXp,
+        betSize: Act0BetSizeV1({
+          'third': (numerator: 1, denominator: 3),
+          'half': (numerator: 1, denominator: 2),
+          'pot': (numerator: 1, denominator: 1),
+          if (four) 'over': (numerator: 3, denominator: 2),
+        }),
+      );
+    }
+
+    test('authored best, near and other sizes keep the §9 grades', () {
+      for (final four in [false, true]) {
+        final task = fixture(four: four);
+        final entry = Act0BetSizeRunnerV1.fromTask(task, task.runner.table)!;
+        expect(
+          entry.options.map((o) => o.id),
+          task.runner.options.map((o) => o.id),
+        );
+        expect(entry.options.map((o) => o.quality), [
+          Act0FeedbackQualityV1.correct,
+          Act0FeedbackQualityV1.acceptable,
+          Act0FeedbackQualityV1.wrong,
+          if (four) Act0FeedbackQualityV1.wrong,
+        ]);
+        expect(entry.options.map((o) => o.isCorrect), [
+          true,
+          true,
+          false,
+          if (four) false,
+        ]);
+        expect(entry.presets.where((p) => p.isPrimary).single.id, 'third');
+        for (final option in entry.options) {
+          expect(option.preferredLabel, '1/3 pot · 2 BB');
+          expect(option.feedbackReason, contains('weaker queens'));
+        }
+      }
+    });
+
+    test(
+      'C1 and Table Truth: BB comes from full contributions, not labels',
+      () {
+        final task = fixture(four: true);
+        final table = task.runner.table;
+        final checks = auditTableContributionsV1(task.taskId, 'fixture', table);
+        expect(checks.where((row) => row.result == 'FAIL'), isEmpty);
+        expect(
+          checks.any((row) => row.invariant == 'D2.pot_feasibility'),
+          isTrue,
+        );
+        final entry = Act0BetSizeRunnerV1.fromTask(task, table)!;
+        expect(entry.potBb, 6);
+        expect(entry.presets.map(entry.amountBb), [2, 3, 6, 9]);
+        expect(entry.options.map((o) => o.label), [
+          '1/3 pot · 2 BB',
+          '1/2 pot · 3 BB',
+          '1 pot · 6 BB',
+          '3/2 pot · 9 BB',
+        ]);
+        final misleadingLabel = table.copyWith(potLabel: 'Pot 999 BB');
+        final derived = Act0BetSizeRunnerV1.fromTask(task, misleadingLabel)!;
+        expect(derived.presets.map(derived.amountBb), [2, 3, 6, 9]);
+        final ledger = table.handContributions!;
+        final changedPot = table.copyWith(
+          handContributions: Act0HandContributionsV1(
+            fromStreet: ledger.fromStreet,
+            throughStreet: ledger.throughStreet,
+            entries: [
+              Act0ContributionV1(
+                PokerStreet.preflop,
+                table.decisionActorSeatId,
+                Act0ContributionKindV1.ante,
+                1,
+              ),
+              ...ledger.entries,
+            ],
+          ),
+        );
+        final changed = Act0BetSizeRunnerV1.fromTask(task, changedPot)!;
+        expect(changed.potBb, 7);
+        expect(changed.amountBb(changed.presets.first), closeTo(7 / 3, 1e-9));
+        expect(changed.options.first.label, '1/3 pot · ≈2.33 BB');
+        final partial = table.copyWith(
+          handContributions: Act0HandContributionsV1(
+            fromStreet: PokerStreet.flop,
+            throughStreet: ledger.throughStreet,
+            entries: const [],
+          ),
+        );
+        expect(Act0BetSizeRunnerV1.fromTask(task, partial), isNull);
+      },
+    );
+
+    test(
+      'flag OFF returns identical runner, ON projects only opted-in tasks',
+      () {
+        final task = fixture();
+        final off = act0ProjectBetSizeV1(
+          enabled: false,
+          task: task,
+          source: task.runner,
+        );
+        expect(off.active, isFalse);
+        expect(off.runner, same(task.runner));
+        final on = act0ProjectBetSizeV1(
+          enabled: true,
+          task: task,
+          source: task.runner,
+        );
+        expect(on.active, isTrue);
+        expect(on.runner.table, same(task.runner.table));
+        expect(on.runner.question, task.runner.question);
+        expect(on.runner.sizingConfig.presets, hasLength(3));
+        final review = act0ProjectBetSizeV1(
+          enabled: true,
+          task: task,
+          source: task.runner.copyWith(
+            phase: Act0LessonPhaseV1.review,
+            selectedOptionId: 'half',
+          ),
+        );
+        expect(
+          review.runner.selectedOption?.quality,
+          Act0FeedbackQualityV1.acceptable,
+        );
+        expect(review.runner.sizingConfig.isEnabled, isFalse);
+        final ordinary = act0ProjectBetSizeV1(
+          enabled: true,
+          task: base,
+          source: base.runner,
+        );
+        expect(ordinary.active, isFalse);
+        expect(ordinary.runner, same(base.runner));
+      },
+    );
   });
 
   test('W4 number-entry answers and bands agree with C1 and Table Truth', () {

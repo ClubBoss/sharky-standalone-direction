@@ -68,6 +68,7 @@ import 'act0_session_summary_view_model_v1.dart';
 
 part 'act0_lesson_runner_surfaces_v1.dart';
 part 'act0_lesson_runner_number_entry_v1.dart';
+part 'act0_lesson_runner_bet_size_v1.dart';
 part 'act0_lesson_runner_scene_v1.dart';
 part 'act0_lesson_runner_feedback_v1.dart';
 part 'act0_lesson_runner_completion_v1.dart';
@@ -1262,6 +1263,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
     this.onUndoInteraction,
     required this.onChooseOption,
     this.numberEntry,
+    this.betSize = false,
     this.onSelectSizingPreset,
     this.onConfirmSizingPreset,
     this.onChooseSeat,
@@ -1353,6 +1355,7 @@ class Act0LessonRunnerShellV1 extends StatefulWidget {
   final VoidCallback? onUndoInteraction;
   final ValueChanged<Act0RunnerOptionV1> onChooseOption;
   final Act0NumberEntryRunnerV1? numberEntry;
+  final bool betSize;
   final ValueChanged<Act0SizingPresetV1>? onSelectSizingPreset;
   final VoidCallback? onConfirmSizingPreset;
   final ValueChanged<String>? onChooseSeat;
@@ -3444,6 +3447,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
             languageCode: act0AcademyLanguageV1(context),
           );
     final isNumberEntry = widget.numberEntry != null;
+    final isExplicitAnswer = isNumberEntry || widget.betSize;
     final question = isNumberEntry
         ? widget.numberEntry!.spec.question
         : widget.preserveSourceOwnedQuestion
@@ -4049,10 +4053,10 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       cycleStableEnvelope: usesSharedActiveRunnerAllocation,
       forceCompactPhoneFeedback: usesSharedActiveRunnerAllocation,
       ensureFullCtaGeometry: _usesCanonicalIntegratedLearningSceneV1,
-      // Keep the submitted number visible alongside any repair guidance.
-      alwaysShowAnswerReason: isNumberEntry,
+      // Keep the submitted numeric answer visible alongside repair guidance.
+      alwaysShowAnswerReason: isExplicitAnswer,
       sceneOwnsFeedbackExplanation:
-          !isNumberEntry &&
+          !isExplicitAnswer &&
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation,
       coachVoiceSeed:
@@ -4075,7 +4079,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                 (isRefinedDev2 && widget.selectedTaskId != 'apply_recap')
             ? null
             : taskRailLabel,
-        sizingPresets: runner.sizingConfig.isEnabled
+        sizingPresets: !widget.betSize && runner.sizingConfig.isEnabled
             ? runner.sizingConfig.presets
             : null,
         selectedPresetId: runner.selectedPresetId,
@@ -4102,7 +4106,19 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         accessibilityFeedbackSurface: isAccessibilityFlow && isReview,
         protectFixedSlotBottom:
             taskCycleEnvelope.usesFixedLowerSlot && isReview,
-        child: widget.numberEntry != null && isDrill && !isTeaching
+        child: widget.betSize && isDrill && !isTeaching
+            ? _BetSizePromptV1(
+                question: runner.question,
+                presets: runner.sizingConfig.presets,
+                selectedPresetId: runner.selectedPresetId,
+                onSelect: _heroDecisionReady
+                    ? _handleSelectSizingPresetV1
+                    : null,
+                onConfirm: _heroDecisionReady
+                    ? _handleConfirmSizingPreset
+                    : null,
+              )
+            : widget.numberEntry != null && isDrill && !isTeaching
             ? _NumberEntryPromptV1(
                 question: widget.numberEntry!.spec.question,
                 onOpen: _heroDecisionReady ? _openNumberEntryV1 : null,
@@ -4278,7 +4294,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
                           usesSharedActiveRunnerAllocation) &&
                       !usesSceneAttachedShelfV1)
                     Expanded(child: buildFeedbackShell())
-                  else if (isNumberEntry)
+                  else if (isExplicitAnswer)
                     // The content-sized dock passes unbounded height to
                     // non-flex children. Give feedback a finite fill budget.
                     ConstrainedBox(
@@ -4573,7 +4589,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           )
         : null;
 
-    if (widget.numberEntry == null &&
+    if (!isExplicitAnswer &&
         widget.tablePresentation ==
             Act0TaskTablePresentationV1.stablePractice &&
         ((isDrill && !isTeaching) || isReview) &&
@@ -4829,7 +4845,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
       final dockIntegratedFeedbackGuide =
           _usesCanonicalIntegratedLearningSceneV1 &&
           usesSharedActiveRunnerAllocation &&
-          ((isReview && !isNumberEntry) ||
+          ((isReview && !isExplicitAnswer) ||
               (dockSourceSeatGuide && registeredScene));
 
       Widget buildIntegratedLowerSurface() {
@@ -4956,7 +4972,7 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
           if (_usesCanonicalIntegratedLearningSceneV1 &&
               usesSharedActiveRunnerAllocation &&
               !dockIntegratedFeedbackGuide &&
-              (isTheory || isDrill || (isReview && !isNumberEntry))) ...[
+              (isTheory || isDrill || (isReview && !isExplicitAnswer))) ...[
             const SizedBox(height: Act0ShellTokensV1.gapXs),
             // Seat decisions use a passive guide here. Let taps in its
             // overlapping painted area reach the physical seats underneath.
