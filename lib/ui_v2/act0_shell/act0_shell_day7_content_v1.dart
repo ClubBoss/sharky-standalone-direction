@@ -2629,7 +2629,11 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     caption:
         "Assume players behind fold. HJ calls a reraise to 9 BB with ATs, but folds it to an all-in.",
     question: 'Of these actions, which puts more chips from ATs into the pot?',
-    choices: const ['Match the 3 BB open', 'Reraise to 9 BB', 'Shove 24 BB'],
+    choices: const [
+      'Match the 3 BB open',
+      'Reraise to 9 BB',
+      'Go all-in for 24 BB',
+    ],
     correct: 1,
     reason:
         "Raise to 9 BB because HJ pays another 6 BB with the weaker suited ace. Match the 3 BB open and that hand adds nothing.",
@@ -2783,7 +2787,7 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     ),
     caption: "BB checks. Weaker pairs will call 2 BB and fold to an all-in.",
     question: 'Which bet fits the stated plan?',
-    choices: const ['Shove 18 BB', 'Bet 2 BB', 'Bet 12 BB'],
+    choices: const ['Go all-in for 18 BB', 'Bet 2 BB', 'Bet 12 BB'],
     correct: 1,
     reason:
         "Bet 2 BB because BB calls with weaker pairs on 9-6-3. Bet the 12 BB size and BB folds those weaker pairs instead of paying.",
