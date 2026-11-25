@@ -33,6 +33,21 @@ typedef Act0ReplayAttemptV1 = ({
     return (skillId: null, taskId: null, reason: 'unknown_skill');
   }
 
+  return resolveSkillDrillV1(
+    skillId,
+    completedDrillPool,
+    recentHistory,
+    excludedTaskId: attempt.task.taskId,
+  );
+}
+
+/// Shared same-skill selection for replay and the profile's explicit skill.
+({String? skillId, String? taskId, String reason}) resolveSkillDrillV1(
+  String skillId,
+  Iterable<Act0ReplayTaskV1> completedDrillPool,
+  Iterable<({String taskId, int createdOrder})> recentHistory, {
+  String? excludedTaskId,
+}) {
   final lastSeen = <String, int>{};
   for (final entry in recentHistory) {
     if (entry.createdOrder > (lastSeen[entry.taskId] ?? -1)) {
@@ -42,7 +57,7 @@ typedef Act0ReplayAttemptV1 = ({
   final candidates =
       [
         for (final drill in completedDrillPool)
-          if (drill.taskId != attempt.task.taskId &&
+          if (drill.taskId != excludedTaskId &&
               act0SkillsForTaskV1(
                 drill.lessonId,
                 drill.taskId,

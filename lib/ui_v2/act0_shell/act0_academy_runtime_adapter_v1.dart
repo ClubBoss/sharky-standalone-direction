@@ -20,6 +20,8 @@ import 'academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'act0_settings_view_model_v1.dart';
 import 'academy_leaves/act0_academy_you_leaf_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'act0_skill_progress_v1.dart';
+import 'act0_leak_dashboard_v1.dart';
 import 'act0_w1_rules_check_v1.dart';
 import 'act0_practice_reminder_v1.dart';
 
@@ -210,6 +212,9 @@ Widget act0AcademyYouRuntimeV1(
   required int independentAnswers,
   required int repairedAnswers,
   List<Act0W14SkillStateV1> skills = const [],
+  List<Act0SkillProgressV1> skillProgress = const [],
+  Map<String, VoidCallback> skillPractice = const {},
+  Act0LeakDashboardV1 Function()? openLeakDashboard,
   bool passedW1RulesCheck = false,
   required Act0ProfileShellV1 legacy,
   Act0BetaLearningMetricsV1 Function()? betaLearningMetrics,
@@ -232,6 +237,14 @@ Widget act0AcademyYouRuntimeV1(
       independentAnswers: independentAnswers,
       repairedAnswers: repairedAnswers,
       skills: skills,
+      skillProgress: skillProgress,
+      skillPractice: {
+        for (final entry in skillPractice.entries)
+          entry.key: _guard(isCurrent, entry.value)!,
+      },
+      openLeakDashboard: openLeakDashboard == null
+          ? null
+          : () => isCurrent() ? openLeakDashboard() : null,
       checkedW1Topics: passedW1RulesCheck
           ? act0W1RulesQuestionsV1
                 .map((question) => question.topic)

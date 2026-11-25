@@ -7,6 +7,7 @@ import 'act0_route_practice_v1.dart';
 import 'package:flutter/semantics.dart';
 import 'act0_accessibility_semantics_v1.dart';
 import 'act0_w14_skill_state_v1.dart';
+import 'act0_skill_progress_v1.dart';
 import 'act0_daily_practice_queue_v1.dart';
 import 'act0_warmup_v1.dart';
 import 'act0_path_progress_v1.dart';
@@ -5534,6 +5535,18 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                           worlds: state.worlds,
                           history: _learningEvidenceHistoryV1,
                         ),
+                        skillProgress: Act0SkillProgressV1.fromArchive(
+                          archive: _attemptArchiveV1,
+                          worlds: state.worlds,
+                        ),
+                        skillPractice: _profileSkillPracticeV1(callbackEpochV1),
+                        openLeakDashboard: leakDashboardV1
+                            ? () => _leakDashboardForReviewV1(
+                                state,
+                                reviewState,
+                                reviewCoaching,
+                              )
+                            : null,
                         isCurrent: () =>
                             _acceptRecoveryCallbackV1(callbackEpochV1),
                         completedTasks: _completedTaskIds.length,
