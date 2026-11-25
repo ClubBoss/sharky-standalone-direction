@@ -574,16 +574,161 @@ void main() {
           Act0FeedbackQualityV1.acceptable,
         );
         expect(review.runner.sizingConfig.isEnabled, isFalse);
+        final unconverted = catalogTasks
+            .singleWhere(
+              (row) => row.task.taskId == 'w6_continuation_bet_wet_check',
+            )
+            .task;
         final ordinary = act0ProjectBetSizeV1(
           enabled: true,
-          task: base,
-          source: base.runner,
+          task: unconverted,
+          source: unconverted.runner,
         );
         expect(ordinary.active, isFalse);
-        expect(ordinary.runner, same(base.runner));
+        expect(ordinary.runner, same(unconverted.runner));
       },
     );
   });
+
+  test(
+    'B88b six pilots preserve authored grades, C1 sizes and OFF identity',
+    () {
+      // Expected amount and grade are independent of the new fractions.
+      const correct = Act0FeedbackQualityV1.correct;
+      const wrong = Act0FeedbackQualityV1.wrong;
+      const suboptimal = Act0FeedbackQualityV1.suboptimal;
+      const expected = {
+        'board_texture_basics_w5_texture_dry_value': {
+          'check': (0.0, wrong),
+          'two': (2.0, correct),
+          'six': (6.0, wrong),
+        },
+        'w5_semi_bluff_flush_draw': {
+          'check': (0.0, wrong),
+          'choice_1': (3.0, correct),
+          'choice_2': (1.0, wrong),
+        },
+        'w5_semi_bluff_combo_draw': {
+          'choice_0': (1.0, wrong),
+          'check': (0.0, correct),
+          'choice_2': (3.0, wrong),
+        },
+        'w5_semi_bluff_short_draw': {
+          'check': (0.0, correct),
+          'choice_1': (2.0, wrong),
+          'choice_2': (1.0, wrong),
+        },
+        'w6_continuation_bet_dry_size': {
+          'bet_two': (2.0, correct),
+          'bet_six': (6.0, wrong),
+          'bet_nine': (9.0, wrong),
+        },
+        'w6_continuation_bet_value_size': {
+          'bet_one_five': (1.5, suboptimal),
+          'bet_six': (6.0, wrong),
+          'bet_three': (3.0, correct),
+        },
+      };
+      final pilots = catalogTasks
+          .where((row) => row.task.betSize != null)
+          .toList();
+      expect(
+        pilots.map((row) => row.task.taskId),
+        unorderedEquals(expected.keys),
+      );
+      for (final row in pilots) {
+        final task = row.task;
+        final table = task.runner.table;
+        final answers = expected[task.taskId]!;
+        final amounts = table.handContributions!.amounts(
+          actorSeatId: table.decisionActorSeatId,
+          seatIds: {
+            for (final seat in table.seats)
+              if (seat.isOccupied) seat.seatId,
+          },
+        );
+        expect(amounts.potBb, 6, reason: task.taskId);
+        expect(amounts.toCallBb, 0, reason: task.taskId);
+        expect(
+          auditTableContributionsV1(
+            task.taskId,
+            'pilot',
+            table,
+          ).where((row) => row.result == 'FAIL'),
+          isEmpty,
+        );
+        final entry = Act0BetSizeRunnerV1.fromTask(task, table)!;
+        expect(entry.potBb, amounts.potBb);
+        final on = act0ProjectBetSizeV1(
+          enabled: true,
+          task: task,
+          source: task.runner,
+        );
+        expect(on.active, isTrue, reason: task.taskId);
+        expect(
+          on.runner.options.map((o) => o.id),
+          task.runner.options.map((o) => o.id),
+        );
+        expect(entry.presets.map((p) => p.id), unorderedEquals(answers.keys));
+        for (final preset in entry.presets) {
+          final (bb, grade) = answers[preset.id]!;
+          final fraction = task.betSize!.fractions[preset.id]!;
+          final authored = task.runner.options.singleWhere(
+            (o) => o.id == preset.id,
+          );
+          final projected = on.runner.options.singleWhere(
+            (o) => o.id == preset.id,
+          );
+          expect(entry.amountBb(preset), closeTo(bb, 1e-9));
+          expect(
+            entry.amountBb(preset),
+            closeTo(
+              amounts.potBb * fraction.numerator / fraction.denominator,
+              1e-9,
+            ),
+          );
+          expect(projected.quality, grade);
+          expect(projected.quality, authored.quality);
+          expect(projected.isCorrect, authored.isCorrect);
+          expect(projected.feedbackTitle, authored.feedbackTitle);
+          expect(projected.feedbackReason, authored.feedbackReason);
+          expect(preset.isPrimary, grade == correct);
+          expect(preset.semanticLabel, contains('big blind'));
+        }
+        final off = act0ProjectBetSizeV1(
+          enabled: false,
+          task: task,
+          source: task.runner,
+        );
+        expect(off.active, isFalse);
+        expect(off.runner, same(task.runner));
+        final learnerTask = Act0ShellStateV1.sample
+            .worldById(row.world.worldId)
+            .lessons
+            .singleWhere((l) => l.lessonId == row.lesson.lessonId)
+            .courseTaskList
+            .singleWhere((t) => t.taskId == task.taskId);
+        expect(learnerTask.betSize?.fractions, task.betSize!.fractions);
+        expect(learnerTask.rewardXp, task.rewardXp);
+      }
+      expect(
+        renderCatalogSnapshot(excludePilot: true),
+        File('test/fixtures/act0_catalog_snapshot_v1.txt').readAsStringSync(),
+      );
+      final route = [
+        for (final world in Act0ShellStateV1.sample.worlds.where(
+          (w) => w.worldNumber <= 12,
+        ))
+          for (final lesson in world.lessons)
+            for (final task in lesson.courseTaskList)
+              [world.worldId, lesson.lessonId, task.taskId, task.rewardXp],
+      ];
+      expect(
+        sha256.convert(utf8.encode(jsonEncode(route))).toString(),
+        '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
+      );
+    },
+  );
 
   test('W4 number-entry answers and bands agree with C1 and Table Truth', () {
     const expected = {

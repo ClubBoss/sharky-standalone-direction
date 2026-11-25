@@ -196,6 +196,11 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'w5_texture_dry_value',
+        betSize: const Act0BetSizeV1({
+          'check': (numerator: 0, denominator: 1),
+          'two': (numerator: 1, denominator: 3),
+          'six': (numerator: 1, denominator: 1),
+        }),
         title: 'Dry flop bet size',
         phase: Act0LessonPhaseV1.drill,
         runner: _w5TextureDryValueRunner,
@@ -621,6 +626,11 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: "flush_draw",
+        betSize: const Act0BetSizeV1({
+          'check': (numerator: 0, denominator: 1),
+          'choice_1': (numerator: 1, denominator: 2),
+          'choice_2': (numerator: 1, denominator: 6),
+        }),
         title: "Bet the flush draw",
         phase: Act0LessonPhaseV1.drill,
         rewardXp: 8,
@@ -651,6 +661,11 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: "combo_draw",
+        betSize: const Act0BetSizeV1({
+          'choice_0': (numerator: 1, denominator: 6),
+          'check': (numerator: 0, denominator: 1),
+          'choice_2': (numerator: 1, denominator: 2),
+        }),
         title: "Two draws, fewer folds",
         phase: Act0LessonPhaseV1.drill,
         rewardXp: 8,
@@ -681,6 +696,11 @@ final _boardDrawsLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: "short_draw",
+        betSize: const Act0BetSizeV1({
+          'check': (numerator: 0, denominator: 1),
+          'choice_1': (numerator: 1, denominator: 3),
+          'choice_2': (numerator: 1, denominator: 6),
+        }),
         title: "A draw against a short stack",
         phase: Act0LessonPhaseV1.drill,
         rewardXp: 8,
@@ -1184,6 +1204,11 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'dry_size',
+        betSize: const Act0BetSizeV1({
+          'bet_two': (numerator: 1, denominator: 3),
+          'bet_six': (numerator: 1, denominator: 1),
+          'bet_nine': (numerator: 3, denominator: 2),
+        }),
         title: 'Size a bet on a dry flop',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6ContinuationBetDry,
@@ -1192,6 +1217,11 @@ final _rangeThinkingLiteLessons = <Act0LessonCardV1>[
       ),
       Act0LessonTaskV1(
         taskId: 'value_size',
+        betSize: const Act0BetSizeV1({
+          'bet_one_five': (numerator: 1, denominator: 4),
+          'bet_six': (numerator: 1, denominator: 1),
+          'bet_three': (numerator: 1, denominator: 2),
+        }),
         title: 'Bet a size that gets called',
         phase: Act0LessonPhaseV1.drill,
         runner: _w6ContinuationBetValue,

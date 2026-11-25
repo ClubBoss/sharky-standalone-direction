@@ -1006,5 +1006,6 @@ Act0LessonTaskV1 _foundationTaskV1(Act0LessonTaskV1 task) {
     guidedDecision: task.guidedDecision,
     summary: task.summary,
     lockedSummary: task.lockedSummary,
+    betSize: task.betSize,
   );
 }

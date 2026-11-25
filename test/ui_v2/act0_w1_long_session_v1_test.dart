@@ -704,6 +704,178 @@ void _registerFocusedCases() {
     semantics.dispose();
   });
 
+  testWidgets(
+    'W6 bet size: mistake, restart, correct lesson progress at 1.3x',
+    (t) async {
+      const taskId = 'w6_continuation_bet_dry_size';
+      final semantics = t.ensureSemantics();
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_6',
+        taskId: taskId,
+        numberEntryV1: true,
+        textScale: 1.3,
+      );
+      final shell = find.byType(Act0LessonRunnerShellV1);
+      Act0LessonRunnerShellV1 current() =>
+          t.widget<Act0LessonRunnerShellV1>(shell);
+      Future<void> tap(String key) async {
+        expect(await _tapFirst(t, [find.byKey(Key(key))]), isTrue, reason: key);
+      }
+
+      expect(current().betSize, isTrue);
+      expect(
+        find.bySemanticsLabel('one third of the pot, 2 big blinds'),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('all of the pot, 6 big blinds'),
+        findsOneWidget,
+      );
+      expect(
+        find.bySemanticsLabel('one and a half of the pot, 9 big blinds'),
+        findsOneWidget,
+      );
+      expect(t.takeException(), isNull);
+      await tap('act0_bet_size_bet_six');
+      expect(current().runner.phase, Act0LessonPhaseV1.drill);
+      await tap('act0_bet_size_confirm');
+      final before = await _saved(t);
+      final miss = (before['learningEvidenceHistory'] as List)
+          .cast<Map>()
+          .lastWhere((row) => row['taskId'] == taskId);
+      expect(miss['choiceId'], 'bet_six');
+      expect(miss['isCorrect'], isFalse);
+      expect(before['completedTaskIds'], isNot(contains(taskId)));
+      expect(before['earnedXp'], xp);
+      await _mount(t, numberEntryV1: true, textScale: 1.3);
+      expect(
+        (await _saved(t))['learningEvidenceHistory'],
+        before['learningEvidenceHistory'],
+      );
+      await tap('act0_academy_home_leaf_cta');
+      expect(current().selectedTaskId, taskId);
+      expect(current().runner.phase, Act0LessonPhaseV1.review);
+      expect(current().runner.selectedOptionId, 'bet_six');
+      final visited = <String>{};
+      final summary = find.byKey(
+        const Key('act0_shell_block_summary_continue_cta'),
+      );
+      for (
+        var step = 0;
+        step < _maxRouteAttempts && summary.evaluate().isEmpty;
+        step++
+      ) {
+        final runner = current();
+        if (runner.runner.phase == Act0LessonPhaseV1.review) {
+          await tap('act0_shell_feedback_continue_cta');
+        } else if (runner.runner.activeTeachingStep != null ||
+            runner.runner.phase == Act0LessonPhaseV1.theory) {
+          expect(await _tapTeachingContinue(t), isTrue);
+        } else {
+          await pumpSourceChoreographyToDecisionV1(t, runner.runner.table);
+          final choice = runner.runner.options.firstWhere(
+            act0RunnerOptionIsPreferredV1,
+          );
+          if (runner.betSize) {
+            visited.add(runner.selectedTaskId!);
+            await tap('act0_bet_size_${choice.id}');
+            await tap('act0_bet_size_confirm');
+          } else if (runner.runner.sizingConfig.isEnabled) {
+            await tap('act0_shell_sizing_preset_${choice.id}');
+            await tap('act0_shell_sizing_confirm_cta');
+          } else {
+            await tap(
+              choice.seatId == null
+                  ? 'act0_shell_option_${choice.id}'
+                  : 'act0_shell_seat_tap_${choice.seatId}',
+            );
+          }
+        }
+      }
+      expect(summary, findsOneWidget);
+      expect(visited, containsAll([taskId, 'w6_continuation_bet_value_size']));
+      final finished = await _saved(t);
+      final history = (finished['learningEvidenceHistory'] as List).cast<Map>();
+      expect(history, contains(equals(miss)));
+      expect(
+        history.any(
+          (r) =>
+              r['taskId'] == taskId &&
+              r['choiceId'] == 'bet_two' &&
+              r['isCorrect'] == true,
+        ),
+        isTrue,
+      );
+      final lesson = Act0ShellStateV1.sample
+          .worldById('world_6')
+          .lessons
+          .singleWhere((l) => l.lessonId == 'w6_continuation_bet');
+      final completed = (finished['completedTaskIds'] as List).cast<String>();
+      expect(
+        completed,
+        containsAll(lesson.courseTaskList.map((task) => task.taskId)),
+      );
+      expect(completed.toSet(), hasLength(completed.length));
+      final rewards = {
+        for (final world in Act0ShellStateV1.sample.worlds)
+          for (final lesson in world.lessons)
+            for (final task in lesson.courseTaskList)
+              task.taskId: task.rewardXp,
+      };
+      expect(
+        finished['earnedXp'],
+        completed.fold(0, (sum, id) => sum + rewards[id]!),
+      );
+      expect(t.takeException(), isNull);
+      semantics.dispose();
+    },
+  );
+
+  testWidgets('W5 bet size includes the authored free check at 1.3x', (
+    t,
+  ) async {
+    final semantics = t.ensureSemantics();
+    await _openSavedCourseTask(
+      t,
+      worldId: 'world_5',
+      taskId: 'w5_semi_bluff_combo_draw',
+      numberEntryV1: true,
+      textScale: 1.3,
+    );
+    expect(
+      find.bySemanticsLabel('Check, zero of the pot, 0 big blinds'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel('one sixth of the pot, 1 big blind'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel('one half of the pot, 3 big blinds'),
+      findsOneWidget,
+    );
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_bet_size_check'))]),
+      isTrue,
+    );
+    expect(
+      await _tapFirst(t, [find.byKey(const Key('act0_bet_size_confirm'))]),
+      isTrue,
+    );
+    final saved = await _saved(t);
+    expect(
+      (saved['learningEvidenceHistory'] as List).cast<Map>().last['choiceId'],
+      'check',
+    );
+    expect(
+      (saved['learningEvidenceHistory'] as List).cast<Map>().last['isCorrect'],
+      isTrue,
+    );
+    expect(t.takeException(), isNull);
+    semantics.dispose();
+  });
+
   testWidgets('pre-split first lesson resumes the card read with its XP', (
     t,
   ) async {

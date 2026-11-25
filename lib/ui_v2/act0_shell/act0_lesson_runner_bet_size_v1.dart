@@ -30,6 +30,7 @@ class _BetSizePromptV1 extends StatelessWidget {
             Act0SkinChipV1(
               key: Key('act0_bet_size_${preset.id}'),
               label: preset.label,
+              semanticLabel: preset.semanticLabel,
               selected: selectedPresetId == preset.id,
               tone: selectedPresetId == preset.id
                   ? Act0SkinChipToneV1.brass

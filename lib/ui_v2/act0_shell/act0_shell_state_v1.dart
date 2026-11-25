@@ -730,6 +730,7 @@ class Act0SizingPresetV1 {
     required this.label,
     required this.potFraction,
     this.displayLabel,
+    this.semanticLabel,
     this.detailLabel,
     this.ctaLabel,
     this.isPrimary = false,
@@ -739,6 +740,7 @@ class Act0SizingPresetV1 {
   final String label;
   final double potFraction;
   final String? displayLabel;
+  final String? semanticLabel;
   final String? detailLabel;
   final String? ctaLabel;
   final bool isPrimary;
