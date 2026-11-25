@@ -131,7 +131,7 @@ TRAIL: SB blind 0.5 BB · BB blind 1 BB · An earlier player folds · Another pl
 
 TASK first_table_guide_first_decision [drill] Decide with your coach
 CAPTION: The player before you raised to 2.5 BB.
-TEACH: Three choices. Fold gives up. Call matches the bet. Raise increases it. Raise to an amount means your total for that betting round reaches that amount. A reraise means raising an earlier raise; the first reraise is called a 3-bet. Two aces are the strongest starting hand. With the strongest hand you want more chips in the pot, so you raise.
+TEACH: Three choices. Fold gives up; call matches the bet and raise increases it. Raise to an amount means your total bet for the round. A reraise means raising an earlier raise; the first reraise is called a 3-bet. Two aces are the strongest starting hand, so raise to build the pot.
 Q: How will you play your aces?
 HINT [theoryOnly]: (none)
 TABLE: Preflop | You As Ac | Pot 4 BB | To call 2.5 BB | Seat CO | Active co | Decision co | Facts pocket pair
