@@ -1,8 +1,11 @@
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_b19_turn_truth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter/material.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_decision_reasoning_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -40,10 +43,10 @@ void main() {
             for (final task in lesson.courseTaskList)
               [world.worldId, lesson.lessonId, task.taskId, task.rewardXp],
       ];
-      // N3 baseline, including task order and each task's award.
+      // Pre-B92 HEAD baseline (498 tasks), including order and XP.
       expect(
         sha256.convert(utf8.encode(jsonEncode(route))).toString(),
-        '58a0269a4fb9bc31cf3f172af93cd766b22e330ad54070b995284c0338907380',
+        '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
       );
     },
     skip: act0CurriculumPilotEnabledV1,
@@ -182,6 +185,134 @@ void main() {
     skip: !act0CurriculumPilotEnabledV1,
   );
 
+  test('turn choices reject flop, private and fixed-opponent cards', () {
+    const hero = ['Ah', '6h'];
+    const flop = ['Kh', '8h', '3c'];
+    const range = [
+      ['Ks', 'Kd'],
+    ];
+    for (final illegal in ['Kh', 'Ah', 'Ks', '2c', 'ZZ']) {
+      expect(
+        () => act0B92TurnChoicesV1(
+          hero: hero,
+          flop: flop,
+          range: range,
+          reference: '2c',
+          candidates: {'turn': illegal},
+          price: 1 / 3,
+        ),
+        throwsArgumentError,
+      );
+    }
+    final atPrice = act0B92TurnChoicesV1(
+      hero: hero,
+      flop: flop,
+      range: range,
+      reference: '2c',
+      candidates: {'heart': 'Qh', 'blank': '4c'},
+      price: 1 / 3,
+    );
+    expect(atPrice.changingIds, {'heart'});
+    final highPrice = act0B92TurnChoicesV1(
+      hero: hero,
+      flop: flop,
+      range: range,
+      reference: '2c',
+      candidates: {'heart': 'Qh', 'blank': '4c', 'none': null},
+      price: 0.95,
+    );
+    expect(highPrice.changingIds, {'none'});
+  });
+
+  test(
+    'mistake grade follows the contribution ledger, not a pinned answer',
+    () {
+      final task = catalogTasks
+          .singleWhere((row) => row.task.taskId == 'mistake_already_committed')
+          .task;
+      final table = task.runner.table;
+      final ledger = table.handContributions!;
+      // Raising to 12 instead of 9 makes the 9 BB call annotation true and
+      // the old raise annotation false. It must not retain the original grade.
+      final changed = Act0HandContributionsV1(
+        throughStreet: ledger.throughStreet,
+        startingStackBbBySeat: ledger.startingStackBbBySeat,
+        entries: [
+          for (final e in ledger.entries)
+            if (e.street == ledger.throughStreet && e.seatId == 'bb')
+              Act0ContributionV1(e.street, e.seatId, e.kind, 12)
+            else
+              e,
+        ],
+      );
+      final truth = act0B92MistakeTruthV1(
+        task.taskId,
+        table.copyWith(handContributions: changed),
+      );
+      expect(truth.mistakes['price'], isFalse);
+      expect(truth.mistakes['raise'], isTrue);
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
+
+  for (final taskId in ['mistake_half_pot', 'turn_heart_completes']) {
+    for (final chooseCorrect in [true, false]) {
+      testWidgets(
+        'B92 existing runner grades $taskId (correct=$chooseCorrect)',
+        (tester) async {
+          final row = catalogTasks.singleWhere(
+            (row) => row.task.taskId == taskId,
+          );
+          final task = row.task;
+          final chosen = task.runner.options.firstWhere(
+            (o) => o.isCorrect == chooseCorrect,
+          );
+          final taps = <Act0RunnerOptionV1>[];
+          tester.view.physicalSize = const Size(393, 852);
+          tester.view.devicePixelRatio = 1;
+          addTearDown(tester.view.resetPhysicalSize);
+          addTearDown(tester.view.resetDevicePixelRatio);
+          await tester.pumpWidget(
+            MaterialApp(
+              home: Scaffold(
+                body: Act0LessonRunnerShellV1(
+                  runner: task.runner,
+                  selectedWorldId: row.world.worldId,
+                  selectedLessonId: row.lesson.lessonId,
+                  selectedTaskId: taskId,
+                  selectedTaskFamily: task.resolvedTaskFamily,
+                  onBack: () {},
+                  onContinueTheory: () {},
+                  onChooseOption: taps.add,
+                  onContinueReview: () {},
+                ),
+              ),
+            ),
+          );
+          await tester.pumpAndSettle();
+          for (final option in task.runner.options) {
+            expect(
+              find.byKey(Key('act0_shell_option_${option.id}')),
+              findsOneWidget,
+            );
+          }
+          final target = find.byKey(Key('act0_shell_option_${chosen.id}'));
+          await tester.ensureVisible(target);
+          await tester.tap(target);
+          await tester.pumpAndSettle();
+          expect(taps.single.id, chosen.id);
+          expect(taps.single.isCorrect, chooseCorrect);
+          expect(
+            taps.single.feedbackReason,
+            contains(taskId.startsWith('mistake') ? 'Mistake:' : '33.3%'),
+          );
+          expect(tester.takeException(), isNull);
+        },
+        skip: !act0CurriculumPilotEnabledV1,
+      );
+    }
+  }
+
   test('B19 flag, drill shape and accepted C1 prices', () {
     final drills = catalogTasks.where(
       (row) => _b19Lessons.contains(row.lesson.lessonId),
@@ -254,10 +385,90 @@ void main() {
         reason: id,
       );
       expect(table.heroCards, hasLength(2), reason: id);
+      if (row.lesson.lessonId == 'where_is_the_mistake') {
+        final truth = act0B92MistakeTruthV1(id, table);
+        expect(
+          truth.mistakes.values.where((wrong) => wrong),
+          hasLength(1),
+          reason: id,
+        );
+        expect(
+          truth.mistakes.keys,
+          unorderedEquals(runner.options.map((o) => o.id)),
+        );
+        final wrong = runner.options.singleWhere((o) => truth.mistakes[o.id]!);
+        expect(wrong.id, _b92MistakeIds[id], reason: id);
+        expect(wrong.quality, Act0FeedbackQualityV1.correct, reason: id);
+        for (final option in runner.options) {
+          expect(
+            option.quality,
+            truth.mistakes[option.id]!
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            reason: id,
+          );
+          expect(option.feedbackReason, contains(wrong.label), reason: id);
+          expect(option.feedbackReason, contains(truth.correction), reason: id);
+        }
+      }
       if (row.lesson.lessonId == 'turn_card_impact') {
-        expect(table.boardCards, hasLength(4), reason: id);
-        expect(table.highlightedCardIds, ['board_3'], reason: id);
+        expect(table.boardCards, hasLength(3), reason: id);
+        expect(table.highlightedCardIds, isEmpty, reason: id);
         expect(table.toCallLabel, isEmpty, reason: id);
+        final (rangeText, reference, correctId, refEquity, correctEquity) =
+            _b92TurnCases[id]!;
+        final hero = table.heroCards.map((card) => card.label).toList();
+        final flop = table.boardCards.map((card) => card.label).toList();
+        final range = rangeText
+            .split(' ')
+            .map((combo) => [combo.substring(0, 2), combo.substring(2)])
+            .toList();
+        final candidates = {
+          for (final o in runner.options)
+            o.id: o.label == 'None of these' ? null : o.label,
+        };
+        final price = act0B92TurnPriceV1(
+          ledger,
+          seats: table.seats.map((s) => s.seatId).toSet(),
+          hero: table.heroSeat.seatId,
+          opponent: 'bb',
+        );
+        expect(price.bet, amounts.potBb, reason: id);
+        expect(price.pot, 19, reason: id);
+        expect(price.due, 9.5, reason: id);
+        expect(price.price, closeTo(1 / 3, 1e-12), reason: id);
+        for (final card in candidates.values.whereType<String>()) {
+          expect(act0B19DeckV1, contains(card), reason: id);
+          expect([...hero, ...flop], isNot(contains(card)), reason: id);
+          expect(range.any((hand) => !hand.contains(card)), isTrue, reason: id);
+        }
+        final result = act0B92TurnChoicesV1(
+          hero: hero,
+          flop: flop,
+          range: range,
+          reference: reference,
+          candidates: candidates,
+          price: price.price,
+        );
+        expect(result.changingIds, {correctId}, reason: id);
+        expect(result.referenceShare, closeTo(refEquity, 0.0001), reason: id);
+        if (correctEquity != null)
+          expect(
+            result.shares[correctId],
+            closeTo(correctEquity, 0.0001),
+            reason: id,
+          );
+        for (final option in runner.options) {
+          expect(
+            option.quality,
+            option.id == correctId
+                ? Act0FeedbackQualityV1.correct
+                : Act0FeedbackQualityV1.wrong,
+            reason: id,
+          );
+          expect(option.feedbackReason, contains('33.3%'), reason: id);
+          expect(option.feedbackReason, contains('showdown share'), reason: id);
+        }
       }
       if (row.lesson.lessonId == 'slightly_harder') {
         expect(task.resolvedTaskFamily, Act0TaskFamilyV1.transfer, reason: id);
@@ -265,6 +476,63 @@ void main() {
     }
   });
 }
+
+// Independently pinned answer identities and evaluator shares for the ten
+// recognition drills; the third B19 lesson retains its accepted grades.
+const _b92MistakeIds = {
+  'mistake_half_pot': 'river_bet',
+  'mistake_minimum_raise': 'short_raise',
+  'mistake_already_committed': 'price',
+  'mistake_turn_straight_call': 'bad_call',
+  'mistake_turn_flush_fold': 'fold',
+  'mistake_worse_calls': 'check',
+  'mistake_bluff_calls': 'big',
+  'mistake_known_blocker': 'count',
+  'mistake_matched_amount': 'all',
+  'mistake_implied_cap': 'extra',
+};
+const _b92TurnCases = <String, (String, String, String, double, double?)>{
+  'turn_heart_completes': ('KsKd KcKd 8s8d', '2c', 'good', 7 / 44, 102 / 132),
+  'turn_heart_pairs_board': ('KsKd KcKd 8s8d', 'Qh', 'bad', 102 / 132, 0),
+  'turn_straight_completes': (
+    'AsAd AcAs QhQc',
+    '2d',
+    'good',
+    24 / 132,
+    128 / 132,
+  ),
+  'turn_overcard_beats_pair': (
+    'AcKc AdKd AcTd',
+    '2c',
+    'bad',
+    117 / 132,
+    6 / 132,
+  ),
+  'turn_remove_high_draw': (
+    'AhKc AhJc ThTc Ah9h',
+    'As',
+    'good',
+    44 / 176,
+    111 / 132,
+  ),
+  'turn_counterfeit_two_pair': (
+    'AcAd AsAh QcQd',
+    '2c',
+    'bad',
+    108 / 132,
+    12 / 132,
+  ),
+  'turn_redraw_good': ('AhJh AhTh QhJh', '2h', 'good', 30 / 132, 1),
+  'turn_board_four_to_straight': (
+    'JdTd JcTh Tc5c',
+    '2c',
+    'bad',
+    105 / 132,
+    1.5 / 132,
+  ),
+  'turn_dead_draw': ('Js8s JsTs Js9s', '3c', 'unchanged', 0, null),
+  'turn_turn_makes_set': ('AhQh AsKd AcJd', '2c', 'good', 6 / 132, 1),
+};
 
 const _b19Lessons = {
   'where_is_the_mistake',
