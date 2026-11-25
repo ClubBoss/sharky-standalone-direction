@@ -1564,6 +1564,11 @@ extension _PreviewAnswerV1 on _Act0ShellPreviewScreenV1State {
       _recordAnswer(selectedLesson, selectedTask, option);
     }
     _selectedOptionId = option.id;
+    if (projectedOptions != null) {
+      // The next bet-size attempt must require a fresh chip selection.
+      _selectedPresetId = null;
+      _selectedPresetTaskId = null;
+    }
     _phase = Act0LessonPhaseV1.review;
     _teachingStepIndex = 0;
   }

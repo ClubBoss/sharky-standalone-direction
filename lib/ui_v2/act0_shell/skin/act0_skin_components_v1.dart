@@ -140,12 +140,14 @@ class Act0SkinChipV1 extends StatelessWidget {
   const Act0SkinChipV1({
     super.key,
     required this.label,
+    this.semanticLabel,
     this.tone = Act0SkinChipToneV1.brass,
     this.onPressed,
     this.selected = false,
   });
 
   final String label;
+  final String? semanticLabel;
   final Act0SkinChipToneV1 tone;
   final VoidCallback? onPressed;
   final bool selected;
@@ -164,7 +166,11 @@ class Act0SkinChipV1 extends StatelessWidget {
         color: bg,
         borderRadius: BorderRadius.circular(999),
       ),
-      child: Text(label, style: _T.tag.copyWith(color: fg)),
+      child: Text(
+        label,
+        semanticsLabel: semanticLabel,
+        style: _T.tag.copyWith(color: fg),
+      ),
     );
     if (onPressed == null) return chip;
     return Semantics(

@@ -33,9 +33,8 @@ class Act0BetSizeRunnerV1 {
     final best = authored.where(
       (option) => option.quality == Act0FeedbackQualityV1.correct,
     );
-    if (best.length != 1 ||
-        !authored.any((o) => o.quality == Act0FeedbackQualityV1.acceptable) ||
-        !authored.any((o) => o.quality == Act0FeedbackQualityV1.wrong)) {
+    // Existing tasks need not author a near-correct size. Never invent one.
+    if (best.length != 1 || !authored.any((o) => !o.quality.passes)) {
       return null;
     }
     final ({double potBb, double? toCallBb}) amounts;
@@ -58,7 +57,9 @@ class Act0BetSizeRunnerV1 {
     for (final option in authored) {
       final fraction = fractions[option.id];
       if (fraction == null ||
-          fraction.numerator <= 0 ||
+          fraction.numerator < 0 ||
+          (fraction.numerator == 0) !=
+              (option.id == 'check' && option.label.toLowerCase() == 'check') ||
           fraction.denominator <= 0 ||
           option.seatId != null ||
           option.feedbackReason.trim().isEmpty ||
@@ -66,14 +67,18 @@ class Act0BetSizeRunnerV1 {
           !const {
             Act0FeedbackQualityV1.correct,
             Act0FeedbackQualityV1.acceptable,
+            Act0FeedbackQualityV1.suboptimal,
             Act0FeedbackQualityV1.wrong,
           }.contains(option.quality)) {
         return null;
       }
       final ratio = fraction.numerator / fraction.denominator;
       final bb = pot * ratio;
-      if (!bb.isFinite || bb <= 0 || !seenFractions.add(ratio)) return null;
-      final fractionLabel = fraction.denominator == 1
+      if (!bb.isFinite || bb < 0 || !seenFractions.add(ratio)) return null;
+      final isCheck = fraction.numerator == 0;
+      final fractionLabel = isCheck
+          ? 'Check'
+          : fraction.denominator == 1
           ? '${fraction.numerator} pot'
           : '${fraction.numerator}/${fraction.denominator} pot';
       final rounded = bb.toStringAsFixed(2);
@@ -83,17 +88,22 @@ class Act0BetSizeRunnerV1 {
         Act0SizingPresetV1(
           id: option.id,
           label: '$fractionLabel · $approx$bbLabel BB',
+          semanticLabel:
+              '${isCheck ? 'Check, zero' : _spokenFraction(fraction)} of the pot, ${approx.isEmpty ? '' : 'approximately '}$bbLabel ${bb == 1 ? 'big blind' : 'big blinds'}',
           potFraction: ratio,
           isPrimary: option.quality == Act0FeedbackQualityV1.correct,
         ),
       );
     }
-    final preferred = presets.singleWhere((preset) => preset.isPrimary).label;
+    final primary = presets.singleWhere((preset) => preset.isPrimary);
+    final preferred = primary.id == 'check' ? 'Check' : primary.label;
     return Act0BetSizeRunnerV1._(pot, [
       for (var i = 0; i < authored.length; i++)
         Act0RunnerOptionV1(
           id: authored[i].id,
-          label: presets[i].label,
+          label: authored[i].id == 'check'
+              ? authored[i].label
+              : presets[i].label,
           isCorrect: authored[i].isCorrect,
           preferredLabel: preferred,
           quality: authored[i].quality,
@@ -105,6 +115,17 @@ class Act0BetSizeRunnerV1 {
         ),
     ], List.unmodifiable(presets));
   }
+
+  static String _spokenFraction(({int numerator, int denominator}) fraction) =>
+      switch ((fraction.numerator, fraction.denominator)) {
+        (1, 1) => 'all',
+        (1, 2) => 'one half',
+        (1, 3) => 'one third',
+        (1, 4) => 'one quarter',
+        (1, 6) => 'one sixth',
+        (3, 2) => 'one and a half',
+        _ => '${fraction.numerator} over ${fraction.denominator}',
+      };
 
   Act0RunnerStateV1 project(Act0RunnerStateV1 source) => source.copyWith(
     options: options,

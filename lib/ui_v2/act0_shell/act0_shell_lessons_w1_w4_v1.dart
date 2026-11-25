@@ -2901,6 +2901,7 @@ List<Act0LessonTaskV1> _retitledTasksV1(
         repairOnly: task.repairOnly,
         summary: task.summary,
         lockedSummary: task.lockedSummary,
+        betSize: task.betSize,
       ),
   ];
 }

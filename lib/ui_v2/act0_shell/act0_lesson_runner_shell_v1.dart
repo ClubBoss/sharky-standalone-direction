@@ -4090,12 +4090,16 @@ class _Act0LessonRunnerShellV1State extends State<Act0LessonRunnerShellV1>
         compactAnswerListDecision: compactAnswerListDecision,
         fillCompactPromptToDock: false,
         scrollContentInEnvelope:
+            (widget.betSize &&
+                isDrill &&
+                !isTeaching &&
+                media.textScaler.scale(1) > 1.1) ||
             (lowerStageNeedsScroll &&
-            (isDrill || isReview) &&
-            !_showBottomLearningRail &&
-            widget.lowerSurfacePrototypeState == null &&
-            !isAccessibilityFlow &&
-            (!usesSharedActiveRunnerAllocation || !isReview)),
+                (isDrill || isReview) &&
+                !_showBottomLearningRail &&
+                widget.lowerSurfacePrototypeState == null &&
+                !isAccessibilityFlow &&
+                (!usesSharedActiveRunnerAllocation || !isReview)),
         centerBoundedLowerSurface:
             !usesSharedActiveRunnerAllocation &&
             _showBottomLearningRail &&
