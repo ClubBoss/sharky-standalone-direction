@@ -22,6 +22,8 @@ The existing B101 rehearsal is palette-only; if an approved pack changes
 non-color values or exactly matches its test palette, refresh that rehearsal
 control in the landing PR rather than weakening its visual checks.
 
+Preview before PR: `python3 tools/skin_pack_preview_v1.py /path/to/pack --out preview.html` (default output: `skin_pack_preview.html`; review the sheet even on FAIL).
+
 ## Token keys
 
 The 134 keys below are exactly the constant rows in the B32 designer contract
