@@ -1060,22 +1060,9 @@
     ]
   },
   "W19": {
-    "1.card.named": [
-      "w19_1_read_information_value|caption:0",
-      "w19_1_read_information_value|caption:1",
-      "w19_1_read_information_value|caption:2",
-      "w19_1_read_information_value|caption:3"
-    ],
-    "11.btn_share_per_world": [
-      "@world:world_19|"
-    ],
     "15.internal_jargon": [
       "w19_1_transfer_pick_baseline_when_uncertain|baseline",
-      "w19_3_day7_anonymous_fastfold|baseline",
-      "w19_4_guided_adaptation_before|exploit",
-      "w19_4_read_predictable_single_size|exploit",
-      "w19_4_teach|exploit",
-      "w19_5_day7_runout_nuts_after_check|hero"
+      "w19_3_day7_anonymous_fastfold|baseline"
     ],
     "16.extreme_wrong_option": [
       "w19_1_teach|alternative",
@@ -1092,10 +1079,6 @@
       "w19_6_day7_audit_which_hands_fold|alternative",
       "w19_6_teach|alternative",
       "w19_6_teach|other"
-    ],
-    "21.duplicate_wrong_reason": [
-      "w19_4_guided_adaptation_before|alternative",
-      "w19_6_guided_depth_changes_counter|fold"
     ],
     "22.action_amount": [
       "w19_1_day7_counter_changes_with_strategy|feedback/alternative|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
@@ -1190,38 +1173,9 @@
       "w19_6_read_self_audit_ratio|feedback/other|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
       "w19_6_read_self_audit_ratio|question|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
     ],
-    "22.all_in": [
-      "w19_6_guided_depth_changes_counter|feedback/call|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w19_6_guided_depth_changes_counter|feedback/fold|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w19_6_guided_depth_changes_counter|question|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w19_6_guided_depth_changes_counter|teach/0|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0"
-    ],
-    "9.inherited_copy": [
-      "w19_6_guided_depth_changes_counter|feedback"
-    ],
     "C5": [
-      "w19_1_day7_counter_changes_with_strategy|1223|CAPTION: Player A adds enough misses that this bluff catcher clears the price.",
-      "w19_1_day7_counter_changes_with_strategy|83|CAPTION: Player A adds enough misses that this bluff catcher clears the price.",
-      "w19_1_day7_counter_changes_with_strategy|exploit|Q: Which adjustment follows?",
-      "w19_1_teach|64|FEEDBACK: Hole cards remain hidden.",
-      "w19_1_transfer_pick_baseline_when_uncertain|exploit|FEEDBACK: New matched samples can justify an adjustment.",
-      "w19_4_day7_simplify_mix|498|CAPTION: In a teaching matrix one hand class has exactly equal EV for check and a small bet against the given policy.",
       "w19_4_day7_simplify_mix|solver|OPTION: Checking loses because the solver mixes",
-      "w19_4_read_predictable_single_size|193|OPTION: Switch only their preflop open size",
-      "w19_5_read_cap_can_vanish|1201|FEEDBACK: The retained group can improve into strong value.",
-      "w19_5_read_cap_can_vanish|64|FEEDBACK: The ten and jack are in the hole cards.",
-      "w19_5_teach|capped_range|TEACH: A range is capped only when the model excludes its strongest relevant hands.",
-      "w19_5_transfer_no_attack_into_traps|1201|FEEDBACK: Strong value does not exclude them.",
-      "w19_5_transfer_no_attack_into_traps|capped_range|OPTION: Calling CO’s range capped below the strongest full houses"
-    ],
-    "D3.explicit_current_bet": [
-      "w19_6_guided_depth_changes_counter|authored/drill|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|decision|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|feedback/call|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|feedback/fold|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|review|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|teaching/0/projected|owner=BB amount=12.0 BB",
-      "w19_6_guided_depth_changes_counter|teaching/0/raw|owner=BB amount=12.0 BB"
+      "w19_4_read_predictable_single_size|193|OPTION: Switch only their preflop open size"
     ],
     "D6.history_support": [
       "w19_1_day7_counter_changes_with_strategy|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1255,11 +1209,6 @@
       "w19_6_read_self_audit_ratio|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "E11": [
-      "w19_1_day7_counter_changes_with_strategy|hole card",
-      "w19_1_teach|hole cards",
-      "w19_5_read_cap_can_vanish|hole cards"
-    ],
     "G1·26": [
       "w19_1_day7_counter_changes_with_strategy|",
       "w19_1_guided_respond_to_extra_bluffs|",
@@ -1288,20 +1237,6 @@
       "w19_6_checkpoint_which_data_controls|",
       "w19_6_guided_depth_changes_counter|"
     ],
-    "G1·28": [
-      "w19_1_day7_counter_changes_with_strategy|answer",
-      "w19_1_guided_respond_to_extra_bluffs|call",
-      "w19_1_read_information_value|answer",
-      "w19_2_day7_pool_overbluffs_size|call",
-      "w19_2_guided_bluff_pool_overfold|answer",
-      "w19_2_transfer_pool_underfold|answer",
-      "w19_4_guided_adaptation_before|answer",
-      "w19_4_read_predictable_single_size|answer",
-      "w19_4_transfer_adaptation_after|answer",
-      "w19_5_guided_attack_a_proven_cap|bet_7",
-      "w19_6_checkpoint_which_data_controls|answer",
-      "w19_6_guided_depth_changes_counter|call"
-    ],
     "G1·29": [
       "w19_1_day7_counter_changes_with_strategy|answer",
       "w19_1_guided_respond_to_extra_bluffs|call",
@@ -1322,16 +1257,6 @@
       "w19_1_read_information_value|answer",
       "w19_2_day7_pool_overbluffs_size|call",
       "w19_6_guided_depth_changes_counter|call"
-    ],
-    "G1·31": [
-      "w19_1_day7_counter_changes_with_strategy|alternative",
-      "w19_1_day7_counter_changes_with_strategy|other",
-      "w19_1_read_information_value|alternative",
-      "w19_1_read_information_value|other",
-      "w19_2_guided_bluff_pool_overfold|alternative",
-      "w19_4_guided_adaptation_before|alternative",
-      "w19_4_read_predictable_single_size|other",
-      "w19_5_guided_attack_a_proven_cap|bet_2"
     ]
   },
   "W20": {
