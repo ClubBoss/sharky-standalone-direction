@@ -218,22 +218,6 @@
       "w19_1_transfer_pick_baseline_when_uncertain|baseline",
       "w19_3_day7_anonymous_fastfold|baseline"
     ],
-    "16.extreme_wrong_option": [
-      "w19_1_teach|alternative",
-      "w19_1_transfer_pick_baseline_when_uncertain|alternative",
-      "w19_1_transfer_pick_baseline_when_uncertain|other",
-      "w19_2_teach|alternative",
-      "w19_2_teach|other",
-      "w19_3_day7_anonymous_fastfold|other",
-      "w19_3_teach|other",
-      "w19_3_transfer_overcalls_draws|other",
-      "w19_4_day7_simplify_mix|other",
-      "w19_5_teach|alternative",
-      "w19_5_transfer_no_attack_into_traps|alternative",
-      "w19_6_day7_audit_which_hands_fold|alternative",
-      "w19_6_teach|alternative",
-      "w19_6_teach|other"
-    ],
     "C5": [
       "w19_4_day7_simplify_mix|solver|OPTION: Checking loses because the solver mixes",
       "w19_4_read_predictable_single_size|193|OPTION: Switch only their preflop open size"
@@ -275,18 +259,7 @@
       "w20_3_transfer_stakes_discomfort_caveat|baseline"
     ],
     "16.extreme_wrong_option": [
-      "w20_1_day7_distracted_online_sample|alternative",
-      "w20_1_read_time_bank_context|other",
-      "w20_1_transfer_live_baseline_break|other",
-      "w20_3_teach|alternative",
-      "w20_3_transfer_stakes_discomfort_caveat|alternative",
-      "w20_4_read_more_limpers_change_price|alternative",
-      "w20_4_read_more_limpers_change_price|other",
-      "w20_4_teach|alternative",
-      "w20_5_teach|other",
-      "w20_5_transfer_image_changes_value|other",
-      "w20_6_read_confirmation_counterexample|alternative",
-      "w20_6_read_confirmation_counterexample|other"
+      "w20_1_day7_distracted_online_sample|alternative"
     ],
     "17.single_format_lesson": [
       "@lesson:image_and_ecology|statement",
@@ -326,15 +299,6 @@
     ]
   },
   "W21": {
-    "16.extreme_wrong_option": [
-      "w21_2_transfer_stop_win_based_on_behavior|alternative",
-      "w21_3_guided_find_own_leak|alternative",
-      "w21_5_teach|alternative",
-      "w21_5_transfer_review_without_result|other",
-      "w21_6_guided_plan_if_then|other",
-      "w21_6_teach|alternative",
-      "w21_6_teach|other"
-    ],
     "17.single_format_lesson": [
       "@lesson:session_checkpoint|statement",
       "@lesson:structure_and_stopping|statement",
@@ -345,9 +309,6 @@
     "18.same_format_streak": [
       "w21_1_teach|statement",
       "w21_5_teach|statement"
-    ],
-    "C5": [
-      "w21_3_guided_find_own_leak|440|OPTION: Give up all misses because your defense is too wide"
     ],
     "D6.history_support": [
       "w21_1_day7_win_checks_still_apply|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -383,19 +344,6 @@
     "15.internal_jargon": [
       "w22_5_read_output_as_scope|heuristic",
       "w22_5_transfer_population_query|baseline"
-    ],
-    "16.extreme_wrong_option": [
-      "w22_2_guided_indifference_mix|alternative",
-      "w22_2_guided_indifference_mix|other",
-      "w22_3_teach|other",
-      "w22_5_read_output_as_scope|alternative",
-      "w22_5_read_output_as_scope|other",
-      "w22_5_transfer_population_query|other",
-      "w22_6_checkpoint_audit_pruned_solver_result|other",
-      "w22_6_day7_read_lead_plan|alternative",
-      "w22_6_day7_read_lead_plan|other",
-      "w22_6_teach|alternative",
-      "w22_6_teach|other"
     ],
     "17.single_format_lesson": [
       "@lesson:game_tree|statement",

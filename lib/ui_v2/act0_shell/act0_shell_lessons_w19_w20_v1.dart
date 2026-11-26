@@ -29,7 +29,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The equilibrium maximizes profit against every actual opponent",
+            "The equilibrium is the profit-maximizing response to an opponent’s actual strategy",
             Act0FeedbackQualityV1.wrong,
             "A player who differs from the equilibrium can permit a more profitable targeted counter.",
           ),
@@ -275,13 +275,13 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Assume the quick bet is always a bluff",
+            "Classify the quick bet as a bluff from its speed",
             Act0FeedbackQualityV1.wrong,
             "Timing has several causes and one event does not establish the relevant breakdown.",
           ),
           (
             "other",
-            "Assume that opponent uses every equilibrium frequency",
+            "Treat the opponent’s strategy as matching the equilibrium frequencies",
             Act0FeedbackQualityV1.wrong,
             "A starting strategy guides your decision under uncertainty. It does not determine an unknown opponent’s exact strategy.",
           ),
@@ -499,13 +499,13 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "To every street for players on that site",
+            "Across the streets played on that site",
             Act0FeedbackQualityV1.wrong,
             "A fold to a preflop raise does not imply a fold to a river overbet.",
           ),
           (
             "other",
-            "To every individual at that stake",
+            "To individual players at that stake as their personal tendency",
             Act0FeedbackQualityV1.wrong,
             "An average does not erase variation across individuals.",
           ),
@@ -931,7 +931,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "All preflop hands that the regular played",
+            "The regular’s complete preflop hand sample",
             Act0FeedbackQualityV1.wrong,
             "Most do not reach the relevant river decision.",
           ),
@@ -1164,7 +1164,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Change all preflop opening charts",
+            "Revise the preflop opening strategy across positions",
             Act0FeedbackQualityV1.wrong,
             "This information describes a particular postflop response.",
           ),
@@ -1261,7 +1261,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "No evidence of any kind",
+            "Anonymity makes the available evidence unusable",
             Act0FeedbackQualityV1.wrong,
             "Format, line, size and depth can still be observed without identifying each player.",
           ),
@@ -1684,7 +1684,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "A pure action is unexploitable against every response",
+            "A pure action is protected against changes in the opponent’s response",
             Act0FeedbackQualityV1.wrong,
             "Equal payoff against one fixed opponent does not protect you against new responses.",
           ),
@@ -1779,7 +1779,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Any amount of checking occurred",
+            "The opponent checked at some point in the hand",
             Act0FeedbackQualityV1.wrong,
             "A check may keep very strong hands. It can also precede improvement.",
           ),
@@ -2007,7 +2007,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "CO holding any missed hands",
+            "CO having missed hands in the retained range",
             Act0FeedbackQualityV1.wrong,
             "The model also retains misses. The retained full houses do not exclude them.",
           ),
@@ -2211,13 +2211,13 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "All hands dealt in the session",
+            "The total number of hands dealt in the session",
             Act0FeedbackQualityV1.wrong,
             "Most hands never face the target river decision.",
           ),
           (
             "other",
-            "Only the hands you called and lost",
+            "The number of losing calls",
             Act0FeedbackQualityV1.wrong,
             "This excludes folds and winning calls, distorting the decision frequency.",
           ),
@@ -2571,7 +2571,7 @@ final _world19Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Call all marginal pairs until the count reaches MDF",
+            "Use marginal-pair calls to raise defense to MDF",
             Act0FeedbackQualityV1.wrong,
             "The range target is not itself a reason to pay with low-equity hands.",
           ),
@@ -2735,7 +2735,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "The river bet is almost always a bluff",
+            "The river betting range is overwhelmingly bluffs",
             Act0FeedbackQualityV1.wrong,
             "One elapsed time cannot establish a betting distribution.",
           ),
@@ -2944,7 +2944,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Ignore every live behavior forever",
+            "Exclude live behavior from your long-term reads",
             Act0FeedbackQualityV1.wrong,
             "Repeated, comparable observations can matter once they track a meaningful distinction.",
           ),
@@ -3662,7 +3662,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The player plays at the same time every day",
+            "The player keeps a consistent daily playing schedule",
             Act0FeedbackQualityV1.wrong,
             "That may suggest a regular. It does not establish how they defend.",
           ),
@@ -3886,7 +3886,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every large river bluff now wins",
+            "Large river bluffs now win through the player’s risk aversion",
             Act0FeedbackQualityV1.wrong,
             "The premise gives no fold frequency and no information about the folded hand.",
           ),
@@ -4100,7 +4100,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "All players behind call every raise size",
+            "Players behind respond to raises by calling at each size",
             Act0FeedbackQualityV1.wrong,
             "The raise may inflate a multiway pot and miss the isolation goal.",
           ),
@@ -4136,13 +4136,13 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only the limper you target",
+            "The targeted limper, excluding players outside that match-up",
             Act0FeedbackQualityV1.wrong,
             "The other live players can make the pot multiway.",
           ),
           (
             "other",
-            "Only the larger blind",
+            "BB, with HJ and SB excluded",
             Act0FeedbackQualityV1.wrong,
             "Both blinds and the other limper matter.",
           ),
@@ -4521,7 +4521,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "It permanently makes every future value bet profitable",
+            "The shown bluff secures lasting profitability for future value bets",
             Act0FeedbackQualityV1.wrong,
             "Different opponents and sizes still have different call ranges.",
           ),
@@ -4754,7 +4754,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Reset your entire read on every player at the table",
+            "Rebuild your reads for the whole table from this regular’s calls",
             Act0FeedbackQualityV1.wrong,
             "Only this regular’s observed response to this line was supplied.",
           ),
@@ -4986,13 +4986,13 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only the two hands you remember",
+            "The two bluffs from your memory, without the other notes",
             Act0FeedbackQualityV1.wrong,
             "That drops five observed value events and distorts the bucket.",
           ),
           (
             "other",
-            "Discard all seven because the player surprised you",
+            "Discard the seven notes because the player surprised you",
             Act0FeedbackQualityV1.wrong,
             "The complete matched roster is a better starting point than the surprise alone.",
           ),

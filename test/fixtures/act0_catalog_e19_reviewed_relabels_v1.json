@@ -166,5 +166,203 @@
     "detail": "wrong: no. all-in wagers never reopen → no. an all-in wager cannot reopen betting",
     "reason": "An all-in can be a full raise; the increase from 5 to 11 BB is 6 BB and reopens action under the stated rule.",
     "package": "B133"
+  },
+  {
+    "task": "w19_1_teach",
+    "detail": "wrong: the equilibrium maximizes profit against every actual opponent → the equilibrium is the profit-maximizing response to an opponent’s actual strategy",
+    "reason": "An equilibrium prevents profitable unilateral deviations against its equilibrium counterpart, but a different opponent may permit a more profitable best response.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_1_transfer_pick_baseline_when_uncertain",
+    "detail": "wrong: assume the quick bet is always a bluff / assume that opponent uses every equilibrium frequency → classify the quick bet as a bluff from its speed / treat the opponent’s strategy as matching the equilibrium frequencies",
+    "reason": "A single quick bet does not establish bluff frequency, and using an equilibrium baseline does not establish that an unknown opponent follows it.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_2_teach",
+    "detail": "wrong: to every street for players on that site / to every individual at that stake → across the streets played on that site / to individual players at that stake as their personal tendency",
+    "reason": "Pool tendencies are specific to comparable decision nodes, and neither other streets nor individual players necessarily share the measured average.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_teach",
+    "detail": "wrong: all preflop hands that the regular played → the regular’s complete preflop hand sample",
+    "reason": "The full preflop sample includes hands that never reach the relevant river decision, so it is not the appropriate denominator.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_transfer_overcalls_draws",
+    "detail": "wrong: change all preflop opening charts → revise the preflop opening strategy across positions",
+    "reason": "A read about calls in a specific postflop node does not establish a reason to revise preflop opening ranges.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_day7_anonymous_fastfold",
+    "detail": "wrong: no evidence of any kind → anonymity makes the available evidence unusable",
+    "reason": "Anonymity limits player-specific histories but leaves observable evidence about format, action line, size and stack depth.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_4_day7_simplify_mix",
+    "detail": "wrong: a pure action is unexploitable against every response → a pure action is protected against changes in the opponent’s response",
+    "reason": "A pure action tied against one fixed strategy need not remain equally profitable against a changed opponent response.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_5_teach",
+    "detail": "wrong: any amount of checking occurred → the opponent checked at some point in the hand",
+    "reason": "Checking does not establish a range cap because strong hands may check and weaker hands can improve later.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_5_transfer_no_attack_into_traps",
+    "detail": "wrong: co holding any missed hands → co having missed hands in the retained range",
+    "reason": "The retained full houses disprove a cap below them but do not exclude missed hands that the model explicitly retains.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_6_teach",
+    "detail": "wrong: all hands dealt in the session / only the hands you called and lost → the total number of hands dealt in the session / the number of losing calls",
+    "reason": "Session-wide hands include irrelevant decisions, while losing calls omit folds and winning calls, so neither denominator measures defense at the target node.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_6_day7_audit_which_hands_fold",
+    "detail": "wrong: call all marginal pairs until the count reaches mdf → use marginal-pair calls to raise defense to mdf",
+    "reason": "Against the observed value-heavy range, meeting MDF alone does not make marginal-pair calls profitable.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_1_read_time_bank_context",
+    "detail": "wrong: the river bet is almost always a bluff → the river betting range is overwhelmingly bluffs",
+    "reason": "One elapsed time is insufficient to infer that the river betting range is predominantly bluffs.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_1_transfer_live_baseline_break",
+    "detail": "wrong: ignore every live behavior forever → exclude live behavior from your long-term reads",
+    "reason": "Discarding live behavior categorically misses repeated comparable observations that can support a meaningful read.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_3_teach",
+    "detail": "wrong: the player plays at the same time every day → the player keeps a consistent daily playing schedule",
+    "reason": "A consistent playing schedule may identify a regular but does not show a high calling frequency at a specific node.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_3_transfer_stakes_discomfort_caveat",
+    "detail": "wrong: every large river bluff now wins → large river bluffs now win through the player’s risk aversion",
+    "reason": "One fold and a remark about stakes suggest a hypothesis but establish neither risk aversion as the cause nor a profitable bluff frequency.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_4_teach",
+    "detail": "wrong: all players behind call every raise size → players behind respond to raises by calling at each size",
+    "reason": "Players calling raises at each size undermine isolation rather than supporting a raise to play heads-up.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_4_read_more_limpers_change_price",
+    "detail": "wrong: only the limper you target / only the larger blind → the targeted limper, excluding players outside that match-up / bb, with hj and sb excluded",
+    "reason": "Ignoring the other limper or either blind misses live players whose calls could prevent a heads-up pot.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_5_teach",
+    "detail": "wrong: it permanently makes every future value bet profitable → the shown bluff secures lasting profitability for future value bets",
+    "reason": "Showing a bluff may change an opponent’s calls but does not guarantee lasting value-bet profitability across opponents and sizes.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_5_transfer_image_changes_value",
+    "detail": "wrong: reset your entire read on every player at the table → rebuild your reads for the whole table from this regular’s calls",
+    "reason": "The regular’s observed calls support a specific adjustment against that player rather than a reset of every table read.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_6_read_confirmation_counterexample",
+    "detail": "wrong: only the two hands you remember / discard all seven because the player surprised you → the two bluffs from your memory, without the other notes / discard the seven notes because the player surprised you",
+    "reason": "Keeping only the two memorable bluffs biases the sample, while discarding all seven notes loses the matched evidence.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_2_transfer_stop_win_based_on_behavior",
+    "detail": "wrong: continue automatically because the result is positive → keep playing based on the positive result",
+    "reason": "A positive result does not override the prewritten stop condition once both the profit marker and the specified process failures occur.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_3_guided_find_own_leak",
+    "detail": "wrong: give up all misses because your defense is too wide → remove missed hands from the bluff range because your defense is too wide",
+    "reason": "Fifteen folds in twenty opportunities show overfolding rather than excessive defense, making additional opponent bluffs profitable here.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_5_teach",
+    "detail": "wrong: all pots you lost → a record of the session’s lost pots",
+    "reason": "Selecting lost pots by outcome can omit flawed river value decisions in pots that were won.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_5_transfer_review_without_result",
+    "detail": "wrong: skip the ledger and reconstruct from your result only → reconstruct the call from your result instead of the ledger",
+    "reason": "The outcome alone cannot reconstruct the action and contribution amounts needed to evaluate the call price.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_6_teach",
+    "detail": "wrong: book a win every short session / never meet a stronger opponent → finish each short session with a profit / arrange to face opponents no stronger than you",
+    "reason": "Short-session profit is subject to variance and available opponents cannot be fully controlled, so neither is a reliable actionable goal.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_6_guided_plan_if_then",
+    "detail": "wrong: i will win back any lost profit before taking a break → recover the lost profit before taking a break",
+    "reason": "Tying a break to recovering lost profit can prolong play despite the decision-process leak the rule is intended to address.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_2_guided_indifference_mix",
+    "detail": "wrong: a only / b only → a with 100% weight / b with 100% weight",
+    "reason": "Pure A lets the minimizing player choose the second column for a row payoff of −1, while pure B lets that player choose the first column for the same payoff.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_3_teach",
+    "detail": "wrong: you always bet against 60% of the opponent’s holdings → bet against 60% of the opponent’s holdings using a pure betting strategy",
+    "reason": "A 60% action frequency describes how often the given hand bets at the node, not a pure bet against 60% of hidden opponent holdings.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_5_read_output_as_scope",
+    "detail": "wrong: always bet every king-high flop / never check this hand → use a pure betting strategy across king-high flops / remove check from this hand’s strategy",
+    "reason": "One queried node cannot justify pure betting across king-high flops or eliminating a check that ties the bet in that model.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_5_transfer_population_query",
+    "detail": "wrong: replace every opponent action at every street → replace the opponent’s complete strategy across streets",
+    "reason": "The observed response supports changing the matched river node, not replacing unrelated opponent strategies across streets.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_teach",
+    "detail": "wrong: only how often you wish the opponent would fold / a commitment to bet every later street → a desired fold frequency, without the follow-up branches / commit to betting the turn and river in advance",
+    "reason": "A flop betting plan must account for called and raised branches and adapt to later cards rather than rely on desired folds or predetermined barrels.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_checkpoint_audit_pruned_solver_result",
+    "detail": "wrong: apply an equilibrium label to any strategy produced → treat the solver’s output as an equilibrium by virtue of its source",
+    "reason": "A solver output is conditional on its entered action tree, so omitted relevant raises and legal sizes must be evaluated before claiming a best response.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_day7_read_lead_plan",
+    "detail": "wrong: a decision to call every raise because you have top pair / only a play for the one river you most want → commit top pair to calling raises based on its rank / plan for the desired river card and leave the others unplanned",
+    "reason": "Top pair must compare call price and equity against possible flushes, while the plan must account for other legal river cards as well as the desired one.",
+    "package": "B134"
   }
 ]
