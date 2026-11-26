@@ -132,7 +132,9 @@ Iterable<String> renderCatalogTaskSectionV1(
     }
     final reviewFamily = act0NewReviewConceptFamilyV1(
       row.world.worldId,
-      row.lesson.authoredLessonId,
+      row.world.worldNumber >= 13
+          ? row.lesson.lessonId
+          : row.lesson.authoredLessonId,
       task.taskId,
     );
     yield 'TASK ' +

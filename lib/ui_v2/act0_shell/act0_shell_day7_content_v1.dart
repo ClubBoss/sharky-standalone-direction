@@ -7309,4 +7309,416 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
     reason:
         'A 3 BB call makes an 11.5 BB pot, so you need about 26.1% wins. Record the share of HJ’s bets you beat to test the decision.',
   ),
+  if (act0CurriculumPilotEnabledV1) ..._act0Vol2PrincipleDay7TasksV1,
+];
+
+// B121: review-only, zero-XP transfer hands for the Vol2 reasoning principles.
+final _act0Vol2PrincipleDay7TasksV1 = <_SpacedReviewEntryV1>[
+  _day7ExampleV1(
+    13,
+    "range_advantage",
+    "range_advantage",
+    _day7PostflopV1(
+      "co",
+      "Ah Qd",
+      "As 9c 4h 6d 2s",
+      openBb: 3.25,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. Your opening range has many strong aces; BB has mostly weaker pairs. In this river model, you beat 80% of BB’s range, which calls 2 BB; the other 20% beats you and also calls.",
+    question: "Which decision converts your range advantage into value?",
+    choices: const ["Bet 2 BB", "Check"],
+    correct: 0,
+    reason:
+        "Bet 2 BB because BB calls with worse hands 80% of the time. Compared with check, the bet gains 0.80 × 2 − 0.20 × 2 = 1.20 BB.",
+    wrongReasons: const {
+      1: "Checking gives up 1.20 BB of extra value because BB calls 2 BB with enough weaker pairs.",
+    },
+    savedTaskId: "spaced_review_w13_range_advantage_range_advantage_v1",
+  ),
+  _day7ExampleV1(
+    13,
+    "nut_advantage",
+    "nut_advantage",
+    _day7PostflopV1(
+      "co",
+      "Jh Tc",
+      "Ad Kc Qs 6h 3d",
+      openBb: 3.5,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. Your straight is the nuts; BB has no equal straight in this model. BB calls either 3 BB or 6 BB with lower made hands 50% of the time and folds the rest.",
+    question: "Which size earns more from BB’s range?",
+    choices: const ["Bet 3 BB", "Bet 6 BB"],
+    correct: 1,
+    reason:
+        "Bet 6 BB because the nut straight wins every call and BB calls both sizes equally. Compared with bet 3 BB, the gain is 50% × 3 = 1.50 BB.",
+    wrongReasons: const {
+      0: "Bet 3 BB earns 1.50 BB less because BB pays 6 BB just as often and cannot beat your straight.",
+    },
+    savedTaskId: "spaced_review_w13_nut_advantage_nut_advantage_v1",
+  ),
+  _day7ExampleV1(
+    13,
+    "equity_vs_range",
+    "price_vs_equity",
+    _day7PostflopV1(
+      "co",
+      "Kd 8h",
+      "Ks 9s 5c 4d 2h",
+      openBb: 3.75,
+      showTurn: true,
+      betBb: 5,
+    ),
+    caption:
+        "BB bets 5 BB on the river. In this model, 30% of the bets are missed draws you beat and 70% are stronger made hands; no ties.",
+    question: "Call or fold against this range?",
+    choices: const ["Fold", "Call"],
+    correct: 1,
+    reason:
+        "Call because BB bluffs 30% of the time and the 5 BB call needs 27.78% of the final 18 BB pot. Folding gives up 0.30 × 18 − 5 = 0.40 BB.",
+    wrongReasons: const {
+      0: "Folding loses the chance to earn 0.40 BB because BB’s bluff share exceeds the 27.78% price.",
+    },
+    savedTaskId: "spaced_review_w13_equity_vs_range_price_vs_equity_v1",
+  ),
+  _day7ExampleV1(
+    13,
+    "equity_realization",
+    "equity_realization",
+    _day7PostflopV1(
+      "co",
+      "Jc 9d",
+      "Js 8h 3c",
+      openBb: 4,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. If you check behind, both players check to showdown and you win 60% of the time. If you bet 4 BB, BB raises every time and you fold. Compare these two plans.",
+    question: "Which plan realizes your showdown equity?",
+    choices: const ["Bet 4 BB and fold to a raise", "Check"],
+    correct: 1,
+    reason:
+        "Check because position lets you reach showdown and win 60% of 8.50 BB = 5.10 BB. Bet 4 BB and fold to a raise loses 4.00 BB, a 9.10 BB gap.",
+    wrongReasons: const {
+      0: "Bet 4 BB and fold to a raise loses 4.00 BB under BB’s stated response; checking preserves your showdown share.",
+    },
+    savedTaskId: "spaced_review_w13_equity_realization_equity_realization_v1",
+  ),
+  _day7ExampleV1(
+    13,
+    "backdoor_draws",
+    "backdoor_equity",
+    _day7PostflopV1(
+      "bb",
+      "7h 4h",
+      "As Qd 2h",
+      openBb: 4.25,
+      showTurn: true,
+      betBb: 3,
+    ),
+    caption:
+        "HJ bets 3 BB. In this exercise only a running heart flush wins, all unseen card pairs are equally likely, and a call buys both remaining cards without further betting.",
+    question: "Is the backdoor flush enough to call?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "HJ bets 3 BB. Fold because two hearts are needed: 10/47 × 9/46 = 4.16% equity, below the 20.00% call price. Calling loses 2.38 BB on average.",
+    wrongReasons: const {
+      0: "Calling loses 2.38 BB because the backdoor hearts arrive only 4.16% of the time, too rarely for a 3 BB call.",
+    },
+    savedTaskId: "spaced_review_w13_backdoor_draws_backdoor_equity_v1",
+  ),
+  _day7ExampleV1(
+    13,
+    "initiative_cbet_checkpoint",
+    "initiative",
+    _day7PostflopV1(
+      "co",
+      "Ac Kd",
+      "Qs 7c 3h",
+      openBb: 4.5,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks to the preflop raiser. In this model, a 2 BB continuation bet makes BB fold 40% of the time and call otherwise. Your showdown share is 20% against calls and 35% against the full range after a check. No further bets.",
+    question: "Which action uses initiative profitably under this read?",
+    choices: const ["Bet 2 BB", "Check"],
+    correct: 0,
+    reason:
+        "Bet 2 BB because BB folds 40%. The bet earns 0.40 × 9.50 + 0.60 × (0.20 × 13.50 − 2) = 4.22 BB. Checking earns 3.33 BB.",
+    wrongReasons: const {
+      1: "Checking earns 3.33 BB but misses the 4.22 BB available when BB folds or calls the continuation bet.",
+    },
+    savedTaskId: "spaced_review_w13_initiative_cbet_checkpoint_initiative_v1",
+  ),
+  _day7ExampleV1(
+    14,
+    "merged_underbet",
+    "merged_sizing",
+    _day7PostflopV1(
+      "co",
+      "Qh Jd",
+      "Qs 9h 5c 4s 2d",
+      openBb: 3.0,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. In this river model, you win against 70% weaker pairs and lose against 30% stronger hands. Weaker pairs call 2 BB but fold to 6 BB; stronger hands call both sizes.",
+    question: "Which size keeps weaker pairs paying?",
+    choices: const ["Bet 6 BB", "Bet 2 BB"],
+    correct: 1,
+    reason:
+        "Bet 2 BB because weaker pairs pay: the extra value over check is 0.70 × 2 − 0.30 × 2 = 0.80 BB. Bet 6 BB loses 1.80 BB versus check.",
+    wrongReasons: const {
+      0: "Bet 6 BB loses 1.80 BB versus checking because weaker pairs fold and only stronger hands call; the smaller bet earns 2.60 BB more.",
+    },
+    savedTaskId: "spaced_review_w14_merged_underbet_merged_sizing_v1",
+  ),
+  _day7ExampleV1(
+    14,
+    "polarized_sizing",
+    "polarized_sizing",
+    _day7PostflopV1(
+      "co",
+      "8h 7h",
+      "Ad Ks 6c 5s 2d",
+      openBb: 3.5,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. Your missed straight draw has no showdown value. BB folds 25% to a 2 BB bet and 65% to a 7 BB bet; every call beats you.",
+    question: "Which bluff size earns more in this model?",
+    choices: const ["Bet 2 BB", "Bet 7 BB"],
+    correct: 1,
+    reason:
+        "Bet 7 BB because it folds more better hands: 0.65 × 7.50 − 0.35 × 7 = 2.43 BB, versus 0.38 BB for bet 2 BB.",
+    wrongReasons: const {
+      0: "Bet 2 BB earns only 0.38 BB because BB folds just 25%; the larger bluff earns 2.05 BB more.",
+    },
+    savedTaskId: "spaced_review_w14_polarized_sizing_polarized_sizing_v1",
+  ),
+  _day7ExampleV1(
+    14,
+    "read_sizing_and_abstraction",
+    "size_range_signal",
+    _day7PostflopV1(
+      "bb",
+      "Ts 9c",
+      "Td 7s 4s 3h 2c",
+      openBb: 3.75,
+      showTurn: true,
+      betBb: 8,
+    ),
+    caption:
+        "HJ bets 8 BB on the river. Your read: the small size contains many weaker pairs, but this large size contains 15% missed draws you beat and 85% stronger hands. No ties.",
+    question: "Call or fold against the range signaled by this size?",
+    choices: const ["Call", "Fold"],
+    correct: 1,
+    reason:
+        "HJ bets large. Fold because this size signals a value-heavy range: 15% wins is below the 8 BB / 24.00 BB = 33.33% price. Calling loses 4.40 BB.",
+    wrongReasons: const {
+      0: "Calling loses 4.40 BB because the 8 BB size contains too few bluffs; the small-bet range does not apply.",
+    },
+    savedTaskId:
+        "spaced_review_w14_read_sizing_and_abstraction_size_range_signal_v1",
+  ),
+  _day7ExampleV1(
+    14,
+    "w14_spr_and_commitment",
+    "spr_commitment",
+    _day7PostflopV1(
+      "co",
+      "Ah 8c",
+      "Ad Js 7h 3d",
+      openBb: 4.0,
+      showTurn: true,
+      betBb: 3,
+      opponentStartingBb: 7.0,
+      opponentAllIn: true,
+    ),
+    caption:
+        "BB goes all-in for the last 3 BB on the turn. Your effective stack at street start was 3 BB; the pot was 8.50 BB. In the stated model your showdown equity is 18%, including ties.",
+    question: "Does the low stack-to-pot ratio justify calling?",
+    choices: const ["Fold", "Call"],
+    correct: 0,
+    reason:
+        "BB bets the last 3 BB. Fold because even at an SPR of 0.35, the 3 BB call needs 20.69% equity in a 14.50 BB final pot. At 18% equity, calling loses 0.39 BB.",
+    wrongReasons: const {
+      1: "Calling loses 0.39 BB because low SPR does not override the 20.69% price against BB’s range.",
+    },
+    savedTaskId: "spaced_review_w14_w14_spr_and_commitment_spr_commitment_v1",
+  ),
+  _day7ExampleV1(
+    14,
+    "induce_and_checkpoint",
+    "induce_raise",
+    _day7PostflopV1(
+      "co",
+      "Ks Kc",
+      "Kh 8s 8d 5h 2c",
+      openBb: 4.25,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. Your full house beats every hand in this model. If you bet 2 BB, BB raises to 8 BB half the time and folds otherwise; you call the raise. If you bet 6 BB, BB calls half the time and folds otherwise.",
+    question: "Which plan earns more from BB’s response?",
+    choices: const ["Bet 2 BB and call the raise", "Bet 6 BB"],
+    correct: 0,
+    reason:
+        "Bet 2 BB and call the raise because BB adds 8 BB half the time, worth 4.00 BB extra. Bet 6 BB earns only 3.00 BB extra.",
+    wrongReasons: const {
+      1: "Bet 6 BB earns 1.00 BB less because it removes the chance to induce BB’s 8 BB raise.",
+    },
+    savedTaskId: "spaced_review_w14_induce_and_checkpoint_induce_raise_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "texture_and_frequency",
+    "texture_cbet_frequency",
+    _day7PostflopV1(
+      "co",
+      "Ad 6d",
+      "8s 7s 5h",
+      openBb: 4.5,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks on this connected flop. In the stated model, a 3 BB continuation bet is called 85% of the time. Your showdown share against calls is 12%, or 20% against the full range if you check. No further bets.",
+    question: "Should you bet this hand just because you raised preflop?",
+    choices: const ["Bet 3 BB", "Check"],
+    correct: 1,
+    reason:
+        "Check because this texture connects with BB’s range. Check earns 20% × 9.50 = 1.90 BB; bet 3 BB earns 15% × 9.50 + 85% × (12% × 15.50 − 3) = 0.46 BB.",
+    wrongReasons: const {
+      0: "Bet 3 BB earns only 0.46 BB because BB continues so often on this connected flop; checking earns 1.90 BB.",
+    },
+    savedTaskId:
+        "spaced_review_w15_texture_and_frequency_texture_cbet_frequency_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "w15_protection_and_denial",
+    "deny_equity",
+    _day7PostflopV1(
+      "co",
+      "Tc Td",
+      "9s 6h 2s",
+      openBb: 4.75,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. In this model BB has only two overcards; you win 75% of showdowns if you check through. BB folds every hand to a 3 BB bet.",
+    question: "Which decision denies BB’s remaining equity?",
+    choices: const ["Check", "Bet 3 BB"],
+    correct: 1,
+    reason:
+        "Bet 3 BB because BB folds and you win the 10.00 BB pot now. Checking realizes only 75% of it, giving up 2.50 BB.",
+    wrongReasons: const {
+      0: "Checking allows BB to realize 25% of the pot, costing you 2.50 BB compared with the bet.",
+    },
+    savedTaskId: "spaced_review_w15_w15_protection_and_denial_deny_equity_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "check_back_and_slowplay",
+    "earned_slowplay",
+    _day7PostflopV1(
+      "co",
+      "8d 8c",
+      "8h 3s 3d",
+      openBb: 5.0,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks. BB folds to a flop bet but, if you check behind, bets 4 BB on the turn 50% of the time. You call that bet. Your full house has 98% showdown equity in both check branches; no more bets.",
+    question: "Which plan earns a slowplay rather than wasting value?",
+    choices: const ["Check", "Bet 3 BB"],
+    correct: 0,
+    reason:
+        "Check because BB folds to a flop bet but bets 4 BB half the time after a check. The check earns 0.98 × (10.50 + 4) − 2 = 12.21 BB versus 10.50 BB for betting.",
+    wrongReasons: const {
+      1: "Bet 3 BB wins the 10.50 BB pot but gives up 1.71 BB because BB folds instead of betting later.",
+    },
+    savedTaskId: "spaced_review_w15_check_back_and_slowplay_earned_slowplay_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "monotone_and_paired",
+    "flop_texture_coverage",
+    _day7PostflopV1(
+      "co",
+      "Ah Qc",
+      "9d 6d 3d",
+      openBb: 5.25,
+      showTurn: true,
+      checkedToHero: true,
+    ),
+    caption:
+        "BB checks on a three-diamond flop. BB calls a 4 BB bet with flushes and strong draws 80% of the time. Your showdown share is 10% against calls and 22% against the full range if you check. No further bets.",
+    question: "What is the better plan on this monotone board?",
+    choices: const ["Bet 4 BB", "Check"],
+    correct: 1,
+    reason:
+        "Check because BB’s range covers the flush texture. Check earns 22% × 11.00 = 2.42 BB; bet 4 BB earns 20% × 11.00 + 80% × (10% × 19.00 − 4) = 0.52 BB.",
+    wrongReasons: const {
+      0: "Bet 4 BB earns only 0.52 BB because BB continues with flushes and strong draws; checking earns 2.42 BB.",
+    },
+    savedTaskId:
+        "spaced_review_w15_monotone_and_paired_flop_texture_coverage_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "leads_and_stabs",
+    "lead_and_stab",
+    _day7PostflopV1("bb", "7c 6c", "Qd 8h 5s", openBb: 5.25, showTurn: true),
+    caption:
+        "HJ raised preflop and you act first. In this model HJ folds to a 4 BB lead 50% of the time and calls otherwise. Your straight draw has 30% showdown equity against calls; no more betting. If you check, HJ bets and you fold.",
+    question: "Which plan uses a profitable lead?",
+    choices: const ["Check and fold to a bet", "Bet 4 BB"],
+    correct: 1,
+    reason:
+        "Bet 4 BB because HJ folds half the time and you retain draw equity when called: 0.50 × 11.00 + 0.50 × (0.30 × 19.00 − 4) = 6.35 BB. Checking and folding earns 0 BB.",
+    wrongReasons: const {
+      0: "Check and fold to a bet gives up 6.35 BB because HJ folds often enough and your draw can still win when called.",
+    },
+    savedTaskId: "spaced_review_w15_leads_and_stabs_lead_and_stab_v1",
+  ),
+  _day7ExampleV1(
+    15,
+    "check_raise_and_checkpoint",
+    "flop_raise_shape",
+    _day7PostflopV1(
+      "bb",
+      "9h 9c",
+      "9d 7s 6s",
+      openBb: 5.75,
+      showTurn: true,
+      betBb: 4,
+    ),
+    caption:
+        "HJ bets 4 BB after your check. HJ calls a raise to 12 BB 60% of the time and folds otherwise. Your set has 80% showdown equity against the full betting range and 75% against the calls. No further betting.",
+    question: "Which flop raise plan earns more than calling?",
+    choices: const ["Call", "Raise to 12 BB"],
+    correct: 1,
+    reason:
+        "Raise to 12 BB because HJ calls with enough worse hands. Raising earns 0.40 × 16.00 + 0.60 × (0.75 × 36.00 − 12) = 15.40 BB; calling earns 0.80 × 20.00 − 4 = 12.00 BB.",
+    wrongReasons: const {
+      0: "Calling earns 12.00 BB but misses 3.40 BB of extra value from HJ’s raise-call group.",
+    },
+    savedTaskId:
+        "spaced_review_w15_check_raise_and_checkpoint_flop_raise_shape_v1",
+  ),
 ];

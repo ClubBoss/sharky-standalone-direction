@@ -7,6 +7,7 @@ import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_solver/poker_solver.dart' as solver;
 
 import 'act0_curriculum_pilot_v1.dart';
+import 'act0_decision_reasoning_v1.dart';
 import 'act0_b19_turn_truth_v1.dart';
 import 'act0_goal_route_v1.dart';
 import 'act0_decision_ledger_v1.dart';

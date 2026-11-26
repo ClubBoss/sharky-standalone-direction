@@ -104,6 +104,20 @@ String act0Day7FamilyForSourceV1({
   required String taskId,
   required String family,
 }) {
+  if (act0CurriculumPilotEnabledV1) {
+    // Match the authored principle in this lesson, not a generic table cue.
+    // Existing durable family IDs are left unchanged.
+    final principle = act0DecisionReasoningV1[taskId]?.principleId;
+    if (principle != null &&
+        _act0Vol2PrincipleDay7TasksV1.any(
+          (entry) =>
+              entry.worldId == worldId &&
+              entry.lessonId == lessonId &&
+              entry.conceptFamilyId == principle,
+        )) {
+      return principle;
+    }
+  }
   if (worldId == 'world_11' &&
       lessonId == 'session_plan_bankroll_followup' &&
       taskId == 'w11_bankroll_move_down') {

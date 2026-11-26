@@ -411,4 +411,149 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB’s range is KJs KJo QJs QJo JTs JTo J8s 99 55 44 87s T8s 76s, with equal weight per legal combo. Against 3 BB, BB calls with KJs KJo QJs QJo JTs JTo J8s and raises to 10 BB with 99 55 44. The other hands fold. Against 5 BB, BB calls with KJs KJo QJs QJo and raises to 14 BB with 99 55 44. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 0.34043,
   ),
+  "spaced_review_w13_range_advantage_range_advantage_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_range_advantage_range_advantage_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "range_advantage",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB checks. Your opening range has many strong aces; BB has mostly weaker pairs. In this river model, you beat 80% of BB’s range, which calls 2 BB; the other 20% beats you and also calls.",
+    preChoiceAssumption:
+        "BB checks. Your opening range has many strong aces; BB has mostly weaker pairs. In this river model, you beat 80% of BB’s range, which calls 2 BB; the other 20% beats you and also calls.",
+    stackMatters: false,
+    edgeBb: 1.2,
+  ),
+  "spaced_review_w13_nut_advantage_nut_advantage_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_nut_advantage_nut_advantage_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "nut_advantage",
+    bestAlternativeOptionId: "choice_0",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB checks. Your straight is the nuts; BB has no equal straight in this model. BB calls either 3 BB or 6 BB with lower made hands 50% of the time and folds the rest.",
+    preChoiceAssumption:
+        "BB checks. Your straight is the nuts; BB has no equal straight in this model. BB calls either 3 BB or 6 BB with lower made hands 50% of the time and folds the rest.",
+    stackMatters: false,
+    edgeBb: 1.5,
+  ),
+  "spaced_review_w13_equity_vs_range_price_vs_equity_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_equity_vs_range_price_vs_equity_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "price_vs_equity",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB bets 5 BB on the river. In this model, 30% of the bets are missed draws you beat and 70% are stronger made hands; no ties.",
+    preChoiceAssumption:
+        "BB bets 5 BB on the river. In this model, 30% of the bets are missed draws you beat and 70% are stronger made hands; no ties.",
+    stackMatters: false,
+    edgeBb: 0.4,
+  ),
+  "spaced_review_w13_equity_realization_equity_realization_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_equity_realization_equity_realization_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "equity_realization",
+    bestAlternativeOptionId: "choice_0",
+    edgeMechanism: Act0EdgeMechanismV1.realizesPosition,
+    opponentRead:
+        "BB checks. If you check behind, both players check to showdown and you win 60% of the time. If you bet 4 BB, BB raises every time and you fold. Compare these two plans.",
+    preChoiceAssumption:
+        "BB checks. If you check behind, both players check to showdown and you win 60% of the time. If you bet 4 BB, BB raises every time and you fold. Compare these two plans.",
+    stackMatters: false,
+    edgeBb: 9.1,
+  ),
+  "spaced_review_w13_backdoor_draws_backdoor_equity_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_backdoor_draws_backdoor_equity_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "backdoor_equity",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "HJ bets 3 BB. In this exercise only a running heart flush wins, all unseen card pairs are equally likely, and a call buys both remaining cards without further betting.",
+    preChoiceAssumption:
+        "HJ bets 3 BB. In this exercise only a running heart flush wins, all unseen card pairs are equally likely, and a call buys both remaining cards without further betting.",
+    stackMatters: false,
+    edgeBb: 2.375578168362627,
+  ),
+  "spaced_review_w13_initiative_cbet_checkpoint_initiative_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w13_initiative_cbet_checkpoint_initiative_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "initiative",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    opponentRead:
+        "BB checks to the preflop raiser. In this model, a 2 BB continuation bet makes BB fold 40% of the time and call otherwise. Your showdown share is 20% against calls and 35% against the full range after a check. No further bets.",
+    preChoiceAssumption:
+        "BB checks to the preflop raiser. In this model, a 2 BB continuation bet makes BB fold 40% of the time and call otherwise. Your showdown share is 20% against calls and 35% against the full range after a check. No further bets.",
+    stackMatters: false,
+    edgeBb: 0.895,
+  ),
+  "spaced_review_w14_merged_underbet_merged_sizing_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w14_merged_underbet_merged_sizing_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "merged_sizing",
+    bestAlternativeOptionId: "choice_0",
+    edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+    opponentRead:
+        "BB checks. In this river model, you win against 70% weaker pairs and lose against 30% stronger hands. Weaker pairs call 2 BB but fold to 6 BB; stronger hands call both sizes.",
+    preChoiceAssumption:
+        "BB checks. In this river model, you win against 70% weaker pairs and lose against 30% stronger hands. Weaker pairs call 2 BB but fold to 6 BB; stronger hands call both sizes.",
+    stackMatters: false,
+    edgeBb: 2.6,
+  ),
+  "spaced_review_w14_polarized_sizing_polarized_sizing_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w14_polarized_sizing_polarized_sizing_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "polarized_sizing",
+    bestAlternativeOptionId: "choice_0",
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    opponentRead:
+        "BB checks. Your missed straight draw has no showdown value. BB folds 25% to a 2 BB bet and 65% to a 7 BB bet; every call beats you.",
+    preChoiceAssumption:
+        "BB checks. Your missed straight draw has no showdown value. BB folds 25% to a 2 BB bet and 65% to a 7 BB bet; every call beats you.",
+    stackMatters: false,
+    edgeBb: 2.05,
+  ),
+  "spaced_review_w14_read_sizing_and_abstraction_size_range_signal_v1":
+      Act0DecisionReasoningV1(
+        taskId:
+            "spaced_review_w14_read_sizing_and_abstraction_size_range_signal_v1",
+        kind: Act0DecisionKindV1.table,
+        principleId: "size_range_signal",
+        bestAlternativeOptionId: "call",
+        edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+        opponentRead:
+            "HJ bets 8 BB on the river. Your read: the small size contains many weaker pairs, but this large size contains 15% missed draws you beat and 85% stronger hands. No ties.",
+        preChoiceAssumption:
+            "HJ bets 8 BB on the river. Your read: the small size contains many weaker pairs, but this large size contains 15% missed draws you beat and 85% stronger hands. No ties.",
+        stackMatters: false,
+        edgeBb: 4.4,
+      ),
+  "spaced_review_w14_w14_spr_and_commitment_spr_commitment_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w14_w14_spr_and_commitment_spr_commitment_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "spr_commitment",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "BB goes all-in for the last 3 BB on the turn. Your effective stack at street start was 3 BB; the pot was 8.50 BB. In the stated model your showdown equity is 18%, including ties.",
+    preChoiceAssumption:
+        "BB goes all-in for the last 3 BB on the turn. Your effective stack at street start was 3 BB; the pot was 8.50 BB. In the stated model your showdown equity is 18%, including ties.",
+    stackMatters: true,
+    edgeBb: 0.39,
+  ),
+  "spaced_review_w14_induce_and_checkpoint_induce_raise_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w14_induce_and_checkpoint_induce_raise_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "induce_raise",
+    bestAlternativeOptionId: "choice_1",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB checks. Your full house beats every hand in this model. If you bet 2 BB, BB raises to 8 BB half the time and folds otherwise; you call the raise. If you bet 6 BB, BB calls half the time and folds otherwise.",
+    preChoiceAssumption:
+        "BB checks. Your full house beats every hand in this model. If you bet 2 BB, BB raises to 8 BB half the time and folds otherwise; you call the raise. If you bet 6 BB, BB calls half the time and folds otherwise.",
+    stackMatters: false,
+    edgeBb: 1,
+  ),
 };
