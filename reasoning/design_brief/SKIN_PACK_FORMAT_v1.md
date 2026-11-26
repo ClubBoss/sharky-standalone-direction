@@ -18,6 +18,11 @@ exactly the five files to `assets/skin_v1/`. Review the resulting Git diff and
 run the normal tests and visual review before merging. B104 reserves slots;
 this tool does not wire screens, generate a native launcher icon or change
 Modern Table. An I/O failure during writing is not an atomic transaction.
+
+**Dry run before PR.**
+Run `python3 tools/skin_drop_in_dryrun_v1.py /path/to/pack` for the HTML preview, would-change paths and B103 affected tests; invalid packs fail.
+Only pass `--keep` to apply the checked changes to the working skin files; otherwise only the local HTML report is retained.
+
 The existing B101 rehearsal is palette-only; if an approved pack changes
 non-color values or exactly matches its test palette, refresh that rehearsal
 control in the landing PR rather than weakening its visual checks.
