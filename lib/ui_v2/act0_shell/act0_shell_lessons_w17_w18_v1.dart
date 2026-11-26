@@ -11,15 +11,15 @@ final _world17Pilot = _act0PilotWorldV1(
         id: "w17_1_teach",
         lesson: "value_and_bluff",
         lessonTitle: "Value and bluff",
-        title: "What distinguishes a value 3-bet from a light 3-bet?",
+        title: "Two reasons to re-raise",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A 3-bet re-raises an opening raise. A value 3-bet expects money from weaker continues. A light 3-bet relies more on folds and may retain equity when called.",
+            "A 3-bet re-raises an opening raise. A value 3-bet means re-raising to collect money from weaker hands. A light 3-bet relies more on folds and may retain equity when called.",
         question: "What distinguishes a value 3-bet from a light 3-bet?",
         teach:
-            "A 3-bet re-raises an opening raise. A value 3-bet expects money from weaker continues. A light 3-bet relies more on folds and may retain equity when called.",
+            "A 3-bet re-raises an opening raise. A value 3-bet means re-raising to collect money from weaker hands. A light 3-bet relies more on folds and may retain equity when called.",
         choices: const [
           (
             "answer",
@@ -31,7 +31,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "alternative",
             "Whether the re-raise wins immediately",
             Act0FeedbackQualityV1.wrong,
-            "A value 3-bet can win the pot preflop. The classification is about the reason it earns money.",
+            "A value 3-bet can take down the pot preflop. The classification is about the reason it earns money.",
           ),
           (
             "other",
@@ -148,7 +148,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "3-bet to 8 BB",
             Act0FeedbackQualityV1.correct,
-            "Kings can collect an extra payment from queens, jacks, tens or broadways. AA’s separate response still matters for the next choice.",
+            "Re-raise because CO calls with queens, jacks, tens and weaker broadways. Calling misses those extra payments; AA’s re-raise is a separate decision.",
           ),
           (
             "alternative",
@@ -329,7 +329,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "alternative",
             "Q-9 is suited",
             Act0FeedbackQualityV1.wrong,
-            "Suitedness can help equity when called. It does not determine which better hands fold.",
+            "Holding two cards of the same suit can help equity when called. It does not determine which better hands fold.",
           ),
           (
             "other",
@@ -397,15 +397,15 @@ final _world17Pilot = _act0PilotWorldV1(
         id: "w17_2_teach",
         lesson: "position_and_squeeze",
         lessonTitle: "Position and squeeze",
-        title: "Which sequence creates an opportunity to squeeze?",
+        title: "Re-raising after a caller",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A squeeze re-raises after an opener and at least one caller. The dead money is a reward if they fold, and every player behind can still affect the result.",
+            "A flat call means matching the raise without raising again. A cold call is a call of a raise by a player who has not voluntarily entered. A squeeze is a re-raise after an opener and one or more callers. Heads-up means two players remain. A 3-bet pot is a pot in which the preflop re-raise was matched. The dead money is the reward if they fold. Players behind can still affect the result.",
         question: "Which sequence creates an opportunity to squeeze?",
         teach:
-            "A squeeze re-raises after an opener and at least one caller. The dead money is a reward if they fold, and every player behind can still affect the result.",
+            "A flat call means matching the raise without raising again. A cold call is a call of a raise by a player who has not voluntarily entered. A squeeze is a re-raise after an opener and one or more callers. Heads-up means two players remain. A 3-bet pot is a pot in which the preflop re-raise was matched. The dead money is the reward if they fold. Players behind can still affect the result.",
         choices: const [
           (
             "answer",
@@ -539,13 +539,13 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "Re-raise to 11 BB",
             Act0FeedbackQualityV1.correct,
-            "CO must add 8.5 BB. That is a larger share of the final pot than the 5.5 BB call facing a raise to 8 BB.",
+            "Raise to 11 BB because CO must add 8.5 BB, a larger share of the final pot than the 5.5 BB call against a raise to 8 BB.",
           ),
           (
             "alternative",
             "Re-raise to 8 BB",
             Act0FeedbackQualityV1.wrong,
-            "The absolute amount and percentage are smaller at this size.",
+            "Raise to 8 BB gives CO a smaller amount and percentage to call than a raise to 11 BB.",
           ),
           (
             "other",
@@ -619,7 +619,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "HJ opened 2.5 BB, CO called, and BTN acts. BTN would add 9 BB. In ten mutually exclusive, equal-weight modeled outcomes, all remaining players fold in five. In five, somebody continues and the re-raise has zero recovery.",
+            "HJ opened 2.5 BB, CO called, and BTN acts. BTN would add 9 BB. An outcome means one possible result. In ten mutually exclusive, equal-weight results, all remaining players fold in five. In five, somebody continues and the re-raise has zero recovery.",
         question:
             "Under that pure-bluff stress test, does the squeeze beat folding?",
         teach: "",
@@ -1042,7 +1042,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 40.8% equity against this BB range clears the 18.5% price.",
+            "Call rather than fold because your 40.8% equity against the stated BB range clears the 18.5% price.",
           ),
           (
             "fold",
@@ -1147,7 +1147,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 23 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 53.6% equity against this BB range clears the 34.6% price.",
+            "Call rather than fold because your 53.6% equity against the stated BB range clears the 34.6% price.",
           ),
           (
             "fold",
@@ -1247,10 +1247,10 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A 4-bet can collect calls from worse or use fold equity. Blockers reduce strong responses. Depth also determines how much the next all-in costs.",
+            "Fold equity means the value gained when opponents fold. Blockers are the cards you hold that reduce the number of possible opposing hands. A 4-bet can collect calls from worse or use fold equity. Depth also determines how much the next all-in costs.",
         question: "When can an ace blocker support a light 4-bet?",
         teach:
-            "A 4-bet can collect calls from worse or use fold equity. Blockers reduce strong responses. Depth also determines how much the next all-in costs.",
+            "Fold equity means the value gained when opponents fold. Blockers are the cards you hold that reduce the number of possible opposing hands. A 4-bet can collect calls from worse or use fold equity. Depth also determines how much the next all-in costs.",
         choices: const [
           (
             "answer",
@@ -1487,7 +1487,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB bets 12 BB with a legal combo from AQo AJo KQs QJs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.",
+            "BB goes all-in for 12 BB with a legal combo from AQo AJo KQs QJs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.",
         question: "Call or fold?",
         teach: "",
         choices: const [
@@ -1495,7 +1495,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 12 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 40.0% equity against this BB range clears the 27.0% price.",
+            "Call rather than fold because your 40.0% equity against the stated BB range clears the 27.0% price.",
           ),
           (
             "fold",
@@ -1572,12 +1572,12 @@ final _world17Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "flop: BTN checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
-            Act0ActionTrailItemV1(label: "river: BB bets 12 BB"),
+            Act0ActionTrailItemV1(label: "river: BB all-in 12 BB"),
           ],
           bets: const {
             "bb": Act0SeatBetStateV1(
               kind: Act0SeatBetKindV1.allIn,
-              label: "bets",
+              label: "all-in",
               amountLabel: "12 BB",
             ),
           },
@@ -1589,13 +1589,13 @@ final _world17Pilot = _act0PilotWorldV1(
         id: "w17_4_day7_spr_after_four_bet",
         lesson: "four_bet_and_stack",
         lessonTitle: "Four bet and stack",
-        title: "What is the flop SPR?",
+        title: "Flop SPR after the matched 4-bet",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
             "BTN opens to 2.5 BB, BB makes it 10 BB, BTN makes it 24 BB and BB calls. There are 100 BB starting stacks.",
-        question: "What is the flop SPR?",
+        question: "What is the flop SPR after the matched 4-bet?",
         teach: "",
         choices: const [
           (
@@ -1699,10 +1699,10 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A limp-reraise requires an opponent who raises after the limp. Deeper stacks leave more postflop money to defend, so compare size and price for the particular positions.",
+            "A limp-reraise requires an opponent who raises after the limp. A multiway flop means three or more players see the flop. Deeper stacks leave more postflop money to defend, so compare size and price for the particular positions.",
         question: "What makes a limp-reraise trap less attractive?",
         teach:
-            "A limp-reraise requires an opponent who raises after the limp. Deeper stacks leave more postflop money to defend, so compare size and price for the particular positions.",
+            "A limp-reraise requires an opponent who raises after the limp. A multiway flop means three or more players see the flop. Deeper stacks leave more postflop money to defend, so compare size and price for the particular positions.",
         choices: const [
           (
             "answer",
@@ -1927,7 +1927,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "Raise to 3 BB",
             Act0FeedbackQualityV1.correct,
-            "The call creates a 6 BB pot, and the check-behind branch after completing can never trigger a limp-reraise.",
+            "Raise because BB calls in the model, creating a 6 BB pot. Completing instead gives BB a check and no chance to trigger a limp-reraise.",
           ),
           (
             "alternative",
@@ -1939,7 +1939,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "other",
             "Fold the small blind",
             Act0FeedbackQualityV1.wrong,
-            "Folding removes your hand before it can earn a payment.",
+            "Folding forfeits the chance to collect BB’s modeled payment.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -2020,7 +2020,7 @@ final _world17Pilot = _act0PilotWorldV1(
         table: _day7TableV1(
           hero: "co",
           actor: "co",
-          hand: "Qh Qd",
+          hand: "Jh Jd",
           board: const [],
           street: PokerStreet.preflop,
           stacks: const {
@@ -2096,11 +2096,11 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Preflop re-raises can narrow the ranges and lower SPR. Compare the actual postflop responses, including a check-back where it can keep weaker bets available.",
+            "Preflop re-raises can narrow the ranges and lower SPR. A check-back means checking last after the other players checked. Compare the postflop responses: a check can keep weaker bets available.",
         question:
             "Which reason can justify checking back a dry flop in a 3-bet pot?",
         teach:
-            "Preflop re-raises can narrow the ranges and lower SPR. Compare the actual postflop responses, including a check-back where it can keep weaker bets available.",
+            "Preflop re-raises can narrow the ranges and lower SPR. A check-back means checking last after the other players checked. Compare the postflop responses: a check can keep weaker bets available.",
         choices: const [
           (
             "answer",
@@ -2246,7 +2246,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "bet_6",
             "Bet 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 6 BB. After calling the 3-bet, CO still pays this size with weaker aces and pocket pairs.",
+            "Bet 6 BB because CO still pays this size with weaker aces and pocket pairs, unlike the larger bet. Checking misses a payment.",
           ),
           (
             "bet_16",
@@ -2258,7 +2258,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "check",
             "Check",
             Act0FeedbackQualityV1.wrong,
-            "A free showdown lets weaker aces and pocket pairs skip a payment.",
+            "Checking gives up a payment from weaker aces and pocket pairs.",
           ),
         ],
         table: _day7TableV1(
@@ -2334,7 +2334,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB bets 75 BB with a legal combo from AA KK QQ JJ AKs, equally weighted. Compare calling with folding. A call closes the betting for this model.",
+            "BB goes all-in for 75 BB with a legal combo from AA KK QQ JJ AKs, equally weighted. Compare calling with folding. A call closes the betting for this model.",
         question: "Call or fold?",
         teach: "",
         choices: const [
@@ -2342,13 +2342,13 @@ final _world17Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold. Your 27.2% equity against this BB range falls below the 37.4% price. A low SPR still leaves a substantial call price.",
+            "Fold rather than call because your 27.2% equity against the stated BB range falls below the 37.4% price. A low SPR does not remove this price.",
           ),
           (
             "call",
             "Call 75 BB",
             Act0FeedbackQualityV1.wrong,
-            "Calling buys a showdown whose counted share leaves a loss of 20.39 BB.",
+            "Calling loses 20.39 BB in the stated model; folding avoids that loss.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -2422,12 +2422,12 @@ final _world17Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
             Act0ActionTrailItemV1(label: "preflop: BTN raises to 25 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 15 BB"),
-            Act0ActionTrailItemV1(label: "flop: BB bets 75 BB"),
+            Act0ActionTrailItemV1(label: "flop: BB all-in 75 BB"),
           ],
           bets: const {
             "bb": Act0SeatBetStateV1(
               kind: Act0SeatBetKindV1.allIn,
-              label: "bets",
+              label: "all-in",
               amountLabel: "75 BB",
             ),
           },
@@ -2452,7 +2452,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 15 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 83.2% equity against this BB range clears the 19.1% price.",
+            "Call rather than fold because your 83.2% equity against the stated BB range clears the 19.1% price.",
           ),
           (
             "fold",
@@ -2591,7 +2591,7 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "Text-only principle. Compute hero’s share of each legal joint outcome and compare betting with checking.",
+            "Text-only principle. Compute your share of each legal joint outcome and compare betting with checking.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_1_read_compression_vs_hand_label",
@@ -2706,13 +2706,13 @@ final _world18Pilot = _act0PilotWorldV1(
             "check",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "Check. The big bet sheds most of the worse queens and meets too many sets. A check preserves the wider showdown share.",
+            "Check because the bet sheds most of CO’s and BB’s worse queens and meets too many sets. Checking preserves the wider showdown share.",
           ),
           (
             "bet",
             "Bet 5 BB",
             Act0FeedbackQualityV1.wrong,
-            "Few worse hands pay 5 BB. Meanwhile either remaining player can continue with a set.",
+            "Check behind instead. Few worse hands pay 5 BB, while either remaining player can continue with a set.",
           ),
         ],
         table: _day7TableV1(
@@ -2802,7 +2802,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 4 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 4 BB. Overpairs, worse nines and smaller full houses can all pay. The lone quads group does not outweigh those branches.",
+            "Bet 4 BB because CO and BB can pay with overpairs, worse nines and smaller full houses. The lone quads group does not outweigh those branches.",
           ),
           (
             "check",
@@ -2995,10 +2995,10 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A pure bluff wins immediately only if everyone folds. Estimate the joint response directly or use conditional frequencies.",
+            "A pure bluff wins immediately only if everyone folds. Conditional frequency means how often a response occurs among the cases where another specified response has occurred. Estimate the joint response directly or use conditional frequencies.",
         question: "Which probability prices a pure bluff against two players?",
         teach:
-            "A pure bluff wins immediately only if everyone folds. Estimate the joint response directly or use conditional frequencies.",
+            "A pure bluff wins immediately only if everyone folds. Conditional frequency means how often a response occurs among the cases where another specified response has occurred. Estimate the joint response directly or use conditional frequencies.",
         choices: const [
           (
             "answer",
@@ -3016,7 +3016,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "other",
             "The fold rate of the opponent who acts first",
             Act0FeedbackQualityV1.wrong,
-            "The second player can still win the pot by continuing.",
+            "The second player can still take the pot by continuing.",
           ),
         ],
         table: _w9TextStudyTableV1,
@@ -3143,19 +3143,19 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Check. The bet loses about 1.33 BB",
             Act0FeedbackQualityV1.correct,
-            "Only four of twelve outcomes award 8 BB. Eight lose the 6 BB wager.",
+            "Check because CO and BB both fold in just four of twelve outcomes. Those wins do not cover eight failed bets.",
           ),
           (
             "alternative",
             "Bet. CO folds 75% of the time",
             Act0FeedbackQualityV1.wrong,
-            "That counts branches where BB calls. Only the joint fold wins.",
+            "Check because this count includes branches where BB calls and the bluff loses.",
           ),
           (
             "other",
             "Bet. Five paths win",
             Act0FeedbackQualityV1.wrong,
-            "Of the nine CO folds, five still face a BB continue.",
+            "Of the nine CO folds, five still face a BB continue, so the bluff loses in those five branches.",
           ),
         ],
         table: _day7TableV1(
@@ -3354,13 +3354,13 @@ final _world18Pilot = _act0PilotWorldV1(
             "alternative",
             "Bet 7 BB because CO folds twelve times",
             Act0FeedbackQualityV1.wrong,
-            "That count includes six CO folds where BB still continues.",
+            "Check instead: six of those CO folds still face a BB call, so the bluff loses.",
           ),
           (
             "other",
             "Bet 7 BB because BB folds half the time",
             Act0FeedbackQualityV1.wrong,
-            "That half applies only to the twelve events where CO folded.",
+            "Check instead: that half applies to the twelve events where CO folded, leaving too few joint folds to cover the losses.",
           ),
         ],
         table: _day7TableV1(
@@ -3445,11 +3445,11 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Position lets the last live player close a checking street. On connected boards, plausible callers may hold strong combinations the opener rarely has.",
+            "Position lets the last live player close a checking street. A connected board is a board with ranks close enough to support straight draws or made straights. Plausible callers can hold strong combinations the opener rarely has.",
         question:
             "Who can guarantee a free turn with a check when all earlier players checked?",
         teach:
-            "Position lets the last live player close a checking street. On connected boards, plausible callers may hold strong combinations the opener rarely has.",
+            "Position lets the last live player close a checking street. A connected board is a board with ranks close enough to support straight draws or made straights. Plausible callers can hold strong combinations the opener rarely has.",
         choices: const [
           (
             "answer",
@@ -3588,7 +3588,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "BTN is last and both earlier players checked. There is no remaining flop action after this check.",
+            "Check behind because BTN is last and both earlier players checked. No flop action remains after this check.",
           ),
           (
             "alternative",
@@ -3600,7 +3600,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "other",
             "Check and then call a flop bet",
             Act0FeedbackQualityV1.wrong,
-            "There can be no later flop bet when BTN closes the checked street.",
+            "Check behind closes the street, so there can be no later flop bet to call.",
           ),
         ],
         table: _day7TableV1(
@@ -4003,7 +4003,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a hypothetical 8 BB flop pot with CO holding 10 BB behind, the proposed finish is: BB checks, CO goes all-in for 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.",
+            "In a hypothetical 8 BB flop pot with CO’s 10 BB behind, the proposed finish is: BB checks, CO goes all-in for 10 BB, BTN raises to 25 BB, and BB folds. CO cannot match the extra 15 BB.",
         question: "How much stays in the pot from that street?",
         teach: "Remove uncalled excess before assigning pot eligibility.",
         choices: const [
@@ -4035,7 +4035,7 @@ final _world18Pilot = _act0PilotWorldV1(
           stacks: const {
             "utg": 100,
             "hj": 100,
-            "co": 100,
+            "co": 12.5,
             "btn": 100,
             "sb": 100,
             "bb": 100,
@@ -4107,19 +4107,19 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Call all-in for 5 BB",
             Act0FeedbackQualityV1.correct,
-            "Your share clears the main-pot price. The extra money matched by CO and BB goes to their side pot.",
+            "Call because your share clears the main-pot price. The extra money matched by CO and BB goes to their side pot, so folding gives up a profitable call.",
           ),
           (
             "alternative",
             "Fold using a 15 BB call price",
             Act0FeedbackQualityV1.wrong,
-            "With 5 BB behind you can contest the main pot for 5 BB. Applying the deeper price changes the answer.",
+            "Call all-in for 5 BB instead. Using the deeper price gives up the profitable main-pot call.",
           ),
           (
             "other",
             "Call and count the entire 65 BB",
             Act0FeedbackQualityV1.wrong,
-            "Your short contribution does not match the opponents’ side pot. Count only the eligible 35 BB.",
+            "Call all-in for 5 BB but count only the eligible 35 BB: your short contribution does not match the opponents’ side pot.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -4228,7 +4228,7 @@ final _world18Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 21.5 (CO) + 6.5 (BTN) + 0.5 (SB) + 21.5 (BB) = 50 BB. Eligible call price = 5/35 = 14.3%. The full 15/65 = 23.1% price applies only at the deeper stack. Across 63 non-overlapping deals, hero showdown share=4/21=19.0%. Main=20+3×5=35 BB, side=2×(15−5)=20 BB. Short EV=35×E−5=1.67 BB. Deep EV=65×E−15=-2.62 BB. Fold=0.",
+            "Pot = 21.5 (CO) + 6.5 (BTN) + 0.5 (SB) + 21.5 (BB) = 50 BB. Eligible call price = 5/35 = 14.3%. The full 15/65 = 23.1% price applies only at the deeper stack. Across 63 non-overlapping deals, your showdown share=4/21=19.0%. Main=20+3×5=35 BB, side=2×(15−5)=20 BB. Short EV=35×E−5=1.67 BB. Deep EV=65×E−15=-2.62 BB. Fold=0.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_4_day7_award_eligible_pots",
@@ -4343,10 +4343,10 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.",
+            "The right to raise depends on prior action and the full-raise rule. Limping behind means calling the blind after one or more limps. An overcall matches after another player calls.",
         question: "How does limping behind differ from overcalling a bet?",
         teach:
-            "A qualifier to raise depends on prior action and the full-raise rule. You limp behind by calling after one or more limps. An overcall matches after another player calls.",
+            "The right to raise depends on prior action and the full-raise rule. Limping behind means calling the blind after one or more limps. An overcall matches after another player calls.",
         choices: const [
           (
             "answer",
@@ -4565,7 +4565,7 @@ final _world18Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
             Act0ActionTrailItemV1(label: "flop: CO bets 6 BB"),
-            Act0ActionTrailItemV1(label: "flop: BTN raises to 9 BB"),
+            Act0ActionTrailItemV1(label: "flop: BTN all-in 9 BB"),
             Act0ActionTrailItemV1(label: "flop: BB calls 9 BB"),
           ],
           bets: const {
@@ -4576,7 +4576,7 @@ final _world18Pilot = _act0PilotWorldV1(
             ),
             "btn": Act0SeatBetStateV1(
               kind: Act0SeatBetKindV1.allIn,
-              label: "raises to",
+              label: "all-in",
               amountLabel: "9 BB",
             ),
           },
@@ -4988,13 +4988,13 @@ final _world18Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 5 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 5 BB with top set. Both ranges have worse hands that call, including two pair and lower sets.",
+            "Bet 5 BB because CO and BB have worse hands that call, including two pair and lower sets.",
           ),
           (
             "check",
             "Check behind",
             Act0FeedbackQualityV1.wrong,
-            "Checking wins almost every legal showdown but leaves the called value on the table.",
+            "Checking wins almost every legal showdown but gives up the value from weaker calls.",
           ),
         ],
         table: _day7TableV1(
@@ -5084,7 +5084,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "check",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "Check. A-J retains showdown value against the weaker jacks and middle pairs. Too many of the paying hands beat it.",
+            "Check because CO and BB can have weaker jacks and middle pairs at showdown, but too many of the hands that pay a bet beat AJo.",
           ),
           (
             "bet",
