@@ -1315,10 +1315,10 @@ final _world19Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A profitable counter can lose its edge when the opponent changes their response. Mixed strategies can keep a line from identifying a single hand category.",
+            "A profitable adjustment is a counter to the opponent’s current strategy. It can lose its edge when the opponent changes their response. Mixed strategies can keep a line from identifying a single hand category.",
         question: "What should make you retire a profitable counter?",
         teach:
-            "A profitable counter can lose its edge when the opponent changes their response. Mixed strategies can keep a line from identifying a single hand category.",
+            "A profitable adjustment is a counter to the opponent’s current strategy. It can lose its edge when the opponent changes their response. Mixed strategies can keep a line from identifying a single hand category.",
         choices: const [
           (
             "answer",
@@ -2290,7 +2290,7 @@ final _world19Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.wrong,
-            "Folding would keep your last 12 BB but sacrifice 4.39 BB in modeled average gain at this depth.",
+            "Folding keeps your last 12 BB but gives up the 4.39 BB modeled average gain from calling.",
           ),
         ],
         table: _day7TableV1(
