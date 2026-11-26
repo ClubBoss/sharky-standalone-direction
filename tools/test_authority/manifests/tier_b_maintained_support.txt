@@ -1,5 +1,6 @@
 # Maintained PR and scheduled support tests. All entries are blocking.
 test/guards/early_world_feedback_quality_family_contract_test.dart
+test/guards/act0_external_entry_state_v1_test.dart
 test/guards/showable_spine_handoff_coherence_contract_test.dart
 test/guards/targeted_content_repairs_contract_test.dart
 test/guards/w10_to_w11_transition_policy_contract_test.dart
