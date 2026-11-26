@@ -978,7 +978,7 @@ final _world17Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The premium pairs only",
+            "The premium pairs rather than the caller’s group",
             Act0FeedbackQualityV1.wrong,
             "A pocket pair adds one distinct rank, which cannot fill two missing straight ranks here.",
           ),
@@ -1298,7 +1298,7 @@ final _world17Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Only when a 4-bet matches the 3-bet",
+            "When the 4-bet matches the 3-bet rather than increasing it",
             Act0FeedbackQualityV1.wrong,
             "A 4-bet raises above the existing re-raise. Matching it is calling.",
           ),
@@ -2162,7 +2162,7 @@ final _world17Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every checked 3-bet flop signals a trap",
+            "A checked flop in a 3-bet pot signals a trap",
             Act0FeedbackQualityV1.wrong,
             "A player may also check a weak or marginal hand. The check alone cannot identify a trap.",
           ),
@@ -2640,7 +2640,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "A three-way pot can never be value-bet",
+            "A third player prevents value betting",
             Act0FeedbackQualityV1.wrong,
             "Strong hands can still collect multiple payments when the response supports them.",
           ),
@@ -2670,7 +2670,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every call is a bluff",
+            "The callers have bluff holdings rather than made hands",
             Act0FeedbackQualityV1.wrong,
             "Only the quick response and the listed hand categories are given. The categories include strong made hands.",
           ),
@@ -2963,7 +2963,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only the first player can pay",
+            "The first player can pay, but the second cannot",
             Act0FeedbackQualityV1.wrong,
             "If the first player calls, the other player can also call.",
           ),
@@ -3539,13 +3539,13 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Always the opening raiser",
+            "The opening raiser",
             Act0FeedbackQualityV1.wrong,
             "Opening preflop provides initiative, not last action.",
           ),
           (
             "other",
-            "Always the first player to check",
+            "The first player to check",
             Act0FeedbackQualityV1.wrong,
             "Players behind retain their betting options.",
           ),
@@ -3576,7 +3576,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only CO",
+            "CO rather than BTN or BB",
             Act0FeedbackQualityV1.wrong,
             "The listed overpairs add one distinct rank. None supplies 9 and T together.",
           ),
@@ -3778,7 +3778,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "It closes all action because the blind checked",
+            "It ends the betting round because the blind checked",
             Act0FeedbackQualityV1.wrong,
             "A blind’s check does not remove BTN’s right to bet.",
           ),
@@ -3874,7 +3874,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Every hand in BB’s full range is a straight",
+            "BB’s full range consists of straights",
             Act0FeedbackQualityV1.wrong,
             "Only the explicit comparison subset is being described.",
           ),
@@ -3971,13 +3971,13 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every pot if its hand is best",
+            "The main and side pots if its hand is best",
             Act0FeedbackQualityV1.wrong,
             "The best hand must also be eligible for the specific pot.",
           ),
           (
             "other",
-            "Only its own chips back",
+            "Its own contribution, without the matched chips",
             Act0FeedbackQualityV1.wrong,
             "Other players’ matched contributions enter the same eligible pot.",
           ),
@@ -4007,7 +4007,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "60.5 BB all in the main pot",
+            "60.5 BB in a single main pot",
             Act0FeedbackQualityV1.wrong,
             "The short player cannot claim the excess matched only by deeper players.",
           ),
@@ -4582,7 +4582,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Yes, because any extra amount reopens",
+            "Yes, because increasing the wager is enough to reopen",
             Act0FeedbackQualityV1.wrong,
             "This increment falls short of the stated house threshold.",
           ),
@@ -4830,7 +4830,7 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "No. All-in wagers never reopen",
+            "No. An all-in wager cannot reopen betting",
             Act0FeedbackQualityV1.wrong,
             "An all-in can be a full raise and reopen action.",
           ),
