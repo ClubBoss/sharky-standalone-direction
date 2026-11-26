@@ -1461,12 +1461,6 @@
     ]
   },
   "W21": {
-    "11.btn_share_per_world": [
-      "@world:world_21|"
-    ],
-    "15.internal_jargon": [
-      "w21_3_guided_find_own_leak|exploit"
-    ],
     "16.extreme_wrong_option": [
       "w21_2_transfer_stop_win_based_on_behavior|alternative",
       "w21_3_guided_find_own_leak|alternative",
@@ -1487,27 +1481,8 @@
       "w21_1_teach|statement",
       "w21_5_teach|statement"
     ],
-    "20.hero_qq_per_world": [
-      "w21_4_read_slowplay_cost|"
-    ],
-    "21.duplicate_wrong_reason": [
-      "w21_4_transfer_short_stack_limits_call|fold"
-    ],
-    "9.inherited_copy": [
-      "w21_4_transfer_short_stack_limits_call|feedback"
-    ],
     "C5": [
-      "w21_3_guided_find_own_leak|440|OPTION: Give up all misses because your defense is too wide",
-      "w21_3_read_seat_change_current_game|table_selection|Q: What changed in the game selection review?",
-      "w21_3_teach|table_selection|TEACH: Table selection changes as seats, opponent skill and your own attention change.",
-      "w21_4_day7_take_worse_pair_payment|569|FEEDBACK: The large bet loses many weaker calls."
-    ],
-    "D3.explicit_current_bet": [
-      "w21_4_transfer_short_stack_limits_call|authored/drill|owner=BB amount=12.0 BB",
-      "w21_4_transfer_short_stack_limits_call|decision|owner=BB amount=12.0 BB",
-      "w21_4_transfer_short_stack_limits_call|feedback/call|owner=BB amount=12.0 BB",
-      "w21_4_transfer_short_stack_limits_call|feedback/fold|owner=BB amount=12.0 BB",
-      "w21_4_transfer_short_stack_limits_call|review|owner=BB amount=12.0 BB"
+      "w21_3_guided_find_own_leak|440|OPTION: Give up all misses because your defense is too wide"
     ],
     "D6.history_support": [
       "w21_1_day7_win_checks_still_apply|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1553,11 +1528,6 @@
       "w21_4_guided_simple_value_over_disguise|",
       "w21_4_transfer_short_stack_limits_call|"
     ],
-    "G1·28": [
-      "w21_4_day7_take_worse_pair_payment|bet_2",
-      "w21_4_guided_simple_value_over_disguise|bet_3",
-      "w21_4_transfer_short_stack_limits_call|call"
-    ],
     "G1·29": [
       "w21_4_day7_take_worse_pair_payment|bet_2",
       "w21_4_guided_simple_value_over_disguise|bet_3",
@@ -1565,24 +1535,12 @@
     ],
     "G1·30": [
       "w21_4_transfer_short_stack_limits_call|call"
-    ],
-    "G1·31": [
-      "w21_4_guided_simple_value_over_disguise|bet_8"
     ]
   },
   "W22": {
-    "11.btn_share_per_world": [
-      "@world:world_22|"
-    ],
     "15.internal_jargon": [
-      "w22_4_teach|transfer",
-      "w22_5_day7_simplification_does_not_transfer|heuristic",
       "w22_5_read_output_as_scope|heuristic",
-      "w22_5_read_output_as_scope|transfer",
-      "w22_5_teach|heuristic",
-      "w22_5_transfer_population_query|baseline",
-      "w22_5_transfer_population_query|exploit",
-      "w22_6_read_plan_gaps|hero"
+      "w22_5_transfer_population_query|baseline"
     ],
     "16.extreme_wrong_option": [
       "w22_2_guided_indifference_mix|alternative",
@@ -1606,28 +1564,9 @@
       "w22_1_teach|statement",
       "w22_4_day7_change_input_requires_new_query|statement"
     ],
-    "21.duplicate_wrong_reason": [
-      "w22_4_transfer_short_tree_price|fold"
-    ],
-    "9.inherited_copy": [
-      "w22_4_transfer_short_tree_price|feedback"
-    ],
     "C5": [
-      "w22_1_transfer_river_no_chance_node|solver|CAPTION: A solver tree has reached the completed five-card river.",
       "w22_2_transfer_best_response_not_equilibrium|gto|OPTION: Check because it is part of a balanced mix elsewhere",
-      "w22_3_transfer_sample_frequency_not_quota|gto|OPTION: An automatic bet to balance the previous checks",
-      "w22_3_transfer_sample_frequency_not_quota|solver|CAPTION: A toy solver strategy independently bets 60% with this exact hand at this node.",
-      "w22_4_day7_change_input_requires_new_query|148|CAPTION: You want to apply its river node frequencies to a game where the same hand is in BB out of position, with the same board and pot.",
-      "w22_4_read_pruned_action|solver|FEEDBACK: The solver did not measure that action.",
-      "w22_4_teach|push_fold|TEACH: Which omitted input can change whether a shove appears in the tree?.",
-      "w22_5_transfer_population_query|gto|CAPTION: Your baseline query assumes balanced river defense."
-    ],
-    "D3.explicit_current_bet": [
-      "w22_4_transfer_short_tree_price|authored/drill|owner=BB amount=12.0 BB",
-      "w22_4_transfer_short_tree_price|decision|owner=BB amount=12.0 BB",
-      "w22_4_transfer_short_tree_price|feedback/call|owner=BB amount=12.0 BB",
-      "w22_4_transfer_short_tree_price|feedback/fold|owner=BB amount=12.0 BB",
-      "w22_4_transfer_short_tree_price|review|owner=BB amount=12.0 BB"
+      "w22_3_transfer_sample_frequency_not_quota|gto|OPTION: An automatic bet to balance the previous checks"
     ],
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1661,9 +1600,6 @@
       "w22_6_read_plan_gaps|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "E11": [
-      "w22_4_teach|shove"
-    ],
     "G1·26": [
       "w22_2_transfer_best_response_not_equilibrium|",
       "w22_4_transfer_short_tree_price|",
@@ -1674,10 +1610,6 @@
       "w22_4_transfer_short_tree_price|",
       "w22_6_guided_compare_branch_plans|"
     ],
-    "G1·28": [
-      "w22_2_transfer_best_response_not_equilibrium|answer",
-      "w22_6_guided_compare_branch_plans|answer"
-    ],
     "G1·29": [
       "w22_2_transfer_best_response_not_equilibrium|answer",
       "w22_4_transfer_short_tree_price|call",
@@ -1685,12 +1617,6 @@
     ],
     "G1·30": [
       "w22_4_transfer_short_tree_price|call"
-    ],
-    "G1·31": [
-      "w22_2_transfer_best_response_not_equilibrium|alternative",
-      "w22_2_transfer_best_response_not_equilibrium|other",
-      "w22_6_guided_compare_branch_plans|alternative",
-      "w22_6_guided_compare_branch_plans|other"
     ]
   },
   "W23": {
@@ -1723,8 +1649,7 @@
       "w23_3_read_bb_minraise|193|FEEDBACK: That uses the full open size as the new BB payment.",
       "w23_3_teach|193|OPTION: The big blind pays the full open size in either branch",
       "w23_5_transfer_depth_changes_available_payoff|298|OPTION: The deep stack guarantees a larger win",
-      "w23_6_checkpoint_combine_coverage_price_and_depth|193|OPTION: Use the heads-up solver because the initial open size matches",
-      "w23_6_checkpoint_combine_coverage_price_and_depth|solver|CAPTION: You have a published chart for single-open BB decisions and a solver result for heads-up BB facing a 2.5 BB BTN open."
+      "w23_6_checkpoint_combine_coverage_price_and_depth|193|OPTION: Use the heads-up solver because the initial open size matches"
     ],
     "D6.history_support": [
       "w23_1_day7_btn_medium_queen|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1853,7 +1778,6 @@
       "w24_3_teach|83|TEACH: A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff.",
       "w24_3_transfer_indifferent_range_blocks|1223|Q: What does the filtered range imply for this bluff catcher?",
       "w24_3_transfer_indifferent_range_blocks|83|Q: What does the filtered range imply for this bluff catcher?",
-      "w24_3_transfer_indifferent_range_blocks|gto|OPTION: Call because the unfiltered range was balanced",
       "w24_4_teach|1223|TEACH: A card that removes missed hands can hurt a bluff catcher.",
       "w24_4_teach|83|TEACH: A card that removes missed hands can hurt a bluff catcher.",
       "w24_5_teach|64|FEEDBACK: Possible callers are narrower than all legal hole cards.",
