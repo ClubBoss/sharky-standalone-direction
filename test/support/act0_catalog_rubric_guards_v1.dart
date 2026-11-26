@@ -178,7 +178,7 @@ Iterable<CatalogRubricFindingV1> catalogOptionLabelChangesV1(
   }
 }
 
-String? previousCatalogSnapshotV1() {
+String? previousCatalogSnapshotV1({String path = catalogSnapshotPathV1}) {
   final environment = Platform.environment;
   final eventPath = environment['GITHUB_EVENT_PATH'];
   final tierA = environment['TEST_AUTHORITY_SHARD']?.endsWith('/3') ?? false;
@@ -199,10 +199,7 @@ String? previousCatalogSnapshotV1() {
     if (result.exitCode != 0) return null;
     revision = (result.stdout as String).trim();
   }
-  final result = Process.runSync('git', [
-    'show',
-    '$revision:$catalogSnapshotPathV1',
-  ]);
+  final result = Process.runSync('git', ['show', '$revision:$path']);
   if (result.exitCode != 0) {
     if (tierA)
       throw StateError('Catalog snapshot at $revision: ${result.stderr}');

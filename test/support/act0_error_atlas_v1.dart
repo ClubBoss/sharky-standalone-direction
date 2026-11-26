@@ -18,7 +18,7 @@ Map<String, dynamic> _fixture(String name) =>
     jsonDecode(File('test/fixtures/$name.json').readAsStringSync())
         as Map<String, dynamic>;
 
-List<CatalogConceptV1> _concepts() {
+List<CatalogConceptV1> catalogConceptsV1() {
   final source = _fixture('act0_c5_concepts_v1');
   final exceptions = _fixture('act0_c5_exceptions_v1');
   final coverage = source['coverage_patterns'] as Map<String, dynamic>;
@@ -151,7 +151,7 @@ CatalogTask _conceptProbe({
 
 void _registerConceptOrderDefinitionTests() {
   late List<CatalogConceptV1> concepts;
-  setUpAll(() => concepts = _concepts());
+  setUpAll(() => concepts = catalogConceptsV1());
   const cases = <(List<String>, String, String)>[
     (['141', 'button'], 'BTN is Button.', 'Find BTN, the Button.'),
     (['139'], 'HJ is Hijack.', 'Tap HJ.'),
@@ -419,7 +419,7 @@ void registerAct0ErrorAtlasV1() {
   _registerConceptOrderDefinitionTests();
   test('Y7 C5 and E13 catalog baselines admit no regressions', () {
     final route = catalogTasks.where((row) => !row.task.repairOnly);
-    final concepts = catalogConceptOrderFindingsV1(route, _concepts());
+    final concepts = catalogConceptOrderFindingsV1(route, catalogConceptsV1());
     final outs = auditCatalogOutsV1(reasoningCatalogRowsV1);
     if (Platform.environment['ACT0_ERROR_ATLAS_REPORT'] case final path?) {
       _writeReport(path, outs, concepts);
