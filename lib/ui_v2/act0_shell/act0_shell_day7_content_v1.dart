@@ -7519,9 +7519,9 @@ final _act0Vol2PrincipleDay7TasksV1 = <_SpacedReviewEntryV1>[
     choices: const ["Bet 2 BB", "Bet 7 BB"],
     correct: 1,
     reason:
-        "Bet 7 BB because it folds more better hands: 0.65 × 7.50 − 0.35 × 7 = 2.43 BB, versus 0.38 BB for bet 2 BB.",
+        "Bet 7 BB because BB folds better hands 65% of the time: 0.65 × 7.50 − 0.35 × 7 = 2.43 BB, versus 0.38 BB for bet 2 BB.",
     wrongReasons: const {
-      0: "Bet 2 BB earns only 0.38 BB because BB folds just 25%; the larger bluff earns 2.05 BB more.",
+      0: "Bet 2 BB earns only 0.38 BB because BB folds just 25%; bet 7 BB earns 2.05 BB more.",
     },
     savedTaskId: "spaced_review_w14_polarized_sizing_polarized_sizing_v1",
   ),
@@ -7596,7 +7596,7 @@ final _act0Vol2PrincipleDay7TasksV1 = <_SpacedReviewEntryV1>[
     reason:
         "Bet 2 BB and call the raise because BB adds 8 BB half the time, worth 4.00 BB extra. Bet 6 BB earns only 3.00 BB extra.",
     wrongReasons: const {
-      1: "Bet 6 BB earns 1.00 BB less because it removes the chance to induce BB’s 8 BB raise.",
+      1: "Bet 6 BB earns 1.00 BB less because BB never raises it; bet 2 BB induces the 8 BB raise half the time.",
     },
     savedTaskId: "spaced_review_w14_induce_and_checkpoint_induce_raise_v1",
   ),
