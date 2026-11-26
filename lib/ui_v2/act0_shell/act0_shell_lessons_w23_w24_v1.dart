@@ -67,7 +67,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "alternative",
             "Open-raise",
             Act0FeedbackQualityV1.wrong,
-            "AQo belongs to mediumHj. That group’s opening permission begins one seat later.",
+            "Fold AQo at UTG: the chart first permits opening this group from HJ.",
           ),
           (
             "other",
@@ -131,7 +131,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Open-raise",
             Act0FeedbackQualityV1.correct,
-            "AJo is in mediumHj and HJ is the first seat where that group opens in the published chart.",
+            "Open-raise AJo because HJ is the first seat covered for this group; folding misses the chart’s opening opportunity.",
           ),
           (
             "alternative",
@@ -143,7 +143,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "other",
             "Open-limp",
             Act0FeedbackQualityV1.wrong,
-            "The published opening row for this position specifies raise or fold.",
+            "Opening with a limp gives up the initiative; the HJ chart prescribes an opening raise for AJo.",
           ),
         ],
         table: _day7TableV1(
@@ -202,7 +202,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Open-raise",
             Act0FeedbackQualityV1.correct,
-            "CO reaches the mediumCo opening threshold. Sevens are in that group and can open here.",
+            "Open-raise sevens because CO reaches their chart threshold. Folding gives up an approved opening opportunity.",
           ),
           (
             "alternative",
@@ -214,7 +214,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "other",
             "Open-limp",
             Act0FeedbackQualityV1.wrong,
-            "The published opening row for this position specifies raise or fold.",
+            "Limping forfeits the chance to take the blinds immediately. The CO row recommends raising sevens.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -275,7 +275,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Open-raise",
             Act0FeedbackQualityV1.correct,
-            "QJo is a mediumCo hand. The unopened BTN row includes that group.",
+            "Open-raise QJo because BTN is later than the chart’s CO threshold. Folding surrenders this opening opportunity.",
           ),
           (
             "alternative",
@@ -287,7 +287,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "other",
             "Open-limp",
             Act0FeedbackQualityV1.wrong,
-            "The published opening row for this position specifies raise or fold.",
+            "Open-raise QJo from BTN; limping lets the big blind see a cheap flop instead.",
           ),
         ],
         table: _day7TableV1(
@@ -616,7 +616,7 @@ final _world23Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "Compare A♠4♠ and Q♠J♠ on the shown river. Each holding is in its own trial.",
+            "Compare A♠4♠ with Q♠J♠ on the shown river, in separate hypothetical trials.",
         question: "Which hand has the highest possible flush?",
         teach: "",
         choices: const [
@@ -624,7 +624,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "A♠4♠",
             Act0FeedbackQualityV1.correct,
-            "Its ace is the highest flush card available. A paired board still permits full houses or quads.",
+            "Its ace is the highest flush card available. The repeated twos permit full houses or four of a kind.",
           ),
           (
             "alternative",
@@ -712,11 +712,11 @@ final _world23Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A smaller open needs less extra from the big blind. Immediate price is one input. Realization, the opening range and players remaining can change what actually defends profitably.",
+            "Open size means the total of the first voluntary raise. A smaller open needs less extra from the big blind. Immediate price is one input. Realization, the opening range and players remaining can change what actually defends profitably.",
         question:
             "What changes when BTN makes it 2 BB instead of 2.5 BB and SB folds?",
         teach:
-            "A smaller open needs less extra from the big blind. Immediate price is one input. Realization, the opening range and players remaining can change what actually defends profitably.",
+            "Open size means the total of the first voluntary raise. A smaller open needs less extra from the big blind. Immediate price is one input. Realization, the opening range and players remaining can change what actually defends profitably.",
         choices: const [
           (
             "answer",
@@ -770,7 +770,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "other",
             "44.4%",
             Act0FeedbackQualityV1.wrong,
-            "That uses the full open size as the new BB payment.",
+            "That counts the entire raise target as a new payment, ignoring the 1 BB already posted.",
           ),
         ],
         table: _day7TableV1(
@@ -1007,7 +1007,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Fold now. Call would work against the 2 BB counterfactual.",
             Act0FeedbackQualityV1.correct,
-            "Your 27% clears 22.2% at 2 BB and misses the current 30.8% price.",
+            "Fold because your 27% misses the price of calling the current 3 BB BTN open. Against the 2 BB open, the same share clears the cheaper price.",
           ),
           (
             "alternative",
@@ -1145,7 +1145,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "other",
             "A call of 22 BB",
             Act0FeedbackQualityV1.wrong,
-            "Calling pays the difference to 22 BB. Shoving above that total raises again.",
+            "Calling pays the difference to 22 BB. Raising all-in above that total increases the wager.",
           ),
         ],
         table: _day7TableV1(
@@ -1326,26 +1326,26 @@ final _world23Pilot = _act0PilotWorldV1(
         id: "w23_4_transfer_five_bet_price_flips",
         lesson: "three_four_five_bet",
         lessonTitle: "Three four five bet",
-        title: "Call the current 5-bet or fold?",
+        title: "Which response earns most at the current stack depth?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "You 4-bet to 22 BB and BTN jams to the effective 35 BB. BTN’s jam range is equally weighted legal AA KK AKo. Both players started with 35 BB. At 100 BB compare a full 100 BB jam by the same range, with everything before the jam held fixed.",
-        question: "Call the current 5-bet or fold?",
+            "You 4-bet to 22 BB and BTN raises all-in to the effective 35 BB. BTN’s all-in range is equally weighted legal AA KK AKo. Both players started with 35 BB. At 100 BB compare a full 100 BB all-in with the same range and unchanged earlier action.",
+        question: "Which response earns most at the current stack depth?",
         teach: "",
         choices: const [
           (
             "answer",
             "Call 13 BB",
             Act0FeedbackQualityV1.correct,
-            "The shorter jam requires far less equity. Your jacks clear that price against the specified mix of overpairs and A-K.",
+            "Call because your jacks have 37.8% equity against BTN’s stated range, above the shorter all-in’s 18.2% price. Folding gives up positive expected value.",
           ),
           (
             "alternative",
             "Fold because 22 BB was already invested",
             Act0FeedbackQualityV1.wrong,
-            "Past chips help form the pot. The current price and enumerated share decide the next investment.",
+            "Past chips help form the pot. Calling earns positive expected value at the current price; folding gives up that gain.",
           ),
           (
             "other",
@@ -1457,13 +1457,13 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "4-bet to 21 BB",
             Act0FeedbackQualityV1.correct,
-            "The call group pays 13 BB above its initial 8 BB at this size.",
+            "Raise to 21 BB because BTN calls with weaker hands, paying 13 BB more than its initial 8 BB. A flat call misses those extra payments.",
           ),
           (
             "alternative",
             "Flat call 5.5 BB",
             Act0FeedbackQualityV1.wrong,
-            "This completes the 8 BB match and takes a flop, without extracting the stated additional BTN payments.",
+            "This completes the 8 BB match but misses the extra payments BTN would make against a 4-bet to 21 BB.",
           ),
           (
             "other",
@@ -1550,11 +1550,11 @@ final _world23Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A small-blind completion can belong to a mixed strategy in a blind-versus-blind model. Such a model needs an explicit BB response and reliable depth before it supplies a recommendation.",
+            "A small-blind completion can belong to a mixed strategy in a blind-versus-blind model. A deep stack means more chips are available for later betting. Such a model needs an explicit BB response and reliable depth before it supplies a recommendation.",
         question:
             "What makes a small-blind limp worth including in a toy model?",
         teach:
-            "A small-blind completion can belong to a mixed strategy in a blind-versus-blind model. Such a model needs an explicit BB response and reliable depth before it supplies a recommendation.",
+            "A small-blind completion can belong to a mixed strategy in a blind-versus-blind model. A deep stack means more chips are available for later betting. Such a model needs an explicit BB response and reliable depth before it supplies a recommendation.",
         choices: const [
           (
             "answer",
@@ -1979,7 +1979,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Three AA and one AKs combo",
             Act0FeedbackQualityV1.correct,
-            "It removes three pairings between itself and other aces, and its suited pairing with K♣.",
+            "It removes three pairings between itself and other aces, and its pairing with the king of the same suit.",
           ),
           (
             "alternative",
@@ -2156,7 +2156,7 @@ final _world23Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BTN opens 2.5 BB, SB 3-bets to 10 BB, and BB acts with 100 BB. You have a published chart for single-open BB decisions and a solver result for heads-up BB facing a 2.5 BB BTN open.",
+            "BTN opens 2.5 BB, SB 3-bets to 10 BB, and BB acts with 100 BB. A solver is a tool that computes strategic recommendations for a specified model. You have a published chart for single-open BB decisions and a solver result for heads-up BB facing a 2.5 BB BTN open.",
         question: "What is the next valid analysis for this actual decision?",
         teach: "",
         choices: const [
@@ -2269,13 +2269,13 @@ final _world23Pilot = _act0PilotWorldV1(
             "alternative",
             "3-bet by the AA/AK premium row",
             Act0FeedbackQualityV1.wrong,
-            "QJs is absent from the chart’s 3-bet set.",
+            "QJs is absent from the chart’s 3-bet set; call instead in the covered BTN-versus-CO row.",
           ),
           (
             "other",
             "Fold using the UTG unopened row",
             Act0FeedbackQualityV1.wrong,
-            "BTN is facing a CO open. The unopened UTG row describes a different decision.",
+            "BTN is facing a CO open, so folding gives up a chart-approved call. The unopened UTG row describes a different decision.",
           ),
         ],
         table: _day7TableV1(
@@ -2350,10 +2350,10 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A polar betting range combines strong value with bluffs. A condensed range consists mostly of middle-strength hands. Middle hands may catch bluffs profitably if the price and bluff share allow.",
+            "Strong value means hands likely to beat the calling range. A polar betting range combines strong value with bluffs. A condensed range consists mostly of middle-strength hands. A bluff catcher is a hand that loses to value bets but beats bluffs. Middle hands may catch bluffs profitably if the price and bluff share allow.",
         question: "What distinguishes the two shapes?",
         teach:
-            "A polar betting range combines strong value with bluffs. A condensed range consists mostly of middle-strength hands. Middle hands may catch bluffs profitably if the price and bluff share allow.",
+            "Strong value means hands likely to beat the calling range. A polar betting range combines strong value with bluffs. A condensed range consists mostly of middle-strength hands. A bluff catcher is a hand that loses to value bets but beats bluffs. Middle hands may catch bluffs profitably if the price and bluff share allow.",
         choices: const [
           (
             "answer",
@@ -2411,8 +2411,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "",
           board: _act0LessonCardsV1("Qs 8d 4h 3c 2s"),
           street: PokerStreet.river,
@@ -2424,7 +2424,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2440,7 +2440,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2456,20 +2456,20 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. After the board, set count=3+3+3=9. Miss classes contribute 4+4=8. None of 76s or JTs completes a straight here.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. After the board, set count=3+3+3=9. Miss classes contribute 4+4=8. None of 76s or JTs completes a straight here.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_1_guided_condensed_bluff_catcher",
@@ -2489,7 +2489,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "call",
             "Call 8 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 53.3% equity against this BB range clears the 29.1% price.",
+            "Call because your 53.3% equity against this BB range clears the 29.1% price. Folding gives up a profitable call.",
           ),
           (
             "fold",
@@ -2601,13 +2601,13 @@ final _world24Pilot = _act0PilotWorldV1(
             "check",
             "Check",
             Act0FeedbackQualityV1.correct,
-            "Check K-J. The small size gets some weaker calls but too many better hands pay or beat you. The check preserves its showdown share.",
+            "Check K-J because BB calls either size with too many better hands; checking preserves the hand’s showdown share.",
           ),
           (
             "bet_2",
             "Bet 2 BB",
             Act0FeedbackQualityV1.wrong,
-            "The small bet gets weaker kings and nines. Better kings and sets still absorb the gain from those calls.",
+            "The small bet gets weaker kings and nines, but loses value against better kings and sets compared with checking.",
           ),
           (
             "bet_7",
@@ -2789,15 +2789,17 @@ final _world24Pilot = _act0PilotWorldV1(
         id: "w24_2_teach",
         lesson: "alpha_mdf_and_price",
         lessonTitle: "Alpha mdf and price",
-        title: "What is alpha for bluffing B into pot P with no recovery?",
+        title:
+            "What fold rate breaks even when bluffing B into pot P with no recovery?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "For a zero-equity bluff, alpha is the break-even fold rate. MDF is its complement. A call has a different threshold since the final pot includes the matched bet and call.",
-        question: "What is alpha for bluffing B into pot P with no recovery?",
+            "For a zero-equity bluff, alpha means the break-even fold rate. MDF is its complement. A call has a different threshold since the final pot includes the matched bet and call.",
+        question:
+            "What fold rate breaks even when bluffing B into pot P with no recovery?",
         teach:
-            "For a zero-equity bluff, alpha is the break-even fold rate. MDF is its complement. A call has a different threshold since the final pot includes the matched bet and call.",
+            "For a zero-equity bluff, alpha means the break-even fold rate. MDF is its complement. A call has a different threshold since the final pot includes the matched bet and call.",
         choices: const [
           (
             "answer",
@@ -2855,8 +2857,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Ad Qd",
           board: _act0LessonCardsV1("Qs 8d 4c 3s 2h"),
           street: PokerStreet.river,
@@ -2868,7 +2870,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2884,7 +2886,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2896,7 +2898,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.flop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               3,
             ),
@@ -2918,15 +2920,15 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN bets 3 BB"),
+            Act0ActionTrailItemV1(label: "flop: CO bets 3 BB"),
             Act0ActionTrailItemV1(label: "flop: BB calls 3 BB more"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 11.5 BB"),
           ],
           bets: const {
@@ -2938,7 +2940,7 @@ final _world24Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 5.5 (BTN) + 0.5 (SB) + 17 (BB) = 23 BB. Call price = to call / (pot + call) = 11.5/34.5 = 33.3%. Alpha=11.5/(11.5+11.5)=50.0%. Price=11.5/(11.5+2×11.5)=33.3%.",
+            "Pot = 5.5 (CO) + 0.5 (SB) + 17 (BB) = 23 BB. Call price = to call / (pot + call) = 11.5/34.5 = 33.3%. Alpha=11.5/(11.5+11.5)=50.0%. Price=11.5/(11.5+2×11.5)=33.3%.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_2_guided_overbet_mdf",
@@ -2960,7 +2962,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "40.0%",
             Act0FeedbackQualityV1.correct,
-            "The bettor needs 60% folds. The defender stops a positive bluff by continuing in the other 40%.",
+            "The break-even fold frequency is 12 ÷ (8 + 12), or 60%. The defender’s complementary continuation frequency is 40%.",
           ),
           (
             "alternative",
@@ -2976,8 +2978,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Qd Jd",
           board: _act0LessonCardsV1("Qs 8s 5d 3h 2c"),
           street: PokerStreet.river,
@@ -2989,7 +2991,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3005,7 +3007,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.25,
             ),
@@ -3017,7 +3019,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.flop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               1.5,
             ),
@@ -3039,15 +3041,15 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.25 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.25 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.25 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN bets 1.5 BB"),
+            Act0ActionTrailItemV1(label: "flop: CO bets 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 12 BB"),
           ],
           bets: const {
@@ -3059,7 +3061,7 @@ final _world24Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 3.75 (BTN) + 0.5 (SB) + 15.75 (BB) = 20 BB. Call price = to call / (pot + call) = 12/32 = 37.5%. Alpha=12/(8+12)=60.0%. MDF=8/(8+12)=40.0%. Call price=12/(8+24)=37.5%.",
+            "Pot = 3.75 (CO) + 0.5 (SB) + 15.75 (BB) = 20 BB. Call price = to call / (pot + call) = 12/32 = 37.5%. Alpha=12/(8+12)=60.0%. MDF=8/(8+12)=40.0%. Call price=12/(8+24)=37.5%.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_2_transfer_bluff_threshold_overpot",
@@ -3084,19 +3086,19 @@ final _world24Pilot = _act0PilotWorldV1(
             "alternative",
             "Bet 14 BB",
             Act0FeedbackQualityV1.wrong,
-            "The caller folds half the time. This overbet needs more than half under the given no-recovery premise.",
+            "The caller folds half the time, so the bluff loses money: five 14 BB losses outweigh five 11.5 BB wins.",
           ),
           (
             "other",
             "Both tie because five folds equal five calls",
             Act0FeedbackQualityV1.wrong,
-            "The loss per failed bluff and reward per successful bluff differ.",
+            "Checking avoids the negative expected value: the loss per failed bluff exceeds the reward per successful bluff.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Jc Tc",
           board: _act0LessonCardsV1("Ks 9d 4h 3c 2s"),
           street: PokerStreet.river,
@@ -3108,7 +3110,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3124,7 +3126,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3136,7 +3138,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.flop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               3,
             ),
@@ -3152,21 +3154,21 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN bets 3 BB"),
+            Act0ActionTrailItemV1(label: "flop: CO bets 3 BB"),
             Act0ActionTrailItemV1(label: "flop: BB calls 3 BB more"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Alpha=14/(11.5+14)=54.9% > observed 5/10. EV(bet)=(5×11.5−5×14)/10=−1.25 BB, EV(check)=0.",
+            "Pot = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Alpha=14/(11.5+14)=54.9% > observed 5/10. EV(bet)=(5×11.5−5×14)/10=−1.25 BB, EV(check)=0.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_2_day7_call_price_vs_range_mdf",
@@ -3185,13 +3187,13 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Two winning events out of ten give 20% equity. The call needs about 29.7%.",
+            "Fold because BB’s two bluffs in ten events give you 20% equity, short of the 29.7% call price.",
           ),
           (
             "alternative",
             "Call because MDF exceeds half",
             Act0FeedbackQualityV1.wrong,
-            "MDF describes what fraction of a range continues against a pure-bluff model, not the equity of this hand.",
+            "MDF describes a range’s continuation frequency, not your equity. This call loses money at the stated 20% equity.",
           ),
           (
             "other",
@@ -3292,11 +3294,11 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff. Translate that share into a ratio or a weighted combo count.",
+            "A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff. A balanced range is a mix of value bets and bluffs chosen so the opponent’s bluff catcher breaks even at the offered price. Translate that share into a ratio or a weighted combo count.",
         question:
             "For a pot-sized bet, what value-to-bluff ratio makes such a caller indifferent?",
         teach:
-            "A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff. Translate that share into a ratio or a weighted combo count.",
+            "A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff. A balanced range is a mix of value bets and bluffs chosen so the opponent’s bluff catcher breaks even at the offered price. Translate that share into a ratio or a weighted combo count.",
         choices: const [
           (
             "answer",
@@ -3354,8 +3356,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "",
           board: _act0LessonCardsV1("As 8c 4d 3s 2h"),
           street: PokerStreet.river,
@@ -3367,7 +3369,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3383,7 +3385,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3399,20 +3401,20 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. B/(P+B)=(3/4)/(7/4)=3/7. With V=7, required bluff weight=7×3/7=3.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. B/(P+B)=(3/4)/(7/4)=3/7. With V=7, required bluff weight=7×3/7=3.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_3_guided_fractional_bluff_weight",
@@ -3450,8 +3452,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "",
           board: _act0LessonCardsV1("Kh 8d 5c 3s 2c"),
           street: PokerStreet.river,
@@ -3463,7 +3465,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3479,7 +3481,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3495,20 +3497,20 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Required bluffs=6×(3/7)=18/7. Remaining=18/7−2=4/7.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Required bluffs=6×(3/7)=18/7. Remaining=18/7−2=4/7.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_3_transfer_indifferent_range_blocks",
@@ -3519,7 +3521,7 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB used a pot-sized bet. Before hero blockers, assume a modeled target of eight value combo units and four bluffs. Removing hero’s known cards leaves eight value units and only two bluff units. No ties occur.",
+            "BB used a pot-sized bet. Before accounting for your blockers, assume a modeled target of eight value combo units and four bluffs. Removing your known cards leaves eight value units and only two bluff units. No ties occur.",
         question: "What does the filtered range imply for this bluff catcher?",
         teach: "",
         choices: const [
@@ -3527,19 +3529,19 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "The remaining bluff share is 2 in 10, below the one-third price.",
+            "Fold because BB’s remaining bluff share is 2 in 10, below the one-third call price.",
           ),
           (
             "alternative",
             "Call because the unfiltered range was balanced",
             Act0FeedbackQualityV1.wrong,
-            "The two blocked bluffs were never legal given your hand and should not be counted.",
+            "Calling loses value because the two blocked bluffs were never legal given your hand.",
           ),
           (
             "other",
             "Call because you block something",
             Act0FeedbackQualityV1.wrong,
-            "Removal helps only if it improves the share of losing bets you face. Here it removes bluffs.",
+            "Here removal reduces the share of bluffs you beat, so calling loses money.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -3651,8 +3653,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "",
           board: _act0LessonCardsV1("Qs 9s 5h 3d 2c"),
           street: PokerStreet.river,
@@ -3664,7 +3666,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3680,7 +3682,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3696,20 +3698,20 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Price=2P/(P+4P)=2/5. Bluff/value=(2/5)/(3/5)=2/3. Thus V:B=3:2.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Price=2P/(P+4P)=2/5. Bluff/value=(2/5)/(3/5)=2/3. Thus V:B=3:2.",
       ),
     ]),
     _act0PilotLessonV1("blockers_and_overbet", "Blockers and overbet", [
@@ -3750,7 +3752,7 @@ final _world24Pilot = _act0PilotWorldV1(
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "Text-only principle. Remove hero blockers from both groups, then use the surviving fold fraction in the wager EV.",
+            "Text-only principle. Remove the combinations blocked by your cards from both groups, then use the surviving fold fraction in the wager EV.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_4_read_nut_flush_removal",
@@ -3761,7 +3763,7 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "The studied BB flush subset is AhKh AhJh KhJh JhTh. Hero has only one heart. The board supplies three hearts.",
+            "The studied BB flush subset is AhKh AhJh KhJh JhTh. You have only one heart. The board supplies three hearts.",
         question: "How many of those exact flush combos remain legal?",
         teach: "",
         choices: const [
@@ -3843,7 +3845,7 @@ final _world24Pilot = _act0PilotWorldV1(
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Before hero removal 4 exact combos fit. After removal 4−2=2. Hero has 3+1=4 hearts, below the flush requirement.",
+            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Before accounting for your cards 4 exact combos fit. After removal 4−2=2. You have 3+1=4 hearts, below the flush requirement.",
       ),
       _wave6AuthoredTaskV1(
         id: "w24_4_guided_overbet_collect_nut_value",
@@ -3863,19 +3865,19 @@ final _world24Pilot = _act0PilotWorldV1(
             "bet_9",
             "Bet 9 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 9 BB. Lower flushes, sets and Q-9 still pay. Their overbet payments beat the smaller size’s broader caller count.",
+            "Bet 9 BB because BB still calls with lower flushes, sets and Q-9. Their larger payments outweigh the broader 3 BB caller count.",
           ),
           (
             "bet_3",
             "Bet 3 BB",
             Act0FeedbackQualityV1.wrong,
-            "Three BB earns calls from more groups. Those extra calls do not overcome the larger payments by strong hands.",
+            "Bet 3 BB gets more calls but misses the larger payments strong hands make against the 9 BB bet.",
           ),
           (
             "check",
             "Check",
             Act0FeedbackQualityV1.wrong,
-            "Checking takes the pot with the nut flush and forgoes the listed calls.",
+            "Checking takes the pot with the nut flush but misses the extra profit from BB’s weaker calls.",
           ),
         ],
         table: _day7TableV1(
@@ -3948,7 +3950,7 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB bets 9 BB with a legal combo from 99 55 KK QQ KJs QJs JTs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 87 BB all-in with the same range.",
+            "BB goes all-in for 9 BB with a legal combo from 99 55 KK QQ KJs QJs JTs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 87 BB all-in with the same range.",
         question: "Call or fold?",
         teach: "",
         choices: const [
@@ -4052,12 +4054,12 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "turn: BB checks"),
             Act0ActionTrailItemV1(label: "turn: BTN bets 6.5 BB"),
             Act0ActionTrailItemV1(label: "turn: BB calls 6.5 BB more"),
-            Act0ActionTrailItemV1(label: "river: BB bets 9 BB (all-in)"),
+            Act0ActionTrailItemV1(label: "river: BB all-in 9 BB"),
           ],
           bets: const {
             "bb": Act0SeatBetStateV1(
               kind: Act0SeatBetKindV1.allIn,
-              label: "bets",
+              label: "all-in",
               amountLabel: "9 BB",
             ),
           },
@@ -4100,8 +4102,8 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Ac 6c",
           board: _act0LessonCardsV1("Qs 9s 4h 3d 2h"),
           street: PokerStreet.river,
@@ -4113,7 +4115,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4129,7 +4131,7 @@ final _world24Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4145,20 +4147,20 @@ final _world24Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. If base folds=F and calls=C with F,C≥2, A’s fraction is F/(F+C−2). B’s is (F−2)/(F+C−2). The same denominator makes A larger.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. If base folds=F and calls=C with F,C≥2, A’s fraction is F/(F+C−2). B’s is (F−2)/(F+C−2). The same denominator makes A larger.",
       ),
     ]),
     _act0PilotLessonV1("thin_value_and_check", "Thin value and check", [
@@ -4172,11 +4174,11 @@ final _world24Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A thin bet or raise earns a modest edge from worse calls. At the river, payoffs can be compared by counting extra chips from weaker hands, extra losses to better calls and bluffs that stop paying.",
+            "A thin bet or raise earns a modest edge from worse calls. A backdoor draw is a draw that needs two future board cards to complete. At the river, payoffs can be compared by counting extra chips from weaker hands, extra losses to better calls and bluffs that stop paying.",
         question:
             "What is the first question when considering a thin value raise?",
         teach:
-            "A thin bet or raise earns a modest edge from worse calls. At the river, payoffs can be compared by counting extra chips from weaker hands, extra losses to better calls and bluffs that stop paying.",
+            "A thin bet or raise earns a modest edge from worse calls. A backdoor draw is a draw that needs two future board cards to complete. At the river, payoffs can be compared by counting extra chips from weaker hands, extra losses to better calls and bluffs that stop paying.",
         choices: const [
           (
             "answer",
@@ -4194,7 +4196,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "other",
             "Can the opponent call regardless of what they hold?",
             Act0FeedbackQualityV1.wrong,
-            "Possible callers are narrower than all legal hole cards. Use the supplied response.",
+            "Possible callers are a subset of the legal two-card combinations. Use the supplied response.",
           ),
         ],
         table: _w9TextStudyTableV1,
@@ -4230,7 +4232,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "other",
             "The set group becoming a draw",
             Act0FeedbackQualityV1.wrong,
-            "There is no future card. Sets beat the one-pair hero.",
+            "There is no future card. Sets beat your one pair.",
           ),
         ],
         table: _day7TableV1(
@@ -4324,13 +4326,13 @@ final _world24Pilot = _act0PilotWorldV1(
             "raise_6",
             "Raise to 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Raise to 6 BB. More worse queens pay this raise than sets. The bigger raise loses much of that paying group.",
+            "Raise to 6 BB because BB calls with more worse queens than sets; raising to 11 BB loses many of those worse calls.",
           ),
           (
             "raise_11",
             "Raise to 11 BB",
             Act0FeedbackQualityV1.wrong,
-            "Eleven BB drops Q-J and Q-T from the caller group. Extra chips against the narrower set-heavy range earn less.",
+            "Raising to 11 BB loses the Q-J and Q-T calls that pay the raise to 6 BB. The narrower range is less profitable.",
           ),
           (
             "call",
@@ -4429,7 +4431,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "call",
             "Call 2 BB",
             Act0FeedbackQualityV1.correct,
-            "Call 2 BB. Misses and weaker kings are in the betting range. Better kings and sets dominate the paying branches if you raise.",
+            "Call 2 BB because BB bets misses and weaker kings, while better kings and sets dominate the hands that call a raise.",
           ),
           (
             "raise_6",
@@ -4535,19 +4537,19 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Check",
             Act0FeedbackQualityV1.correct,
-            "K-T keeps its wins against weaker holdings without paying anything more to the strongest hands.",
+            "Check K-T because BB calls either bet size with stronger holdings; checking preserves the wins against weaker hands.",
           ),
           (
             "alternative",
             "Bet small for protection",
             Act0FeedbackQualityV1.wrong,
-            "No cards remain to protect against. The size earns no worse call under the stated policy.",
+            "No cards remain to protect against. Checking avoids paying stronger hands because no weaker hand calls.",
           ),
           (
             "other",
             "Bet large to fold the better kings",
             Act0FeedbackQualityV1.wrong,
-            "The policy keeps better kings and sets at both offered sizes.",
+            "Better kings and sets call either size, so betting loses money compared with checking.",
           ),
         ],
         table: _day7TableV1(
@@ -4773,13 +4775,13 @@ final _world24Pilot = _act0PilotWorldV1(
         id: "w24_6_guided_raise_blocker_bluff",
         lesson: "river_check_raise_checkpoint",
         lessonTitle: "River check raise checkpoint",
-        title: "Which river response earns most in this model?",
+        title: "Which response earns most given the blocker and fold rate?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "BTN bets 4 BB with a legal combo of KhJh JhTh Th8h 99 44 QJs QTs 88 77, equally weighted. Against a raise to 13 BB, BTN calls KhJh JhTh Th8h 99 44 and folds the rest. Against a raise to 24 BB, BTN calls KhJh JhTh Th8h 99 44 and folds the rest. There are no re-raises.",
-        question: "Which river response earns most in this model?",
+        question: "Which response earns most given the blocker and fold rate?",
         teach:
             "Use the full new raise amount as risk and check which better hands really fold.",
         choices: const [
@@ -4787,13 +4789,13 @@ final _world24Pilot = _act0PilotWorldV1(
             "raise_13",
             "Check-raise to 13 BB",
             Act0FeedbackQualityV1.correct,
-            "Check-raise to 13 BB as a bluff. A♥ removes nut-flush possibilities. Enough pairs leave to cover the risk, and the bigger raise buys no extra folds.",
+            "Check-raise to 13 BB because BTN folds enough pairs to cover the risk; your A♥ removes nut-flush possibilities. The larger raise costs more without extra folds.",
           ),
           (
             "raise_24",
             "Check-raise to 24 BB",
             Act0FeedbackQualityV1.wrong,
-            "The same holdings call at 24 BB, so the extra amount only magnifies losses when called.",
+            "The same holdings call at 24 BB, so the larger raise costs more when called without winning extra folds.",
           ),
           (
             "fold",
@@ -4893,13 +4895,13 @@ final _world24Pilot = _act0PilotWorldV1(
         id: "w24_6_checkpoint_value_check_raise",
         lesson: "river_check_raise_checkpoint",
         lessonTitle: "River check raise checkpoint",
-        title: "Which river response earns most in this model?",
+        title: "Which response earns most with top set and these callers?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "BTN bets 4 BB with a legal combo of AQs AQo AJs AJo 88 44 76s JTs, equally weighted. Against a raise to 12 BB, BTN calls AQs AQo AJs AJo 88 44 and folds the rest. Against a raise to 18 BB, BTN calls 88 44 and folds the rest. There are no re-raises.",
-        question: "Which river response earns most in this model?",
+        question: "Which response earns most with top set and these callers?",
         teach: "",
         choices: const [
           (
@@ -5026,13 +5028,13 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "The blocker leaves some flushes available and all of them still call. Your hand cannot win a river call or bluff raise.",
+            "Fold because BTN calls either raise with its remaining flushes, and your hand cannot win at showdown.",
           ),
           (
             "alternative",
             "Call as a nut flush",
             Act0FeedbackQualityV1.wrong,
-            "Three board hearts and your one heart total four. You have no flush.",
+            "Three board hearts and your one heart total four. Calling loses because you have no flush against the stated range.",
           ),
           (
             "other",
