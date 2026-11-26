@@ -643,7 +643,7 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Continue because you are ahead",
+            "Continue automatically because the result is positive",
             Act0FeedbackQualityV1.wrong,
             "The winning result is exactly the circumstance the condition was designed to check.",
           ),
@@ -953,7 +953,7 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Check missed draws because your calling range is too wide",
+            "Give up all misses because your defense is too wide",
             Act0FeedbackQualityV1.wrong,
             "The log shows a small defense share, not a wide one.",
           ),
@@ -1649,7 +1649,7 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The losing pots from your session",
+            "All pots you lost",
             Act0FeedbackQualityV1.wrong,
             "This selects by result and can omit losing reasoning in won pots.",
           ),
@@ -1878,7 +1878,7 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Reconstruct from the result instead of the ledger",
+            "Skip the ledger and reconstruct from your result only",
             Act0FeedbackQualityV1.wrong,
             "You need the action and amounts to evaluate the price.",
           ),
@@ -2074,13 +2074,13 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Set a winning result as the session goal",
+            "Book a win every short session",
             Act0FeedbackQualityV1.wrong,
             "A profitable policy still has variance over the block.",
           ),
           (
             "other",
-            "Avoid facing stronger opponents as the session goal",
+            "Never meet a stronger opponent",
             Act0FeedbackQualityV1.wrong,
             "You cannot control every opponent or the lineup. You can reassess what is available.",
           ),
@@ -2205,7 +2205,7 @@ final _world21Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "I will recover my lost profit before taking a break",
+            "I will win back any lost profit before taking a break",
             Act0FeedbackQualityV1.wrong,
             "That condition favors continuing even if the specified leak gets worse.",
           ),
@@ -2610,19 +2610,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "5",
+            "Five",
             Act0FeedbackQualityV1.correct,
             "There is one check leaf, two direct responses ending the bet, and two responses to the raise.",
           ),
           (
             "alternative",
-            "4",
+            "Four",
             Act0FeedbackQualityV1.wrong,
             "This typically treats the raise itself as terminal although CO still has two options.",
           ),
           (
             "other",
-            "6",
+            "Six",
             Act0FeedbackQualityV1.wrong,
             "The intermediate BB raise is a node. It cannot also count as a leaf.",
           ),
@@ -3041,13 +3041,13 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Choose A with certainty",
+            "A only",
             Act0FeedbackQualityV1.wrong,
             "The second column would give the row player −1.",
           ),
           (
             "other",
-            "Choose B with certainty",
+            "B only",
             Act0FeedbackQualityV1.wrong,
             "The first column would give the row player −1.",
           ),
@@ -3134,7 +3134,7 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Check because a different strategy mixes betting and checking",
+            "Check because it is part of a balanced mix elsewhere",
             Act0FeedbackQualityV1.wrong,
             "Bet 4 BB against the supplied policy; checking gives up the profitable bluff.",
           ),
@@ -3330,7 +3330,7 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "You bet against 60% of the opponent’s holdings",
+            "You always bet against 60% of the opponent’s holdings",
             Act0FeedbackQualityV1.wrong,
             "The frequency refers to your action given the information available.",
           ),
@@ -3543,7 +3543,7 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A compulsory bet to make up for the previous checks",
+            "An automatic bet to balance the previous checks",
             Act0FeedbackQualityV1.wrong,
             "A fixed quota is different from repeated independent choices.",
           ),
@@ -4180,19 +4180,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "A rule of thumb to test on a matching board family",
+            "A candidate heuristic to test on a matching board family",
             Act0FeedbackQualityV1.correct,
             "One tie is a starting point. Compare several nodes before using an in-game default.",
           ),
           (
             "alternative",
-            "Use a fixed betting rule for king-high flops",
+            "Always bet every king-high flop",
             Act0FeedbackQualityV1.wrong,
             "The single query tested one node with one range pair and set of sizes.",
           ),
           (
             "other",
-            "Treat betting as mandatory with this hand",
+            "Never check this hand",
             Act0FeedbackQualityV1.wrong,
             "The two actions tied in the supplied model.",
           ),
@@ -4269,19 +4269,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "2 nodes: use the simplification in the first two, with an exception for the third",
+            "Use the simplification in the first two nodes with an exception for the third",
             Act0FeedbackQualityV1.correct,
             "Only the third exceeds the per-node tolerance. The average does not remove that exception.",
           ),
           (
             "alternative",
-            "3 nodes: use the simplification throughout because two pass",
+            "Use it everywhere because two of the three pass",
             Act0FeedbackQualityV1.wrong,
             "The stated acceptance test is per-node. One failing node blocks the all-node rule.",
           ),
           (
             "other",
-            "0 nodes: reject the simplification in the first two as well",
+            "Reject it in the first two as well",
             Act0FeedbackQualityV1.wrong,
             "Both of those costs are below the threshold.",
           ),
@@ -4364,13 +4364,13 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Use the original output without changing the opponent model",
+            "Use the baseline output without changing the opponent model",
             Act0FeedbackQualityV1.wrong,
             "That answers a different question about the original policy.",
           ),
           (
             "other",
-            "Replace the opponent’s whole strategy across streets",
+            "Replace every opponent action at every street",
             Act0FeedbackQualityV1.wrong,
             "The observation only supports a change at the matched river node.",
           ),
@@ -4550,13 +4550,13 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Your desired opponent fold frequency",
+            "Only how often you wish the opponent would fold",
             Act0FeedbackQualityV1.wrong,
             "The called and raised branches still occur and affect payoff.",
           ),
           (
             "other",
-            "A fixed commitment to keep betting through the river",
+            "A commitment to bet every later street",
             Act0FeedbackQualityV1.wrong,
             "New cards can change the value of continuing.",
           ),
@@ -4773,7 +4773,7 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Treat the resulting strategy as an equilibrium",
+            "Apply an equilibrium label to any strategy produced",
             Act0FeedbackQualityV1.wrong,
             "A solution belongs only to the entered assumptions and action tree.",
           ),
@@ -4859,13 +4859,13 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A fixed call response to raises because you have top pair",
+            "A decision to call every raise because you have top pair",
             Act0FeedbackQualityV1.wrong,
             "The range contains already-made flushes. Compare price and remaining equity.",
           ),
           (
             "other",
-            "A play for the one river you most want",
+            "Only a play for the one river you most want",
             Act0FeedbackQualityV1.wrong,
             "Other legal rivers also affect the line’s expected payoff.",
           ),
