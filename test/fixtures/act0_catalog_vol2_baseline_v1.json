@@ -96,16 +96,7 @@
       "w15_6_read_polar_on_two_tone|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "G1·26": [
-      "w15_6_read_polar_on_two_tone|"
-    ],
-    "G1·27": [
-      "w15_6_read_polar_on_two_tone|"
-    ],
     "G1·29": [
-      "w15_6_read_polar_on_two_tone|answer"
-    ],
-    "G1·30": [
       "w15_6_read_polar_on_two_tone|answer"
     ]
   },
@@ -147,46 +138,6 @@
       "w16_3_day7_one_street_only|jam",
       "w16_3_transfer_jam_nut_straight|jam"
     ],
-    "G1·26": [
-      "h5_w16_3_guided_thin_third_street|",
-      "h5_w16_3_transfer_jam_nut_straight|",
-      "h5_w16_6_day7_last_bet_independent|",
-      "w16_1_guided_barrel_worse_kings|",
-      "w16_1_transfer_give_up_on_third_heart|",
-      "w16_2_day7_fold_despite_investment|",
-      "w16_2_guided_bluff_catch_price|",
-      "w16_2_transfer_short_shove|",
-      "w16_3_day7_one_street_only|",
-      "w16_3_guided_thin_third_street|",
-      "w16_3_transfer_jam_nut_straight|",
-      "w16_4_guided_delayed_value|",
-      "w16_4_transfer_float_or_free_card|",
-      "w16_5_guided_turn_overbet_nuts|",
-      "w16_5_transfer_block_price|",
-      "w16_6_checkpoint_match_the_price|",
-      "w16_6_day7_last_bet_independent|",
-      "w16_6_guided_scare_card_call|"
-    ],
-    "G1·27": [
-      "h5_w16_3_guided_thin_third_street|",
-      "h5_w16_3_transfer_jam_nut_straight|",
-      "h5_w16_6_day7_last_bet_independent|",
-      "w16_1_guided_barrel_worse_kings|",
-      "w16_1_transfer_give_up_on_third_heart|",
-      "w16_2_day7_fold_despite_investment|",
-      "w16_2_guided_bluff_catch_price|",
-      "w16_2_transfer_short_shove|",
-      "w16_3_day7_one_street_only|",
-      "w16_3_guided_thin_third_street|",
-      "w16_3_transfer_jam_nut_straight|",
-      "w16_4_guided_delayed_value|",
-      "w16_4_transfer_float_or_free_card|",
-      "w16_5_guided_turn_overbet_nuts|",
-      "w16_5_transfer_block_price|",
-      "w16_6_checkpoint_match_the_price|",
-      "w16_6_day7_last_bet_independent|",
-      "w16_6_guided_scare_card_call|"
-    ],
     "G1·28": [
       "h5_w16_3_guided_thin_third_street|flop_bet",
       "h5_w16_3_transfer_jam_nut_straight|flop_bet",
@@ -196,29 +147,12 @@
       "h5_w16_3_guided_thin_third_street|flop_bet",
       "h5_w16_3_transfer_jam_nut_straight|flop_bet",
       "h5_w16_6_day7_last_bet_independent|flop_bet",
-      "w16_1_guided_barrel_worse_kings|bet_4",
       "w16_1_transfer_give_up_on_third_heart|check",
-      "w16_2_day7_fold_despite_investment|fold",
-      "w16_2_guided_bluff_catch_price|call",
-      "w16_2_transfer_short_shove|call",
       "w16_3_day7_one_street_only|answer",
       "w16_3_guided_thin_third_street|bet_3",
-      "w16_3_transfer_jam_nut_straight|bet_44",
       "w16_4_guided_delayed_value|bet_3",
       "w16_4_transfer_float_or_free_card|answer",
-      "w16_5_guided_turn_overbet_nuts|bet_25",
-      "w16_5_transfer_block_price|answer",
-      "w16_6_checkpoint_match_the_price|call",
-      "w16_6_day7_last_bet_independent|fold",
-      "w16_6_guided_scare_card_call|call"
-    ],
-    "G1·30": [
-      "w16_2_day7_fold_despite_investment|fold",
-      "w16_2_guided_bluff_catch_price|call",
-      "w16_2_transfer_short_shove|call",
-      "w16_6_checkpoint_match_the_price|call",
-      "w16_6_day7_last_bet_independent|fold",
-      "w16_6_guided_scare_card_call|call"
+      "w16_5_guided_turn_overbet_nuts|bet_25"
     ]
   },
   "W17": {
