@@ -127,7 +127,16 @@ TIER_A_COMMANDS = [
             "test/ui_v2/act0_w14_skill_projection_v1_test.dart",
             "test/ui_v2/act0_daily_practice_queue_v1_test.dart",
             "test/ui_v2/act0_daily_deal_generator_v1_test.dart",
+            "test/ui_v2/act0_post17_timed_logic_v1_test.dart",
             "test/ui_v2/act0_w14_skill_state_v1_test.dart",
+            "-r", "compact",
+        ],
+    },
+    {
+        "name": "POST.17 harder practice source parity (pilot on)",
+        "cmd": [
+            "flutter", "test", "--dart-define=SHARKY_W13_PLUS_PILOT=true",
+            "test/ui_v2/act0_post17_timed_logic_v1_test.dart",
             "-r", "compact",
         ],
     },
