@@ -2388,7 +2388,9 @@ Future<void> Function(WidgetTester) _withWalkthroughV1(
 void registerLongSessionRoutes({
   ({int first, int last})? tierARange,
   Act0LongSessionObserverV1? walkthrough,
+  bool cleanWalkthrough = false,
 }) {
+  assert(!cleanWalkthrough || walkthrough != null);
   assert(
     walkthrough == null ||
         (tierARange != null && tierARange.first == tierARange.last),
@@ -2426,7 +2428,7 @@ void registerLongSessionRoutes({
         walkthrough == null && tierARange != null && lastWorld < 7;
     testWidgets(
       walkthrough != null
-          ? 'V9 walkthrough W$firstWorld'
+          ? 'V9 ${cleanWalkthrough ? "clean " : ""}walkthrough W$firstWorld'
           : 'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       _withWalkthroughV1(walkthrough, (t) async {
         _tapLog.clear();
@@ -2663,13 +2665,16 @@ void registerLongSessionRoutes({
                   pilot &&
                   b19MissTasks.contains(taskId) &&
                   !answered.contains(taskId);
+              // GRO review requires an earned milestone without a deliberate
+              // miss. The ordinary route and V9 repair capture keep their miss.
               final injectMiss =
-                  b19Miss ||
-                  (!missedWorlds.contains(world) &&
-                      wrong.isNotEmpty &&
-                      (walkthrough != null ||
-                          world != 7 ||
-                          taskId == w7Checkpoint));
+                  !cleanWalkthrough &&
+                  (b19Miss ||
+                      (!missedWorlds.contains(world) &&
+                          wrong.isNotEmpty &&
+                          (walkthrough != null ||
+                              world != 7 ||
+                              taskId == w7Checkpoint)));
               final choice = injectMiss
                   ? wrong.first
                   : runner.options.firstWhere(
@@ -2984,7 +2989,7 @@ void registerLongSessionRoutes({
           expect(completed, contains('w12_checkpoint_review'));
           expect(completed, containsAll(cur04bSummaryChoicesV1.keys));
         }
-        expect(missedWorlds, expectedWorlds);
+        expect(missedWorlds, cleanWalkthrough ? <int>{} : expectedWorlds);
         if (walkthrough == null) expect(restartedWorlds, expectedWorlds);
         expect(snapshot['skippedTaskIds'], isEmpty);
         expect(
@@ -2997,7 +3002,7 @@ void registerLongSessionRoutes({
             (sum, id) => sum + (rewards[id] ?? 0),
           ),
         );
-        expect(confirmedMisses, expectedWorlds);
+        expect(confirmedMisses, cleanWalkthrough ? <int>{} : expectedWorlds);
         if (pilot) expect(confirmedB19Misses, b19MissTasks);
         if (fullRoute || pilot) {
           await _mount(t);
