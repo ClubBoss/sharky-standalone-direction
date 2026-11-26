@@ -289,10 +289,10 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
         final plan = nineMax
             ? null
             : act0TableChoreographyPlanForTableV1(r.table);
-        final timeline = r.table.handTimelinePrefix;
-        if (nineMax &&
+        final timeline = r.table.handTimelinePrefix ?? plan?.verifiedHistory;
+        if ((nineMax || r.table.tableFormat == Act0TableFormatV1.sixMax) &&
             r.table.scope == Act0TableScopeV1.playedHand &&
-            r.table.handHistoryCoverage == Act0HandHistoryCoverageV1.complete) {
+            timeline?.coverage == Act0HandHistoryCoverageV1.complete) {
           final actor = r.table.decisionSeatId ?? r.table.activeSeatId;
           final error = actor == null || actor.isEmpty
               ? timeline!.replayError()
