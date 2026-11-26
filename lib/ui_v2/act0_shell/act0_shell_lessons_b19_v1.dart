@@ -1924,7 +1924,9 @@ Act0LessonTaskV1 _b92TurnDrillV1({
           );
         })(),
     ],
-    table: table,
+    // The flop betting round is complete. The learner compares hypothetical
+    // turn cards and a proposed future bet, not a live decision in this hand.
+    table: table.copyWith(scope: Act0TableScopeV1.explanation),
   );
 }
 
