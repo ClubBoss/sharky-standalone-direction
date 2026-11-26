@@ -43,6 +43,7 @@ part 'act0_shell_lessons_w17_w18_v1.dart';
 part 'act0_shell_lessons_w19_w20_v1.dart';
 part 'act0_shell_lessons_w21_w22_v1.dart';
 part 'act0_shell_lessons_w23_w24_v1.dart';
+part 'act0_shell_lessons_w25_w26_v1.dart';
 part 'act0_shell_lessons_b19_v1.dart';
 part 'act0_shell_lessons_ninemax_v1.dart';
 part 'act0_shell_lessons_live_room_v1.dart';
@@ -259,6 +260,14 @@ class Act0ShellStateV1 {
 
   /// The normal Act0 entry uses the route-safe view of the authored catalog.
   static final sample = learnerCatalog();
+
+  /// Volume I remains independently addressable even in a pilot build.
+  static final volumeOneLearnerCatalog = _buildCatalog(
+    null,
+    List.unmodifiable(
+      _act0PreviewWorlds.where((world) => world.worldNumber <= 12),
+    ),
+  ).forLearners();
   static final _learnerSixSeatCatalog = catalog(
     nineSeatPreview: false,
   ).forLearners();
@@ -1225,11 +1234,16 @@ class Act0TableStateV1 {
 
   String get tableSize => act0TableFormatLabelV1(tableFormat);
 
+  // Short final tables occupy the existing six-max layout, but their
+  // betting ring must contain only the three players actually dealt in.
   List<String> get canonicalSeatOrder =>
-      act0CanonicalSeatOrderForFormatV1(tableFormat);
+      act0CurriculumPilotEnabledV1 &&
+          tableFormat == Act0TableFormatV1.sixMax &&
+          playerCount == 3
+      ? act0PreflopPositionsByCountV1[3]!
+      : act0CanonicalSeatOrderForFormatV1(tableFormat);
 
-  bool get usesCanonicalPlayerCount =>
-      playerCount == act0ExpectedPlayerCountForFormatV1(tableFormat);
+  bool get usesCanonicalPlayerCount => playerCount == canonicalSeatOrder.length;
 
   /// The observed player can be different from Hero.
   String get decisionActorSeatId => decisionSeatId ?? heroSeat.seatId;
@@ -2215,5 +2229,7 @@ final _act0PreviewWorlds = <Act0WorldCardV1>[
     _world22Pilot,
     _world23Pilot,
     _world24Pilot,
+    _world25Pilot,
+    _world26Pilot,
   ],
 ];

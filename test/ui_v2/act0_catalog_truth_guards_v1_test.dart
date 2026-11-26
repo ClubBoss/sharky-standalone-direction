@@ -911,6 +911,16 @@ TASK w13_4_teach [theory] Equity realization
     expect(current, fixture.readAsStringSync());
   }, skip: !act0CurriculumPilotEnabledV1);
 
+  test('W25–W26 pilot catalog snapshot', () {
+    final fixture = File('test/fixtures/act0_catalog_snapshot_w25_w26_v1.txt');
+    final current = renderCatalogSnapshot(worlds: {25, 26});
+    if (Platform.environment['G1_UPDATE_SNAPSHOT'] == '1') {
+      fixture.writeAsStringSync(current);
+      return;
+    }
+    expect(current, fixture.readAsStringSync());
+  }, skip: !act0CurriculumPilotEnabledV1);
+
   test(
     'W3 blind lesson charges the amount still due and checks its decisions',
     () {

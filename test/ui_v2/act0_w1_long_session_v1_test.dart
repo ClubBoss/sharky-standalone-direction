@@ -2448,7 +2448,7 @@ void registerLongSessionRoutes({
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
-    final expectedMissWorlds = volumeRoute ? {1, 13} : expectedWorlds;
+    final expectedMissWorlds = volumeRoute ? {1, 13, 25} : expectedWorlds;
     final useRulesCheck = walkthrough == null && firstWorld == 2;
     final restoreSaved =
         w7ToW8 || pilot || (tierARange != null && firstWorld > 1);
@@ -2456,7 +2456,7 @@ void registerLongSessionRoutes({
         walkthrough == null && tierARange != null && lastWorld < 7;
     testWidgets(
       volumeRoute
-          ? 'B99: fresh learner finishes W1–W24 with a miss and reload per volume'
+          ? 'B99: fresh learner finishes W1–W26 with a miss and reload per volume'
           : walkthrough != null
           ? 'V9 ${cleanWalkthrough ? "clean " : ""}walkthrough W$firstWorld'
           : 'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',

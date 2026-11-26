@@ -5126,4 +5126,6 @@ const _act0PilotCheckpointLessonsV1 = {
   'plans_checkpoint',
   'range_construction_checkpoint',
   'river_check_raise_checkpoint',
+  'conditional_range_share',
+  'shove_timing_checkpoint',
 };

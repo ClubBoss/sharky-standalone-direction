@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -11,8 +13,14 @@ void main() {
     addTearDown(tester.view.resetPhysicalSize);
     addTearDown(tester.view.resetDevicePixelRatio);
     await tester.pumpWidget(
-      const MaterialApp(
-        home: Act0ShellPreviewScreenV1(showPlacementOnStart: false),
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          state: act0CurriculumPilotEnabledV1
+              ? Act0ShellStateV1.volumeOneLearnerCatalog
+              : null,
+          debugPersistFixtureProgress: act0CurriculumPilotEnabledV1,
+          showPlacementOnStart: false,
+        ),
       ),
     );
     await tester.pumpAndSettle();

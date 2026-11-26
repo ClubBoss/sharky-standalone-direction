@@ -25,7 +25,7 @@ void main() {
     expect(enabled.worlds, same(disabled.worlds));
     expect(
       enabled.worlds.last.worldNumber,
-      act0CurriculumPilotEnabledV1 ? 24 : 12,
+      act0CurriculumPilotEnabledV1 ? 26 : 12,
     );
   });
 
@@ -88,7 +88,7 @@ void main() {
           .where(
             (option) => option.quality == Act0FeedbackQualityV1.acceptable,
           );
-      expect(options, hasLength(3));
+      expect(options, hasLength(6));
       expect(options.every(act0RunnerOptionIsAuthoredCorrectV1), isTrue);
       expect(options.any(act0RunnerOptionIsPreferredV1), isFalse);
       final played = catalogTasks.where(
@@ -97,7 +97,7 @@ void main() {
             !_b19Lessons.contains(row.lesson.lessonId) &&
             row.task.runner.table.scope == Act0TableScopeV1.playedHand,
       );
-      expect(played, hasLength(291));
+      expect(played, hasLength(301));
       for (final row in played) {
         final checks = auditTableContributionsV1(
           row.task.taskId,
@@ -178,6 +178,83 @@ void main() {
             due == 0 ? null : (1000 * due / (eligiblePot + due)).round() / 10,
           ),
           prices[id],
+          reason: id,
+        );
+      }
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
+
+  test(
+    'W25–W26 preserve authored reasoning, prices and real rosters',
+    () {
+      final rows = catalogTasks
+          .where((row) => row.world.worldNumber >= 25)
+          .toList();
+      for (final world in [25, 26]) {
+        expect(
+          rows.where((row) => row.world.worldNumber == world),
+          hasLength(30),
+        );
+      }
+      final ids = rows.map((row) => row.task.taskId).toSet();
+      expect(ids, hasLength(60));
+      final decisions = rows.where(
+        (row) => act0DecisionReasoningV1.containsKey(row.task.taskId),
+      );
+      expect(decisions, hasLength(36));
+      for (final row in decisions) {
+        final task = row.task;
+        final entry = act0DecisionReasoningV1[task.taskId]!;
+        expect(entry.taskId, task.taskId);
+        expect(
+          act0PrinciplesV1[entry.principleId],
+          isNotNull,
+          reason: task.taskId,
+        );
+        expect(
+          task.runner.options.where(
+            (o) =>
+                o.id == entry.bestAlternativeOptionId &&
+                !act0RunnerOptionIsPreferredV1(o),
+          ),
+          hasLength(1),
+          reason: task.taskId,
+        );
+      }
+      final played = rows.where(
+        (row) => row.task.runner.table.scope == Act0TableScopeV1.playedHand,
+      );
+      expect(
+        played.map((row) => row.task.taskId),
+        unorderedEquals(_b147Prices.keys),
+      );
+      for (final row in played) {
+        final id = row.task.taskId;
+        final table = row.task.runner.table;
+        final ledger = table.handContributions!;
+        final amounts = ledger.amounts(
+          seatIds: table.seats.map((seat) => seat.seatId).toSet(),
+          actorSeatId: table.heroSeat.seatId,
+        );
+        expect(
+          table.seats.where((seat) => seat.isOccupied),
+          hasLength(row.world.worldNumber == 26 ? 3 : 6),
+          reason: id,
+        );
+        final due = amounts.toCallBb!;
+        expect(
+          (
+            amounts.potBb,
+            due,
+            due == 0 ? null : (1000 * due / (amounts.potBb + due)).round() / 10,
+          ),
+          _b147Prices[id],
+          reason: id,
+        );
+        expect(
+          act0DecisionReasoningV1[id]!.opponentRead,
+          isNotEmpty,
           reason: id,
         );
       }
@@ -781,4 +858,17 @@ const _b7Prices = <String, (double, double, double?)>{
   'w24_6_guided_raise_blocker_bluff': (15.5, 4, 20.5),
   'w24_6_checkpoint_value_check_raise': (15.5, 4, 20.5),
   'w24_6_day7_no_bluff_without_folds': (13.5, 8, 37.2),
+};
+
+const _b147Prices = <String, (double, double, double?)>{
+  "w25_1_guided_set_value": (11.5, 0, null),
+  "w25_2_guided_nut_flush_blocker": (11.5, 0, null),
+  "w25_2_transfer_without_heart": (11.5, 0, null),
+  "w25_3_guided_preserve_missed_hearts": (18.5, 7, 27.5),
+  "w25_3_transfer_remove_the_misses": (18.5, 7, 27.5),
+  "w25_4_guided_boat_removal": (25.5, 14, 35.4),
+  "w25_5_guided_suit_value_3bet": (32.5, 0, null),
+  "w25_6_transfer_weighted_coverage": (29.5, 8, 21.3),
+  "w26_1_guided_positive_chips_negative_prize": (36, 24.5, 40.5),
+  "w26_1_transfer_winner_take_all": (36, 24.5, 40.5),
 };

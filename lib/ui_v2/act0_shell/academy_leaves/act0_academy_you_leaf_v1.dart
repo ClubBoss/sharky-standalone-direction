@@ -379,8 +379,16 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
     );
   }
 
+  int get _skillMapLastWorld {
+    final lastWorld = input.worlds.fold<int>(0, (last, world) {
+      final number = world.worldNumber;
+      return number > last && number <= act0SkillMapLastWorldV1 ? number : last;
+    });
+    return lastWorld == 0 ? act0SkillMapLastWorldV1 : lastWorld;
+  }
+
   Widget _skillsDetails() => _progressDetails(
-    'Skills · W1–W$act0SkillMapLastWorldV1',
+    'Skills · W1–W$_skillMapLastWorld',
     [
       if (input.checkedW1Topics.isNotEmpty) ...[
         const Text(

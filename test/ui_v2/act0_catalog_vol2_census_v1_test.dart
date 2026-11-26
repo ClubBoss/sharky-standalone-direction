@@ -25,7 +25,7 @@ import 'act0_b132_origin_choreography_reference.dart';
 // TODO(B91 lead): generate the initial fixture before opening the PR:
 // G1_UPDATE_SNAPSHOT=1 flutter test --no-pub --dart-define=SHARKY_W13_PLUS_PILOT=true test/ui_v2/act0_catalog_vol2_census_v1_test.dart
 const _baselinePath = 'test/fixtures/act0_catalog_vol2_baseline_v1.json';
-const _worlds = {13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24};
+const _worlds = {13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26};
 typedef _Census = Map<String, Map<String, List<String>>>;
 
 Set<String> _keys(_Census census) => {
@@ -116,7 +116,7 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
         .map((row) => row.world.worldNumber)
         .toSet(),
     _worlds,
-    reason: 'Pilot census must contain every world W13–W24.',
+    reason: 'Pilot census must contain every world W13–W26.',
   );
   final taskWorld = {
     for (final row in allRows) row.task.taskId: row.world.worldNumber,
@@ -140,7 +140,7 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
 
   // Render the canonical learner-facing snapshot for every pilot pair. E19
   // compares the same grade/label projection as the existing rubric.
-  for (var world = 13; world < 24; world += 2) {
+  for (var world = 13; world < 26; world += 2) {
     final current = renderCatalogSnapshot(worlds: {world, world + 1});
     final previous = previousCatalogSnapshotV1(
       path:
@@ -345,7 +345,7 @@ void main() {
         'B132 W${world.worldNumber} D6 NEEDS_SOURCE_CONTEXT ${before.length} -> ${after.length}',
       );
     }
-    print('B132 W13–W24 D6 NEEDS_SOURCE_CONTEXT $beforeTotal -> $afterTotal');
+    print('B132 W13–W26 D6 NEEDS_SOURCE_CONTEXT $beforeTotal -> $afterTotal');
     expect(beforeTotal, greaterThan(0));
     expect(afterTotal, 0);
     expect(
@@ -644,26 +644,50 @@ void main() {
   });
 
   testWidgets(
-    'W13–W24 pilot G1 census ratchets findings',
+    'W13–W26 pilot G1 census ratchets findings',
     (tester) async {
       final file = File(_baselinePath);
       final baseline = _readBaseline(file);
       final current = await _collectCensus(tester);
       final update = Platform.environment['G1_UPDATE_SNAPSHOT'] == '1';
-      // The empty placeholder can be seeded once. After that, even an explicit
-      // update may only remove findings, never admit new debt.
-      if (!(update && baseline.isEmpty)) {
+      // Extend the existing ratchet only for the two new worlds. Existing
+      // worlds must remain subject to the exact same no-new-debt check.
+      const newWorlds = {'W25', 'W26'};
+      final missing = current.keys.toSet().difference(baseline.keys.toSet());
+      if (update) {
         expect(
-          baseline.keys.toSet(),
-          current.keys.toSet(),
-          reason: 'Generate the complete W13–W24 baseline before the PR.',
-        );
-        final added = _additions(current, baseline);
-        expect(
-          added,
+          missing.difference(newWorlds),
           isEmpty,
-          reason: 'New Vol2 findings:\n${added.join('\n')}',
+          reason: 'Only W25–W26 may be seeded by B147.',
         );
+      } else {
+        expect(
+          missing,
+          isEmpty,
+          reason: 'Generate the complete W13–W26 baseline before the PR.',
+        );
+      }
+      expect(baseline.keys.toSet().difference(current.keys.toSet()), isEmpty);
+      final comparable = {
+        for (final entry in current.entries)
+          if (!update || !missing.contains(entry.key)) entry.key: entry.value,
+      };
+      final added = _additions(comparable, baseline);
+      expect(
+        added,
+        isEmpty,
+        reason: 'New existing-world findings:\n${added.join('\n')}',
+      );
+      for (final world in newWorlds) {
+        final rules = current[world]!;
+        final count = rules.values.fold<int>(
+          0,
+          (sum, hits) => sum + hits.length,
+        );
+        print('B147 $world: $count findings (target <= 10)');
+        for (final rule in rules.entries) {
+          print('B147 $world ${rule.key}: ${rule.value.length}');
+        }
       }
       if (update) {
         file.writeAsStringSync(
