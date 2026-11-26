@@ -1260,14 +1260,8 @@
     ]
   },
   "W20": {
-    "11.btn_share_per_world": [
-      "@world:world_20|"
-    ],
     "15.internal_jargon": [
-      "w20_1_day7_distracted_online_sample|transfer",
-      "w20_1_teach|baseline",
-      "w20_3_transfer_stakes_discomfort_caveat|baseline",
-      "w20_5_day7_dont_use_private_image|baseline"
+      "w20_3_transfer_stakes_discomfort_caveat|baseline"
     ],
     "16.extreme_wrong_option": [
       "w20_1_day7_distracted_online_sample|alternative",
@@ -1380,30 +1374,8 @@
       "w20_6_read_confirmation_counterexample|feedback/other|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
       "w20_6_read_confirmation_counterexample|question|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
     ],
-    "22.all_in": [
-      "w20_6_guided_short_price_with_read|feedback/call|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w20_6_guided_short_price_with_read|feedback/fold|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w20_6_guided_short_price_with_read|question|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0",
-      "w20_6_guided_short_price_with_read|teach/0|bb|bb all-in action=false, stack=0 BB, ledger behind=0.0"
-    ],
     "C5": [
-      "w20_1_day7_distracted_online_sample|1201|OPTION: A slow river bet always has strong value",
-      "w20_1_day7_distracted_online_sample|isolation|FEEDBACK: The speed changed along with street and action, so strength was not isolated.",
-      "w20_1_teach|tells|TEACH: Which evidence gives a timing tell more weight?.",
-      "w20_3_day7_table_captain_vs_overbluffer|1223|Q: Whose evidence first suggests more calls with an appropriate river bluff catcher?",
-      "w20_3_day7_table_captain_vs_overbluffer|83|Q: Whose evidence first suggests more calls with an appropriate river bluff catcher?",
-      "w20_4_teach|192|TEACH: Which evidence supports an isolation raise?.",
-      "w20_4_teach|isolation|TEACH: Which evidence supports an isolation raise?.",
-      "w20_5_teach|etiquette|TEACH: Keep the table respectful and avoid coaching, shaming or angle shooting."
-    ],
-    "D3.explicit_current_bet": [
-      "w20_6_guided_short_price_with_read|authored/drill|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|decision|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|feedback/call|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|feedback/fold|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|review|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|teaching/0/projected|owner=BB amount=12.0 BB",
-      "w20_6_guided_short_price_with_read|teaching/0/raw|owner=BB amount=12.0 BB"
+      "w20_1_day7_distracted_online_sample|1201|OPTION: A slow river bet always has strong value"
     ],
     "D6.history_support": [
       "w20_1_day7_distracted_online_sample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1439,7 +1411,6 @@
     ],
     "E11": [
       "w20_1_day7_distracted_online_sample|snap-call",
-      "w20_1_day7_distracted_online_sample|snap-calls",
       "w20_4_guided_isolation_two_sizes|limp behind"
     ],
     "G1·26": [
@@ -1466,18 +1437,6 @@
       "w20_6_day7_late_sizing_update|",
       "w20_6_guided_short_price_with_read|"
     ],
-    "G1·28": [
-      "w20_2_day7_unfamiliar_size_fold|fold",
-      "w20_2_guided_value_heavy_size|fold",
-      "w20_2_transfer_large_size_polar|call",
-      "w20_3_guided_raise_larger_inelastic|bet_8",
-      "w20_4_day7_value_adjust_to_sticky|answer",
-      "w20_4_guided_isolation_two_sizes|answer",
-      "w20_4_transfer_skip_marginal_isolation|answer",
-      "w20_6_checkpoint_filter_then_call|call",
-      "w20_6_day7_late_sizing_update|fold",
-      "w20_6_guided_short_price_with_read|call"
-    ],
     "G1·29": [
       "w20_2_day7_unfamiliar_size_fold|fold",
       "w20_2_guided_value_heavy_size|fold",
@@ -1499,14 +1458,6 @@
       "w20_6_checkpoint_filter_then_call|call",
       "w20_6_day7_late_sizing_update|fold",
       "w20_6_guided_short_price_with_read|call"
-    ],
-    "G1·31": [
-      "w20_2_day7_unfamiliar_size_fold|call",
-      "w20_2_guided_value_heavy_size|call",
-      "w20_3_guided_raise_larger_inelastic|bet_3",
-      "w20_3_guided_raise_larger_inelastic|check",
-      "w20_4_transfer_skip_marginal_isolation|alternative",
-      "w20_6_day7_late_sizing_update|call"
     ]
   },
   "W21": {
