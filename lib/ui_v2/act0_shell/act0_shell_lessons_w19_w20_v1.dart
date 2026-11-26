@@ -2600,15 +2600,15 @@ final _world20Pilot = _act0PilotWorldV1(
         id: "w20_1_teach",
         lesson: "timing_and_live_tells",
         lessonTitle: "Timing and live tells",
-        title: "Which evidence gives a timing tell more weight?",
+        title: "Which evidence makes a player’s timing more informative?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Timing, gestures and speech can change a range estimate after you establish a baseline. Connection delays, a different action and table conditions create alternative explanations.",
-        question: "Which evidence gives a timing tell more weight?",
+            "A timing tell means a pattern linking decision speed to hand strength in comparable situations. Timing, gestures and speech can change a range estimate after you establish their usual behavior. Connection delays, a different action and table conditions create alternative explanations.",
+        question: "Which evidence makes a player’s timing more informative?",
         teach:
-            "Timing, gestures and speech can change a range estimate after you establish a baseline. Connection delays, a different action and table conditions create alternative explanations.",
+            "A timing tell means a pattern linking decision speed to hand strength in comparable situations. Timing, gestures and speech can change a range estimate after you establish their usual behavior. Connection delays, a different action and table conditions create alternative explanations.",
         choices: const [
           (
             "answer",
@@ -2626,7 +2626,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "other",
             "A universal claim about fast calls",
             Act0FeedbackQualityV1.wrong,
-            "Players use time differently. Identify what this player does relative to their own baseline.",
+            "Players use time differently. Identify what this player does relative to their own usual behavior.",
           ),
         ],
         table: _w9TextStudyTableV1,
@@ -2666,8 +2666,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Kh Qd",
           board: _act0LessonCardsV1("Ks 8d 5s 3c 2h"),
           street: PokerStreet.river,
@@ -2679,7 +2679,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2695,7 +2695,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2717,14 +2717,14 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 5 BB"),
           ],
           bets: const {
@@ -2736,7 +2736,7 @@ final _world20Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 10.5 BB. Call price = to call / (pot + call) = 5/15.5 = 32.3%. There is one timing observation and no linked hand-class sample for this player.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 7.5 (BB) = 10.5 BB. Call price = to call / (pot + call) = 5/15.5 = 32.3%. There is one timing observation and no linked hand-class sample for this player.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_1_guided_compare_matched_timing",
@@ -2772,8 +2772,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "hj",
+          actor: "hj",
           hand: "As Jd",
           board: _act0LessonCardsV1("Ah 7s 4c 3d 2h"),
           street: PokerStreet.river,
@@ -2785,7 +2785,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "co", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2801,7 +2801,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2816,21 +2816,21 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Within the visible roster, quick=5/6=83.3%; delayed=3/6=50.0%. Record 5/6 and 3/6 without assigning missing hands.",
+            "Pot = 2.5 (HJ) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Within the visible roster, quick=5/6=83.3%; delayed=3/6=50.0%. Record 5/6 and 3/6 without assigning missing hands.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_1_transfer_live_baseline_break",
@@ -2866,8 +2866,8 @@ final _world20Pilot = _act0PilotWorldV1(
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Qh Qd",
           board: _act0LessonCardsV1("Js 8h 4d 3s 2c"),
           street: PokerStreet.river,
@@ -2879,7 +2879,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2895,7 +2895,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2917,14 +2917,14 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 6 BB"),
           ],
           bets: const {
@@ -2936,19 +2936,19 @@ final _world20Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 11.5 BB. Call price = to call / (pot + call) = 6/17.5 = 34.3%. The event has an unresolved context change and no comparable showdown class. No reliable likelihood is given.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 8.5 (BB) = 11.5 BB. Call price = to call / (pot + call) = 6/17.5 = 34.3%. The event has an unresolved context change and no comparable showdown class. No reliable likelihood is given.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_1_day7_distracted_online_sample",
         lesson: "timing_and_live_tells",
         lessonTitle: "Timing and live tells",
-        title: "Which read can you transfer to this river?",
+        title: "Which read can you use on this river?",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "In a live-streamed online practice game an opponent snap-calls two small flop bets while using a hotkey. You now face an unusually slow river bet.",
-        question: "Which read can you transfer to this river?",
+            "In a live-streamed online practice game an opponent calls two small flop bets immediately while using a hotkey. You now face an unusually slow river bet.",
+        question: "Which read can you use on this river?",
         teach: "",
         choices: const [
           (
@@ -2961,7 +2961,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "alternative",
             "A slow river bet always has strong value",
             Act0FeedbackQualityV1.wrong,
-            "The speed changed along with street and action, so strength was not isolated.",
+            "The speed changed along with the street and action, so you cannot attribute the difference to hand strength.",
           ),
           (
             "other",
@@ -2971,8 +2971,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "hj",
+          actor: "hj",
           hand: "As Td",
           board: _act0LessonCardsV1("Ah 9c 5s 2d 2h"),
           street: PokerStreet.river,
@@ -2984,7 +2984,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "co", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3000,7 +3000,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3021,15 +3021,15 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 8 BB"),
           ],
           bets: const {
@@ -3041,7 +3041,7 @@ final _world20Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 10.5 (BB) = 13.5 BB. Call price = to call / (pot + call) = 8/21.5 = 37.2%. Comparison requires the same street, action and similar timing context. The examples differ on each.",
+            "Pot = 2.5 (HJ) + 0.5 (SB) + 10.5 (BB) = 13.5 BB. Call price = to call / (pot + call) = 8/21.5 = 37.2%. Comparison requires the same street, action and similar timing context. The examples differ on each.",
       ),
     ]),
     _act0PilotLessonV1("sizing_and_filtering", "Sizing and filtering", [
@@ -3218,13 +3218,13 @@ final _world20Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold. Your 11.8% equity against this BB range falls below the 31.4% price.",
+            "Fold because BB bets 8 BB with a range giving you 11.8% equity, below the 31.4% price. Calling loses 5 BB.",
           ),
           (
             "call",
             "Call 8 BB",
             Act0FeedbackQualityV1.wrong,
-            "Calling buys a showdown whose counted share leaves a loss of 5.00 BB.",
+            "Calling loses 5 BB on average against this range; folding costs no further chips.",
           ),
         ],
         table: _day7TableV1(
@@ -3330,7 +3330,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "call",
             "Call 9 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 66.7% equity against this BB range clears the 30.5% price.",
+            "Call because BB bets 9 BB with a range giving you 66.7% equity, above the 30.5% price. Folding forfeits the profitable call.",
           ),
           (
             "fold",
@@ -3443,13 +3443,13 @@ final _world20Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold. Your 14.3% equity against this BB range falls below the 33.8% price.",
+            "Fold because BB bets 12 BB with a range giving you 14.3% equity, below the 33.8% price. Calling loses 6.93 BB.",
           ),
           (
             "call",
             "Call 12 BB",
             Act0FeedbackQualityV1.wrong,
-            "Calling buys a showdown whose counted share leaves a loss of 6.93 BB.",
+            "Calling loses 6.93 BB on average; folding avoids that loss.",
           ),
         ],
         table: _day7TableV1(
@@ -3610,8 +3610,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "As Qd",
           board: _act0LessonCardsV1("Qc 7d 3h"),
           street: PokerStreet.flop,
@@ -3623,7 +3623,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3639,7 +3639,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3655,8 +3655,8 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
@@ -3664,7 +3664,7 @@ final _world20Pilot = _act0PilotWorldV1(
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Participation frequency and evidence of decision quality are different observations.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Participation frequency and evidence of decision quality are different observations.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_3_guided_raise_larger_inelastic",
@@ -3684,19 +3684,19 @@ final _world20Pilot = _act0PilotWorldV1(
             "bet_8",
             "Bet 8 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 8 BB. The listed weaker aces, two pair and sets pay both sizes, so the larger price earns more.",
+            "Bet 8 BB because BB calls both 3 BB and 8 BB with the same weaker hands, so the larger bet earns more.",
           ),
           (
             "bet_3",
             "Bet 3 BB",
             Act0FeedbackQualityV1.wrong,
-            "The small bet wins extra chips. In this size interval it retains exactly the same caller group as 8 BB.",
+            "Betting 3 BB misses extra value: bet 8 BB against the same caller group.",
           ),
           (
             "check",
             "Check",
             Act0FeedbackQualityV1.wrong,
-            "Checking lets weaker made hands see showdown without paying.",
+            "Checking gives up value from the weaker hands that call an 8 BB bet.",
           ),
         ],
         table: _day7TableV1(
@@ -3794,8 +3794,8 @@ final _world20Pilot = _act0PilotWorldV1(
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "hj",
+          actor: "hj",
           hand: "Jc Tc",
           board: _act0LessonCardsV1("Ks 8h 5d 3c 2h"),
           street: PokerStreet.river,
@@ -3807,7 +3807,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "co", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3823,7 +3823,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3838,35 +3838,35 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. One decision supplies neither a stable fold estimate nor a reliable hand breakdown.",
+            "Pot = 2.5 (HJ) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. One decision supplies neither a stable fold estimate nor a reliable hand breakdown.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_3_day7_table_captain_vs_overbluffer",
         lesson: "opponent_profiles",
         lessonTitle: "Opponent profiles",
         title:
-            "Whose evidence first suggests more calls with an appropriate river bluff catcher?",
+            "Whose evidence first supports calling more with hands that beat bluffs but lose to value bets?",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
             "Player A opens many limps and initiates table action. Player B has far more missed hands than expected in a matched river betting sample. Neither label tells you the other behavior.",
         question:
-            "Whose evidence first suggests more calls with an appropriate river bluff catcher?",
+            "Whose evidence first supports calling more with hands that beat bluffs but lose to value bets?",
         teach: "",
         choices: const [
           (
@@ -3967,15 +3967,15 @@ final _world20Pilot = _act0PilotWorldV1(
         id: "w20_4_teach",
         lesson: "isolation_and_inelasticity",
         lessonTitle: "Isolation and inelasticity",
-        title: "Which evidence supports an isolation raise?",
+        title: "Which evidence supports raising to play heads-up?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Isolation is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.",
-        question: "Which evidence supports an isolation raise?",
+            "An isolation raise is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.",
+        question: "Which evidence supports raising to play heads-up?",
         teach:
-            "Isolation is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.",
+            "An isolation raise is a raise meant to play heads-up against a selected limper. Weigh players behind, position, direct cost and what the target calls with.",
         choices: const [
           (
             "answer",
@@ -4103,7 +4103,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "answer",
             "Raise to 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Seven matching branches exceed three. That identifies the higher isolation rate under this roster.",
+            "Raise to 6 BB because CO is the sole caller in seven of ten branches, versus three at 4 BB. The larger raise meets your stated goal.",
           ),
           (
             "alternative",
@@ -4188,13 +4188,13 @@ final _world20Pilot = _act0PilotWorldV1(
             "answer",
             "Check the big blind",
             Act0FeedbackQualityV1.correct,
-            "All live opponents matched 1 BB. Checking closes preflop at no extra price.",
+            "Check because HJ, CO, BTN and SB have matched your 1 BB blind. Checking closes preflop for free, unlike raising.",
           ),
           (
             "alternative",
             "Raise to isolate HJ",
             Act0FeedbackQualityV1.wrong,
-            "Raising uses new chips, can attract multiple responses and risks a re-raise.",
+            "Raising costs extra chips and risks a re-raise. Checking sees the flop for free.",
           ),
           (
             "other",
@@ -4288,7 +4288,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "answer",
             "Raise to 12 BB",
             Act0FeedbackQualityV1.correct,
-            "The same weaker kings pay for both raises. Their extra payments more than cover the extra losses against the sets.",
+            "Raise to 12 BB because BB calls both 7 BB and 12 BB with the same range. Extra payments from weaker kings outweigh extra losses against sets.",
           ),
           (
             "alternative",
@@ -4387,10 +4387,10 @@ final _world20Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Image changes through actions opponents saw and remembered. Consider observable adjustments. Keep the table respectful and avoid coaching, shaming or angle shooting.",
+            "Image changes through actions opponents saw and remembered. Consider observable adjustments. Angle shooting means seeking an unfair advantage through deceptive conduct around the rules. Keep the table respectful and avoid coaching, shaming or deceptive conduct.",
         question: "What supports an adjustment after showing a bluff?",
         teach:
-            "Image changes through actions opponents saw and remembered. Consider observable adjustments. Keep the table respectful and avoid coaching, shaming or angle shooting.",
+            "Image changes through actions opponents saw and remembered. Consider observable adjustments. Angle shooting means seeking an unfair advantage through deceptive conduct around the rules. Keep the table respectful and avoid coaching, shaming or deceptive conduct.",
         choices: const [
           (
             "answer",
@@ -4448,8 +4448,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Qs Jc",
           board: _act0LessonCardsV1("Qh 8d 5s 3c 2h"),
           street: PokerStreet.river,
@@ -4461,7 +4461,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4477,7 +4477,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4493,20 +4493,20 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Levels track your hand, the opponent’s range, and the opponent’s estimate of your range.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Levels track your hand, the opponent’s range, and the opponent’s estimate of your range.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_5_guided_keep_table_welcoming",
@@ -4542,8 +4542,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "hj",
+          actor: "hj",
           hand: "Ad Jd",
           board: _act0LessonCardsV1("Jc 8d 4s 3h 2c"),
           street: PokerStreet.river,
@@ -4555,7 +4555,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "co", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4571,7 +4571,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4586,21 +4586,21 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Compare whether each response respects the player’s agency and preserves the game’s social standards.",
+            "Pot = 2.5 (HJ) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Compare whether each response respects the player’s agency and preserves the game’s social standards.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_5_transfer_image_changes_value",
@@ -4636,8 +4636,8 @@ final _world20Pilot = _act0PilotWorldV1(
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "As Qc",
           board: _act0LessonCardsV1("Qh 8d 4s 3c 2h"),
           street: PokerStreet.river,
@@ -4649,7 +4649,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4665,7 +4665,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4681,20 +4681,20 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Each newly legal weaker call increases the incremental value of a paid terminal bet by its wager, versus checking that same branch.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. Each newly legal weaker call increases the incremental value of a paid terminal bet by its wager, versus checking that same branch.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_5_day7_dont_use_private_image",
@@ -4715,7 +4715,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "answer",
             "No evidence of a player-specific adjustment",
             Act0FeedbackQualityV1.correct,
-            "They never observed your bluff. Use the available baseline or matched observations.",
+            "They never observed your bluff. Use the usual response or matched observations.",
           ),
           (
             "alternative",
@@ -4731,8 +4731,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "hj",
+          actor: "hj",
           hand: "Qd Js",
           board: _act0LessonCardsV1("Qc 7h 4d 3c 2h"),
           street: PokerStreet.river,
@@ -4744,7 +4744,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "co", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4760,7 +4760,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4775,21 +4775,21 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. An event absent from the opponent’s information cannot justify an image-based response update by itself.",
+            "Pot = 2.5 (HJ) + 0.5 (SB) + 2.5 (BB) = 5.5 BB. An event absent from the opponent’s information cannot justify an image-based response update by itself.",
       ),
     ]),
     _act0PilotLessonV1("read_calibration_checkpoint", "Read calibration checkpoint", [
@@ -4863,8 +4863,8 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "As Jd",
           board: _act0LessonCardsV1("Jh 8c 6s 3d 2c"),
           street: PokerStreet.river,
@@ -4876,7 +4876,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -4892,7 +4892,7 @@ final _world20Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -4914,14 +4914,14 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 6 BB"),
           ],
           bets: const {
@@ -4933,7 +4933,7 @@ final _world20Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 11.5 BB. Call price = to call / (pot + call) = 6/17.5 = 34.3%. The visible roster contains 2 bluff and 5 value events. Observed bluff fraction=2/7=28.6%, with unshown events still uncertain.",
+            "Pot = 2.5 (CO) + 0.5 (SB) + 8.5 (BB) = 11.5 BB. Call price = to call / (pot + call) = 6/17.5 = 34.3%. The visible roster contains 2 bluff and 5 value events. Observed bluff fraction=2/7=28.6%, with unshown events still uncertain.",
       ),
       _wave6AuthoredTaskV1(
         id: "w20_6_guided_short_price_with_read",
@@ -4944,7 +4944,7 @@ final _world20Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB bets 12 BB with a legal combo from AQo KQo KJs JTs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.",
+            "BB goes all-in for 12 BB with a legal combo from AQo KQo KJs JTs, equally weighted. Compare calling with folding. A call closes the betting for this model. At the 100 BB start the comparison uses a matched 90 BB all-in with the same range.",
         question: "Call or fold?",
         teach:
             "Separate the observation-driven range from the stack-driven price.",
@@ -4953,7 +4953,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "call",
             "Call 12 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 33.3% equity against this BB range clears the 27.0% price.",
+            "Call because BB bets the last 12 BB with a range giving you 33.3% equity, above the 27.0% price. Folding forfeits 2.83 BB of expected value.",
           ),
           (
             "fold",
@@ -5029,12 +5029,12 @@ final _world20Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "flop: BTN checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
-            Act0ActionTrailItemV1(label: "river: BB bets 12 BB"),
+            Act0ActionTrailItemV1(label: "river: BB all-in 12 BB"),
           ],
           bets: const {
             "bb": Act0SeatBetStateV1(
               kind: Act0SeatBetKindV1.allIn,
-              label: "bets",
+              label: "all-in",
               amountLabel: "12 BB",
             ),
           },
@@ -5059,7 +5059,7 @@ final _world20Pilot = _act0PilotWorldV1(
             "call",
             "Call 8 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 57.1% equity against this BB range clears the 29.1% price.",
+            "Call because BB bets 8 BB with a range giving you 57.1% equity, above the 29.1% price. Folding forfeits 7.71 BB of expected value.",
           ),
           (
             "fold",
@@ -5172,13 +5172,13 @@ final _world20Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold. Your 18.2% equity against this BB range falls below the 29.1% price.",
+            "Fold because BB bets 8 BB with a range giving you 18.2% equity, below the 29.1% price. Calling loses 3 BB.",
           ),
           (
             "call",
             "Call 8 BB",
             Act0FeedbackQualityV1.wrong,
-            "Calling buys a showdown whose counted share leaves a loss of 3.00 BB.",
+            "Calling loses 3 BB on average against this range; folding preserves those chips.",
           ),
         ],
         table: _day7TableV1(
