@@ -473,41 +473,13 @@
       "w23_4_read_raise_number|shove",
       "w23_4_teach|shove"
     ],
-    "G1·26": [
-      "w23_1_day7_btn_medium_queen|",
-      "w23_1_guided_hj_opens_medium|",
-      "w23_1_read_utg_medium_hj|",
-      "w23_1_transfer_co_opens_sevens|",
-      "w23_3_day7_different_prices_different_calls|",
-      "w23_4_day7_four_bet_value_response|",
-      "w23_4_transfer_five_bet_price_flips|",
-      "w23_6_day7_choose_chart_only_matching_line|"
-    ],
-    "G1·27": [
-      "w23_1_day7_btn_medium_queen|",
-      "w23_1_guided_hj_opens_medium|",
-      "w23_1_read_utg_medium_hj|",
-      "w23_1_transfer_co_opens_sevens|",
-      "w23_3_day7_different_prices_different_calls|",
-      "w23_4_day7_four_bet_value_response|",
-      "w23_4_transfer_five_bet_price_flips|",
-      "w23_6_day7_choose_chart_only_matching_line|"
-    ],
     "G1·29": [
-      "w23_1_day7_btn_medium_queen|answer",
-      "w23_1_guided_hj_opens_medium|answer",
-      "w23_1_read_utg_medium_hj|answer",
-      "w23_1_transfer_co_opens_sevens|answer",
-      "w23_3_day7_different_prices_different_calls|answer",
       "w23_4_day7_four_bet_value_response|answer",
-      "w23_4_transfer_five_bet_price_flips|answer",
       "w23_6_day7_choose_chart_only_matching_line|answer"
     ],
     "G1·30": [
       "w23_3_day7_different_prices_different_calls|answer",
-      "w23_4_day7_four_bet_value_response|answer",
-      "w23_4_transfer_five_bet_price_flips|answer",
-      "w23_6_day7_choose_chart_only_matching_line|answer"
+      "w23_4_transfer_five_bet_price_flips|answer"
     ]
   },
   "W24": {
@@ -537,49 +509,12 @@
       "w24_6_read_raise_bluff_risk|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "G1·26": [
-      "w24_1_guided_condensed_bluff_catcher|",
-      "w24_1_transfer_keep_middle_check|",
-      "w24_2_day7_call_price_vs_range_mdf|",
-      "w24_2_transfer_bluff_threshold_overpot|",
-      "w24_3_transfer_indifferent_range_blocks|",
-      "w24_4_guided_overbet_collect_nut_value|",
-      "w24_4_transfer_effective_price_river|",
-      "w24_5_day7_check_marginal_showdown|",
-      "w24_5_guided_thin_value_raise|",
-      "w24_5_transfer_thin_raise_becomes_call|",
-      "w24_6_checkpoint_value_check_raise|",
-      "w24_6_day7_no_bluff_without_folds|",
-      "w24_6_guided_raise_blocker_bluff|"
-    ],
-    "G1·27": [
-      "w24_1_guided_condensed_bluff_catcher|",
-      "w24_1_transfer_keep_middle_check|",
-      "w24_2_day7_call_price_vs_range_mdf|",
-      "w24_2_transfer_bluff_threshold_overpot|",
-      "w24_3_transfer_indifferent_range_blocks|",
-      "w24_4_guided_overbet_collect_nut_value|",
-      "w24_4_transfer_effective_price_river|",
-      "w24_5_day7_check_marginal_showdown|",
-      "w24_5_guided_thin_value_raise|",
-      "w24_5_transfer_thin_raise_becomes_call|",
-      "w24_6_checkpoint_value_check_raise|",
-      "w24_6_day7_no_bluff_without_folds|",
-      "w24_6_guided_raise_blocker_bluff|"
-    ],
     "G1·29": [
-      "w24_1_guided_condensed_bluff_catcher|call",
       "w24_1_transfer_keep_middle_check|check",
-      "w24_2_day7_call_price_vs_range_mdf|answer",
       "w24_2_transfer_bluff_threshold_overpot|answer",
-      "w24_3_transfer_indifferent_range_blocks|answer",
       "w24_4_guided_overbet_collect_nut_value|bet_9",
       "w24_4_transfer_effective_price_river|call",
-      "w24_5_day7_check_marginal_showdown|answer",
-      "w24_5_guided_thin_value_raise|raise_6",
-      "w24_5_transfer_thin_raise_becomes_call|call",
       "w24_6_checkpoint_value_check_raise|raise_12",
-      "w24_6_day7_no_bluff_without_folds|answer",
       "w24_6_guided_raise_blocker_bluff|raise_13"
     ],
     "G1·30": [
@@ -587,11 +522,7 @@
       "w24_2_day7_call_price_vs_range_mdf|answer",
       "w24_3_transfer_indifferent_range_blocks|answer",
       "w24_4_transfer_effective_price_river|call",
-      "w24_5_guided_thin_value_raise|raise_6",
-      "w24_5_transfer_thin_raise_becomes_call|call",
-      "w24_6_checkpoint_value_check_raise|raise_12",
-      "w24_6_day7_no_bluff_without_folds|answer",
-      "w24_6_guided_raise_blocker_bluff|raise_13"
+      "w24_6_checkpoint_value_check_raise|raise_12"
     ]
   }
 }
