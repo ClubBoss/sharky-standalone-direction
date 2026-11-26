@@ -212,20 +212,6 @@
     ],
     "G1·30": [
       "w15_6_read_polar_on_two_tone|answer"
-    ],
-    "G1·42": [
-      "w15_5_day7_check_before_raiser|BTN calls with AKo AQo AJs 66 33  → 33/BTN: fold",
-      "w15_5_day7_check_before_raiser|BTN calls with AKo AQo AJs 66 33  → 66/BTN: fold",
-      "w15_5_day7_check_before_raiser|BTN calls with AKo AQo AJs 66 33  → AKo/BTN: raise",
-      "w15_5_day7_check_before_raiser|BTN calls with AKo AQo AJs 66 33  → BTN Medium calls: AQo, AJo, KQs, KQo, ATs, ATo, KJs, QJs",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → 44/BTN: fold",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → 65s/BTN: fold",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → 77/BTN: fold",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → 88/BTN: fold",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → AA/BTN: raise",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → BTN Medium calls: AQo, AJo, KQs, KQo, ATs, ATo, KJs, QJs",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → KK/BTN: raise",
-      "w15_5_guided_lead_two_pair|BTN calls with AA KK QQ JJ TT 88 77 44 65s  → QQ/BTN: raise"
     ]
   },
   "W16": {
