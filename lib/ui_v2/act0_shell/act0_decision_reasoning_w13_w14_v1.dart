@@ -198,6 +198,16 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB holds a uniformly weighted combo from KQs KQo QJs QTs 77 33 88 76s 65s. Against the listed bet, BB calls only KQs KQo QJs QTs 77 33 and folds all other groups. After a check or a call, both check through with no further bets.",
     edgeBb: 0.63315,
   ),
+  "w14_1_read_underbet": Act0DecisionReasoningV1(
+    taskId: "w14_1_read_underbet",
+    kind: Act0DecisionKindV1.table,
+    principleId: "merged_sizing",
+    bestAlternativeOptionId: "alternative",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    stackMatters: false,
+    preChoiceAssumption:
+        "The current flop pot is 5.5 BB. Classify each proposed amount as below, equal to or above the pot.",
+  ),
   "w14_1_guided_smaller_gets_paid": Act0DecisionReasoningV1(
     taskId: "w14_1_guided_smaller_gets_paid",
     kind: Act0DecisionKindV1.table,
@@ -208,7 +218,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB’s check allows both weaker queens and sets. The model keeps more middling hands in at 2 BB.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is KQs KQo QJs QTs 77 22 99 88 AJs T9s, with equal weight per legal combo. Against 2 BB, BB calls with KQs KQo QJs QTs 77 22 99 88. The other hands fold. Against 6 BB, BB calls with 77 22. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is KQs KQo QJs QTs 77 22 99 88 AJs T9s, with equal weight per legal combo. Against 2 BB, BB calls with KQs KQo QJs QTs 77 22 99 88. The other hands fold. Against 6 BB, BB calls with 77 22. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 0.75536,
     suboptimalKinds: {
       "check": Act0SuboptimalKindV1.clearlyWorse,
@@ -225,8 +235,8 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB retains underpairs and missed suited hands after checking. Sevens and three diamond draws pay 1.5 BB. Both sizes keep the aces and sets.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is AKs AJo ATo 99 55 77 66 KcJc KdJd KhJh KsJs QcJc QdJd QhJh QsJs 8c7c 8d7d 8h7h 8s7s, with equal weight per legal combo. Against 1.5 BB, BB calls with AKs AJo ATo 99 55 77 KdJd QdJd 8d7d. The other hands fold. Against 5 BB, BB calls with AKs AJo ATo 99 55. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
-    edgeBb: 0.45431,
+        "BB’s range is AQs AJo ATo 99 55 77 66 QcJc QdJd QhJh QsJs KcJc KdJd KhJh KsJs 8c7c 8d7d 8h7h 8s7s, with equal weight per legal combo. Against 1.5 BB, BB calls with AQs AJo ATo 99 55 77 QdJd KdJd 8d7d. The other hands fold. Against 5 BB, BB calls with AQs AJo ATo 99 55. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
+    edgeBb: 0.47310,
   ),
   "w14_1_day7_keep_weaker_pairs": Act0DecisionReasoningV1(
     taskId: "w14_1_day7_keep_weaker_pairs",
@@ -238,7 +248,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB calls 2 BB with worse jacks, lower pairs and sets. Against 7 BB only the sets call.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is QJs QJo JTs J9s 88 55 77 66 A9s T9s, with equal weight per legal combo. Against 2 BB, BB calls with QJs QJo JTs J9s 88 55 77 66. The other hands fold. Against 7 BB, BB calls with 88 55. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is QJs QJo JTs J9s 88 55 77 66 A9s T9s, with equal weight per legal combo. Against 2 BB, BB calls with QJs QJo JTs J9s 88 55 77 66. The other hands fold. Against 7 BB, BB calls with 88 55. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 0.94737,
     suboptimalKinds: {"check": Act0SuboptimalKindV1.clearlyWorse},
   ),
@@ -252,7 +262,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB’s small-size caller group contains more kings and several pocket pairs that fold to 6 BB.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is KQs KJs KTs 99 77 88 66 55 54s 65s, with equal weight per legal combo. This BB has shown a willingness to fold some one-pair hands to large river bets. In this model KJs KTs 88 66 55 call 2 BB and fold to 6 BB. Against 2 BB, BB calls with KQs KJs KTs 99 77 88 66 55. The other hands fold. Against 6 BB, BB calls with KQs 99 77. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is KQs KJs KTs 99 77 88 66 55 54s 65s, with equal weight per legal combo. This BB has shown a willingness to fold some one-pair hands to large river bets. In this model KJs KTs 88 66 55 call 2 BB and fold to 6 BB. Against 2 BB, BB calls with KQs KJs KTs 99 77 88 66 55. The other hands fold. Against 6 BB, BB calls with KQs 99 77. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 1.95,
   ),
   "w14_2_transfer_nut_value": Act0DecisionReasoningV1(
@@ -265,7 +275,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB checks two pair, sets and one pair in this model. The 8 BB size keeps sets and the stronger two-pair groups.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is J9s J8s JTs 88 33 TT AJo QJs, with equal weight per legal combo. Against 3 BB, BB calls with J9s J8s JTs 88 33 TT AJo QJs. The other hands fold. Against 8 BB, BB calls with J8s JTs 88 33 TT. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is J9s J8s JTs 88 33 TT AJo QJs, with equal weight per legal combo. Against 3 BB, BB calls with J9s J8s JTs 88 33 TT AJo QJs. The other hands fold. Against 8 BB, BB calls with J8s JTs 88 33 TT. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 1.30769,
     suboptimalKinds: {"bet_3": Act0SuboptimalKindV1.clearlyWorse},
   ),
@@ -279,7 +289,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "The 7 BB calls are limited to the stated strong group. At 2 BB the middle pairs also continue.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is AQs KQs QJs JJ 88 77 66 55 KTs 65s, with equal weight per legal combo. This BB has shown a willingness to fold some one-pair hands to large river bets. In this model KQs 77 66 55 call 2 BB and fold to 7 BB. Against 2 BB, BB calls with AQs KQs QJs JJ 88 77 66 55. The other hands fold. Against 7 BB, BB calls with AQs QJs JJ 88. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is AQs KQs QJs JJ 88 77 66 55 KTs 65s, with equal weight per legal combo. This BB has shown a willingness to fold some one-pair hands to large river bets. In this model KQs 77 66 55 call 2 BB and fold to 7 BB. Against 2 BB, BB calls with AQs KQs QJs JJ 88 77 66 55. The other hands fold. Against 7 BB, BB calls with AQs QJs JJ 88. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 1.1,
   ),
   "w14_3_guided_compare_size_plans": Act0DecisionReasoningV1(
@@ -344,7 +354,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB’s effective shove covers the shorter stack. Hold the stated range fixed in the 100 BB counterfactual so the comparison measures the change in price.",
     stackMatters: true,
     preChoiceAssumption:
-        "BB bets 25.5 BB with a legal combo from AA KK QQ 99 44 KQs QJs AJs T9s, weighted equally. Compare call with fold. If you call, no more money goes in. Hero has 25.5 BB behind. Compare a 100 BB start with the same BB range shoving the 90 BB available after the same preflop contributions.",
+        "BB bets 25.5 BB with a legal combo from AA KK QQ 99 44 KQs QJs AJs T9s, weighted equally. Compare call with fold. If you call, no more money goes in. You have 25.5 BB behind. Compare a 100 BB start with the same BB range going all-in for the 90 BB available after the same preflop contributions.",
     edgeBb: 3.98333,
     stackNote:
         "At 35.5 BB start the call earns 3.98 BB. At 100 BB start the otherwise identical effective shove needs 44.9% equity and calling loses 7.32 BB.",
@@ -372,7 +382,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "BB raises both straight groups at either size. At 2 BB the set and bluff groups can also raise. Strong raises at 5 BB are easier to fold to.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is TT 88 55 KTs QTs 99 77 76s 64s A4s J9s Q9s 97s, with equal weight per legal combo. Against 2 BB, BB calls with KTs QTs 99 77 and raises to 8 BB with TT 88 55 64s A4s 76s J9s Q9s. The other hands fold. Against 5 BB, BB calls with TT 88 55 KTs QTs and raises to 14 BB with 64s A4s. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is TT 88 55 KTs QTs 99 77 76s 64s A4s J9s Q9s 97s, with equal weight per legal combo. Against 2 BB, BB calls with KTs QTs 99 77 and raises to 8 BB with TT 88 55 64s A4s 76s J9s Q9s. The other hands fold. Against 5 BB, BB calls with TT 88 55 KTs QTs and raises to 14 BB with 64s A4s. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 0.34783,
   ),
   "w14_6_checkpoint_size_and_raise": Act0DecisionReasoningV1(
@@ -385,7 +395,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "At 3 BB, BB pays with several jacks and raises a mixed group. The 8 BB response loses most worse calls and all modeled raises.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is AJs KJs JTs 99 66 TT 88 QTs T8s 87s, with equal weight per legal combo. Against 3 BB, BB calls with AJs KJs JTs TT 88 and raises to 10 BB with 99 66 QTs T8s. The other hands fold. Against 8 BB, BB calls with AJs 99 66. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is AJs QJs JTs 99 66 TT 88 KTs T8s 87s, with equal weight per legal combo. Against 3 BB, BB calls with AJs QJs JTs TT 88 and raises to 10 BB with 99 66 KTs T8s. The other hands fold. Against 8 BB, BB calls with AJs 99 66. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 1.7027,
   ),
   "w14_6_day7_decline_induce": Act0DecisionReasoningV1(
@@ -398,7 +408,7 @@ const act0DecisionReasoningW13W14V1 = <String, Act0DecisionReasoningV1>{
         "After checking the flop and turn, BB can have numerous weaker jacks. In this model the 3 BB raise range contains only sets. At 5 BB, the same sets raise to 14 BB. Both suited and offsuit K-J and Q-J call.",
     stackMatters: false,
     preChoiceAssumption:
-        "BB’s range is KJs KJo QJs QJo JTs JTo J8s 99 55 44 87s T8s 76s, with equal weight per legal combo. Against 3 BB, BB calls with KJs KJo QJs QJo JTs JTo J8s and raises to 10 BB with 99 55 44. The other hands fold. Against 5 BB, BB calls with KJs KJo QJs QJo and raises to 14 BB with 99 55 44. The other hands fold. After a check, a flat call or a called raise, there is no more betting. Hero can call or fold if BB raises.",
+        "BB’s range is KJs KJo QJs QJo JTs JTo J8s 99 55 44 87s T8s 76s, with equal weight per legal combo. Against 3 BB, BB calls with KJs KJo QJs QJo JTs JTo J8s and raises to 10 BB with 99 55 44. The other hands fold. Against 5 BB, BB calls with KJs KJo QJs QJo and raises to 14 BB with 99 55 44. The other hands fold. After a check, a call without a raise, or a called raise, there is no more betting. You may call or fold if BB raises.",
     edgeBb: 0.34043,
   ),
 };

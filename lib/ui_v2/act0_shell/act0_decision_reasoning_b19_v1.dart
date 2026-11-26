@@ -80,7 +80,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "dead_sb",
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     preChoiceAssumption:
-        "After preflop BTN and BB each contributed 2.5 BB. On the river BB pushes its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.",
+        "After preflop BTN and BB each contributed 2.5 BB. On the river BB goes all-in for its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.",
   ),
   "mistake_implied_cap": Act0DecisionReasoningV1(
     taskId: "mistake_implied_cap",
@@ -317,7 +317,7 @@ const act0DecisionReasoningB19V1 = <String, Act0DecisionReasoningV1>{
     bestAlternativeOptionId: "call",
     edgeMechanism: Act0EdgeMechanismV1.stackLimitsPayoff,
     preChoiceAssumption:
-        "Assume BB holds Ks Kd and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, capped by its stack. Other rivers check through. Compare call and fold.",
+        "Assume BB holds Ks Kd and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, limited by the chips it has left. Other rivers check through. Compare call and fold.",
     edgeBb: 0.76136,
     opponentRead:
         "BB holds Ks Kd in this teaching replay. The set pays only on clean hearts and is capped by the remaining effective stack.",
