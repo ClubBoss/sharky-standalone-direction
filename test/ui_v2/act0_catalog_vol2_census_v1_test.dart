@@ -20,6 +20,7 @@ import '../support/act0_catalog_truth_audit_v1.dart';
 import '../support/act0_error_atlas_v1.dart';
 import '../support/act0_table_chip_labels_v1.dart';
 import '../support/act0_table_truth_v1.dart';
+import 'act0_b132_origin_choreography_reference.dart';
 
 // TODO(B91 lead): generate the initial fixture before opening the PR:
 // G1_UPDATE_SNAPSHOT=1 flutter test --no-pub --dart-define=SHARKY_W13_PLUS_PILOT=true test/ui_v2/act0_catalog_vol2_census_v1_test.dart
@@ -218,6 +219,92 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
 }
 
 void main() {
+  test('B132 D6 played-hand census reports origin and candidate', () {
+    final worlds = Act0ShellStateV1.authoredCatalog.worlds
+        .where((w) => _worlds.contains(w.worldNumber))
+        .toList();
+    expect(worlds.map((w) => w.worldNumber).toSet(), _worlds);
+    final rows = auditTableTruth(worlds: worlds);
+    var beforeTotal = 0;
+    var afterTotal = 0;
+    for (final world in worlds) {
+      final tasks = world.lessons.expand((l) => l.taskList).toList();
+      final ids = tasks.map((t) => t.taskId).toSet();
+      final before = tasks.where((task) {
+        final table = task.runner.table;
+        return table.scope == Act0TableScopeV1.playedHand &&
+            originChoreographyPlanV1(table) == null;
+      }).toList();
+      final after = rows
+          .where(
+            (r) =>
+                ids.contains(r.taskId) &&
+                r.invariant == 'D6.history_support' &&
+                r.result == 'NEEDS_SOURCE_CONTEXT',
+          )
+          .toList();
+      beforeTotal += before.length;
+      afterTotal += after.length;
+      for (final task in before) {
+        final trail = task.runner.table.actionTrail
+            .where((item) => !item.isNote)
+            .map((item) => item.label)
+            .toList();
+        final tokens = trail
+            .where(
+              (line) => RegExp(
+                r'^preflop:|\bposts\b|\braises to\b|\bcalls .* more\b',
+                caseSensitive: false,
+              ).hasMatch(line),
+            )
+            .toList();
+        print(
+          'B132 W${world.worldNumber} ${task.taskId}: ${tokens.isEmpty ? (trail.firstOrNull ?? "empty trail") : tokens.first}',
+        );
+        final proof = rows
+            .where(
+              (r) =>
+                  r.taskId == task.taskId &&
+                  r.invariant == 'D6.history_support',
+            )
+            .single;
+        expect(
+          proof.result,
+          anyOf('PASS', 'NEEDS_SOURCE_CONTEXT'),
+          reason: task.taskId,
+        );
+        if (proof.result == 'PASS') {
+          expect(
+            rows
+                .where(
+                  (r) =>
+                      r.taskId == task.taskId &&
+                      r.variant.startsWith('choreography/') &&
+                      r.result == 'FAIL',
+                )
+                .map((r) => r.key),
+            isEmpty,
+            reason: task.taskId,
+          );
+        }
+      }
+      print(
+        'B132 W${world.worldNumber} D6 NEEDS_SOURCE_CONTEXT ${before.length} -> ${after.length}',
+      );
+    }
+    print('B132 W13–W24 D6 NEEDS_SOURCE_CONTEXT $beforeTotal -> $afterTotal');
+    expect(beforeTotal, greaterThan(0));
+    expect(afterTotal, 0);
+    expect(
+      rows
+          .where(
+            (r) => r.invariant == 'D6.history_support' && r.result == 'FAIL',
+          )
+          .map((r) => r.key),
+      isEmpty,
+    );
+  });
+
   test('only explicit exceptions with verified frame scope leave debt', () {
     bool excluded(String invariant, String status, String detail) =>
         _isVerifiedScopeException(

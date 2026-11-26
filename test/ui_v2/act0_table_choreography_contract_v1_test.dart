@@ -1,8 +1,262 @@
+import 'dart:convert';
+
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_hand_contributions_v1.dart';
+import '../support/act0_table_truth_v1.dart';
+import 'act0_b132_origin_choreography_reference.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_table_choreography_contract_v1.dart';
 
 void main() {
+  test('W1–W12 plans are byte-identical to origin/main', () {
+    final worlds = Act0ShellStateV1.authoredCatalog.worlds.where(
+      (w) => w.worldNumber <= 12,
+    );
+    for (final world in worlds) {
+      for (final lesson in world.lessons) {
+        for (final task in lesson.taskList) {
+          final runner = task.runner;
+          final tables = [
+            runner.table,
+            for (final step in runner.teachingSteps) ...[
+              step.table ?? runner.table,
+              act0TeachingTableForRunnerV1(runner.table, step),
+            ],
+            for (final option in runner.options)
+              act0FeedbackTableForRunnerV1(
+                runner: runner.copyWith(
+                  phase: Act0LessonPhaseV1.review,
+                  selectedOptionId: option.id,
+                  teachingStepIndex: runner.teachingSteps.length,
+                ),
+                taskFamily: task.resolvedTaskFamily,
+              ),
+            act0FeedbackTableForRunnerV1(
+              runner: runner.copyWith(phase: Act0LessonPhaseV1.review),
+              taskFamily: task.resolvedTaskFamily,
+            ),
+          ];
+          for (final table in tables) {
+            final before = originChoreographyPlanV1(table);
+            final after = act0TableChoreographyPlanForTableV1(table);
+            expect(_planBytes(after), _planBytes(before), reason: task.taskId);
+            expect(after?.verifiedHistory, isNull, reason: task.taskId);
+          }
+        }
+      }
+    }
+  });
+  for (final (token, sourceIndex, kind, total, delta) in [
+    ('posts', 0, Act0SeatBetKindV1.post, '0.5 BB', 0.5),
+    ('raises to', 6, Act0SeatBetKindV1.raise, '9 BB', 8.5),
+    ('calls more', 8, Act0SeatBetKindV1.call, '9 BB', 6.0),
+  ]) {
+    test('six-max $token preserves exact street total and contribution', () {
+      final plan = act0TableChoreographyPlanForTableV1(_ledgerTable())!;
+      final beat = plan.beats.singleWhere(
+        (beat) => beat.sourceIndex == sourceIndex && beat.commitment != null,
+      );
+      expect(beat.commitment!.kind, kind);
+      expect(beat.commitment!.amountLabel, total);
+      expect(beat.contribution!.amountBb, delta);
+    });
+  }
+  test(
+    'preflop prefix establishes the first street without guessing the board',
+    () {
+      final plan = act0TableChoreographyPlanForTableV1(_ledgerTable())!;
+      expect(plan.initialStreet, Act0TableChoreographyStreetV1.preflop);
+      expect(plan.initialBoardCardCount, 0);
+    },
+  );
+  test(
+    'six-max preflop prefix, posts, raises to, calls more replay and conserve chips',
+    () {
+      final table = _ledgerTable();
+      final plan = act0TableChoreographyPlanForTableV1(table)!;
+      expect(plan.initialStreet, Act0TableChoreographyStreetV1.preflop);
+      expect(plan.verifiedHistory!.decisionError('btn'), isNull);
+      final commits = plan.beats
+          .where((beat) => beat.commitment != null)
+          .toList();
+      expect(commits.map((beat) => beat.commitment!.kind), [
+        Act0SeatBetKindV1.post,
+        Act0SeatBetKindV1.post,
+        Act0SeatBetKindV1.raise,
+        Act0SeatBetKindV1.raise,
+        Act0SeatBetKindV1.call,
+      ]);
+      expect(commits.map((beat) => beat.commitment!.amountLabel), [
+        '0.5 BB',
+        '1 BB',
+        '3 BB',
+        '9 BB',
+        '9 BB',
+      ]);
+      expect(commits.map((beat) => beat.contribution!.amountBb), [
+        0.5,
+        1,
+        3,
+        8.5,
+        6,
+      ]);
+      final collect = plan.beats.indexWhere(
+        (beat) =>
+            beat.kind == Act0TableChoreographyBeatKindV1.commitmentsCollect,
+      );
+      final before = act0TableChoreographyFrameAfterBeatV1(plan, collect - 1);
+      final after = act0TableChoreographyFrameAfterBeatV1(plan, collect + 1);
+      expect(before.commitments['btn']!.amountLabel, '9 BB');
+      expect(after.commitments, isEmpty);
+      for (final frame in [before, after]) {
+        final projected = act0TableForChoreographyFrameV1(table, frame);
+        expect(projected.potLabel, 'Pot 19 BB');
+        expect(projected.handContributions!.entries.map((e) => e.amountBb), [
+          0.5,
+          1,
+          3,
+          8.5,
+          6,
+        ]);
+      }
+      expect(
+        act0TableForChoreographyFrameV1(
+          table,
+          act0TableChoreographyFrameAfterBeatV1(plan, plan.beats.length - 1),
+        ),
+        same(table),
+      );
+    },
+  );
+  test(
+    'new grammar fails closed on unknown tokens, inconsistent chips or illegal turns',
+    () {
+      final table = _ledgerTable();
+      for (final replacement in [
+        'preflop: SB raises about 9 BB',
+        'preflop: SB raises to 8 BB',
+        'preflop: SB raises to 9 BB extra',
+      ]) {
+        final trail = [...table.actionTrail];
+        trail[6] = Act0ActionTrailItemV1(label: replacement);
+        expect(
+          act0TableChoreographyPlanForTableV1(
+            table.copyWith(
+              actionTrail: trail,
+              handContributions: table.handContributions,
+            ),
+          ),
+          isNull,
+          reason: replacement,
+        );
+      }
+      final trail = [...table.actionTrail];
+      final fold = trail[2];
+      trail[2] = trail[3];
+      trail[3] = fold;
+      expect(
+        act0TableChoreographyPlanForTableV1(
+          table.copyWith(
+            actionTrail: trail,
+            handContributions: table.handContributions,
+          ),
+        ),
+        isNull,
+      );
+    },
+  );
+  test(
+    'a plain call total and an explicit additional call have identical commitments',
+    () {
+      final source = _ledgerTable();
+      final total = [...source.actionTrail];
+      total[8] = const Act0ActionTrailItemV1(label: 'preflop: BTN calls 9 BB');
+      expect(
+        _planBytes(
+          act0TableChoreographyPlanForTableV1(
+            source.copyWith(
+              actionTrail: total,
+              handContributions: source.handContributions,
+            ),
+          ),
+        ),
+        _planBytes(act0TableChoreographyPlanForTableV1(source)),
+      );
+    },
+  );
+  test('explicit all-in suffix must exhaust the source stack', () {
+    final table = _ledgerTable();
+    final trail = table.actionTrail.take(8).toList();
+    trail[6] = const Act0ActionTrailItemV1(
+      label: 'preflop: SB raises to 9 BB (all-in)',
+    );
+    final ledger = table.handContributions!;
+    Act0TableStateV1 withStack(double stack) => table.copyWith(
+      streetLabel: 'Preflop',
+      boardCards: const [],
+      actionTrail: trail,
+      handContributions: Act0HandContributionsV1(
+        throughStreet: PokerStreet.preflop,
+        startingStackBbBySeat: {...ledger.startingStackBbBySeat, 'sb': stack},
+        entries: ledger.entries.take(4).toList(),
+      ),
+    );
+    final plan = act0TableChoreographyPlanForTableV1(withStack(9));
+    expect(plan, isNotNull);
+    expect(
+      plan!.beats.lastWhere((beat) => beat.commitment != null).commitment!.kind,
+      Act0SeatBetKindV1.allIn,
+    );
+    expect(act0TableChoreographyPlanForTableV1(withStack(100)), isNull);
+  });
+  test('D6 requires a legal complete six-max replay, not merely grammar', () {
+    final source = _ledgerTable();
+    final timeline = act0TableChoreographyPlanForTableV1(
+      source,
+    )!.verifiedHistory!;
+    final world = Act0ShellStateV1.authoredCatalog.worldById('world_8');
+    final lesson = world.lessons.first;
+    final task = lesson.taskList.first;
+    String status(Act0TableStateV1 table) => auditTableTruth(
+      worlds: [
+        world.copyWith(
+          lessons: [
+            lesson.copyWith(
+              tasks: [
+                Act0LessonTaskV1(
+                  taskId: task.taskId,
+                  title: task.title,
+                  phase: task.phase,
+                  rewardXp: task.rewardXp,
+                  runner: task.runner.copyWith(table: table),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ).singleWhere((row) => row.invariant == 'D6.history_support').result;
+    expect(status(source), 'PASS');
+    expect(status(source.copyWith(handTimelinePrefix: timeline)), 'PASS');
+    expect(
+      status(
+        source.copyWith(handTimelinePrefix: timeline, decisionSeatId: 'sb'),
+      ),
+      'FAIL',
+    );
+    expect(
+      status(
+        source.copyWith(
+          actionTrail: const [Act0ActionTrailItemV1(label: 'unknown')],
+          handContributions: source.handContributions,
+        ),
+      ),
+      'NEEDS_SOURCE_CONTEXT',
+    );
+  });
+
   group('Act0 table choreography contract', () {
     test('projects the canonical W6 turn hand in source order', () {
       final table = _table(
@@ -338,5 +592,115 @@ Act0TableStateV1 _table({
     heroSeatId: 'btn',
     highlightedSeatIds: const <String>['btn', 'bb'],
     highlightedCardIds: const <String>[],
+  );
+}
+
+String _planBytes(Act0TableChoreographyPlanV1? plan) => jsonEncode(
+  plan == null
+      ? null
+      : [
+          plan.initialStreet.name,
+          plan.finalStreet.name,
+          plan.heroSeatId,
+          [
+            for (final beat in plan.beats)
+              [
+                beat.kind.name,
+                beat.street.name,
+                beat.actorSeatId,
+                beat.actorLabel,
+                beat.sourceIndex,
+                beat.commitment?.kind.name,
+                beat.commitment?.label,
+                beat.commitment?.amountLabel,
+                beat.contribution?.amountBb,
+              ],
+          ],
+        ],
+);
+
+Act0TableStateV1 _ledgerTable() {
+  final table = _table(
+    street: 'Flop',
+    board: const [
+      Act0CardStateV1(rank: 'K', suit: 'c'),
+      Act0CardStateV1(rank: '7', suit: 'h'),
+      Act0CardStateV1(rank: '2', suit: 's'),
+    ],
+    trail: const [
+      'preflop: SB posts 0.5 BB',
+      'preflop: BB posts 1 BB',
+      'preflop: UTG folds',
+      'preflop: HJ folds',
+      'preflop: CO folds',
+      'preflop: BTN raises to 3 BB',
+      'preflop: SB raises to 9 BB',
+      'preflop: BB folds',
+      'preflop: BTN calls 6 BB more',
+      'flop: SB checks',
+    ],
+  );
+  return table.copyWith(
+    seats: [
+      for (final seat in table.seats)
+        Act0SeatStateV1(
+          seatId: seat.seatId,
+          seatLabel: seat.seatLabel,
+          displayName: seat.displayName,
+          isHero: seat.isHero,
+          isDealerButton: seat.seatId == 'btn',
+          isSmallBlind: seat.seatId == 'sb',
+          isBigBlind: seat.seatId == 'bb',
+          isFolded: !['btn', 'sb'].contains(seat.seatId),
+          isInHand: ['btn', 'sb'].contains(seat.seatId),
+          isActive: seat.isHero,
+          holeCards: seat.isHero ? table.heroCards : const [],
+        ),
+    ],
+    decisionSeatId: 'btn',
+    potLabel: 'Pot 19 BB',
+    handContributions: const Act0HandContributionsV1(
+      throughStreet: PokerStreet.flop,
+      startingStackBbBySeat: {
+        'utg': 100,
+        'hj': 100,
+        'co': 100,
+        'btn': 100,
+        'sb': 100,
+        'bb': 100,
+      },
+      entries: [
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.blind,
+          0.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'bb',
+          Act0ContributionKindV1.blind,
+          1,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          3,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'sb',
+          Act0ContributionKindV1.wager,
+          8.5,
+        ),
+        Act0ContributionV1(
+          PokerStreet.preflop,
+          'btn',
+          Act0ContributionKindV1.wager,
+          6,
+        ),
+      ],
+    ),
   );
 }

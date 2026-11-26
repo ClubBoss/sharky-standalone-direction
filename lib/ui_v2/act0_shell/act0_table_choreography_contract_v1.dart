@@ -1,3 +1,6 @@
+import 'package:poker_analyzer/models/poker_street.dart';
+import 'act0_hand_contributions_v1.dart';
+import 'act0_hand_timeline_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_street_replay_contract_v1.dart';
 
@@ -43,6 +46,7 @@ class Act0TableChoreographyBeatV1 {
     this.actorLabel,
     this.commitment,
     this.sourceIndex,
+    this.contribution,
   });
 
   final Act0TableChoreographyBeatKindV1 kind;
@@ -51,6 +55,7 @@ class Act0TableChoreographyBeatV1 {
   final String? actorLabel;
   final Act0SeatBetStateV1? commitment;
   final int? sourceIndex;
+  final Act0ContributionV1? contribution;
 }
 
 class Act0TableChoreographyPlanV1 {
@@ -59,12 +64,14 @@ class Act0TableChoreographyPlanV1 {
     required this.finalStreet,
     required this.heroSeatId,
     required this.beats,
+    this.verifiedHistory,
   });
 
   final Act0TableChoreographyStreetV1 initialStreet;
   final Act0TableChoreographyStreetV1 finalStreet;
   final String heroSeatId;
   final List<Act0TableChoreographyBeatV1> beats;
+  final Act0HandTimelinePrefixV1? verifiedHistory;
 
   int get initialBoardCardCount => initialStreet.boardCardCount;
 }
@@ -79,6 +86,7 @@ class Act0TableChoreographyFrameV1 {
     this.sourceActorSeatIds = const <String>{},
     this.focusSeatId,
     this.latestCommitmentSeatId,
+    this.handContributions,
   });
 
   final Act0TableChoreographyStreetV1 street;
@@ -92,6 +100,7 @@ class Act0TableChoreographyFrameV1 {
   final bool heroDecisionReady;
   final String? focusSeatId;
   final String? latestCommitmentSeatId;
+  final Act0HandContributionsV1? handContributions;
 }
 
 Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
@@ -143,6 +152,17 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     seatByActor[actor] = seat;
   }
 
+  // The volume-2 ledger dialect explicitly qualifies every action with a
+  // lower-case street. Keep the older (including partial) choreography
+  // grammar unchanged; the extended dialect requires a complete legal replay.
+  final extended =
+      table.tableFormat == Act0TableFormatV1.sixMax &&
+      table.actionTrail
+              .where((item) => !item.isNote)
+              .firstOrNull
+              ?.label
+              .startsWith('preflop:') ==
+          true;
   final parsed = <_ParsedTrailItemV1>[];
   for (var index = 0; index < table.actionTrail.length; index++) {
     if (table.actionTrail[index].isNote) continue;
@@ -151,6 +171,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
       sourceIndex: index,
       seatByActor: seatByActor,
       heroSeat: heroSeat,
+      extended: extended,
     );
     if (item == null) {
       return null;
@@ -161,6 +182,22 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     return null;
   }
 
+  final verified = extended ? _verifyExtendedHistoryV1(table, parsed) : null;
+  if (extended && verified == null) return null;
+  // A complete replay can establish a newly dealt decision street before its
+  // first action. The board is authored evidence for the reveal, not an
+  // invented trail action or contribution.
+  if (verified != null && parsed.last.street != finalStreet) {
+    parsed.add(
+      _ParsedTrailItemV1(
+        sourceIndex: null,
+        street: finalStreet,
+        actorSeat: null,
+        action: null,
+        amountLabel: null,
+      ),
+    );
+  }
   final first = parsed.first;
   final firstStreet = first.street;
   final Act0TableChoreographyStreetV1 initialStreet;
@@ -267,7 +304,14 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
       ),
     );
 
-    final commitment = _commitmentForTrailItemV1(item);
+    final verifiedAction = verified?.actions[item.sourceIndex];
+    final commitment = _commitmentForTrailItemV1(
+      item,
+      allIn: verifiedAction?.allIn ?? false,
+      amountLabel: verifiedAction == null || verifiedAction.chipsAdded == 0
+          ? null
+          : _bbLabelV1(verifiedAction.streetTotal / 100),
+    );
     if (commitment != null) {
       transientCommitments.add(actorSeat.seatId);
       beats.add(
@@ -278,6 +322,14 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
           actorLabel: actorSeat.seatLabel,
           commitment: commitment,
           sourceIndex: item.sourceIndex,
+          contribution: verifiedAction == null
+              ? null
+              : act0TimelineContributionV1(
+                  verifiedAction.street,
+                  verifiedAction.seat,
+                  verifiedAction.verb,
+                  verifiedAction.chipsAdded / 100,
+                ),
         ),
       );
     } else if (item.action == _TrailActionV1.folds) {
@@ -313,6 +365,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     finalStreet: finalStreet,
     heroSeatId: heroSeatId,
     beats: List<Act0TableChoreographyBeatV1>.unmodifiable(beats),
+    verifiedHistory: verified?.timeline,
   );
 }
 
@@ -327,6 +380,7 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
   String? focusSeatId;
   String? latestCommitmentSeatId;
   var heroDecisionReady = false;
+  final contributions = <Act0ContributionV1>[];
 
   final lastIndex = beatIndex.clamp(-1, plan.beats.length - 1);
   for (var index = 0; index <= lastIndex; index++) {
@@ -340,6 +394,8 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
         final commitment = beat.commitment;
         if (actorSeatId != null && commitment != null) {
           commitments[actorSeatId] = commitment;
+          if (beat.contribution case final contribution?)
+            contributions.add(contribution);
           focusSeatId = actorSeatId;
           latestCommitmentSeatId = actorSeatId;
         }
@@ -380,6 +436,16 @@ Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
     ),
     focusSeatId: focusSeatId,
     latestCommitmentSeatId: latestCommitmentSeatId,
+    handContributions: plan.verifiedHistory == null
+        ? null
+        : Act0HandContributionsV1(
+            throughStreet: PokerStreet.values[street.index],
+            startingStackBbBySeat: {
+              for (final entry in plan.verifiedHistory!.startingStacks.entries)
+                entry.key: entry.value / 100,
+            },
+            entries: List.unmodifiable(contributions),
+          ),
   );
 }
 
@@ -392,6 +458,15 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
     return source;
   }
 
+  final ledger = frame.handContributions;
+  final invested = <String, int>{};
+  for (final entry in ledger?.entries ?? const <Act0ContributionV1>[]) {
+    invested.update(
+      entry.seatId,
+      (total) => total + (entry.netAmountBb * 100).round(),
+      ifAbsent: () => (entry.netAmountBb * 100).round(),
+    );
+  }
   final seats = source.seats
       .map((seat) {
         final sourceActor = frame.sourceActorSeatIds.contains(seat.seatId);
@@ -414,7 +489,15 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
           hasActed: showDecisionSeatDetails && seat.hasActed,
           isLastAggressor: showDecisionSeatDetails && seat.isLastAggressor,
           isOccupied: seat.isOccupied,
-          stackLabel: showDecisionSeatDetails ? seat.stackLabel : '',
+          stackLabel: !showDecisionSeatDetails
+              ? ''
+              : ledger == null
+              ? seat.stackLabel
+              : _bbLabelV1(
+                  ((ledger.startingStackBbBySeat[seat.seatId]! * 100).round() -
+                          (invested[seat.seatId] ?? 0)) /
+                      100,
+                ),
           holeCards: seat.holeCards,
           cardsVisibleMode:
               !showDecisionSeatDetails &&
@@ -439,7 +522,10 @@ Act0TableStateV1 act0TableForChoreographyFrameV1(
         .take(frame.visibleBoardCardCount)
         .toList(growable: false),
     streetLabel: frame.street.label,
-    potLabel: '',
+    potLabel: ledger == null
+        ? ''
+        : 'Pot ${_bbLabelV1(invested.values.fold<int>(0, (total, amount) => total + amount) / 100)}',
+    handContributions: ledger,
     toCallLabel: '',
     centerLabel: '',
     focusCalloutLabel: '',
@@ -477,13 +563,17 @@ class _ParsedTrailItemV1 {
     required this.actorSeat,
     required this.action,
     required this.amountLabel,
+    this.callMore = false,
+    this.explicitAllIn = false,
   });
 
-  final int sourceIndex;
+  final int? sourceIndex;
   final Act0TableChoreographyStreetV1? street;
   final Act0SeatStateV1? actorSeat;
   final _TrailActionV1? action;
   final String? amountLabel;
+  final bool callMore;
+  final bool explicitAllIn;
 }
 
 _ParsedTrailItemV1? _parseTrailItemV1(
@@ -491,6 +581,7 @@ _ParsedTrailItemV1? _parseTrailItemV1(
   required int sourceIndex,
   required Map<String, Act0SeatStateV1> seatByActor,
   required Act0SeatStateV1 heroSeat,
+  required bool extended,
 }) {
   var text = source.trim();
   if (text.isEmpty) {
@@ -499,13 +590,15 @@ _ParsedTrailItemV1? _parseTrailItemV1(
 
   Act0TableChoreographyStreetV1? street;
   final prefix = RegExp(
-    r'^(Flop|Turn|River):\s*',
+    extended ? r'^(Preflop|Flop|Turn|River):\s*' : r'^(Flop|Turn|River):\s*',
     caseSensitive: false,
   ).firstMatch(text);
   if (prefix != null) {
     street = _streetFromLabelV1(prefix.group(1)!);
     text = text.substring(prefix.end).trim();
   }
+
+  if (extended && street == null) return null;
 
   if (RegExp(
     r'^(Flop|Turn|River)\s+dealt$',
@@ -540,7 +633,9 @@ _ParsedTrailItemV1? _parseTrailItemV1(
   var remainder = text.substring(actorMatch.end).trim();
 
   final actionMatch = RegExp(
-    r'^(blind|opens?|raises?|bets?|calls?|checks?|folds?|shoves?|all[- ]in|acts)\b',
+    extended
+        ? r'^(posts|raises|bets|calls|checks|folds|shoves|all-in)\b'
+        : r'^(blind|opens?|raises?|bets?|calls?|checks?|folds?|shoves?|all[- ]in|acts)\b',
     caseSensitive: false,
   ).firstMatch(remainder);
   if (actionMatch == null) {
@@ -569,6 +664,26 @@ _ParsedTrailItemV1? _parseTrailItemV1(
     return null;
   }
 
+  var callMore = false;
+  var explicitAllIn =
+      action == _TrailActionV1.allIn || action == _TrailActionV1.shoves;
+  if (extended) {
+    if (remainder.endsWith(' (all-in)') &&
+        (action == _TrailActionV1.raises ||
+            action == _TrailActionV1.bets ||
+            action == _TrailActionV1.calls)) {
+      explicitAllIn = true;
+      remainder = remainder.substring(0, remainder.length - 9);
+    }
+    if (action == _TrailActionV1.raises) {
+      if (!remainder.startsWith('to ')) return null;
+      remainder = remainder.substring(3);
+    }
+    if (action == _TrailActionV1.calls && remainder.endsWith(' more')) {
+      callMore = true;
+      remainder = remainder.substring(0, remainder.length - 5);
+    }
+  }
   String? amountLabel;
   if (remainder.isNotEmpty) {
     if (!RegExp(
@@ -586,12 +701,14 @@ _ParsedTrailItemV1? _parseTrailItemV1(
     actorSeat: actorSeat,
     action: action,
     amountLabel: amountLabel,
+    callMore: callMore,
+    explicitAllIn: explicitAllIn,
   );
 }
 
 _TrailActionV1? _trailActionFromTokenV1(String token) {
   return switch (token.trim().toLowerCase()) {
-    'blind' => _TrailActionV1.blind,
+    'blind' || 'posts' => _TrailActionV1.blind,
     'open' || 'opens' => _TrailActionV1.opens,
     'raise' || 'raises' => _TrailActionV1.raises,
     'bet' || 'bets' => _TrailActionV1.bets,
@@ -605,7 +722,11 @@ _TrailActionV1? _trailActionFromTokenV1(String token) {
   };
 }
 
-Act0SeatBetStateV1? _commitmentForTrailItemV1(_ParsedTrailItemV1 item) {
+Act0SeatBetStateV1? _commitmentForTrailItemV1(
+  _ParsedTrailItemV1 item, {
+  String? amountLabel,
+  bool allIn = false,
+}) {
   final actor = item.actorSeat;
   final action = item.action;
   if (actor == null || action == null) {
@@ -625,9 +746,9 @@ Act0SeatBetStateV1? _commitmentForTrailItemV1(_ParsedTrailItemV1 item) {
     return null;
   }
   return Act0SeatBetStateV1(
-    kind: kind,
+    kind: allIn ? Act0SeatBetKindV1.allIn : kind,
     label: actor.seatLabel,
-    amountLabel: item.amountLabel ?? '',
+    amountLabel: amountLabel ?? item.amountLabel ?? '',
   );
 }
 
@@ -665,4 +786,163 @@ bool _isValidBoardCardV1(Act0CardStateV1 card) {
       suit != '?' &&
       ranks.contains(rank) &&
       suits.contains(suit);
+}
+
+String _bbLabelV1(double bb) =>
+    '${bb == bb.roundToDouble() ? bb.toInt() : bb} BB';
+
+/// In the authored street-qualified dialect, raises are street totals and
+/// unqualified calls are street totals; "more" denotes additional chips.
+/// The independent source contribution ledger must agree action by action;
+/// no inferred missing turns,
+/// stacks, posts or contributions are allowed.
+({Act0HandTimelinePrefixV1 timeline, Map<int, Act0HandActionV1> actions})?
+_verifyExtendedHistoryV1(
+  Act0TableStateV1 table,
+  List<_ParsedTrailItemV1> parsed,
+) {
+  final source = table.handContributions;
+  final actor = table.decisionSeatId ?? table.activeSeatId;
+  final finalStreet = _streetFromLabelV1(table.streetLabel);
+  if (source == null ||
+      finalStreet == null ||
+      actor == null ||
+      actor.isEmpty ||
+      actor != table.activeSeatId ||
+      table.handHistoryCoverage == Act0HandHistoryCoverageV1.partialDrill ||
+      source.fromStreet != PokerStreet.preflop ||
+      source.throughStreet.index != finalStreet.index ||
+      !table.usesCanonicalPlayerCount ||
+      table.seats.length != table.playerCount ||
+      table.seats.any((seat) => !seat.isOccupied))
+    return null;
+  final buttons = table.seats.where((seat) => seat.isDealerButton).toList();
+  if (buttons.length != 1) return null;
+  final stacks = <String, int>{};
+  int? units(double? bb) {
+    if (bb == null || !bb.isFinite || bb < 0) return null;
+    final scaled = bb * 100;
+    return (scaled - scaled.round()).abs() < 1e-7 ? scaled.round() : null;
+  }
+
+  for (final label in table.canonicalSeatOrder) {
+    final matches = table.seats.where(
+      (seat) => seat.seatLabel.toUpperCase() == label,
+    );
+    if (matches.length != 1) return null;
+    final seat = matches.single.seatId;
+    final stack = units(source.startingStackBbBySeat[seat]);
+    if (stack == null || stack <= 0 || stacks.containsKey(seat)) return null;
+    stacks[seat] = stack;
+  }
+  final deltas = <Act0HandDeltaV1>[];
+  final indexes = <int>[];
+  final explicitAllIns = <int>{};
+  final totals = <String, int>{};
+  var currentStreet = PokerStreet.preflop;
+  var contributionIndex = 0;
+  for (final item in parsed) {
+    final street = item.street;
+    final seat = item.actorSeat;
+    final action = item.action;
+    if (street == null ||
+        seat == null ||
+        action == null ||
+        street.index < currentStreet.index ||
+        street.index > currentStreet.index + 1)
+      return null;
+    if (street.index != currentStreet.index) {
+      currentStreet = PokerStreet.values[street.index];
+      totals.clear();
+    }
+    final genericAllIn =
+        action == _TrailActionV1.allIn || action == _TrailActionV1.shoves;
+    final old = totals[seat.seatId] ?? 0;
+    final highest = totals.values.fold<int>(0, (a, b) => a > b ? a : b);
+    final amount = item.amountLabel;
+    final chips = amount == null
+        ? null
+        : units(double.tryParse(amount.substring(0, amount.length - 2).trim()));
+    final verb = switch (action) {
+      _TrailActionV1.blind when seat.isSmallBlind => Act0HandVerbV1.smallBlind,
+      _TrailActionV1.blind when seat.isBigBlind => Act0HandVerbV1.bigBlind,
+      _TrailActionV1.raises => Act0HandVerbV1.raise,
+      _TrailActionV1.bets => Act0HandVerbV1.bet,
+      _TrailActionV1.calls => Act0HandVerbV1.call,
+      _TrailActionV1.folds => Act0HandVerbV1.fold,
+      _TrailActionV1.checks => Act0HandVerbV1.check,
+      _TrailActionV1.allIn || _TrailActionV1.shoves when chips != null =>
+        highest == 0
+            ? Act0HandVerbV1.bet
+            : chips <= highest
+            ? Act0HandVerbV1.call
+            : Act0HandVerbV1.raise,
+      _ => null,
+    };
+    if (verb == null) return null;
+    final noChips = verb == Act0HandVerbV1.fold || verb == Act0HandVerbV1.check;
+    var added = 0;
+    if (noChips) {
+      if (item.amountLabel != null) return null;
+    } else {
+      if (chips == null) return null;
+      added =
+          genericAllIn ||
+              verb == Act0HandVerbV1.raise ||
+              (verb == Act0HandVerbV1.call && !item.callMore)
+          ? chips - old
+          : chips;
+      if (added <= 0 || contributionIndex >= source.entries.length) return null;
+      final expected = act0TimelineContributionV1(
+        currentStreet,
+        seat.seatId,
+        verb,
+        added / 100,
+      );
+      final actual = source.entries[contributionIndex++];
+      if (expected.street != actual.street ||
+          expected.seatId != actual.seatId ||
+          expected.kind != actual.kind ||
+          added != units(actual.amountBb))
+        return null;
+    }
+    totals[seat.seatId] = old + added;
+    indexes.add(item.sourceIndex!);
+    if (item.explicitAllIn) explicitAllIns.add(deltas.length);
+    deltas.add((
+      street: currentStreet,
+      seat: seat.seatId,
+      verb: verb,
+      chipsAdded: added,
+    ));
+  }
+  if (contributionIndex != source.entries.length ||
+      finalStreet.index < currentStreet.index ||
+      finalStreet.index > currentStreet.index + 1)
+    return null;
+  try {
+    final timeline = Act0HandTimelineV1.fromDeltas(
+      coverage: Act0HandHistoryCoverageV1.complete,
+      startingStacks: stacks,
+      button: buttons.single.seatId,
+      smallBlind: 50,
+      bigBlind: 100,
+      board: table.boardCards
+          .map((card) => '${card.rank == '10' ? 'T' : card.rank}${card.suit}')
+          .toList(),
+      actions: deltas,
+      explicitAllInActions: explicitAllIns,
+      heroSeat: table.heroSeatId,
+    ).beforeDecision;
+    if (timeline.decisionError(actor) != null) return null;
+    final actions = timeline.events.whereType<Act0HandActionV1>().toList();
+    return (
+      timeline: timeline,
+      actions: {
+        for (var i = 0; i < indexes.length; i++) indexes[i]: actions[i],
+      },
+    );
+  } on FormatException {
+    return null;
+  }
 }
