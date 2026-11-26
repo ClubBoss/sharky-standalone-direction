@@ -438,26 +438,6 @@
       "w21_6_guided_plan_if_then|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w21_6_read_outcome_not_repair|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w21_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·26": [
-      "w21_1_teach|",
-      "w21_4_day7_take_worse_pair_payment|",
-      "w21_4_guided_simple_value_over_disguise|",
-      "w21_4_transfer_short_stack_limits_call|"
-    ],
-    "G1·27": [
-      "w21_1_teach|",
-      "w21_4_day7_take_worse_pair_payment|",
-      "w21_4_guided_simple_value_over_disguise|",
-      "w21_4_transfer_short_stack_limits_call|"
-    ],
-    "G1·29": [
-      "w21_4_day7_take_worse_pair_payment|bet_2",
-      "w21_4_guided_simple_value_over_disguise|bet_3",
-      "w21_4_transfer_short_stack_limits_call|call"
-    ],
-    "G1·30": [
-      "w21_4_transfer_short_stack_limits_call|call"
     ]
   },
   "W22": {
@@ -520,24 +500,6 @@
       "w22_6_guided_compare_branch_plans|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_read_plan_gaps|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·26": [
-      "w22_2_transfer_best_response_not_equilibrium|",
-      "w22_4_transfer_short_tree_price|",
-      "w22_6_guided_compare_branch_plans|"
-    ],
-    "G1·27": [
-      "w22_2_transfer_best_response_not_equilibrium|",
-      "w22_4_transfer_short_tree_price|",
-      "w22_6_guided_compare_branch_plans|"
-    ],
-    "G1·29": [
-      "w22_2_transfer_best_response_not_equilibrium|answer",
-      "w22_4_transfer_short_tree_price|call",
-      "w22_6_guided_compare_branch_plans|answer"
-    ],
-    "G1·30": [
-      "w22_4_transfer_short_tree_price|call"
     ]
   },
   "W23": {
