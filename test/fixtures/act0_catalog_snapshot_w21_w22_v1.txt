@@ -139,7 +139,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ac Kd stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
   + [correct] End the session under the prewritten stop-win condition — Correct. Both the marker and the described loss of process are present. Apply the rule you chose while calm.
     FEEDBACK TABLE: Flop | You Ac Kd | Board Ks 9h 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Continue automatically because the result is positive — Look again. The winning result is exactly the circumstance the condition was designed to check.
+  - [wrong] Keep playing based on the positive result — Look again. The winning result is exactly the circumstance the condition was designed to check.
     BETTER ANSWER: End the session under the prewritten stop-win condition
     FEEDBACK TABLE: Flop | You Ac Kd | Board Ks 9h 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] Stop in order to make the profit permanent — Look again. Ending limits your current exposure, but it does not make an outcome immune to future sessions.
@@ -203,7 +203,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
   + [correct] Bluff this node more when you fold 75% — Correct. At half pot the bluff requires only one third folds. Your observed response offers more.
     FEEDBACK TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
-  - [wrong] Give up all misses because your defense is too wide — Look again. The log shows a small defense share, not a wide one.
+  - [wrong] Remove missed hands from the bluff range because your defense is too wide — Look again. The log shows a small defense share, not a wide one.
     BETTER ANSWER: Bluff this node more when you fold 75%
     FEEDBACK TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
   - [wrong] Change a different street’s value sizes — Look again. The measured leak is the river response at this size.
@@ -336,7 +336,7 @@ Q: Which tag best supports reviewing river value?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] A named river decision with its size, action and unresolved range question — Correct. That tag lets you reconstruct the choice and test the paying group.
-  - [wrong] All pots you lost — Look again. This selects by result and can omit losing reasoning in won pots.
+  - [wrong] A record of the session’s lost pots — Look again. This selects by result and can omit losing reasoning in won pots.
     BETTER ANSWER: A named river decision with its size, action and unresolved range question
   - [wrong] Hands that felt strange with no action detail — Look again. The impression may help recall, but the missing decision state prevents reliable review.
     BETTER ANSWER: A named river decision with its size, action and unresolved range question
@@ -386,7 +386,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Reveal the outcome and use it to grade the call — Look again. One hidden hand becoming visible does not retroactively define your decision range.
     BETTER ANSWER: Reconstruct price and range first, then reveal the outcome
     FEEDBACK TABLE: River | You Ac Qs | Board Qd 9h 3s 2h 2c | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
-  - [wrong] Skip the ledger and reconstruct from your result only — Look again. You need the action and amounts to evaluate the price.
+  - [wrong] Reconstruct the call from your result instead of the ledger — Look again. You need the action and amounts to evaluate the price.
     BETTER ANSWER: Reconstruct price and range first, then reveal the outcome
     FEEDBACK TABLE: River | You Ac Qs | Board Qd 9h 3s 2h 2c | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
 
@@ -416,9 +416,9 @@ Q: Which goal is actionable for the next block?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Complete the range check before each tagged turn choice — Correct. You can perform and record this action regardless of the next card.
-  - [wrong] Book a win every short session — Look again. A profitable policy still has variance over the block.
+  - [wrong] Finish each short session with a profit — Look again. A profitable policy still has variance over the block.
     BETTER ANSWER: Complete the range check before each tagged turn choice
-  - [wrong] Never meet a stronger opponent — Look again. You cannot control every opponent or the lineup. You can reassess what is available.
+  - [wrong] Arrange to face opponents no stronger than you — Look again. You cannot control every opponent or the lineup. You can reassess what is available.
     BETTER ANSWER: Complete the range check before each tagged turn choice
 
 TASK w21_6_read_outcome_not_repair [drill] Did the win satisfy that goal?
@@ -450,7 +450,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] I will try to feel less impulsive eventually — Look again. There is no observable trigger or recovery step.
     BETTER ANSWER: If I skip the price twice, I tag the hands and sit out before the next deal
     FEEDBACK TABLE: Flop | You Ah Js | Board Jc 9s 5h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] I will win back any lost profit before taking a break — Look again. That condition favors continuing even if the specified leak gets worse.
+  - [wrong] Recover the lost profit before taking a break — Look again. That condition favors continuing even if the specified leak gets worse.
     BETTER ANSWER: If I skip the price twice, I tag the hands and sit out before the next deal
     FEEDBACK TABLE: Flop | You Ah Js | Board Jc 9s 5h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
@@ -607,10 +607,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Jc Tc stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB checks
   + [correct] A and B half each — Correct. At equal weights, each column has expected row payoff zero. Any tilt creates a favorable column for the minimizing player.
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 4c 3d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] A only — Look again. The second column would give the row player −1.
+  - [wrong] A with 100% weight — Look again. The second column would give the row player −1.
     BETTER ANSWER: A and B half each
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 4c 3d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] B only — Look again. The first column would give the row player −1.
+  - [wrong] B with 100% weight — Look again. The first column would give the row player −1.
     BETTER ANSWER: A and B half each
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 4c 3d 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
@@ -660,7 +660,7 @@ TABLE: Facts no applicable hand facts
   + [correct] When this hand reaches this node, betting is selected on 60% of repeated trials — Correct. The denominator is opportunities for the specified hand at the node.
   - [wrong] The bet size is 60% of the pot — Look again. A selection frequency and a bet amount describe different properties.
     BETTER ANSWER: When this hand reaches this node, betting is selected on 60% of repeated trials
-  - [wrong] You always bet against 60% of the opponent’s holdings — Look again. The frequency refers to your action given the information available.
+  - [wrong] Bet against 60% of the opponent’s holdings using a pure betting strategy — Look again. The frequency refers to your action given the information available.
     BETTER ANSWER: When this hand reaches this node, betting is selected on 60% of repeated trials
 
 TASK w22_3_read_hand_vs_range [drill] What is the overall bet frequency?
@@ -832,10 +832,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
   + [correct] A candidate heuristic to test on a matching board family — Correct. One tie is a starting point. Compare several nodes before using an in-game default.
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Always bet every king-high flop — Look again. The single query tested one node with one range pair and set of sizes.
+  - [wrong] Use a pure betting strategy across king-high flops — Look again. The single query tested one node with one range pair and set of sizes.
     BETTER ANSWER: A candidate heuristic to test on a matching board family
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Never check this hand — Look again. The two actions tied in the supplied model.
+  - [wrong] Remove check from this hand’s strategy — Look again. The two actions tied in the supplied model.
     BETTER ANSWER: A candidate heuristic to test on a matching board family
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
@@ -868,7 +868,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Use the baseline output without changing the opponent model — Look again. That answers a different question about the original policy.
     BETTER ANSWER: Freeze that opponent response at the observed node and recompute your best response
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 9d 4s 3c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Replace every opponent action at every street — Look again. The observation only supports a change at the matched river node.
+  - [wrong] Replace the opponent’s complete strategy across streets — Look again. The observation only supports a change at the matched river node.
     BETTER ANSWER: Freeze that opponent response at the observed node and recompute your best response
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 9d 4s 3c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
 
@@ -898,9 +898,9 @@ Q: What should a flop betting plan specify?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] What you do after a call, key turn changes and a raise — Correct. A plan covers more than the first preferred action.
-  - [wrong] Only how often you wish the opponent would fold — Look again. The called and raised branches still occur and affect payoff.
+  - [wrong] A desired fold frequency, without the follow-up branches — Look again. The called and raised branches still occur and affect payoff.
     BETTER ANSWER: What you do after a call, key turn changes and a raise
-  - [wrong] A commitment to bet every later street — Look again. New cards can change the value of continuing.
+  - [wrong] Commit to betting the turn and river in advance — Look again. New cards can change the value of continuing.
     BETTER ANSWER: What you do after a call, key turn changes and a raise
 
 TASK w22_6_read_plan_gaps [drill] Which opponent branch is missing entirely from the plan?
@@ -950,7 +950,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Assume the omitted nodes were rejected for low EV — Look again. Pruning excludes actions without measuring their payoffs in that tree.
     BETTER ANSWER: Include the relevant opponent raise and your additional size, then reprice the branches
     FEEDBACK TABLE: Turn | You Ah Qh | Board Qs 8h 4c 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] Apply an equilibrium label to any strategy produced — Look again. A solution belongs only to the entered assumptions and action tree.
+  - [wrong] Treat the solver’s output as an equilibrium by virtue of its source — Look again. A solution belongs only to the entered assumptions and action tree.
     BETTER ANSWER: Include the relevant opponent raise and your additional size, then reprice the branches
     FEEDBACK TABLE: Turn | You Ah Qh | Board Qs 8h 4c 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
@@ -964,10 +964,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks
   + [correct] A response to the raise and separate river plans after a call — Correct. The raise can happen before any river and a call keeps more than one river pattern.
     FEEDBACK TABLE: Turn | You Ac Jd | Board Js 9h 5h 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] A decision to call every raise because you have top pair — Look again. The range contains already-made flushes. Compare price and remaining equity.
+  - [wrong] Commit top pair to calling raises based on its rank — Look again. The range contains already-made flushes. Compare price and remaining equity.
     BETTER ANSWER: A response to the raise and separate river plans after a call
     FEEDBACK TABLE: Turn | You Ac Jd | Board Js 9h 5h 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
-  - [wrong] Only a play for the one river you most want — Look again. Other legal rivers also affect the line’s expected payoff.
+  - [wrong] Plan for the desired river card and leave the others unplanned — Look again. Other legal rivers also affect the line’s expected payoff.
     BETTER ANSWER: A response to the raise and separate river plans after a call
     FEEDBACK TABLE: Turn | You Ac Jd | Board Js 9h 5h 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3 | Facts one pair, top pair
 
