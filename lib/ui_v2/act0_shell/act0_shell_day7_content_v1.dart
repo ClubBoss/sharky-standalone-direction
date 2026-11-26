@@ -7313,6 +7313,25 @@ final _act0Day7ReviewTasksV1 = <_SpacedReviewEntryV1>[
 ];
 
 // B121: review-only, zero-XP transfer hands for the Vol2 reasoning principles.
+Act0TableStateV1 _vol2Day7LeadTableV1() {
+  final table = _day7PostflopV1(
+    'bb',
+    '7c 6c',
+    'Qd 8h 5s',
+    openBb: 5.25,
+    showTurn: true,
+  );
+  // BB closed the preflop betting. The flop starts a new betting round,
+  // in which BB acts first; record that transition without inventing a bet.
+  return table.copyWith(
+    actionTrail: [
+      ...table.actionTrail,
+      const Act0ActionTrailItemV1(label: 'Flop dealt'),
+    ],
+    handContributions: table.handContributions,
+  );
+}
+
 final _act0Vol2PrincipleDay7TasksV1 = <_SpacedReviewEntryV1>[
   _day7ExampleV1(
     13,
@@ -7683,7 +7702,7 @@ final _act0Vol2PrincipleDay7TasksV1 = <_SpacedReviewEntryV1>[
     15,
     "leads_and_stabs",
     "lead_and_stab",
-    _day7PostflopV1("bb", "7c 6c", "Qd 8h 5s", openBb: 5.25, showTurn: true),
+    _vol2Day7LeadTableV1(),
     caption:
         "HJ raised preflop and you act first. In this model HJ folds to a 4 BB lead 50% of the time and calls otherwise. Your straight draw has 30% showdown equity against calls; no more betting. If you check, HJ bets and you fold.",
     question: "Which plan uses a profitable lead?",

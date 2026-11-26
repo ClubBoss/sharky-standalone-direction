@@ -63,10 +63,13 @@ void main() {
     final pilot = day7
         .where((entry) => int.parse(entry.worldId.substring(6)) >= 13)
         .toList();
-    expect(day7.length - pilot.length, 168);
+    // The main-branch Vol1 catalog has 168 _day7ExampleV1 entries plus
+    // 37 explicit W9–W12 records (8 W9, 15 W10, 7 W11, 7 W12).
+    const vol1Day7Count = 205;
+    expect(day7.length - pilot.length, vol1Day7Count);
     if (!act0CurriculumPilotEnabledV1) {
       expect(pilot, isEmpty);
-      expect(day7, hasLength(168));
+      expect(day7, hasLength(vol1Day7Count));
       return;
     }
     expect(pilot, hasLength(17));
