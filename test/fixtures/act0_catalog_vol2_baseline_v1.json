@@ -1,11 +1,5 @@
 {
   "W13": {
-    "16.extreme_wrong_option": [
-      "w13_4_teach|all_automatic",
-      "w13_5_read_running_spades|rank",
-      "w13_6_teach|automatic",
-      "w13_6_teach|position"
-    ],
     "C5": [
       "w13_4_teach|equity_realization|TEACH: Realization is how much of that share you actually turn into chips after future bets and folds.",
       "w13_5_teach|122|TEACH: What is true of a backdoor flush draw on the flop?.",
@@ -21,12 +15,6 @@
     ]
   },
   "W14": {
-    "16.extreme_wrong_option": [
-      "w14_1_teach|other",
-      "w14_2_read_polar_range|other",
-      "w14_3_teach|alternative",
-      "w14_5_teach|alternative"
-    ],
     "17.single_format_lesson": [
       "@lesson:slightly_harder|actionDecision"
     ],
@@ -88,14 +76,6 @@
     ]
   },
   "W15": {
-    "16.extreme_wrong_option": [
-      "w15_1_teach|alternative",
-      "w15_3_teach|alternative",
-      "w15_4_teach|other",
-      "w15_6_read_polar_on_two_tone|other",
-      "w15_6_teach|alternative",
-      "w15_6_teach|other"
-    ],
     "8.active_caller": [
       "w15_5_day7_check_before_raiser|bb",
       "w15_5_guided_lead_two_pair|bb",
@@ -130,10 +110,6 @@
     ]
   },
   "W16": {
-    "16.extreme_wrong_option": [
-      "w16_5_teach|alternative",
-      "w16_6_read_runout_two_sides|other"
-    ],
     "18.same_format_streak": [
       "w16_6_guided_scare_card_call|actionDecision"
     ],
@@ -249,11 +225,6 @@
     "11.btn_share_per_world": [
       "@world:world_17|"
     ],
-    "16.extreme_wrong_option": [
-      "w17_3_guided_count_caller_coverage|alternative",
-      "w17_4_teach|other",
-      "w17_6_teach|alternative"
-    ],
     "18.same_format_streak": [
       "w17_2_guided_size_oop|statement"
     ],
@@ -329,21 +300,6 @@
   "W18": {
     "11.btn_share_per_world": [
       "@world:world_18|"
-    ],
-    "16.extreme_wrong_option": [
-      "w18_1_day7_multiple_value_calls|alternative",
-      "w18_1_read_compression_vs_hand_label|alternative",
-      "w18_1_teach|other",
-      "w18_3_day7_connected_caller_edge|other",
-      "w18_3_read_three_way_nuts|alternative",
-      "w18_3_teach|alternative",
-      "w18_3_teach|other",
-      "w18_3_transfer_oop_check_may_face_bet|other",
-      "w18_4_read_side_pot_layers|alternative",
-      "w18_4_teach|alternative",
-      "w18_4_teach|other",
-      "w18_5_day7_full_raise_reopens|alternative",
-      "w18_5_guided_short_raise_no_reopen|alternative"
     ],
     "D6.history_support": [
       "w18_1_day7_multiple_value_calls|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
