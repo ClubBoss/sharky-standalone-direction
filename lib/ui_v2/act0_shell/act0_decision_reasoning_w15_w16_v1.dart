@@ -325,4 +325,197 @@ const act0DecisionReasoningW15W16V1 = <String, Act0DecisionReasoningV1>{
         stackMatters: false,
         edgeBb: 3.4,
       ),
+  // B141: use the authored runner choice IDs; h5 tasks audit their flop decision.
+  "w15_6_read_polar_on_two_tone": Act0DecisionReasoningV1(
+    taskId: "w15_6_read_polar_on_two_tone",
+    kind: Act0DecisionKindV1.table,
+    principleId: "flop_raise_shape",
+    bestAlternativeOptionId: "alternative",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "On Qh 7c 2h, BB can raise sets for value and the two candidate heart draws as semibluffs. Raising sets and strong top pairs instead omits the bluff end of the policy; the model calls top pair. BTN’s 2 BB bet triggers this policy; no BTN range or fold rate is specified.",
+    stackMatters: false,
+  ),
+  "w16_1_guided_barrel_worse_kings": Act0DecisionReasoningV1(
+    taskId: "w16_1_guided_barrel_worse_kings",
+    kind: Act0DecisionKindV1.table,
+    principleId: "barrel_on_range_shift",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB calls 4 BB with weaker kings and underpairs as well as sets on the 3h turn. Bet 4 BB for a modeled 8.58 BB rather than check for 7.14 BB; the 9 BB size drops too many worse calls.",
+    stackMatters: false,
+  ),
+  "w16_1_transfer_give_up_on_third_heart": Act0DecisionReasoningV1(
+    taskId: "w16_1_transfer_give_up_on_third_heart",
+    kind: Act0DecisionKindV1.table,
+    principleId: "barrel_on_range_shift",
+    bestAlternativeOptionId: "bet_4",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB’s stipulated 4 BB calling range contains made flushes, sets and kings on the third heart. Check back for modeled 1.93 BB rather than bluff 4 BB for −0.62 BB; the folds do not pay for the losing calls.",
+    stackMatters: false,
+  ),
+  "w16_2_guided_bluff_catch_price": Act0DecisionReasoningV1(
+    taskId: "w16_2_guided_bluff_catch_price",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_by_price",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB’s stated 4 BB river range gives A-J 45.5% equity, above the 29.6% call price. Calling earns a modeled 2.14 BB instead of folding for zero.",
+    stackMatters: false,
+  ),
+  "w16_2_transfer_short_shove": Act0DecisionReasoningV1(
+    taskId: "w16_2_transfer_short_shove",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_by_price",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB shoves the stated range for 12 BB. A-J has 36.8% equity, above the 27.0% price; call for modeled 4.39 BB rather than fold for zero.",
+    stackMatters: true,
+    stackNote:
+        "At the matched 100 BB start, the 90 BB shove requires 44.9% equity against the same range; calling loses 16.13 BB on average.",
+  ),
+  "w16_2_day7_fold_despite_investment": Act0DecisionReasoningV1(
+    taskId: "w16_2_day7_fold_despite_investment",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_by_price",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "BB’s 13 BB betting range leaves Q-J only 14.3% equity against a 34.7% price. Fold for zero additional loss rather than call and lose 7.64 BB on average; the flop investment is sunk.",
+    stackMatters: false,
+  ),
+  "w16_3_guided_thin_third_street": Act0DecisionReasoningV1(
+    taskId: "w16_3_guided_thin_third_street",
+    kind: Act0DecisionKindV1.table,
+    principleId: "street_value_budget",
+    bestAlternativeOptionId: "bet_8",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB calls 3 BB on the blank river with more weak jacks than sets, and the wider call group supplies value. Bet 3 BB for a modeled 14.42 BB rather than 8 BB for 13.36 BB; checking earns only 12.92 BB.",
+    stackMatters: false,
+  ),
+  "w16_3_transfer_jam_nut_straight": Act0DecisionReasoningV1(
+    taskId: "w16_3_transfer_jam_nut_straight",
+    kind: Act0DecisionKindV1.table,
+    principleId: "street_value_budget",
+    bestAlternativeOptionId: "bet_18",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB still calls the 44 BB jam with sets and two pair; another 8-7 splits. Jam for modeled 125.11 BB rather than bet 18 BB for 119.43 BB, since the larger payments outweigh lost calls.",
+    stackMatters: false,
+  ),
+  "w16_3_day7_one_street_only": Act0DecisionReasoningV1(
+    taskId: "w16_3_day7_one_street_only",
+    kind: Act0DecisionKindV1.table,
+    principleId: "street_value_budget",
+    bestAlternativeOptionId: "alternative",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB folds hands worse than K-T and calls with better hands on this river by assumption. Check back rather than bet small for another street: the bet gets no extra money from worse and loses more against better.",
+    stackMatters: false,
+  ),
+  "w16_4_guided_delayed_value": Act0DecisionReasoningV1(
+    taskId: "w16_4_guided_delayed_value",
+    kind: Act0DecisionKindV1.table,
+    principleId: "delayed_attack",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB checks the turn queen and calls 3 BB with weaker queens, lower pairs and a draw as well as sets. The improved A-Q earns 4.54 BB by betting 3 BB versus 3.60 BB by checking in this model.",
+    stackMatters: false,
+  ),
+  "w16_4_transfer_float_or_free_card": Act0DecisionReasoningV1(
+    taskId: "w16_4_transfer_float_or_free_card",
+    kind: Act0DecisionKindV1.table,
+    principleId: "delayed_attack",
+    bestAlternativeOptionId: "alternative",
+    edgeMechanism: Act0EdgeMechanismV1.realizesPosition,
+    opponentRead:
+        "CO checks after BTN called the flop. CO never folds a pair here in the stated range, and BTN acts last. Check behind to see the river for no additional chips rather than bet to complete a float.",
+    stackMatters: false,
+  ),
+  "w16_5_guided_turn_overbet_nuts": Act0DecisionReasoningV1(
+    taskId: "w16_5_guided_turn_overbet_nuts",
+    kind: Act0DecisionKindV1.table,
+    principleId: "pressure_or_price",
+    bestAlternativeOptionId: "bet_7",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BB calls the 25 BB overbet with sets, two pair and other listed hands. The nut straight earns modeled 27.36 BB at 25 BB versus 21.87 BB at 7 BB; the larger payments outweigh the extra calls at the smaller size.",
+    stackMatters: false,
+  ),
+  "w16_5_transfer_block_price": Act0DecisionReasoningV1(
+    taskId: "w16_5_transfer_block_price",
+    kind: Act0DecisionKindV1.table,
+    principleId: "pressure_or_price",
+    bestAlternativeOptionId: "check_fold",
+    edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+    opponentRead:
+        "BTN calls 1 BB with all 14 legal combinations: eight worse kings and six better kings. Lead for modeled 3.29 BB rather than check and fold to 5 BB for 3.14 BB; the weaker kings check back otherwise.",
+    stackMatters: false,
+  ),
+  "w16_6_guided_scare_card_call": Act0DecisionReasoningV1(
+    taskId: "w16_6_guided_scare_card_call",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_recheck",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB bets 5 BB with flushes and weaker hands in the stated range. A-Q has 66.7% equity versus a 19.6% call price, so call for modeled 12 BB rather than fold for zero.",
+    stackMatters: false,
+  ),
+  "w16_6_checkpoint_match_the_price": Act0DecisionReasoningV1(
+    taskId: "w16_6_checkpoint_match_the_price",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_recheck",
+    bestAlternativeOptionId: "fold",
+    edgeMechanism: Act0EdgeMechanismV1.priceBeatsEquity,
+    opponentRead:
+        "BB’s 15 BB river betting range gives A-J 62.5% equity against a 33.0% price. Call for modeled 13.44 BB instead of folding for zero; earlier payments do not set the current price.",
+    stackMatters: false,
+  ),
+  "w16_6_day7_last_bet_independent": Act0DecisionReasoningV1(
+    taskId: "w16_6_day7_last_bet_independent",
+    kind: Act0DecisionKindV1.table,
+    principleId: "commitment_recheck",
+    bestAlternativeOptionId: "call",
+    edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+    opponentRead:
+        "BB’s stated 12 BB river betting range includes made flushes and sets. K-Q has 18.2% equity versus a 30.4% call price, so fold rather than call for a modeled 4.82 BB loss regardless of past bets.",
+    stackMatters: false,
+  ),
+  "h5_w16_3_guided_thin_third_street": Act0DecisionReasoningV1(
+    taskId: "h5_w16_3_guided_thin_third_street",
+    kind: Act0DecisionKindV1.table,
+    principleId: "pot_geometry",
+    bestAlternativeOptionId: "flop_check",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB has checked and the flop exercise assumes BB calls any offered bet. Bet 2 BB to build the 5.5 BB pot to 9.5 BB; checking leaves 5.5 BB and misses the sizing goal. This compares pot targets, not showdown EV.",
+    stackMatters: false,
+  ),
+  "h5_w16_3_transfer_jam_nut_straight": Act0DecisionReasoningV1(
+    taskId: "h5_w16_3_transfer_jam_nut_straight",
+    kind: Act0DecisionKindV1.table,
+    principleId: "pot_geometry",
+    bestAlternativeOptionId: "flop_check",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB has checked and the flop exercise assumes BB calls any offered bet. Bet 16 BB into 20.5 BB to reach 52.5 BB after the matching call; checking leaves 20.5 BB. This is the specified sizing goal, not a comparison of showdown EV.",
+    stackMatters: false,
+  ),
+  "h5_w16_6_day7_last_bet_independent": Act0DecisionReasoningV1(
+    taskId: "h5_w16_6_day7_last_bet_independent",
+    kind: Act0DecisionKindV1.table,
+    principleId: "pot_geometry",
+    bestAlternativeOptionId: "flop_check",
+    edgeMechanism: Act0EdgeMechanismV1.processRule,
+    opponentRead:
+        "BB has checked and the flop exercise assumes BB calls any offered bet. Bet 2 BB to reach the 9.5 BB target from 5.5 BB; checking leaves the pot unchanged. Reassess the river decision separately, rather than treating this flop bet as a commitment to call.",
+    stackMatters: false,
+  ),
 };
