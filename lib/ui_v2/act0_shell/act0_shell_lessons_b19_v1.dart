@@ -1992,7 +1992,7 @@ Act0LessonTaskV1 _b92TurnDrillV1({
           'short_raise': 6 < 2 * lead,
           'lead': lead != 4 || lead < blind('bb'),
           'btn_flop':
-              !hasAction('flop: BB checks') || !hasAction('flop: HJ checks'),
+              !hasAction('flop: BB checks') || !hasAction('flop: BTN checks'),
         },
         correction:
             'Raise to at least ${bb(2 * lead)}: match the ${bb(lead)} lead and add at least that much again.',
@@ -2015,7 +2015,7 @@ Act0LessonTaskV1 _b92TurnDrillV1({
         mistakes: {
           'bad_call': due != 4 || equity(outs) < price(),
           'check':
-              !hasAction('flop: BB checks') || !hasAction('flop: HJ checks'),
+              !hasAction('flop: BB checks') || !hasAction('flop: BTN checks'),
           'count': outs != 8,
         },
         correction:

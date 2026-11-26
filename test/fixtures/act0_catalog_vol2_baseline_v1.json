@@ -1,35 +1,10 @@
 {
   "W13": {
-    "1.board.texture": [
-      "w13_5_read_running_spades|feedback.rank:0"
-    ],
-    "1.card.named": [
-      "w13_4_guided_payment_tree|feedback:0",
-      "w13_4_guided_payment_tree|feedback:1",
-      "w13_4_guided_payment_tree|feedback:2",
-      "w13_4_guided_payment_tree|feedback:3",
-      "w13_4_guided_payment_tree|feedback:4",
-      "w13_4_guided_payment_tree|feedback:5",
-      "w13_4_transfer_short_stack_flip|feedback:0",
-      "w13_4_transfer_short_stack_flip|feedback:1",
-      "w13_4_transfer_short_stack_flip|feedback:2",
-      "w13_4_transfer_short_stack_flip|feedback:3",
-      "w13_4_transfer_short_stack_flip|feedback:4",
-      "w13_4_transfer_short_stack_flip|feedback:5"
-    ],
-    "11.btn_share_per_world": [
-      "@world:world_13|"
-    ],
     "16.extreme_wrong_option": [
       "w13_4_teach|all_automatic",
       "w13_5_read_running_spades|rank",
       "w13_6_teach|automatic",
       "w13_6_teach|position"
-    ],
-    "21.duplicate_wrong_reason": [
-      "w13_1_day7_queen_high_density|same",
-      "w13_2_day7_567_rainbow|same",
-      "w13_2_read_789_rainbow|same"
     ],
     "22.action_amount": [
       "w13_1_day7_queen_high_density|feedback/bb|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
@@ -120,22 +95,9 @@
       "w13_6_read_check_raise_transfer|question|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
     ],
     "C5": [
-      "w13_2_teach|527|OPTION: More overpairs after card removal",
-      "w13_2_teach|connected_board|FEEDBACK: An overpair is behind a straight on connected boards.",
-      "w13_2_teach|nut_advantage|TEACH: What would establish a nut advantage on a connected flop?.",
-      "w13_3_day7_river_pair_against_range|440|FEEDBACK: Folding would give up the wins against weaker hands and misses from the stated range.",
-      "w13_3_read_same_hand_two_ranges|528|CAPTION: Compare two equally weighted BB ranges after blockers.",
-      "w13_3_teach|368|CAPTION: Study equity vs range.",
       "w13_4_teach|equity_realization|TEACH: Realization is how much of that share you actually turn into chips after future bets and folds.",
-      "w13_5_day7_reprice_after_first_diamond|backdoor|CAPTION: The flop offered a backdoor diamond draw and the turn brought a diamond.",
-      "w13_5_guided_pair_plus_backdoor|backdoor|FEEDBACK: BB can bet weaker queens and unpaired hands, so your top pair with a backdoor has 65.6% equity against a 21.1% price.",
-      "w13_5_read_running_spades|93|FEEDBACK: A paired board can also let an opponent make a full house.",
-      "w13_5_read_running_spades|paired_board|FEEDBACK: A paired board can also let an opponent make a full house.",
       "w13_5_teach|122|TEACH: What is true of a backdoor flush draw on the flop?.",
-      "w13_5_teach|backdoor|TEACH: What is true of a backdoor flush draw on the flop?.",
-      "w13_5_transfer_backdoor_not_a_call|backdoor|FEEDBACK: With A-high on K-9-3, BB’s kings, sets and two pair leave you only 8.9% total equity, including backdoors, versus a 26.1% price.",
-      "w13_6_guided_small_cbet|84|FEEDBACK: On K-8-3, BB folds the same air and lower pairs to both sizes.",
-      "w13_6_teach|1291|TEACH: What should decide whether you use initiative for a c-bet?."
+      "w13_5_teach|backdoor|TEACH: What is true of a backdoor flush draw on the flop?."
     ],
     "D6.history_support": [
       "w13_1_day7_queen_high_density|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -168,35 +130,6 @@
       "w13_6_guided_small_cbet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w13_6_read_check_raise_transfer|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w13_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·28": [
-      "w13_2_guided_top_straight_size|bet_7",
-      "w13_2_transfer_second_straight|call",
-      "w13_3_day7_river_pair_against_range|call",
-      "w13_4_guided_payment_tree|call",
-      "w13_5_transfer_backdoor_not_a_call|fold"
-    ],
-    "G1·29": [
-      "w13_2_guided_top_straight_size|bet_7",
-      "w13_2_transfer_second_straight|call",
-      "w13_5_guided_pair_plus_backdoor|call",
-      "w13_5_transfer_backdoor_not_a_call|fold",
-      "w13_6_guided_small_cbet|bet_1"
-    ],
-    "G1·30": [
-      "w13_2_transfer_second_straight|call",
-      "w13_3_day7_river_pair_against_range|call",
-      "w13_3_transfer_pair_against_value|fold",
-      "w13_5_transfer_backdoor_not_a_call|fold"
-    ],
-    "G1·31": [
-      "w13_3_guided_flush_draw_turn|fold",
-      "w13_3_transfer_pair_against_value|call",
-      "w13_4_day7_check_behind_midpair|bet_3",
-      "w13_5_transfer_backdoor_not_a_call|call"
-    ],
-    "G1·37": [
-      "w13_6_guided_small_cbet|bet_2"
     ],
     "scope.applicability": [
       "w13_1_teach|authored/theory|explanation: source scope must identify physical applicability",
@@ -250,63 +183,6 @@
     ]
   },
   "W14": {
-    "1.card.named": [
-      "harder_block_weaker_flushes|caption:0",
-      "harder_block_weaker_flushes|feedback.bet_5:1",
-      "harder_block_weaker_flushes|feedback:1",
-      "harder_dirty_flush|caption:0",
-      "harder_dirty_flush|caption:1",
-      "harder_dirty_flush|feedback.fold:6",
-      "harder_dirty_flush|feedback.fold:7",
-      "harder_dirty_flush|feedback:6",
-      "harder_dirty_flush|feedback:7",
-      "harder_leave_misses_unblocked|feedback.call:1",
-      "harder_leave_misses_unblocked|feedback:1",
-      "harder_paired_river_boats|feedback.call:5",
-      "harder_paired_river_boats|feedback:5",
-      "harder_remove_missed_hearts|feedback.fold:1",
-      "harder_remove_missed_hearts|feedback:1",
-      "harder_shorter_implied_payment|caption:0",
-      "harder_shorter_implied_payment|caption:1",
-      "harder_shorter_implied_payment|caption:2",
-      "harder_shorter_implied_payment|caption:3",
-      "harder_straight_price_rises|caption:0",
-      "harder_straight_price_rises|caption:1",
-      "harder_straight_price_rises|feedback.fold:6",
-      "harder_straight_price_rises|feedback.fold:7",
-      "harder_straight_price_rises|feedback:6",
-      "harder_straight_price_rises|feedback:7",
-      "w14_3_guided_compare_size_plans|caption:0",
-      "w14_3_guided_compare_size_plans|caption:1",
-      "w14_3_guided_compare_size_plans|caption:2",
-      "w14_3_guided_compare_size_plans|caption:3"
-    ],
-    "11.btn_share_per_world": [
-      "@world:world_14|"
-    ],
-    "15.internal_jargon": [
-      "harder_block_weaker_flushes|baseline",
-      "harder_block_weaker_flushes|hero",
-      "harder_dirty_flush|baseline",
-      "harder_leave_misses_unblocked|baseline",
-      "harder_overbet_passes_value|baseline",
-      "harder_paired_river_boats|baseline",
-      "harder_remove_missed_hearts|baseline",
-      "harder_river_value_added|baseline",
-      "harder_shorter_implied_payment|baseline",
-      "harder_straight_price_rises|baseline",
-      "harder_worse_calls_larger|baseline",
-      "w14_1_day7_keep_weaker_pairs|hero",
-      "w14_1_guided_smaller_gets_paid|hero",
-      "w14_1_transfer_medium_showdown|hero",
-      "w14_2_day7_size_for_bluff|hero",
-      "w14_2_guided_make_better_fold|hero",
-      "w14_2_transfer_nut_value|hero",
-      "w14_4_transfer_effective_shove|hero",
-      "w14_6_checkpoint_size_and_raise|hero",
-      "w14_6_day7_decline_induce|hero",
-      "w14_6_guided_bet_to_induce|hero"
-    ],
     "16.extreme_wrong_option": [
       "w14_1_teach|other",
       "w14_2_read_polar_range|other",
@@ -324,10 +200,6 @@
       "@lesson:slightly_harder|too_long",
       "@lesson:turn_card_impact|too_long",
       "@lesson:where_is_the_mistake|too_long"
-    ],
-    "20.hero_qq_per_world": [
-      "turn_overcard_beats_pair|",
-      "w14_6_checkpoint_size_and_raise|"
     ],
     "22.action_amount": [
       "w14_1_day7_keep_weaker_pairs|feedback/bet_2|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
@@ -429,69 +301,11 @@
       "w14_6_read_induced_raise_price|feedback/other|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
       "w14_6_read_induced_raise_price|question|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
     ],
-    "25.street_stack": [
-      "w14_2_transfer_nut_value|option[bet_3].reason|3 BB behind|expected 97.5",
-      "w14_5_guided_work_backward|option[plan_2].reason|10 BB behind|expected 90.0",
-      "w14_5_guided_work_backward|option[plan_3].reason|5 BB behind|expected 90.0"
-    ],
-    "47.correct_feedback_length": [
-      "harder_block_weaker_flushes|bet_5|194 words",
-      "harder_dirty_flush|fold|122 words",
-      "harder_leave_misses_unblocked|call|119 words",
-      "harder_overbet_passes_value|bet_15|185 words",
-      "harder_paired_river_boats|call|124 words",
-      "harder_remove_missed_hearts|fold|119 words",
-      "harder_river_value_added|call|117 words",
-      "harder_shorter_implied_payment|fold|141 words",
-      "harder_straight_price_rises|fold|114 words",
-      "harder_worse_calls_larger|bet_4|179 words",
-      "turn_remove_high_draw|good|47 words"
-    ],
-    "8.all_in_kind": [
-      "w14_4_day7_low_spr_fold|bb"
-    ],
     "C5": [
-      "harder_overbet_passes_value|overbet|FEEDBACK: Enough flushes and sets pay the overbet to beat the smaller wager that also gets K-Q.",
-      "harder_paired_river_boats|93|FEEDBACK: The paired board changes the value group, but there are still enough misses in the legal betting range.",
-      "harder_paired_river_boats|bluff_catcher|CAPTION: Replace the river-bluff-catch board’s turn three with a second nine.",
-      "harder_paired_river_boats|paired_board|FEEDBACK: The paired board changes the value group, but there are still enough misses in the legal betting range.",
       "harder_river_value_added|polarized|CAPTION: Add weaker K-J bets to a formerly polarized range.",
-      "harder_shorter_implied_payment|297|CAPTION: The set pays only on clean hearts and is capped by the remaining effective stack.",
-      "harder_shorter_implied_payment|capped_range|CAPTION: If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, capped by its stack.",
-      "harder_shorter_implied_payment|effective_stack|CAPTION: The set pays only on clean hearts and is capped by the remaining effective stack.",
-      "mistake_matched_amount|heads_up|Q: Which note is wrong for this heads-up pot?",
-      "mistake_matched_amount|push_fold|CAPTION: On the river BB pushes its last 15 BB.",
-      "mistake_turn_flush_fold|385|Q: Which annotated choice gives up positive chip EV?",
-      "mistake_turn_flush_fold|845|Q: Which annotated choice gives up positive chip EV?",
-      "w14_1_day7_keep_weaker_pairs|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_1_guided_smaller_gets_paid|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_1_guided_smaller_gets_paid|overbet|FEEDBACK: More weaker pairs fold at 6 BB, and only sets pay the overbet.",
-      "w14_1_read_underbet|570|FEEDBACK: It is a pot-size bet.",
-      "w14_1_read_underbet|overbet|FEEDBACK: The bet is 127.3% of the pot, so it is an overbet.",
-      "w14_1_teach|polarized|TEACH: When does a small merged bet earn value?.",
-      "w14_1_transfer_medium_showdown|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_2_day7_size_for_bluff|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_2_guided_make_better_fold|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_2_read_polar_range|1201|FEEDBACK: Sets are strong value here and the unpaired groups are bluffs.",
-      "w14_2_read_polar_range|172|FEEDBACK: The suited connectors and broadway hands listed for the bet have no pair on this board.",
       "w14_2_read_polar_range|polarized|OPTION: Polarized",
       "w14_2_teach|1201|TEACH: A polarized betting range uses strong value and bluffs, with many medium-strength hands checking.",
-      "w14_2_teach|569|TEACH: A large bet can support that split.",
-      "w14_2_teach|polarized|TEACH: Which group is polarized?.",
-      "w14_2_transfer_nut_value|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_2_transfer_nut_value|mixed_strategy|FEEDBACK: Their extra frequency leaves 3 BB behind the 8 BB option.",
-      "w14_3_day7_read_opponent_size|440|FEEDBACK: Folding would give up wins against the weaker and missed combinations included in BB’s stated range.",
-      "w14_3_teach|180|FEEDBACK: A size may change the likely hand classes.",
-      "w14_4_day7_low_spr_fold|push_fold|FEEDBACK: BB called the 4-bet with a premium range and shoves T-7-4.",
-      "w14_4_transfer_effective_shove|push_fold|FEEDBACK: A 90 BB shove from 100 BB stacks would require 44.9% and change the answer.",
-      "w14_5_day7_two_streets|push_fold|FEEDBACK: The required shove exceeds the stated cap.",
-      "w14_5_read_called_turn_pot|297|Q: What are the river pot and effective stack?",
-      "w14_5_read_called_turn_pot|effective_stack|Q: What are the river pot and effective stack?",
-      "w14_6_checkpoint_size_and_raise|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_6_day7_decline_induce|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_6_guided_bet_to_induce|210|CAPTION: After a check, a flat call or a called raise, there is no more betting.",
-      "w14_6_read_induced_raise_price|winrate|Q: What win rate covers the extra call?",
-      "w14_6_teach|gto|FEEDBACK: One observed result does not supply the balance of value hands and bluffs in the current range."
+      "w14_2_teach|polarized|TEACH: Which group is polarized?."
     ],
     "D6.history_support": [
       "harder_block_weaker_flushes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -556,11 +370,7 @@
       "w14_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
-      "w14_4_day7_low_spr_fold|shoves",
-      "w14_4_teach|shoving",
-      "w14_4_transfer_effective_shove|shove",
-      "w14_4_transfer_effective_shove|shoving",
-      "w14_5_day7_two_streets|shove"
+      "w14_4_teach|shoving"
     ],
     "E19": [
       "mistake_known_blocker|wrong: river · keep all four queens available → river · keep four queens available",
@@ -584,72 +394,6 @@
       "turn_straight_completes|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
       "turn_turn_makes_set|correct: good for your showdown share → 5c",
       "turn_turn_makes_set|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c"
-    ],
-    "G1·26": [
-      "w14_1_read_underbet|"
-    ],
-    "G1·27": [
-      "w14_1_read_underbet|"
-    ],
-    "G1·28": [
-      "harder_dirty_flush|fold",
-      "harder_leave_misses_unblocked|call",
-      "harder_overbet_passes_value|bet_15",
-      "harder_paired_river_boats|call",
-      "harder_remove_missed_hearts|fold",
-      "harder_river_value_added|call",
-      "harder_straight_price_rises|fold",
-      "harder_worse_calls_larger|bet_4",
-      "w14_1_day7_keep_weaker_pairs|bet_2",
-      "w14_1_read_underbet|answer",
-      "w14_1_transfer_medium_showdown|check",
-      "w14_2_transfer_nut_value|bet_8",
-      "w14_3_day7_read_opponent_size|call",
-      "w14_3_guided_compare_size_plans|split",
-      "w14_4_day7_low_spr_fold|fold",
-      "w14_4_guided_spr_price|call",
-      "w14_6_checkpoint_size_and_raise|bet_3"
-    ],
-    "G1·29": [
-      "harder_block_weaker_flushes|bet_5",
-      "harder_overbet_passes_value|bet_15",
-      "harder_worse_calls_larger|bet_4",
-      "w14_1_day7_keep_weaker_pairs|bet_2",
-      "w14_1_read_underbet|answer",
-      "w14_2_day7_size_for_bluff|bet_7",
-      "w14_3_day7_read_opponent_size|call",
-      "w14_3_guided_compare_size_plans|split",
-      "w14_3_transfer_small_value_signal|fold",
-      "w14_4_guided_spr_price|call",
-      "w14_4_transfer_effective_shove|call",
-      "w14_6_checkpoint_size_and_raise|bet_3",
-      "w14_6_day7_decline_induce|bet_3"
-    ],
-    "G1·30": [
-      "w14_3_transfer_small_value_signal|fold",
-      "w14_4_transfer_effective_shove|call"
-    ],
-    "G1·31": [
-      "harder_overbet_passes_value|bet_5",
-      "harder_overbet_passes_value|check",
-      "harder_paired_river_boats|fold",
-      "harder_remove_missed_hearts|call",
-      "harder_river_value_added|fold",
-      "harder_shorter_implied_payment|call",
-      "harder_worse_calls_larger|check",
-      "w14_1_guided_smaller_gets_paid|bet_6",
-      "w14_1_guided_smaller_gets_paid|check",
-      "w14_1_read_underbet|alternative",
-      "w14_1_read_underbet|other",
-      "w14_1_transfer_medium_showdown|bet_5",
-      "w14_2_day7_size_for_bluff|check",
-      "w14_2_transfer_nut_value|bet_3",
-      "w14_3_transfer_small_value_signal|call",
-      "w14_6_checkpoint_size_and_raise|check",
-      "w14_6_guided_bet_to_induce|bet_5"
-    ],
-    "G1·40": [
-      "w14_3_transfer_small_value_signal|fold|The 2 BB bet"
     ],
     "scope.applicability": [
       "w14_1_teach|authored/theory|explanation: source scope must identify physical applicability",
