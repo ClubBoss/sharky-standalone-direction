@@ -1690,7 +1690,7 @@ final _world15Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BTN has an equally weighted legal combo from AA KK QQ JJ TT AKo AQo KQs 88 77 44 65s. If you lead 3 BB, BTN calls with AA KK QQ JJ TT 88 77 44 65s and folds the rest. After check or call, both players check through to showdown.",
+            "BTN has an equally weighted legal combo from AA KK QQ JJ TT AKo AQo KQs 88 77 44 65s. If you lead 3 BB on this flop, BTN calls that bet with AA KK QQ JJ TT 88 77 44 65s and folds the rest. After check or call, both players check through to showdown.",
         question: "Which play earns more under the modeled response?",
         teach:
             "Classify the lead by action order. Price it by the hands that continue.",
@@ -1857,7 +1857,7 @@ final _world15Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "BTN has an equally weighted legal combo from AKo AQo AJs 66 33 99 88 77 KQs QJs. If you lead 3 BB, BTN calls with AKo AQo AJs 66 33 and folds the rest. After check or call, both players check through to showdown.",
+            "BTN has an equally weighted legal combo from AKo AQo AJs 66 33 99 88 77 KQs QJs. If you lead 3 BB on this flop, BTN calls that bet with AKo AQo AJs 66 33 and folds the rest. After check or call, both players check through to showdown.",
         question: "Which play earns more under the modeled response?",
         teach: "",
         choices: const [
