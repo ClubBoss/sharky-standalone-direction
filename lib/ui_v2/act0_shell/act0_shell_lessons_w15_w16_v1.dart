@@ -29,7 +29,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A low-card flop favors a broad c-bet regardless of connections",
+            "Any low-card flop makes a wide c-bet safe",
             Act0FeedbackQualityV1.wrong,
             "Low does not mean disconnected. Count the caller’s pairs and straight draws on a connected low board.",
           ),
@@ -792,7 +792,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Disguising a set is worth more than taking immediate value",
+            "A set should always disguise its strength",
             Act0FeedbackQualityV1.wrong,
             "A passive opponent may check again. Then the free card costs immediate value without adding a later bet.",
           ),
@@ -920,7 +920,7 @@ final _world15Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 2 BB",
             Act0FeedbackQualityV1.wrong,
-            "A bet earns some value from K-x and sets. It makes BB’s unpaired lead candidates fold before they can bet.",
+            "A bet earns some value from K-x and sets, but misses the later bets from unpaired hands that fold now. Checking earns more in this model.",
           ),
         ],
         table: _day7TableV1(
@@ -1176,7 +1176,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "The preflop raiser has less flush coverage on a monotone flop",
+            "The preflop raiser never has good flush coverage",
             Act0FeedbackQualityV1.wrong,
             "Suit-blocked classes determine the legal flushes. The label preflop raiser does not supply those counts.",
           ),
@@ -1538,7 +1538,7 @@ final _world15Pilot = _act0PilotWorldV1(
         caption: "Study leads and stabs.",
         question: "What distinguishes a lead from a stab in this course?",
         teach:
-            "An out-of-position bet before the preflop aggressor acts is a lead. A stab is a bet after the aggressor shows weakness by checking. The same board can offer both ideas in different action orders.",
+            "A lead into the preflop aggressor is a bet by the out-of-position preflop caller before the raiser acts. A stab is a bet after the aggressor shows weakness by checking. The same board can offer both ideas in different action orders.",
         choices: const [
           (
             "answer",
@@ -1923,13 +1923,13 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Sets and high-equity semibluffs raise while top pair calls",
+            "Only sets and high-equity semibluffs raise",
             Act0FeedbackQualityV1.wrong,
             "That describes a polarized shape. Strong one-pair hands stay in the calling range in that policy.",
           ),
           (
             "other",
-            "The raise size is fixed across hand strengths",
+            "Every raise uses the same amount",
             Act0FeedbackQualityV1.wrong,
             "One amount can serve either a merged or polarized range. Identify which hands use it.",
           ),
@@ -1953,19 +1953,19 @@ final _world15Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Sets and the Ah Jh or Kh Jh flush draws",
+            "Raise sets and the Ah Jh or Kh Jh flush draws",
             Act0FeedbackQualityV1.correct,
-            "Sets form the strong end, and the two heart draws are the bluff end because they can improve. BB calls with the modeled top pairs.",
+            "BB raises sets for value and the two heart draws as bluffs because those draws can improve. BB calls with the modeled top pairs.",
           ),
           (
             "alternative",
-            "Sets and strong top pairs together",
+            "Raise sets and strong top pairs together",
             Act0FeedbackQualityV1.wrong,
-            "Raising top pair alongside sets leaves out the bluff end of the polarized policy.",
+            "Raising top pair alongside sets misses the bluff end of the polarized policy.",
           ),
           (
             "other",
-            "Top pair, with sets and draws in calls",
+            "Raise only top pair because the board has two hearts",
             Act0FeedbackQualityV1.wrong,
             "Raising top pair misses both the strongest made hands and the bluffs with draws.",
           ),
@@ -3570,7 +3570,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
         choices: const [
           (
             "bet_44",
-            "All-in 44 BB",
+            "Jam 44 BB",
             Act0FeedbackQualityV1.correct,
             "Go all-in for 44 BB because BB still calls with sets and two pair. Another 8-7 splits at either size; the smaller bet earns less.",
           ),
@@ -3709,7 +3709,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Go all-in for value",
+            "Jam as shown value",
             Act0FeedbackQualityV1.wrong,
             "The stipulated continuing hands are stronger. Increasing the bet costs more against these callers.",
           ),
@@ -4240,7 +4240,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Acting first is enough to set your price",
+            "Every time you act first",
             Act0FeedbackQualityV1.wrong,
             "Position only supplies the option to bet. Opponent responses determine the cost.",
           ),
@@ -4709,9 +4709,9 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "other",
-            "A single-spade hand makes a flush",
+            "Every single-spade hand makes a flush",
             Act0FeedbackQualityV1.wrong,
-            "One hole spade plus three board spades gives four spades.",
+            "One private spade plus three board spades gives just four spades. A flush requires five.",
           ),
         ],
         table: _day7TableV1(
