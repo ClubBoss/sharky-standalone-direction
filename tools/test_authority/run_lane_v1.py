@@ -36,6 +36,11 @@ LANES = {
 
 TIER_A_COMMANDS = [
     {"name":"poker W4 closed-flop actor and historical compatibility","cmd":["flutter","test","test/ui_v2/act0_w4_closed_flop_actor_v1_test.dart","-r","expanded"]},
+    {
+        "name": "B101 skin swap rehearsal and default parity",
+        "min_timeout_seconds": 600,
+        "cmd": ["python3", "tools/test_authority/skin_swap_rehearsal_v1.py", "test/ui_v2/skin/act0_skin_swap_rehearsal_v1_test.dart"],
+    },
     {"name":"poker face-up physical disclosure","cmd":["flutter","test","test/ui_v2/act0_faceup_physical_disclosure_v1_test.dart","-r","expanded"]},
     {"name":"poker W6 full-house explanation","cmd":["flutter","test","test/ui_v2/act0_w6_full_house_explanation_v1_test.dart","-r","expanded"]},
     {"name":"Academy Placement Review widget-host remount default OFF","cmd":["flutter","test","test/ui_v2/act0_jrn06_placement_review_restart_v1_test.dart","-r","expanded"]},
