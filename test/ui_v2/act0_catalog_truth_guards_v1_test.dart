@@ -630,6 +630,41 @@ TASK river [decision] River
       );
     });
 
+    test('E19 skips only exact reviewed relabels', () {
+      const previous = '''
+TASK w13_4_teach [theory] Equity realization
+  - [wrong] The full share is always paid on the turn — Explanation.
+''';
+      const reviewed = '''
+TASK w13_4_teach [theory] Equity realization
+  - [wrong] The full equity share is paid out on the turn — Explanation.
+''';
+      expect(catalogOptionLabelChangesV1(previous, reviewed), isEmpty);
+      // A matching detail under another task is not approved.
+      expect(
+        catalogOptionLabelChangesV1(
+          previous.replaceFirst('w13_4_teach', 'unreviewed_task'),
+          reviewed.replaceFirst('w13_4_teach', 'unreviewed_task'),
+        ).single,
+        (
+          rule: 'E19',
+          task: 'unreviewed_task',
+          detail:
+              'wrong: the full share is always paid on the turn → the full equity share is paid out on the turn',
+        ),
+      );
+      // Approval is not a wildcard for future edits to the same task.
+      expect(
+        catalogOptionLabelChangesV1(
+          previous,
+          reviewed.replaceFirst('on the turn', 'on the river'),
+        ).single.rule,
+        'E19',
+      );
+      // After merge the reviewed entry need not match an active change.
+      expect(catalogOptionLabelChangesV1(reviewed, reviewed), isEmpty);
+    });
+
     test('E19 compares option labels with the previous catalog snapshot', () {
       final previous = previousCatalogSnapshotV1();
       if (previous == null) return;

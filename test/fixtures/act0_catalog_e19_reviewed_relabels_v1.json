@@ -1,0 +1,170 @@
+[
+  {
+    "task": "w13_4_teach",
+    "detail": "wrong: the full share is always paid on the turn → the full equity share is paid out on the turn",
+    "reason": "Equity is a probability-weighted showdown share, not chips paid on the turn; a later fold can forfeit potential wins.",
+    "package": "B133"
+  },
+  {
+    "task": "w13_5_read_running_spades",
+    "detail": "wrong: any two cards that pair the board → pairing the board across the two remaining cards",
+    "reason": "Pairing board ranks does not ensure the two additional spades needed to reach five spades.",
+    "package": "B133"
+  },
+  {
+    "task": "w13_6_teach",
+    "detail": "wrong: the preflop raiser should always bet / the last actor always has initiative → the preflop raise obliges the raiser to c-bet / acting last gives a player the initiative",
+    "reason": "Preflop aggression does not require a c-bet; acting last determines position, not which player has betting initiative.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_1_teach",
+    "detail": "wrong: when only sets and bluffs use it → when sets and bluffs form the betting range",
+    "reason": "A range of sets and bluffs is polarized, not the merged strong-and-medium value range asked about; worse made-hand calls justify the small value bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_2_read_polar_range",
+    "detail": "wrong: value only → a pure value range",
+    "reason": "The listed unpaired hands are bluffs alongside sets, so the 8 BB range is not pure value.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_3_teach",
+    "detail": "wrong: a second size always makes a policy more profitable → adding a second size itself increases profitability",
+    "reason": "Adding a second size alone does not increase EV if responses and payoffs remain identical.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_5_teach",
+    "detail": "wrong: only the bet stays in the pot → the bet enters the pot but the call does not",
+    "reason": "Both the bet and its matched call increase the pot for the next street.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_1_teach",
+    "detail": "wrong: any low-card flop makes a wide c-bet safe → low flop ranks by themselves make a wide c-bet safe",
+    "reason": "Low ranks alone do not make broad c-betting safe; connected low boards can favor the caller’s pairs and draws.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_3_teach",
+    "detail": "wrong: a set should always disguise its strength → having a set is enough reason to hide its strength",
+    "reason": "A set alone does not justify slowplaying; a passive opponent may check again instead of paying a delayed bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_4_teach",
+    "detail": "wrong: the preflop raiser never has good flush coverage → raising preflop rules out good flush coverage",
+    "reason": "A preflop raiser can have flushes; legal suited combinations depend on the actual range and board blockers.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_6_teach",
+    "detail": "wrong: only sets and high-equity semibluffs raise / every raise uses the same amount → the raising range consists of sets and high-equity semibluffs / the raising range uses one size",
+    "reason": "Sets plus semibluffs describe polarization, not merged raising; using one size does not distinguish merged and polarized ranges.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_6_read_polar_on_two_tone",
+    "detail": "wrong: raise only top pair because the board has two hearts → reserve raises for top pair because the board has two hearts",
+    "reason": "The stipulated top pairs call; the polarized raise includes sets and heart-draw bluffs instead.",
+    "package": "B133"
+  },
+  {
+    "task": "w16_5_teach",
+    "detail": "wrong: every time you act first → when your position lets you act first",
+    "reason": "Acting first permits a lead but cannot by itself lower showdown cost; opponent calls and raises determine whether the block bet helps.",
+    "package": "B133"
+  },
+  {
+    "task": "w16_6_read_runout_two_sides",
+    "detail": "wrong: every single-spade hand makes a flush → holding one spade is enough to make a flush",
+    "reason": "Three board spades plus one hole-card spade make four spades, not the five needed for a flush.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_3_guided_count_caller_coverage",
+    "detail": "wrong: the premium pairs only → the premium pairs rather than the caller’s group",
+    "reason": "Each listed suited caller class supplies the two missing straight ranks; premium pocket pairs cannot supply two distinct ranks here.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_4_teach",
+    "detail": "wrong: only when a 4-bet matches the 3-bet → when the 4-bet matches the 3-bet rather than increasing it",
+    "reason": "Matching a 3-bet is a call, not a 4-bet, which must increase the wager.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_6_teach",
+    "detail": "wrong: every checked 3-bet flop signals a trap → a checked flop in a 3-bet pot signals a trap",
+    "reason": "A check in a 3-bet pot alone cannot establish a trap or justify checking back; weak and marginal hands can check too.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_teach",
+    "detail": "wrong: a three-way pot can never be value-bet → a third player prevents value betting",
+    "reason": "A third player does not prevent value betting; multiple worse ranges may still pay a strong hand.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_read_compression_vs_hand_label",
+    "detail": "wrong: every call is a bluff → the callers have bluff holdings rather than made hands",
+    "reason": "The stated continuing groups contain sets and top pairs, not bluff holdings.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_day7_multiple_value_calls",
+    "detail": "wrong: only the first player can pay → the first player can pay, but the second cannot",
+    "reason": "Both modeled players have worse made hands that can call the river bet, including after the first calls.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_teach",
+    "detail": "wrong: always the opening raiser / always the first player to check → the opening raiser / the first player to check",
+    "reason": "Neither being the opener nor checking first guarantees last action; a live player behind can still bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_read_three_way_nuts",
+    "detail": "wrong: only co → co rather than btn or bb",
+    "reason": "The stated CO overpairs cannot supply both T and 9; BTN and BB can each hold T9s for the nut straight.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_transfer_oop_check_may_face_bet",
+    "detail": "wrong: it closes all action because the blind checked → it ends the betting round because the blind checked",
+    "reason": "BTN remains live and has not acted, so CO’s check after BB does not close the betting round.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_day7_connected_caller_edge",
+    "detail": "wrong: every hand in bb’s full range is a straight → bb’s full range consists of straights",
+    "reason": "The listed straight classes demonstrate a subset of BB’s range, not that its full range contains only straights.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_4_teach",
+    "detail": "wrong: every pot if its hand is best / only its own chips back → the main and side pots if its hand is best / its own contribution, without the matched chips",
+    "reason": "A short stack cannot win the side pot it did not match, but can win opponents’ matched contributions in the eligible main pot.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_4_read_side_pot_layers",
+    "detail": "wrong: 60.5 bb all in the main pot → 60.5 bb in a single main pot",
+    "reason": "The 8 BB starting pot plus three 7.5 BB matches gives 30.5 BB main; the two extra 10 BB contributions give 20 BB side, not a single 60.5 BB main.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_5_guided_short_raise_no_reopen",
+    "detail": "wrong: yes, because any extra amount reopens → yes, because increasing the wager is enough to reopen",
+    "reason": "The increase from 6 to 9 BB is only 3 BB, below the stated 6 BB full-raise threshold for reopening.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_5_day7_full_raise_reopens",
+    "detail": "wrong: no. all-in wagers never reopen → no. an all-in wager cannot reopen betting",
+    "reason": "An all-in can be a full raise; the increase from 5 to 11 BB is 6 BB and reopens action under the stated rule.",
+    "package": "B133"
+  }
+]
