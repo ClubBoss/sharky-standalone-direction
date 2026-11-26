@@ -1620,11 +1620,6 @@
     ]
   },
   "W23": {
-    "1.card.named": [
-      "w23_2_day7_which_flush_is_nut|caption:2",
-      "w23_2_day7_which_flush_is_nut|caption:3",
-      "w23_6_read_blocker_value_four_bet|feedback.answer:0"
-    ],
     "16.extreme_wrong_option": [
       "w23_1_teach|other",
       "w23_4_teach|alternative",
@@ -1633,23 +1628,6 @@
       "w23_5_teach|other",
       "w23_6_read_blocker_value_four_bet|alternative",
       "w23_6_teach|alternative"
-    ],
-    "21.duplicate_wrong_reason": [
-      "w23_1_day7_btn_medium_queen|other",
-      "w23_1_guided_hj_opens_medium|other",
-      "w23_1_transfer_co_opens_sevens|other"
-    ],
-    "46.action_question_options": [
-      "w23_4_transfer_five_bet_price_flips|missing bet",
-      "w23_4_transfer_five_bet_price_flips|unasked answer answer"
-    ],
-    "C5": [
-      "w23_2_day7_which_flush_is_nut|93|FEEDBACK: A paired board still permits full houses or quads.",
-      "w23_2_day7_which_flush_is_nut|paired_board|FEEDBACK: A paired board still permits full houses or quads.",
-      "w23_3_read_bb_minraise|193|FEEDBACK: That uses the full open size as the new BB payment.",
-      "w23_3_teach|193|OPTION: The big blind pays the full open size in either branch",
-      "w23_5_transfer_depth_changes_available_payoff|298|OPTION: The deep stack guarantees a larger win",
-      "w23_6_checkpoint_combine_coverage_price_and_depth|193|OPTION: Use the heads-up solver because the initial open size matches"
     ],
     "D6.history_support": [
       "w23_1_day7_btn_medium_queen|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1685,10 +1663,7 @@
     ],
     "E11": [
       "w23_4_read_raise_number|shove",
-      "w23_4_read_raise_number|shoving",
-      "w23_4_teach|shove",
-      "w23_4_transfer_five_bet_price_flips|jam",
-      "w23_4_transfer_five_bet_price_flips|jams"
+      "w23_4_teach|shove"
     ],
     "G1·26": [
       "w23_1_day7_btn_medium_queen|",
@@ -1710,14 +1685,6 @@
       "w23_4_transfer_five_bet_price_flips|",
       "w23_6_day7_choose_chart_only_matching_line|"
     ],
-    "G1·28": [
-      "w23_1_day7_btn_medium_queen|answer",
-      "w23_1_guided_hj_opens_medium|answer",
-      "w23_1_transfer_co_opens_sevens|answer",
-      "w23_3_day7_different_prices_different_calls|answer",
-      "w23_4_day7_four_bet_value_response|answer",
-      "w23_4_transfer_five_bet_price_flips|answer"
-    ],
     "G1·29": [
       "w23_1_day7_btn_medium_queen|answer",
       "w23_1_guided_hj_opens_medium|answer",
@@ -1733,62 +1700,15 @@
       "w23_4_day7_four_bet_value_response|answer",
       "w23_4_transfer_five_bet_price_flips|answer",
       "w23_6_day7_choose_chart_only_matching_line|answer"
-    ],
-    "G1·31": [
-      "w23_1_day7_btn_medium_queen|other",
-      "w23_1_guided_hj_opens_medium|other",
-      "w23_1_read_utg_medium_hj|alternative",
-      "w23_1_transfer_co_opens_sevens|other",
-      "w23_4_day7_four_bet_value_response|alternative",
-      "w23_4_transfer_five_bet_price_flips|alternative",
-      "w23_6_day7_choose_chart_only_matching_line|alternative",
-      "w23_6_day7_choose_chart_only_matching_line|other"
     ]
   },
   "W24": {
-    "11.btn_share_per_world": [
-      "@world:world_24|"
-    ],
-    "15.internal_jargon": [
-      "w24_3_transfer_indifferent_range_blocks|hero",
-      "w24_4_read_nut_flush_removal|hero",
-      "w24_4_teach|hero",
-      "w24_5_read_what_thin_raise_costs|hero"
-    ],
     "16.extreme_wrong_option": [
       "w24_1_read_classify_river_groups|alternative",
       "w24_1_read_classify_river_groups|other",
       "w24_3_guided_fractional_bluff_weight|other",
       "w24_4_teach|alternative",
       "w24_4_teach|other"
-    ],
-    "24.call_equity": [
-      "w24_2_guided_overbet_mdf|option[answer].reason|needs 60%|expected 37.5"
-    ],
-    "9.inherited_copy": [
-      "w24_6_checkpoint_value_check_raise|title",
-      "w24_6_guided_raise_blocker_bluff|title"
-    ],
-    "C5": [
-      "w24_1_teach|1201|TEACH: A polar betting range combines strong value with bluffs.",
-      "w24_2_teach|alpha_breakeven_bluff|TEACH: What is alpha for bluffing B into pot P with no recovery?.",
-      "w24_3_day7_ratio_for_double_pot|1223|Q: Which value-to-bluff ratio makes the bluff catcher indifferent?",
-      "w24_3_day7_ratio_for_double_pot|83|Q: Which value-to-bluff ratio makes the bluff catcher indifferent?",
-      "w24_3_teach|1223|TEACH: A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff.",
-      "w24_3_teach|83|TEACH: A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff.",
-      "w24_3_transfer_indifferent_range_blocks|1223|Q: What does the filtered range imply for this bluff catcher?",
-      "w24_3_transfer_indifferent_range_blocks|83|Q: What does the filtered range imply for this bluff catcher?",
-      "w24_4_teach|1223|TEACH: A card that removes missed hands can hurt a bluff catcher.",
-      "w24_4_teach|83|TEACH: A card that removes missed hands can hurt a bluff catcher.",
-      "w24_5_teach|64|FEEDBACK: Possible callers are narrower than all legal hole cards.",
-      "w24_5_teach|backdoor|OPTION: Does the hand have a backdoor draw?"
-    ],
-    "D3.explicit_current_bet": [
-      "w24_4_transfer_effective_price_river|authored/drill|owner=BB amount=9.0 BB",
-      "w24_4_transfer_effective_price_river|decision|owner=BB amount=9.0 BB",
-      "w24_4_transfer_effective_price_river|feedback/call|owner=BB amount=9.0 BB",
-      "w24_4_transfer_effective_price_river|feedback/fold|owner=BB amount=9.0 BB",
-      "w24_4_transfer_effective_price_river|review|owner=BB amount=9.0 BB"
     ],
     "D6.history_support": [
       "w24_1_day7_condensed_calls_sized_bluffs|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -1822,9 +1742,6 @@
       "w24_6_read_raise_bluff_risk|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "E11": [
-      "w24_5_teach|hole cards"
-    ],
     "G1·26": [
       "w24_1_guided_condensed_bluff_catcher|",
       "w24_1_transfer_keep_middle_check|",
@@ -1855,18 +1772,6 @@
       "w24_6_day7_no_bluff_without_folds|",
       "w24_6_guided_raise_blocker_bluff|"
     ],
-    "G1·28": [
-      "w24_1_guided_condensed_bluff_catcher|call",
-      "w24_1_transfer_keep_middle_check|check",
-      "w24_2_day7_call_price_vs_range_mdf|answer",
-      "w24_3_transfer_indifferent_range_blocks|answer",
-      "w24_4_guided_overbet_collect_nut_value|bet_9",
-      "w24_5_day7_check_marginal_showdown|answer",
-      "w24_5_guided_thin_value_raise|raise_6",
-      "w24_5_transfer_thin_raise_becomes_call|call",
-      "w24_6_day7_no_bluff_without_folds|answer",
-      "w24_6_guided_raise_blocker_bluff|raise_13"
-    ],
     "G1·29": [
       "w24_1_guided_condensed_bluff_catcher|call",
       "w24_1_transfer_keep_middle_check|check",
@@ -1892,21 +1797,6 @@
       "w24_6_checkpoint_value_check_raise|raise_12",
       "w24_6_day7_no_bluff_without_folds|answer",
       "w24_6_guided_raise_blocker_bluff|raise_13"
-    ],
-    "G1·31": [
-      "w24_1_transfer_keep_middle_check|bet_2",
-      "w24_2_day7_call_price_vs_range_mdf|alternative",
-      "w24_2_transfer_bluff_threshold_overpot|alternative",
-      "w24_2_transfer_bluff_threshold_overpot|other",
-      "w24_3_transfer_indifferent_range_blocks|alternative",
-      "w24_3_transfer_indifferent_range_blocks|other",
-      "w24_4_guided_overbet_collect_nut_value|bet_3",
-      "w24_4_guided_overbet_collect_nut_value|check",
-      "w24_5_day7_check_marginal_showdown|alternative",
-      "w24_5_day7_check_marginal_showdown|other",
-      "w24_5_guided_thin_value_raise|raise_11",
-      "w24_6_day7_no_bluff_without_folds|alternative",
-      "w24_6_guided_raise_blocker_bluff|raise_24"
     ]
   }
 }
