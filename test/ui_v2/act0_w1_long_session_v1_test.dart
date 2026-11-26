@@ -50,6 +50,16 @@ const _continueKeys = [
 ];
 
 const _maxRouteAttempts = 40;
+const _storageWaitLimit = Duration(seconds: 3);
+
+// runAsync uses a real clock. Bound each storage await there, not in the
+// widget test's fake clock (which cannot pump while waiting for runAsync).
+Future<T> _waitForStorage<T>(Future<T> operation, String action) =>
+    operation.timeout(
+      _storageWaitLimit,
+      onTimeout: () =>
+          fail('Storage timed out after $_storageWaitLimit: $action'),
+    );
 
 Future<void> _settle(
   WidgetTester t,
@@ -200,12 +210,18 @@ Future<void> _onboard(WidgetTester t, {required bool useRulesCheck}) async {
 Future<Map<String, dynamic>> _saved(WidgetTester t) async {
   Map<String, dynamic>? result;
   await t.runAsync(() async {
-    await Act0ProgressStoreV1(
-      key: 'act0_shell_progress_v1',
-      isValidPayload: (_) => false,
-    ).flush().timeout(const Duration(seconds: 3));
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.reload();
+    await _waitForStorage(
+      Act0ProgressStoreV1(
+        key: 'act0_shell_progress_v1',
+        isValidPayload: (_) => false,
+      ).flush(),
+      'flush progress',
+    );
+    final prefs = await _waitForStorage(
+      SharedPreferences.getInstance(),
+      'open preferences for progress readback',
+    );
+    await _waitForStorage(prefs.reload(), 'reload progress checkpoints');
     final head = prefs.getString('act0_shell_progress_v1_head');
     expect(head, isNotNull);
     expect(prefs.getString('act0_shell_progress_v1_backup'), head);
@@ -214,6 +230,7 @@ Future<Map<String, dynamic>> _saved(WidgetTester t) async {
         jsonDecode((jsonDecode(head!) as Map)['payload'] as String)
             as Map<String, dynamic>;
   });
+  expect(t.takeException(), isNull, reason: 'Progress checkpoint readback');
   return result!;
 }
 
@@ -290,11 +307,15 @@ Future<int> _openSavedCourseTask(
   });
   if (persistSeed) {
     final saved = await t.runAsync(() {
-      return Act0ProgressStoreV1(
-        key: progressKey,
-        isValidPayload: (candidate) => candidate == payload,
-      ).save(payload);
+      return _waitForStorage(
+        Act0ProgressStoreV1(
+          key: progressKey,
+          isValidPayload: (candidate) => candidate == payload,
+        ).save(payload),
+        'seed progress for $taskId',
+      );
     });
+    expect(t.takeException(), isNull, reason: 'Progress seed for $taskId');
     expect(saved, isTrue);
   }
   t.view.physicalSize = const Size(393, 852);
