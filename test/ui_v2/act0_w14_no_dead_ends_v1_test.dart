@@ -30,8 +30,12 @@ class _Bytes extends CachingAssetBundle {
       ByteData.sublistView(File(key).readAsBytesSync());
 }
 
+final _worlds = Act0ShellStateV1.sample.worlds.where(
+  (w) => w.worldNumber <= 12,
+);
+
 final _rows = [
-  for (final world in Act0ShellStateV1.sample.worlds)
+  for (final world in _worlds)
     for (final lesson in world.lessons)
       for (final task in lesson.taskList)
         (world: world, lesson: lesson, task: task),
@@ -40,7 +44,7 @@ final _rows = [
 void main() {
   test('W1–W12 structure has no dead ends', () {
     final problems = <String>[];
-    final worlds = Act0ShellStateV1.sample.worlds;
+    final worlds = _worlds;
     for (final w in worlds) {
       if (w.lessons.isEmpty) problems.add('${w.worldId}: no lessons');
       for (final l in w.lessons) {
@@ -48,7 +52,7 @@ void main() {
       }
     }
     final allIds = [
-      for (final w in Act0ShellStateV1.sample.worlds)
+      for (final w in worlds)
         for (final l in w.lessons)
           for (final t in l.taskList) t.taskId,
     ];

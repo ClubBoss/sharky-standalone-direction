@@ -966,7 +966,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BTN opened and called BB’s 3-bet. BTN’s model includes T9s 95s 54s. BB’s shown premium comparison group is AA KK QQ.",
+            "CO opened and called BB’s 3-bet. CO’s model includes T9s 95s 54s. BB’s shown premium comparison group is AA KK QQ.",
         question: "Which described group has made straights on this board?",
         teach: "Verify which two hole ranks fill all five straight ranks.",
         choices: const [
@@ -991,8 +991,8 @@ final _world17Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "",
               board: _act0LessonCardsV1("8c 7d 6s"),
               street: PokerStreet.flop,
@@ -1004,7 +1004,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "co", "sb"},
+              folded: const {"utg", "hj", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -1020,7 +1020,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -1032,7 +1032,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   7.5,
                 ),
@@ -1042,11 +1042,11 @@ final _world17Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
                 Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO folds"),
-                Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 7.5 BB more"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 7.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
               ],
               bets: const {},
@@ -1055,7 +1055,7 @@ final _world17Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 10 (BTN) + 0.5 (SB) + 10 (BB) = 20.5 BB. No board rank blocks any of the three classes. Straight count=4+4+4=12. AA KK QQ straight count=0.",
+            "Pot = 10 (CO) + 0.5 (SB) + 10 (BB) = 20.5 BB. No board rank blocks any of the three classes. Straight count=4+4+4=12. AA KK QQ straight count=0.",
       ),
       _wave6AuthoredTaskV1(
         id: "w17_3_transfer_defend_dry_3bet",
@@ -1085,8 +1085,8 @@ final _world17Pilot = _act0PilotWorldV1(
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Qc Qd",
           board: _act0LessonCardsV1("Jh 8s 4c 2d"),
           street: PokerStreet.turn,
@@ -1098,7 +1098,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -1114,7 +1114,7 @@ final _world17Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -1126,7 +1126,7 @@ final _world17Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               7.5,
             ),
@@ -1142,13 +1142,13 @@ final _world17Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BTN calls 7.5 BB more"),
+            Act0ActionTrailItemV1(label: "preflop: CO calls 7.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB bets 6 BB"),
           ],
           bets: const {
@@ -1160,7 +1160,7 @@ final _world17Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 10 (BTN) + 0.5 (SB) + 16 (BB) = 26.5 BB. Call price = to call / (pot + call) = 6/32.5 = 18.5%. Equity E=(W+T/2)/N over 32 legal combos = 40.8%. EV(call)=E×(20.5+2×6)−6=7.25 BB. Fold yields 0 BB.",
+            "Pot = 10 (CO) + 0.5 (SB) + 16 (BB) = 26.5 BB. Call price = to call / (pot + call) = 6/32.5 = 18.5%. Equity E=(W+T/2)/N over 32 legal combos = 40.8%. EV(call)=E×(20.5+2×6)−6=7.25 BB. Fold yields 0 BB.",
       ),
       _wave6AuthoredTaskV1(
         id: "w17_3_day7_coverage_still_prices_call",
@@ -1189,8 +1189,8 @@ final _world17Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Ac Jd",
           board: _act0LessonCardsV1("Js 8h 7h 6d 2c"),
           street: PokerStreet.river,
@@ -1202,7 +1202,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "co", "sb"},
+          folded: const {"utg", "hj", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -1218,7 +1218,7 @@ final _world17Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -1230,7 +1230,7 @@ final _world17Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               7.5,
             ),
@@ -1246,15 +1246,15 @@ final _world17Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
             Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BTN calls 7.5 BB more"),
+            Act0ActionTrailItemV1(label: "preflop: CO calls 7.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
+            Act0ActionTrailItemV1(label: "flop: CO checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
+            Act0ActionTrailItemV1(label: "turn: CO checks"),
             Act0ActionTrailItemV1(label: "river: BB bets 23 BB"),
           ],
           bets: const {
@@ -1266,7 +1266,7 @@ final _world17Pilot = _act0PilotWorldV1(
           },
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 10 (BTN) + 0.5 (SB) + 33 (BB) = 43.5 BB. Call price = to call / (pot + call) = 23/66.5 = 34.6%. Equity E=(W+T/2)/N over 28 legal combos = 53.6%. EV(call)=E×(20.5+2×23)−23=12.62 BB. Fold yields 0 BB.",
+            "Pot = 10 (CO) + 0.5 (SB) + 33 (BB) = 43.5 BB. Call price = to call / (pot + call) = 23/66.5 = 34.6%. Equity E=(W+T/2)/N over 28 legal combos = 53.6%. EV(call)=E×(20.5+2×23)−23=12.62 BB. Fold yields 0 BB.",
       ),
     ]),
     _act0PilotLessonV1("four_bet_and_stack", "Four bet and stack", [
@@ -1630,7 +1630,7 @@ final _world17Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "BTN opens to 2.5 BB, BB makes it 10 BB, BTN makes it 24 BB and BB calls. There are 100 BB starting stacks.",
+            "CO opens to 2.5 BB, BB makes it 10 BB, CO makes it 24 BB and BB calls. There are 100 BB starting stacks.",
         question: "What is the flop SPR after the matched 4-bet?",
         teach: "",
         choices: const [
@@ -1655,8 +1655,8 @@ final _world17Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Ac Kc",
               board: _act0LessonCardsV1("Kd 8s 3h"),
               street: PokerStreet.flop,
@@ -1668,7 +1668,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "co", "sb"},
+              folded: const {"utg", "hj", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -1684,7 +1684,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -1696,7 +1696,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   21.5,
                 ),
@@ -1712,11 +1712,11 @@ final _world17Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
                 Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO folds"),
-                Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN raises to 24 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO raises to 24 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 14 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
               ],
@@ -1726,7 +1726,7 @@ final _world17Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 24 (BTN) + 0.5 (SB) + 24 (BB) = 48.5 BB. SPR=(100−24)/(24+24+0.5)=76/48.5=1.5670.",
+            "Pot = 24 (CO) + 0.5 (SB) + 24 (BB) = 48.5 BB. SPR=(100−24)/(24+24+0.5)=76/48.5=1.5670.",
       ),
     ]),
     _act0PilotLessonV1("traps_and_depth", "Traps and depth", [
@@ -2211,8 +2211,8 @@ final _world17Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Kd Kc",
               board: _act0LessonCardsV1("Qs 8h 3d"),
               street: PokerStreet.flop,
@@ -2224,7 +2224,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "co", "sb"},
+              folded: const {"utg", "hj", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -2240,7 +2240,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -2252,7 +2252,7 @@ final _world17Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   22.5,
                 ),
@@ -2268,11 +2268,11 @@ final _world17Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
                 Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO folds"),
-                Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB raises to 10 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN raises to 25 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO raises to 25 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 15 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
               ],
@@ -2282,7 +2282,7 @@ final _world17Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 25 (BTN) + 0.5 (SB) + 25 (BB) = 50.5 BB. 10 BB: 90/20.5=4.39. 25 BB: 75/50.5=1.49.",
+            "Pot = 25 (CO) + 0.5 (SB) + 25 (BB) = 50.5 BB. 10 BB: 90/20.5=4.39. 25 BB: 75/50.5=1.49.",
       ),
       _wave6AuthoredTaskV1(
         id: "w17_6_guided_small_cbet_three_bet",
@@ -2658,7 +2658,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "CO and BB are active with BTN. This comparison lists sets from CO and top pair plus sets from BB as the groups that pay a large flop bet.",
+            "HJ and BB are active with CO. This comparison lists sets from HJ and top pair plus sets from BB as the groups that pay a large flop bet.",
         question: "What does the caller description imply?",
         teach: "",
         choices: const [
@@ -2683,8 +2683,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Ac Qd",
               board: _act0LessonCardsV1("Qh 8s 4c"),
               street: PokerStreet.flop,
@@ -2696,7 +2696,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -2712,13 +2712,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -2733,13 +2733,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
-                Act0ActionTrailItemV1(label: "flop: CO checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -2747,7 +2747,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. When k opponents call and no cards remain, a player wins the pot by beating all k or takes a split share on a tie.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. When k opponents call and no cards remain, a player wins the pot by beating all k or takes a split share on a tie.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_1_guided_check_top_pair",
@@ -2758,7 +2758,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "CO holds KQs QJs 88 44 JTs. BB holds QTs Q9s 88 44 99. All non-overlapping pairs of legal hands are equally weighted. If BTN bets 5 BB, CO calls KQs 88 44, and BB calls 88 44, regardless of CO’s choice. Other hands fold. All checked and called branches go to showdown.",
+            "HJ holds KQs QJs 88 44 JTs. BB holds QTs Q9s 88 44 99. All non-overlapping pairs of legal hands are equally weighted. If CO bets 5 BB, HJ calls KQs 88 44, and BB calls 88 44, regardless of HJ’s choice. Other hands fold. All checked and called branches go to showdown.",
         question: "Which river option has higher EV?",
         teach: "Compare who pays and what share you win when two players stay.",
         choices: const [
@@ -2766,7 +2766,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "check",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "Check because the bet sheds most of CO’s and BB’s worse queens and meets too many sets. Checking preserves the wider showdown share.",
+            "Check because the bet sheds most of HJ’s and BB’s worse queens and meets too many sets. Checking preserves the wider showdown share.",
           ),
           (
             "bet",
@@ -2776,8 +2776,8 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Ac Qd",
           board: _act0LessonCardsV1("Qh 8s 4c 3d 2s"),
           street: PokerStreet.river,
@@ -2789,7 +2789,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "sb"},
+          folded: const {"utg", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2805,13 +2805,13 @@ final _world18Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "co",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2826,24 +2826,24 @@ final _world18Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "flop: CO checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: CO checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
-            Act0ActionTrailItemV1(label: "river: CO checks"),
+            Act0ActionTrailItemV1(label: "river: HJ checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. Enumerate 196 legal joint deals. Across these, caller counts 0/1/2 occur 54/112/30 times. Checked payoff is your showdown share × P. With k calls, payoff=share×[P+(1+k)B]−B. EV(check)=2.86 BB. EV(bet)=0.05 BB.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. Enumerate 196 legal joint deals. Across these, caller counts 0/1/2 occur 54/112/30 times. Checked payoff is your showdown share × P. With k calls, payoff=share×[P+(1+k)B]−B. EV(check)=2.86 BB. EV(bet)=0.05 BB.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_1_transfer_set_value_two_callers",
@@ -2854,7 +2854,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "CO holds AA KK 77 33 88 AKs. BB holds A9s T9s 98s 77 33 22 66. All non-overlapping pairs of legal hands are equally weighted. If BTN bets 4 BB, CO calls AA KK 77 33, and BB calls A9s T9s 98s 77 33 22, regardless of CO’s choice. Other hands fold. All checked and called branches go to showdown.",
+            "HJ holds AA KK 77 33 88 AKs. BB holds A9s T9s 98s 77 33 22 66. All non-overlapping pairs of legal hands are equally weighted. If CO bets 4 BB, HJ calls AA KK 77 33, and BB calls A9s T9s 98s 77 33 22, regardless of HJ’s choice. Other hands fold. All checked and called branches go to showdown.",
         question: "Which river option has higher EV?",
         teach: "",
         choices: const [
@@ -2862,7 +2862,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 4 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 4 BB because CO and BB can pay with overpairs, worse nines and smaller full houses. The lone quads group does not outweigh those branches.",
+            "Bet 4 BB because HJ and BB can pay with overpairs, worse nines and smaller full houses. The lone quads group does not outweigh those branches.",
           ),
           (
             "check",
@@ -2873,8 +2873,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         family: Act0TaskFamilyV1.transfer,
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "9h 9d",
           board: _act0LessonCardsV1("9s 7c 3d 2h 2s"),
           street: PokerStreet.river,
@@ -2886,7 +2886,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "sb"},
+          folded: const {"utg", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -2902,13 +2902,13 @@ final _world18Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "co",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -2923,24 +2923,24 @@ final _world18Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
             Act0ActionTrailItemV1(label: "flop: CO checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN checks"),
             Act0ActionTrailItemV1(label: "turn: BB checks"),
+            Act0ActionTrailItemV1(label: "turn: HJ checks"),
             Act0ActionTrailItemV1(label: "turn: CO checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
-            Act0ActionTrailItemV1(label: "river: CO checks"),
+            Act0ActionTrailItemV1(label: "river: HJ checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. Enumerate 423 legal joint deals. Across these, caller counts 0/1/2 occur 60/204/159 times. Checked payoff is your showdown share × P. With k calls, payoff=share×[P+(1+k)B]−B. EV(check)=7.47 BB. EV(bet)=11.71 BB.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. Enumerate 423 legal joint deals. Across these, caller counts 0/1/2 occur 60/204/159 times. Checked payoff is your showdown share × P. With k calls, payoff=share×[P+(1+k)B]−B. EV(check)=7.47 BB. EV(bet)=11.71 BB.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_1_day7_multiple_value_calls",
@@ -2951,7 +2951,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "Two players checked to BTN. One continues a 4 BB bet with 99 and KQo. The other continues with 55 and KJs. These are all the legal continuing classes in the exercise.",
+            "Two players checked to CO. One continues a 4 BB bet with 99 and KQo. The other continues with 55 and KJs. These are all the legal continuing classes in the exercise.",
         question: "What supports a river value bet?",
         teach: "",
         choices: const [
@@ -2976,8 +2976,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Ks Kd",
               board: _act0LessonCardsV1("Kh 9h 5c 3s 2c"),
               street: PokerStreet.river,
@@ -2989,7 +2989,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -3005,13 +3005,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -3026,19 +3026,19 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
                 Act0ActionTrailItemV1(label: "flop: CO checks"),
-                Act0ActionTrailItemV1(label: "flop: BTN checks"),
                 Act0ActionTrailItemV1(label: "turn: BB checks"),
+                Act0ActionTrailItemV1(label: "turn: HJ checks"),
                 Act0ActionTrailItemV1(label: "turn: CO checks"),
-                Act0ActionTrailItemV1(label: "turn: BTN checks"),
                 Act0ActionTrailItemV1(label: "river: BB checks"),
-                Act0ActionTrailItemV1(label: "river: CO checks"),
+                Act0ActionTrailItemV1(label: "river: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -3046,7 +3046,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. All named calls show down below K-K-K. Each legal call increases the amount you win by 4 BB.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. All named calls show down below K-K-K. Each legal call increases the amount you win by 4 BB.",
       ),
     ]),
     _act0PilotLessonV1("joint_fold_threshold", "Joint fold threshold", [
@@ -3335,8 +3335,8 @@ final _world18Pilot = _act0PilotWorldV1(
         family: Act0TaskFamilyV1.transfer,
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Jh Th",
               board: _act0LessonCardsV1("Ks 8c 6d 3s 2h"),
               street: PokerStreet.river,
@@ -3348,7 +3348,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -3364,13 +3364,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -3385,19 +3385,19 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
                 Act0ActionTrailItemV1(label: "flop: CO checks"),
-                Act0ActionTrailItemV1(label: "flop: BTN checks"),
                 Act0ActionTrailItemV1(label: "turn: BB checks"),
+                Act0ActionTrailItemV1(label: "turn: HJ checks"),
                 Act0ActionTrailItemV1(label: "turn: CO checks"),
-                Act0ActionTrailItemV1(label: "turn: BTN checks"),
                 Act0ActionTrailItemV1(label: "river: BB checks"),
-                Act0ActionTrailItemV1(label: "river: CO checks"),
+                Act0ActionTrailItemV1(label: "river: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -3405,7 +3405,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. EV(bet)=(6×8−4×4)/10=3.20 BB. EV(check)=0. Required joint folds=4/(8+4)=33.3%.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. EV(bet)=(6×8−4×4)/10=3.20 BB. EV(check)=0. Required joint folds=4/(8+4)=33.3%.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_2_day7_conditional_fold_count",
@@ -3664,7 +3664,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "BB and CO have checked. BTN holds top pair. For this question BTN’s goal is to see the turn without risking any additional chip on the flop.",
+            "BB and HJ have checked. CO holds top pair. For this question CO’s goal is to see the turn without risking any additional chip on the flop.",
         question: "What secures that objective?",
         teach: "Trace action order before assuming a check buys a free card.",
         choices: const [
@@ -3672,7 +3672,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "Check behind because BTN is last and both earlier players checked. No flop action remains after this check.",
+            "Check behind because CO is last and both earlier players checked. No flop action remains after this check.",
           ),
           (
             "alternative",
@@ -3688,8 +3688,8 @@ final _world18Pilot = _act0PilotWorldV1(
           ),
         ],
         table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
+          hero: "co",
+          actor: "co",
           hand: "Ad Qd",
           board: _act0LessonCardsV1("Qh Js 9s"),
           street: PokerStreet.flop,
@@ -3701,7 +3701,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "sb": 100,
             "bb": 100,
           },
-          folded: const {"utg", "hj", "sb"},
+          folded: const {"utg", "btn", "sb"},
           entries: const [
             Act0ContributionV1(
               PokerStreet.preflop,
@@ -3717,13 +3717,13 @@ final _world18Pilot = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "co",
+              "hj",
               Act0ContributionKindV1.wager,
               2.5,
             ),
             Act0ContributionV1(
               PokerStreet.preflop,
-              "btn",
+              "co",
               Act0ContributionKindV1.wager,
               2.5,
             ),
@@ -3738,18 +3738,18 @@ final _world18Pilot = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
             Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BTN folds"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
             Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: CO checks"),
+            Act0ActionTrailItemV1(label: "flop: HJ checks"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. The sequence BB check, CO check, BTN check closes the street. Additional cost=0.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. The sequence BB check, HJ check, CO check closes the street. Additional cost=0.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_3_transfer_oop_check_may_face_bet",
@@ -3995,7 +3995,7 @@ final _world18Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a branch where CO starts the flop with only 7.5 BB, BB checks, CO goes all-in, BTN raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.",
+            "In a branch where HJ starts the flop with only 7.5 BB, BB checks, HJ goes all-in, CO raises to 17.5 BB and BB calls the full 17.5 BB. Assume this completes the proposed flop wagering sequence in an 8 BB pot.",
         question: "What pots exist before future side-pot betting?",
         teach: "",
         choices: const [
@@ -4003,7 +4003,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "30.5 BB main and 20 BB side",
             Act0FeedbackQualityV1.correct,
-            "Each player matches the first 7.5 BB. Only BTN and BB add the extra 10 BB each.",
+            "Each player matches the first 7.5 BB. Only CO and BB add the extra 10 BB each.",
           ),
           (
             "alternative",
@@ -4020,8 +4020,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "Ah Qh",
               board: _act0LessonCardsV1("Qs 8d 4c"),
               street: PokerStreet.flop,
@@ -4033,7 +4033,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -4049,13 +4049,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -4070,13 +4070,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
-                Act0ActionTrailItemV1(label: "flop: CO checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -4084,7 +4084,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. Main=8+3×7.5=30.5 BB. Side=2×(17.5−7.5)=20 BB. Together=50.5 BB.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. Main=8+3×7.5=30.5 BB. Side=2×(17.5−7.5)=20 BB. Together=50.5 BB.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_4_guided_refund_uncalled",
@@ -5013,8 +5013,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "",
               board: _act0LessonCardsV1("As 7h 2c"),
               street: PokerStreet.flop,
@@ -5026,7 +5026,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -5042,13 +5042,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -5063,13 +5063,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
-                Act0ActionTrailItemV1(label: "flop: CO checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -5077,7 +5077,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. Remaining suits are c and d. Ordered legal assignments=2×1=2.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. Remaining suits are c and d. Ordered legal assignments=2×1=2.",
       ),
       _wave6AuthoredTaskV1(
         id: "w18_6_guided_value_on_blank",
@@ -5306,8 +5306,8 @@ final _world18Pilot = _act0PilotWorldV1(
         ],
         table:
             _day7TableV1(
-              hero: "btn",
-              actor: "btn",
+              hero: "co",
+              actor: "co",
               hand: "",
               board: _act0LessonCardsV1("As Kd Qc Jh Ts"),
               street: PokerStreet.river,
@@ -5319,7 +5319,7 @@ final _world18Pilot = _act0PilotWorldV1(
                 "sb": 100,
                 "bb": 100,
               },
-              folded: const {"utg", "hj", "sb"},
+              folded: const {"utg", "btn", "sb"},
               entries: const [
                 Act0ContributionV1(
                   PokerStreet.preflop,
@@ -5335,13 +5335,13 @@ final _world18Pilot = _act0PilotWorldV1(
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "co",
+                  "hj",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
                 Act0ContributionV1(
                   PokerStreet.preflop,
-                  "btn",
+                  "co",
                   Act0ContributionKindV1.wager,
                   2.5,
                 ),
@@ -5356,19 +5356,19 @@ final _world18Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
                 Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-                Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-                Act0ActionTrailItemV1(label: "preflop: CO raises to 2.5 BB"),
-                Act0ActionTrailItemV1(label: "preflop: BTN calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: HJ raises to 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: CO calls 2.5 BB"),
+                Act0ActionTrailItemV1(label: "preflop: BTN folds"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
                 Act0ActionTrailItemV1(label: "flop: BB checks"),
+                Act0ActionTrailItemV1(label: "flop: HJ checks"),
                 Act0ActionTrailItemV1(label: "flop: CO checks"),
-                Act0ActionTrailItemV1(label: "flop: BTN checks"),
                 Act0ActionTrailItemV1(label: "turn: BB checks"),
+                Act0ActionTrailItemV1(label: "turn: HJ checks"),
                 Act0ActionTrailItemV1(label: "turn: CO checks"),
-                Act0ActionTrailItemV1(label: "turn: BTN checks"),
                 Act0ActionTrailItemV1(label: "river: BB checks"),
-                Act0ActionTrailItemV1(label: "river: CO checks"),
+                Act0ActionTrailItemV1(label: "river: HJ checks"),
               ],
               bets: const {},
             ).copyWith(
@@ -5376,7 +5376,7 @@ final _world18Pilot = _act0PilotWorldV1(
               showDecisionPremise: true,
             ),
         explanation:
-            "Pot = 2.5 (CO) + 2.5 (BTN) + 0.5 (SB) + 2.5 (BB) = 8 BB. There are three tied winners in the same layer. Each share=1/3. The score ignores odd-chip house rules.",
+            "Pot = 2.5 (HJ) + 2.5 (CO) + 0.5 (SB) + 2.5 (BB) = 8 BB. There are three tied winners in the same layer. Each share=1/3. The score ignores odd-chip house rules.",
       ),
     ]),
   ],

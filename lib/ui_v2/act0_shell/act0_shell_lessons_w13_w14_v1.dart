@@ -1236,7 +1236,7 @@ final _world13Pilot = _act0PilotWorldV1(
         question:
             "What can make the same showdown equity worth less in a played hand?",
         teach:
-            "Showdown equity assumes you get to see the last card. Realization is how much of that share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.",
+            "Showdown equity assumes you get to see the last card. Equity realization means the share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.",
         choices: const [
           (
             "future_price",
@@ -1639,14 +1639,14 @@ final _world13Pilot = _act0PilotWorldV1(
         id: "w13_5_teach",
         lesson: "backdoor_draws",
         lessonTitle: "Backdoor draws",
-        title: "What is true of a backdoor flush draw on the flop?",
+        title: "Two remaining cards",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption: "Study backdoor draws.",
         question: "What is true of a backdoor flush draw on the flop?",
         teach:
-            "A backdoor draw needs help on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.",
+            "A backdoor flush draw is a draw that needs a card of the right suit on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.",
         choices: const [
           (
             "both",
@@ -2880,7 +2880,7 @@ final _world14Pilot = _act0PilotWorldV1(
         caption: "Study polarized sizing.",
         question: "Which group is polarized?",
         teach:
-            "A polarized betting range uses strong value and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.",
+            "Strong value means hands that can bet profitably for calls from worse hands. A polarized betting range uses very strong value hands and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.",
         choices: const [
           (
             "answer",
