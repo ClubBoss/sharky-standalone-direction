@@ -50,29 +50,6 @@
     ],
     "E11": [
       "w14_4_teach|shoving"
-    ],
-    "E19": [
-      "mistake_known_blocker|wrong: river · keep all four queens available → river · keep four queens available",
-      "turn_board_four_to_straight|correct: bad for your showdown share → 7s",
-      "turn_board_four_to_straight|wrong: unchanged showdown share / good for your showdown share → 3c / 4c",
-      "turn_counterfeit_two_pair|correct: bad for your showdown share → kh",
-      "turn_counterfeit_two_pair|wrong: unchanged showdown share / good for your showdown share → 4c / 3c",
-      "turn_dead_draw|correct: unchanged showdown share → none of these",
-      "turn_dead_draw|wrong: good for your showdown share / bad for your showdown share → 2d / qc",
-      "turn_heart_completes|correct: good for your showdown share → qh",
-      "turn_heart_completes|wrong: unchanged showdown share / bad for your showdown share → 4c / 7c",
-      "turn_heart_pairs_board|correct: bad for your showdown share → 3h",
-      "turn_heart_pairs_board|wrong: unchanged showdown share / good for your showdown share → 2h / 4h",
-      "turn_overcard_beats_pair|correct: bad for your showdown share → ah",
-      "turn_overcard_beats_pair|wrong: unchanged showdown share / good for your showdown share → 7c / 4c",
-      "turn_redraw_good|correct: good for your showdown share → 5s",
-      "turn_redraw_good|wrong: unchanged showdown share / bad for your showdown share → 6h / 3h",
-      "turn_remove_high_draw|correct: good for your showdown share → 9h",
-      "turn_remove_high_draw|wrong: unchanged showdown share / bad for your showdown share → ad / ac",
-      "turn_straight_completes|correct: good for your showdown share → td",
-      "turn_straight_completes|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
-      "turn_turn_makes_set|correct: good for your showdown share → 5c",
-      "turn_turn_makes_set|wrong: unchanged showdown share / bad for your showdown share → 4c / 3c"
     ]
   },
   "W15": {
