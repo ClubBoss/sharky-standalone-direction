@@ -98,6 +98,11 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "V9 walkthrough W1 capture and JSON smoke",
+        "min_timeout_seconds": 360,
+        "cmd": ["flutter", "test", "test/ui_v2/act0_v9_walkthrough_v1_test.dart", "-r", "compact"],
+    },
+    {
         "name": "W1-W3 long session across restarts",
         # The combined W1-W7 traversal and focused cases hit 480s in CI.
         "min_timeout_seconds": 420,

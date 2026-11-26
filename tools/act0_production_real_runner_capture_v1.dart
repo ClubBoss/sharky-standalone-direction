@@ -307,14 +307,12 @@ String _testSource(String output, String device, String modifier) {
   return '''
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import '${File('tools/act0_widget_capture_v1.dart').absolute.uri}';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -327,35 +325,6 @@ void main() {
     'large_phone': Size(430, 932),
     'iphone17_class': Size(402, 874),
   };
-  Future<void> loadFont() async {
-    final file = File('/System/Library/Fonts/Supplemental/Arial.ttf');
-    if (!file.existsSync()) throw StateError('No local real-text font found.');
-    final bytes = await file.readAsBytes();
-    for (final family in <String>['Roboto', 'Ahem']) {
-      await (FontLoader(family)..addFont(Future<ByteData>.value(ByteData.sublistView(bytes)))).load();
-    }
-  }
-  Future<void> loadFontFamily(String family, String path) async {
-    final bytes = await File(path).readAsBytes();
-    await (FontLoader(family)
-          ..addFont(Future<ByteData>.value(ByteData.sublistView(bytes))))
-        .load();
-  }
-  Future<void> loadIconFonts() async {
-    const candidates = <(String, String)>[
-      ('MaterialIcons', 'build/unit_test_assets/fonts/MaterialIcons-Regular.otf'),
-      ('CupertinoIcons', 'build/unit_test_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
-      ('MaterialIcons', 'build/flutter_assets/fonts/MaterialIcons-Regular.otf'),
-      ('CupertinoIcons', 'build/flutter_assets/packages/cupertino_icons/assets/CupertinoIcons.ttf'),
-    ];
-    final loaded = <String>{};
-    for (final candidate in candidates) {
-      if (loaded.contains(candidate.\$1) || !File(candidate.\$2).existsSync()) continue;
-      await loadFontFamily(candidate.\$1, candidate.\$2);
-      loaded.add(candidate.\$1);
-    }
-    if (!loaded.contains('MaterialIcons')) throw StateError('No local MaterialIcons font found.');
-  }
   String colorToHex(Color color) {
     final alpha = (color.a * 255).round().clamp(0, 255);
     final red = (color.r * 255).round().clamp(0, 255);
@@ -390,7 +359,7 @@ void main() {
     }
     File(pngPath + '.text_overlays.json').writeAsStringSync(jsonEncode(overlays));
   }
-  setUpAll(() async { await loadFont(); await loadIconFonts(); });
+  setUpAll(loadAct0CaptureFontsV1);
   testWidgets('captures direct production runner seeds', (tester) async {
     if (modifier == 'reduced_motion') {
       (WidgetsBinding.instance.platformDispatcher as TestPlatformDispatcher)
@@ -431,10 +400,7 @@ void main() {
       await tester.pump(); await tester.pump(const Duration(milliseconds: 500));
       final pngPath = outputPath + '/' + device + '.' + (seed['visual_state_id'] as String) + '.png';
       writeTextRepairOverlays(tester, pngPath);
-      final boundary = tester.renderObject<RenderRepaintBoundary>(find.byKey(const Key('capture')));
-      final data = await tester.runAsync(() async => (await boundary.toImage(pixelRatio: 2)).toByteData(format: ui.ImageByteFormat.png));
-      if (data == null) throw StateError('Unable to capture '+(seed['visual_state_id'] as String));
-      File(pngPath).writeAsBytesSync(Uint8List.view(data.buffer));
+      await captureAct0WidgetPngV1(tester, find.byKey(const Key('capture')), File(pngPath));
     }
     $calls
   });
