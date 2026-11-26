@@ -151,6 +151,20 @@ Map<String, Map<String, Set<String>>> _labelsByGrade(String snapshot) {
   return tasks;
 }
 
+Set<(String, String)> reviewedE19RelabelsV1() {
+  final entries =
+      jsonDecode(
+            File(
+              'test/fixtures/act0_catalog_e19_reviewed_relabels_v1.json',
+            ).readAsStringSync(),
+          )
+          as List;
+  return {
+    for (final entry in entries)
+      (entry['task'] as String, entry['detail'] as String),
+  };
+}
+
 Iterable<CatalogRubricFindingV1> catalogOptionLabelChangesV1(
   String previous,
   String current,
@@ -160,6 +174,7 @@ Iterable<CatalogRubricFindingV1> catalogOptionLabelChangesV1(
   if (before.isEmpty || after.isEmpty) {
     throw const FormatException('No TASK records in catalog snapshot');
   }
+  final reviewed = reviewedE19RelabelsV1();
   for (final task in after.entries) {
     final old = before[task.key];
     if (old == null) continue;
@@ -169,11 +184,12 @@ Iterable<CatalogRubricFindingV1> catalogOptionLabelChangesV1(
       final removed = old[grade.key]?.difference(newLabels);
       final added = grade.value.difference(oldLabels);
       if (removed == null || removed.isEmpty || added.isEmpty) continue;
-      yield (
-        rule: 'E19',
-        task: task.key,
-        detail: '${grade.key}: ${removed.join(' / ')} → ${added.join(' / ')}',
-      );
+      final detail =
+          '${grade.key}: ${removed.join(' / ')} → ${added.join(' / ')}';
+      // Only the exact reviewed task/grade/label change is exempt. Entries
+      // may become inactive as the previous snapshot advances after merge.
+      if (reviewed.contains((task.key, detail))) continue;
+      yield (rule: 'E19', task: task.key, detail: detail);
     }
   }
 }
