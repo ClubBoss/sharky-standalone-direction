@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
 
 import '../support/act0_catalog_chart_audit_v1.dart';
 import '../support/act0_catalog_concept_order_v1.dart';
@@ -44,6 +45,20 @@ _Census _readBaseline(File file) {
           rule.key: (rule.value as List).cast<String>(),
       },
   };
+}
+
+bool _isVerifiedScopeException(TableTruthRow row) {
+  // scope.applicability reports the actual raw/projected frame's scope in
+  // detail. Require an explicit scope, not just the exception status; other
+  // invariants do not carry this scope evidence.
+  return row.invariant == 'scope.applicability' &&
+      row.result == 'EXPLICIT_EXCEPTION' &&
+      Act0TableScopeV1.values.any(
+        (scope) =>
+            scope != Act0TableScopeV1.unclassified &&
+            row.detail ==
+                '${scope.name}: source scope must identify physical applicability',
+      );
 }
 
 Future<_Census> _collectCensus(WidgetTester tester) async {
@@ -184,7 +199,7 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
   for (final f in auditTableTruth(
     worlds: pilot.map((row) => row.world).toSet(),
   )) {
-    if (f.result != 'PASS') {
+    if (f.result != 'PASS' && !_isVerifiedScopeException(f)) {
       taskFinding(f.invariant, f.taskId, '${f.variant}|${f.detail}');
     }
   }
@@ -203,6 +218,81 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
 }
 
 void main() {
+  test('only explicit exceptions with verified frame scope leave debt', () {
+    bool excluded(String invariant, String status, String detail) =>
+        _isVerifiedScopeException(
+          TableTruthRow('task', 'decision', invariant, status, detail),
+        );
+    const rule = 'scope.applicability';
+    const status = 'EXPLICIT_EXCEPTION';
+    const detail =
+        'explanation: source scope must identify physical applicability';
+    expect(excluded(rule, status, detail), isTrue);
+    expect(excluded(rule, 'FAIL', detail), isFalse);
+    expect(excluded(rule, 'NEEDS_SOURCE_CONTEXT', detail), isFalse);
+    expect(excluded(rule, status, ''), isFalse);
+    expect(
+      excluded(
+        rule,
+        status,
+        detail.replaceFirst('explanation', 'unclassified'),
+      ),
+      isFalse,
+    );
+    expect(
+      excluded(rule, status, detail.replaceFirst('explanation', 'unknown')),
+      isFalse,
+    );
+    expect(excluded('D6.history_support', status, detail), isFalse);
+  });
+
+  test(
+    'Vol2 text-only concepts already declare explanation applicability',
+    () {
+      final worlds = Act0ShellStateV1.authoredCatalog.worlds.where(
+        (world) => _worlds.contains(world.worldNumber),
+      );
+      final scopeRows = auditTableTruth(
+        worlds: worlds,
+      ).where((row) => row.invariant == 'scope.applicability').toList();
+      expect(scopeRows, isNotEmpty);
+      expect(
+        scopeRows.map((row) => row.result),
+        everyElement('EXPLICIT_EXCEPTION'),
+      );
+      expect(scopeRows.every(_isVerifiedScopeException), isTrue);
+      for (final world in worlds) {
+        final concepts = world.lessons
+            .expand((lesson) => lesson.taskList)
+            .where((task) => task.phase == Act0LessonPhaseV1.theory);
+        expect(concepts, isNotEmpty, reason: world.worldId);
+        for (final task in concepts) {
+          final table = task.runner.table;
+          expect(
+            table.scope,
+            Act0TableScopeV1.explanation,
+            reason: task.taskId,
+          );
+          expect(table.seats, isEmpty, reason: task.taskId);
+          expect(table.heroCards, isEmpty, reason: task.taskId);
+          expect(table.boardCards, isEmpty, reason: task.taskId);
+          expect(table.streetLabel, isEmpty, reason: task.taskId);
+          expect(table.potLabel, isEmpty, reason: task.taskId);
+          expect(table.toCallLabel, isEmpty, reason: task.taskId);
+          expect(table.actionTrail, isEmpty, reason: task.taskId);
+          expect(table.handContributions, isNull, reason: task.taskId);
+          expect(table.handTimelinePrefix, isNull, reason: task.taskId);
+          expect(
+            scopeRows.where((row) => row.taskId == task.taskId),
+            isNotEmpty,
+            reason: task.taskId,
+          );
+        }
+      }
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
+
   test('ratchet distinguishes world, rule, task and detail', () {
     final baseline = {
       'W13': {
