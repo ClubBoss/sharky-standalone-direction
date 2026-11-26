@@ -302,10 +302,7 @@
       "w14_6_read_induced_raise_price|question|7/label|preflop/bb 'preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
     ],
     "C5": [
-      "harder_river_value_added|polarized|CAPTION: Add weaker K-J bets to a formerly polarized range.",
-      "w14_2_read_polar_range|polarized|OPTION: Polarized",
-      "w14_2_teach|1201|TEACH: A polarized betting range uses strong value and bluffs, with many medium-strength hands checking.",
-      "w14_2_teach|polarized|TEACH: Which group is polarized?."
+      "w14_2_teach|1201|TEACH: A polarized betting range uses strong value and bluffs, with many medium-strength hands checking."
     ],
     "D6.history_support": [
       "harder_block_weaker_flushes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
