@@ -344,23 +344,6 @@
     ]
   },
   "W15": {
-    "1.card.named": [
-      "w15_1_guided_compare_cbet_frequency|caption:0",
-      "w15_1_guided_compare_cbet_frequency|caption:1",
-      "w15_1_guided_compare_cbet_frequency|caption:2",
-      "w15_1_guided_compare_cbet_frequency|caption:3",
-      "w15_6_read_polar_on_two_tone|feedback:0",
-      "w15_6_read_polar_on_two_tone|feedback:1",
-      "w15_6_read_polar_on_two_tone|feedback:2",
-      "w15_6_read_polar_on_two_tone|feedback:3"
-    ],
-    "11.btn_share_per_world": [
-      "@world:world_15|"
-    ],
-    "15.internal_jargon": [
-      "w15_1_read_straight_heavy|hero",
-      "w15_4_read_monotone|hero"
-    ],
     "16.extreme_wrong_option": [
       "w15_1_teach|alternative",
       "w15_3_teach|alternative",
@@ -461,35 +444,6 @@
       "w15_5_guided_lead_two_pair|bb",
       "w15_5_read_first_flop_actor|bb"
     ],
-    "C5": [
-      "w15_1_day7_king_low_low|429|FEEDBACK: Those calls make the small c-bet earn more than checking.",
-      "w15_1_read_straight_heavy|64|CAPTION: This exercise shows BB’s public range and no hero hole cards.",
-      "w15_1_teach|180|FEEDBACK: Coverage and responses matter across several hand classes.",
-      "w15_1_teach|514|FEEDBACK: This flop and the opponent’s continuing range still decide which hands benefit from betting.",
-      "w15_1_teach|board_texture|CAPTION: Study texture and frequency.",
-      "w15_1_teach|mixed_strategy|CAPTION: Study texture and frequency.",
-      "w15_1_transfer_connected_select|514|FEEDBACK: On T-9-7, BB’s continuing range connects strongly.",
-      "w15_2_guided_protect_overpair|118|FEEDBACK: Worse tens, underpairs and double-gutshot straight draws pay on T-8-4.",
-      "w15_2_guided_protect_overpair|equity_realization|FEEDBACK: It misses payments from worse pairs and lets some unpaired hands realize their share.",
-      "w15_2_guided_protect_overpair|gutshot|FEEDBACK: Worse tens, underpairs and double-gutshot straight draws pay on T-8-4.",
-      "w15_2_read_two_payoffs|364|Q: Which response supplies equity denial?",
-      "w15_2_read_two_payoffs|64|CAPTION: No exact hole cards are revealed.",
-      "w15_2_teach|364|TEACH: Which result is specifically equity denial?.",
-      "w15_2_teach|thin_value|TEACH: A thin value bet is paid by some worse hands.",
-      "w15_3_guided_trap_dry_set|440|FEEDBACK: It makes BB’s unpaired lead candidates give up before they can bet.",
-      "w15_3_read_dry_trap_condition|569|FEEDBACK: It says nothing about paying a large bet from you.",
-      "w15_3_teach|97|TEACH: On a dry board, weigh the value of that later bet against immediate calls and the free card.",
-      "w15_3_teach|board_texture|TEACH: On a dry board, weigh the value of that later bet against immediate calls and the free card.",
-      "w15_3_teach|slowplay|TEACH: Which fact supports checking back a dry-board set as a trap?.",
-      "w15_4_read_monotone|64|CAPTION: No hero hole cards are shown.",
-      "w15_4_teach|board_texture|TEACH: What should change your bet plan on these textures?.",
-      "w15_5_guided_lead_two_pair|514|TEACH: Price it by the continuing range.",
-      "w15_5_read_first_flop_actor|38|CAPTION: BB acts first on the flop and BTN has not acted on this street.",
-      "w15_6_checkpoint_short_check_raise|push_fold|FEEDBACK: A stronger deep caller group makes calling better than a 100 BB stack’s shove.",
-      "w15_6_read_polar_on_two_tone|64|CAPTION: No BB hole cards are revealed.",
-      "w15_6_read_polar_on_two_tone|board_texture|FEEDBACK: The suit texture does not make that policy polarized.",
-      "w15_6_teach|board_texture|TEACH: Texture and the response decide which approach fits."
-    ],
     "D6.history_support": [
       "w15_1_day7_king_low_low|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_1_guided_compare_cbet_frequency|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -522,45 +476,17 @@
       "w15_6_read_polar_on_two_tone|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "E11": [
-      "w15_1_read_straight_heavy|hole cards",
-      "w15_2_read_two_payoffs|hole cards",
-      "w15_4_read_monotone|hole cards",
-      "w15_5_teach|donk bet",
-      "w15_6_checkpoint_short_check_raise|shove",
-      "w15_6_read_polar_on_two_tone|hole cards"
-    ],
     "G1·26": [
       "w15_6_read_polar_on_two_tone|"
     ],
     "G1·27": [
       "w15_6_read_polar_on_two_tone|"
     ],
-    "G1·28": [
-      "w15_2_day7_protect_top_pair|bet",
-      "w15_3_guided_trap_dry_set|check",
-      "w15_6_guided_wet_check_raise|raise",
-      "w15_6_read_polar_on_two_tone|answer"
-    ],
     "G1·29": [
-      "w15_1_transfer_connected_select|check",
-      "w15_2_day7_protect_top_pair|bet",
-      "w15_2_transfer_value_or_denial|bet",
-      "w15_3_transfer_bet_wet_set|bet",
-      "w15_4_day7_paired_low|bet",
       "w15_6_read_polar_on_two_tone|answer"
     ],
     "G1·30": [
-      "w15_6_guided_wet_check_raise|raise",
       "w15_6_read_polar_on_two_tone|answer"
-    ],
-    "G1·31": [
-      "w15_1_guided_compare_cbet_frequency|value_only",
-      "w15_6_checkpoint_short_check_raise|fold",
-      "w15_6_day7_merged_raise_dry|call",
-      "w15_6_guided_wet_check_raise|call",
-      "w15_6_read_polar_on_two_tone|alternative",
-      "w15_6_read_polar_on_two_tone|other"
     ],
     "G1·42": [
       "w15_5_day7_check_before_raiser|BTN calls with AKo AQo AJs 66 33  → 33/BTN: fold",
@@ -578,9 +504,6 @@
     ]
   },
   "W16": {
-    "11.btn_share_per_world": [
-      "@world:world_16|"
-    ],
     "16.extreme_wrong_option": [
       "w16_5_teach|alternative",
       "w16_6_read_runout_two_sides|other"
@@ -706,28 +629,6 @@
     "8.active_caller": [
       "w16_4_day7_turn_equity_lead|bb"
     ],
-    "8.all_in_kind": [
-      "w16_2_transfer_short_shove|bb"
-    ],
-    "C5": [
-      "w16_1_read_nut_change|180|FEEDBACK: A call on the flop still leaves several hand classes.",
-      "w16_1_teach|barrel|TEACH: What justifies a second barrel after a flop bluff?.",
-      "w16_2_teach|336|TEACH: Which inputs determine the break-even equity for one terminal call?.",
-      "w16_2_teach|mdf|TEACH: Minimum defense frequency addresses how often a whole range continues against a zero-equity bluff.",
-      "w16_2_teach|mixed_strategy|TEACH: Minimum defense frequency addresses how often a whole range continues against a zero-equity bluff.",
-      "w16_3_guided_thin_third_street|82|FEEDBACK: Checking takes showdown value and gives up payment from weaker jacks.",
-      "w16_3_guided_thin_third_street|thin_value|FEEDBACK: Take thin value at 3 BB.",
-      "w16_3_transfer_jam_nut_straight|569|FEEDBACK: Sets and two pair still pay the large bet in the stated range.",
-      "w16_4_day7_turn_equity_lead|equity_realization|FEEDBACK: Checking lets the preflop raiser realize its equity for free under the stated check-through.",
-      "w16_4_read_probe_sequence|delayed_cbet|OPTION: A delayed c-bet",
-      "w16_4_read_probe_sequence|probe|OPTION: A turn probe",
-      "w16_4_teach|probe|FEEDBACK: That is a probe by the preflop caller.",
-      "w16_4_transfer_float_or_free_card|float|OPTION: Bet to complete the float",
-      "w16_5_guided_turn_overbet_nuts|overbet|FEEDBACK: Overbet 25 BB with the best straight.",
-      "w16_5_teach|309|TEACH: A turn overbet compresses the calling range and changes the river stack-to-pot ratio.",
-      "w16_5_teach|block_bet|TEACH: When can a block bet lower your showdown cost?.",
-      "w16_5_teach|overbet|TEACH: A turn overbet compresses the calling range and changes the river stack-to-pot ratio."
-    ],
     "D6.history_support": [
       "h5_w16_3_guided_thin_third_street|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "h5_w16_3_transfer_jam_nut_straight|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -810,20 +711,7 @@
     "G1·28": [
       "h5_w16_3_guided_thin_third_street|flop_bet",
       "h5_w16_3_transfer_jam_nut_straight|flop_bet",
-      "h5_w16_6_day7_last_bet_independent|flop_bet",
-      "w16_2_day7_fold_despite_investment|fold",
-      "w16_2_guided_bluff_catch_price|call",
-      "w16_2_transfer_short_shove|call",
-      "w16_3_day7_one_street_only|answer",
-      "w16_3_guided_thin_third_street|bet_3",
-      "w16_3_transfer_jam_nut_straight|bet_44",
-      "w16_4_guided_delayed_value|bet_3",
-      "w16_4_transfer_float_or_free_card|answer",
-      "w16_5_guided_turn_overbet_nuts|bet_25",
-      "w16_5_transfer_block_price|answer",
-      "w16_6_checkpoint_match_the_price|call",
-      "w16_6_day7_last_bet_independent|fold",
-      "w16_6_guided_scare_card_call|call"
+      "h5_w16_6_day7_last_bet_independent|flop_bet"
     ],
     "G1·29": [
       "h5_w16_3_guided_thin_third_street|flop_bet",
@@ -852,21 +740,6 @@
       "w16_6_checkpoint_match_the_price|call",
       "w16_6_day7_last_bet_independent|fold",
       "w16_6_guided_scare_card_call|call"
-    ],
-    "G1·31": [
-      "w16_1_guided_barrel_worse_kings|check",
-      "w16_2_day7_fold_despite_investment|call",
-      "w16_3_day7_one_street_only|alternative",
-      "w16_3_day7_one_street_only|other",
-      "w16_3_transfer_jam_nut_straight|bet_18",
-      "w16_3_transfer_jam_nut_straight|check",
-      "w16_4_guided_delayed_value|check",
-      "w16_5_guided_turn_overbet_nuts|bet_7",
-      "w16_5_guided_turn_overbet_nuts|check",
-      "w16_6_day7_last_bet_independent|call"
-    ],
-    "G1·37": [
-      "w16_5_transfer_block_price|check_fold"
     ]
   },
   "W17": {
@@ -1332,19 +1205,14 @@
       "w19_1_day7_counter_changes_with_strategy|exploit|Q: Which adjustment follows?",
       "w19_1_teach|64|FEEDBACK: Hole cards remain hidden.",
       "w19_1_transfer_pick_baseline_when_uncertain|exploit|FEEDBACK: New matched samples can justify an adjustment.",
-      "w19_2_guided_bluff_pool_overfold|82|FEEDBACK: Checking has no showdown value in this model.",
-      "w19_2_read_overfold_denominator|overbet|CAPTION: An audit log has 8 folds in 10 comparable river overbet opportunities and 20 folds in 80 small river bet opportunities.",
-      "w19_2_teach|overbet|FEEDBACK: A fold to a preflop raise does not imply a fold to a river overbet.",
       "w19_4_day7_simplify_mix|498|CAPTION: In a teaching matrix one hand class has exactly equal EV for check and a small bet against the given policy.",
       "w19_4_day7_simplify_mix|solver|OPTION: Checking loses because the solver mixes",
-      "w19_4_guided_adaptation_before|82|FEEDBACK: Checking has no showdown value in this model.",
       "w19_4_read_predictable_single_size|193|OPTION: Switch only their preflop open size",
       "w19_5_read_cap_can_vanish|1201|FEEDBACK: The retained group can improve into strong value.",
       "w19_5_read_cap_can_vanish|64|FEEDBACK: The ten and jack are in the hole cards.",
       "w19_5_teach|capped_range|TEACH: A range is capped only when the model excludes its strongest relevant hands.",
       "w19_5_transfer_no_attack_into_traps|1201|FEEDBACK: Strong value does not exclude them.",
-      "w19_5_transfer_no_attack_into_traps|capped_range|OPTION: Calling CO’s range capped below the strongest full houses",
-      "w19_6_day7_audit_which_hands_fold|mdf|CAPTION: You defend less often than the pure-bluff MDF in a river node."
+      "w19_5_transfer_no_attack_into_traps|capped_range|OPTION: Calling CO’s range capped below the strongest full houses"
     ],
     "D3.explicit_current_bet": [
       "w19_6_guided_depth_changes_counter|authored/drill|owner=BB amount=12.0 BB",
@@ -1601,8 +1469,7 @@
       "w20_3_day7_table_captain_vs_overbluffer|83|Q: Whose evidence first suggests more calls with an appropriate river bluff catcher?",
       "w20_4_teach|192|TEACH: Which evidence supports an isolation raise?.",
       "w20_4_teach|isolation|TEACH: Which evidence supports an isolation raise?.",
-      "w20_5_teach|etiquette|TEACH: Keep the table respectful and avoid coaching, shaming or angle shooting.",
-      "w20_5_transfer_image_changes_value|thin_value|OPTION: Consider more thin value at the small size"
+      "w20_5_teach|etiquette|TEACH: Keep the table respectful and avoid coaching, shaming or angle shooting."
     ],
     "D3.explicit_current_bet": [
       "w20_6_guided_short_price_with_read|authored/drill|owner=BB amount=12.0 BB",
@@ -1757,11 +1624,7 @@
       "w21_3_guided_find_own_leak|440|OPTION: Give up all misses because your defense is too wide",
       "w21_3_read_seat_change_current_game|table_selection|Q: What changed in the game selection review?",
       "w21_3_teach|table_selection|TEACH: Table selection changes as seats, opponent skill and your own attention change.",
-      "w21_4_day7_take_worse_pair_payment|569|FEEDBACK: The large bet loses many weaker calls.",
-      "w21_4_teach|equity_realization|TEACH: A fancy line must earn its complexity through extra value, folds or equity realization.",
-      "w21_5_guided_choose_review_priority|thin_value|OPTION: Missed thin value",
-      "w21_5_transfer_review_without_result|equity_realization|FEEDBACK: Evaluate what the decision knew before looking at the realized hand.",
-      "w21_6_day7_reset_next_block|thin_value|CAPTION: Yesterday’s tagged review found that you repeatedly missed the comparison between check and thin value."
+      "w21_4_day7_take_worse_pair_payment|569|FEEDBACK: The large bet loses many weaker calls."
     ],
     "D3.explicit_current_bet": [
       "w21_4_transfer_short_stack_limits_call|authored/drill|owner=BB amount=12.0 BB",
@@ -1874,17 +1737,13 @@
       "w22_4_transfer_short_tree_price|feedback"
     ],
     "C5": [
-      "w22_1_day7_turn_chance_node|equity_realization|FEEDBACK: Players act on the realized card.",
       "w22_1_transfer_river_no_chance_node|solver|CAPTION: A solver tree has reached the completed five-card river.",
-      "w22_2_transfer_best_response_not_equilibrium|82|CAPTION: In a 5.5 BB river pot your missed hand has no showdown value.",
       "w22_2_transfer_best_response_not_equilibrium|gto|OPTION: Check because it is part of a balanced mix elsewhere",
       "w22_3_transfer_sample_frequency_not_quota|gto|OPTION: An automatic bet to balance the previous checks",
       "w22_3_transfer_sample_frequency_not_quota|solver|CAPTION: A toy solver strategy independently bets 60% with this exact hand at this node.",
       "w22_4_day7_change_input_requires_new_query|148|CAPTION: You want to apply its river node frequencies to a game where the same hand is in BB out of position, with the same board and pot.",
       "w22_4_read_pruned_action|solver|FEEDBACK: The solver did not measure that action.",
-      "w22_4_teach|effective_stack|OPTION: Remaining effective stacks and allowed bet sizes",
       "w22_4_teach|push_fold|TEACH: Which omitted input can change whether a shove appears in the tree?.",
-      "w22_5_day7_simplification_does_not_transfer|board_texture|FEEDBACK: The new texture changes the payoffs and is outside the tested family.",
       "w22_5_transfer_population_query|gto|CAPTION: Your baseline query assumes balanced river defense."
     ],
     "D3.explicit_current_bet": [
@@ -1987,11 +1846,9 @@
       "w23_2_day7_which_flush_is_nut|paired_board|FEEDBACK: A paired board still permits full houses or quads.",
       "w23_3_read_bb_minraise|193|FEEDBACK: That uses the full open size as the new BB payment.",
       "w23_3_teach|193|OPTION: The big blind pays the full open size in either branch",
-      "w23_3_teach|equity_realization|TEACH: Realization, the opening range and players remaining can change what actually defends profitably.",
       "w23_5_transfer_depth_changes_available_payoff|298|OPTION: The deep stack guarantees a larger win",
       "w23_6_checkpoint_combine_coverage_price_and_depth|193|OPTION: Use the heads-up solver because the initial open size matches",
-      "w23_6_checkpoint_combine_coverage_price_and_depth|solver|CAPTION: You have a published chart for single-open BB decisions and a solver result for heads-up BB facing a 2.5 BB BTN open.",
-      "w23_6_day7_choose_chart_only_matching_line|effective_stack|CAPTION: BTN has QJs, effective stacks are 100 BB, and the Sharky chart covers one CO open facing this BTN seat."
+      "w23_6_checkpoint_combine_coverage_price_and_depth|solver|CAPTION: You have a published chart for single-open BB decisions and a solver result for heads-up BB facing a 2.5 BB BTN open."
     ],
     "D6.history_support": [
       "w23_1_day7_btn_medium_queen|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -2113,10 +1970,7 @@
     ],
     "C5": [
       "w24_1_teach|1201|TEACH: A polar betting range combines strong value with bluffs.",
-      "w24_2_day7_call_price_vs_range_mdf|mdf|OPTION: Call because MDF exceeds half",
       "w24_2_teach|alpha_breakeven_bluff|TEACH: What is alpha for bluffing B into pot P with no recovery?.",
-      "w24_2_teach|mdf|TEACH: MDF is its complement.",
-      "w24_2_transfer_bluff_threshold_overpot|overbet|FEEDBACK: This overbet needs more than half under the given no-recovery premise.",
       "w24_3_day7_ratio_for_double_pot|1223|Q: Which value-to-bluff ratio makes the bluff catcher indifferent?",
       "w24_3_day7_ratio_for_double_pot|83|Q: Which value-to-bluff ratio makes the bluff catcher indifferent?",
       "w24_3_teach|1223|TEACH: A bluff catcher is indifferent when the betting range’s bluff share equals the call price, assuming it loses to every value bet and beats every bluff.",
@@ -2124,13 +1978,10 @@
       "w24_3_transfer_indifferent_range_blocks|1223|Q: What does the filtered range imply for this bluff catcher?",
       "w24_3_transfer_indifferent_range_blocks|83|Q: What does the filtered range imply for this bluff catcher?",
       "w24_3_transfer_indifferent_range_blocks|gto|OPTION: Call because the unfiltered range was balanced",
-      "w24_4_guided_overbet_collect_nut_value|overbet|FEEDBACK: Their overbet payments beat the smaller size’s broader caller count.",
       "w24_4_teach|1223|TEACH: A card that removes missed hands can hurt a bluff catcher.",
       "w24_4_teach|83|TEACH: A card that removes missed hands can hurt a bluff catcher.",
-      "w24_4_teach|overbet|TEACH: Which blocker is often useful for a zero-recovery overbet bluff?.",
       "w24_5_teach|64|FEEDBACK: Possible callers are narrower than all legal hole cards.",
-      "w24_5_teach|backdoor|OPTION: Does the hand have a backdoor draw?",
-      "w24_5_teach|thin_value|TEACH: What is the first question when considering a thin value raise?."
+      "w24_5_teach|backdoor|OPTION: Does the hand have a backdoor draw?"
     ],
     "D3.explicit_current_bet": [
       "w24_4_transfer_effective_price_river|authored/drill|owner=BB amount=9.0 BB",
