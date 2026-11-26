@@ -186,6 +186,41 @@ void main() {
       );
     },
   );
+  test('bare BB amounts replay B19 calls as additional chips', () {
+    final source = _ledgerTable();
+    final trail = [
+      for (final item in source.actionTrail)
+        Act0ActionTrailItemV1(
+          label: item.label.replaceFirst(RegExp(r' BB(?: more)?$'), ''),
+        ),
+    ];
+    Act0TableChoreographyPlanV1? planFor(List<Act0ActionTrailItemV1> items) =>
+        act0TableChoreographyPlanForTableV1(
+          source.copyWith(
+            actionTrail: items,
+            handContributions: source.handContributions,
+          ),
+        );
+    final plan = planFor(trail)!;
+    expect(plan.verifiedHistory!.decisionError('btn'), isNull);
+    expect(
+      _planBytes(plan),
+      _planBytes(act0TableChoreographyPlanForTableV1(source)),
+    );
+    final call = plan.beats.singleWhere(
+      (beat) => beat.sourceIndex == 8 && beat.contribution != null,
+    );
+    expect(call.commitment!.amountLabel, '9 BB');
+    expect(call.contribution!.amountBb, 6);
+    for (final invalid in [
+      'preflop: BTN calls 9',
+      'preflop: BTN calls 6 chips',
+    ]) {
+      final changed = [...trail];
+      changed[8] = Act0ActionTrailItemV1(label: invalid);
+      expect(planFor(changed), isNull, reason: invalid);
+    }
+  });
   test('explicit all-in suffix must exhaust the source stack', () {
     final table = _ledgerTable();
     final trail = table.actionTrail.take(8).toList();

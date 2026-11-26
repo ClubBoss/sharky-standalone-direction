@@ -686,6 +686,14 @@ _ParsedTrailItemV1? _parseTrailItemV1(
   }
   String? amountLabel;
   if (remainder.isNotEmpty) {
+    // The B19 street-qualified trail uses bare BB amounts, with calls
+    // expressed as chips added rather than the resulting street total.
+    // Normalize only this extended grammar; the source ledger and typed
+    // replay must still independently confirm every contribution and turn.
+    if (extended && RegExp(r'^\d+(?:\.\d+)?$').hasMatch(remainder)) {
+      if (action == _TrailActionV1.calls) callMore = true;
+      remainder = '$remainder BB';
+    }
     if (!RegExp(
       r'^\d+(?:\.\d+)?\s*BB$',
       caseSensitive: false,
@@ -792,7 +800,8 @@ String _bbLabelV1(double bb) =>
     '${bb == bb.roundToDouble() ? bb.toInt() : bb} BB';
 
 /// In the authored street-qualified dialect, raises are street totals and
-/// unqualified calls are street totals; "more" denotes additional chips.
+/// calls with a BB suffix are street totals unless marked "more"; bare
+/// numeric calls in the B19 dialect denote additional chips.
 /// The independent source contribution ledger must agree action by action;
 /// no inferred missing turns,
 /// stacks, posts or contributions are allowed.
