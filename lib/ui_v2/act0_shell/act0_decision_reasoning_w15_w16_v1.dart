@@ -240,4 +240,89 @@ const act0DecisionReasoningW15W16V1 = <String, Act0DecisionReasoningV1>{
     edgeBb: 0.52189,
     suboptimalKinds: {"call": Act0SuboptimalKindV1.clearlyWorse},
   ),
+  "spaced_review_w15_texture_and_frequency_texture_cbet_frequency_v1":
+      Act0DecisionReasoningV1(
+        taskId:
+            "spaced_review_w15_texture_and_frequency_texture_cbet_frequency_v1",
+        kind: Act0DecisionKindV1.table,
+        principleId: "texture_cbet_frequency",
+        bestAlternativeOptionId: "choice_0",
+        edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+        opponentRead:
+            "BB checks on this connected flop. In the stated model, a 3 BB continuation bet is called 85% of the time. Your showdown share against calls is 12%, or 20% against the full range if you check. No further bets.",
+        preChoiceAssumption:
+            "BB checks on this connected flop. In the stated model, a 3 BB continuation bet is called 85% of the time. Your showdown share against calls is 12%, or 20% against the full range if you check. No further bets.",
+        stackMatters: false,
+        edgeBb: 1.444,
+      ),
+  "spaced_review_w15_w15_protection_and_denial_deny_equity_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w15_w15_protection_and_denial_deny_equity_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "deny_equity",
+    bestAlternativeOptionId: "check",
+    edgeMechanism: Act0EdgeMechanismV1.deniesEquity,
+    opponentRead:
+        "BB checks. In this model BB has only two overcards; you win 75% of showdowns if you check through. BB folds every hand to a 3 BB bet.",
+    preChoiceAssumption:
+        "BB checks. In this model BB has only two overcards; you win 75% of showdowns if you check through. BB folds every hand to a 3 BB bet.",
+    stackMatters: false,
+    edgeBb: 2.5,
+  ),
+  "spaced_review_w15_check_back_and_slowplay_earned_slowplay_v1":
+      Act0DecisionReasoningV1(
+        taskId: "spaced_review_w15_check_back_and_slowplay_earned_slowplay_v1",
+        kind: Act0DecisionKindV1.table,
+        principleId: "earned_slowplay",
+        bestAlternativeOptionId: "choice_1",
+        edgeMechanism: Act0EdgeMechanismV1.keepsWorseIn,
+        opponentRead:
+            "BB checks. BB folds to a flop bet but, if you check behind, bets 4 BB on the turn 50% of the time. You call that bet. Your full house has 98% showdown equity in both check branches; no more bets.",
+        preChoiceAssumption:
+            "BB checks. BB folds to a flop bet but, if you check behind, bets 4 BB on the turn 50% of the time. You call that bet. Your full house has 98% showdown equity in both check branches; no more bets.",
+        stackMatters: false,
+        edgeBb: 1.71,
+      ),
+  "spaced_review_w15_monotone_and_paired_flop_texture_coverage_v1":
+      Act0DecisionReasoningV1(
+        taskId:
+            "spaced_review_w15_monotone_and_paired_flop_texture_coverage_v1",
+        kind: Act0DecisionKindV1.table,
+        principleId: "flop_texture_coverage",
+        bestAlternativeOptionId: "choice_0",
+        edgeMechanism: Act0EdgeMechanismV1.equityBelowPrice,
+        opponentRead:
+            "BB checks on a three-diamond flop. BB calls a 4 BB bet with flushes and strong draws 80% of the time. Your showdown share is 10% against calls and 22% against the full range if you check. No further bets.",
+        preChoiceAssumption:
+            "BB checks on a three-diamond flop. BB calls a 4 BB bet with flushes and strong draws 80% of the time. Your showdown share is 10% against calls and 22% against the full range if you check. No further bets.",
+        stackMatters: false,
+        edgeBb: 1.9,
+      ),
+  "spaced_review_w15_leads_and_stabs_lead_and_stab_v1": Act0DecisionReasoningV1(
+    taskId: "spaced_review_w15_leads_and_stabs_lead_and_stab_v1",
+    kind: Act0DecisionKindV1.table,
+    principleId: "lead_and_stab",
+    bestAlternativeOptionId: "choice_0",
+    edgeMechanism: Act0EdgeMechanismV1.foldsBetter,
+    opponentRead:
+        "HJ raised preflop and you act first. In this model HJ folds to a 4 BB lead 50% of the time and calls otherwise. Your straight draw has 30% showdown equity against calls; no more betting. If you check, HJ bets and you fold.",
+    preChoiceAssumption:
+        "HJ raised preflop and you act first. In this model HJ folds to a 4 BB lead 50% of the time and calls otherwise. Your straight draw has 30% showdown equity against calls; no more betting. If you check, HJ bets and you fold.",
+    stackMatters: false,
+    edgeBb: 6.35,
+  ),
+  "spaced_review_w15_check_raise_and_checkpoint_flop_raise_shape_v1":
+      Act0DecisionReasoningV1(
+        taskId:
+            "spaced_review_w15_check_raise_and_checkpoint_flop_raise_shape_v1",
+        kind: Act0DecisionKindV1.table,
+        principleId: "flop_raise_shape",
+        bestAlternativeOptionId: "call",
+        edgeMechanism: Act0EdgeMechanismV1.moreValueFromWorse,
+        opponentRead:
+            "HJ bets 4 BB after your check. HJ calls a raise to 12 BB 60% of the time and folds otherwise. Your set has 80% showdown equity against the full betting range and 75% against the calls. No further betting.",
+        preChoiceAssumption:
+            "HJ bets 4 BB after your check. HJ calls a raise to 12 BB 60% of the time and folds otherwise. Your set has 80% showdown equity against the full betting range and 75% against the calls. No further betting.",
+        stackMatters: false,
+        edgeBb: 3.4,
+      ),
 };

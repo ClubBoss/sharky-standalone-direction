@@ -8,6 +8,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_authored_source_proof_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_curriculum_pilot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_v1.dart';
@@ -280,7 +281,24 @@ void main() {
     await start(taskId: riverVariant);
   });
 
+  // Vol2 uses the same existing due-review route. Prove one actual
+  // Day 2 -> Day 7 transition from an original (generic) retention receipt.
+  final pilotRangeSource = act0CurriculumPilotEnabledV1
+      ? act0Day7MissSourcesV1.entries.singleWhere(
+          (entry) =>
+              entry.key == ('world_13', 'range_advantage', 'range_advantage'),
+        )
+      : null;
   for (final (entry, savedFamily) in [
+    if (pilotRangeSource != null)
+      (
+        pilotRangeSource,
+        act0FirstValueSkillReceiptForRunnerV1(
+          runner: pilotRangeSource.value.task.runner,
+          option: pilotRangeSource.value.miss,
+          taskFamily: pilotRangeSource.value.task.resolvedTaskFamily,
+        )!.sourceSignalId,
+      ),
     for (final entry in act0Day7MissSourcesV1.entries.where(
       (entry) => day7MustBeCoveredV1(entry.key),
     )) ...[
