@@ -161,44 +161,12 @@
       "w17_6_read_lower_spr_mechanics|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
-    "G1·26": [
-      "w17_1_guided_choose_value_job|",
-      "w17_2_guided_size_oop|",
-      "w17_3_day7_coverage_still_prices_call|",
-      "w17_3_transfer_defend_dry_3bet|",
-      "w17_4_guided_four_bet_bluff_model|",
-      "w17_4_transfer_short_three_bet_shove|",
-      "w17_5_transfer_trap_not_triggered|",
-      "w17_6_checkpoint_four_bet_shove|",
-      "w17_6_day7_narrow_range_small_call|",
-      "w17_6_guided_small_cbet_three_bet|"
-    ],
-    "G1·27": [
-      "w17_1_guided_choose_value_job|",
-      "w17_2_guided_size_oop|",
-      "w17_3_day7_coverage_still_prices_call|",
-      "w17_3_transfer_defend_dry_3bet|",
-      "w17_4_guided_four_bet_bluff_model|",
-      "w17_4_transfer_short_three_bet_shove|",
-      "w17_5_transfer_trap_not_triggered|",
-      "w17_6_checkpoint_four_bet_shove|",
-      "w17_6_day7_narrow_range_small_call|",
-      "w17_6_guided_small_cbet_three_bet|"
-    ],
     "G1·29": [
-      "w17_1_guided_choose_value_job|answer",
-      "w17_2_guided_size_oop|answer",
-      "w17_3_day7_coverage_still_prices_call|call",
-      "w17_3_transfer_defend_dry_3bet|call",
       "w17_4_guided_four_bet_bluff_model|answer",
-      "w17_4_transfer_short_three_bet_shove|call",
       "w17_5_transfer_trap_not_triggered|answer",
-      "w17_6_checkpoint_four_bet_shove|fold",
-      "w17_6_day7_narrow_range_small_call|call",
       "w17_6_guided_small_cbet_three_bet|bet_6"
     ],
     "G1·30": [
-      "w17_1_guided_choose_value_job|answer",
       "w17_2_guided_size_oop|answer",
       "w17_3_day7_coverage_still_prices_call|call",
       "w17_3_transfer_defend_dry_3bet|call",
@@ -237,41 +205,12 @@
     "E11": [
       "w18_5_read_overlimp|limp behind"
     ],
-    "G1·26": [
-      "w18_1_guided_check_top_pair|",
-      "w18_1_transfer_set_value_two_callers|",
-      "w18_2_day7_conditional_fold_count|",
-      "w18_2_guided_joint_folds_price|",
-      "w18_2_transfer_profitable_joint_bluff|",
-      "w18_3_guided_check_closes|",
-      "w18_4_transfer_call_only_eligible_pot|",
-      "w18_6_checkpoint_two_caller_check|",
-      "w18_6_guided_value_on_blank|"
-    ],
-    "G1·27": [
-      "w18_1_guided_check_top_pair|",
-      "w18_1_transfer_set_value_two_callers|",
-      "w18_2_day7_conditional_fold_count|",
-      "w18_2_guided_joint_folds_price|",
-      "w18_2_transfer_profitable_joint_bluff|",
-      "w18_3_guided_check_closes|",
-      "w18_4_transfer_call_only_eligible_pot|",
-      "w18_6_checkpoint_two_caller_check|",
-      "w18_6_guided_value_on_blank|"
-    ],
     "G1·29": [
-      "w18_1_guided_check_top_pair|check",
       "w18_1_transfer_set_value_two_callers|bet",
       "w18_2_day7_conditional_fold_count|answer",
-      "w18_2_guided_joint_folds_price|answer",
       "w18_2_transfer_profitable_joint_bluff|answer",
       "w18_3_guided_check_closes|answer",
-      "w18_4_transfer_call_only_eligible_pot|answer",
-      "w18_6_checkpoint_two_caller_check|check",
       "w18_6_guided_value_on_blank|bet"
-    ],
-    "G1·30": [
-      "w18_4_transfer_call_only_eligible_pot|answer"
     ]
   },
   "W19": {
