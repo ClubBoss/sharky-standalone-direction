@@ -330,7 +330,7 @@ String _pilotTrailLabelV1(Act0HandActionV1 action) {
     Act0HandVerbV1.smallBlind || Act0HandVerbV1.bigBlind => 'posts $amount',
     Act0HandVerbV1.fold => 'folds',
     Act0HandVerbV1.check => 'checks',
-    Act0HandVerbV1.call => 'calls $amount',
+    Act0HandVerbV1.call => action.streetTotal > action.chipsAdded ? 'calls $amount more' : 'calls $amount',
     Act0HandVerbV1.bet => action.allIn ? 'shoves $amount' : 'bets $amount',
     Act0HandVerbV1.raise => 'raises to $total',
     _ => throw StateError('Unsupported practice action'),
