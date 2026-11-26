@@ -239,18 +239,6 @@
     "21.duplicate_wrong_reason": [
       "h5_w16_6_day7_last_bet_independent|flop_check"
     ],
-    "22.action_amount": [
-      "h5_w16_3_guided_thin_third_street|feedback/flop_bet|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_3_guided_thin_third_street|feedback/flop_check|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_3_guided_thin_third_street|question|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_3_guided_thin_third_street|teach/0|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_3_transfer_jam_nut_straight|feedback/flop_bet|8/label|preflop/btn 'Preflop: BTN calls 7.5 BB' vs ledger increment/total 7.5/10.0 BB",
-      "h5_w16_3_transfer_jam_nut_straight|feedback/flop_check|8/label|preflop/btn 'Preflop: BTN calls 7.5 BB' vs ledger increment/total 7.5/10.0 BB",
-      "h5_w16_3_transfer_jam_nut_straight|question|8/label|preflop/btn 'Preflop: BTN calls 7.5 BB' vs ledger increment/total 7.5/10.0 BB",
-      "h5_w16_6_day7_last_bet_independent|feedback/flop_bet|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_6_day7_last_bet_independent|feedback/flop_check|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB",
-      "h5_w16_6_day7_last_bet_independent|question|7/label|preflop/bb 'Preflop: BB calls 1.5 BB' vs ledger increment/total 1.5/2.5 BB"
-    ],
     "23.pot_with_bet": [
       "h5_w16_3_guided_thin_third_street|feedbackReason|bring the pot to 9.5 BB|expected 5.5",
       "h5_w16_3_guided_thin_third_street|option[flop_bet].reason|bring the pot to 9.5 BB|expected 5.5",
