@@ -162,6 +162,7 @@ TIER_A_COMMANDS = [
             "test/ui_v2/act0_catalog_truth_guards_v1_test.dart",
             "test/guards/act0_atlas_dod_v1_test.dart",
             "test/guards/act0_skin_literal_guard_v1_test.dart",
+            "test/ui_v2/skin_contrast_guard_v1_test.dart",
             "test/ui_v2/act0_starting_chart_v1_test.dart",
             "test/ui_v2/act0_glossary_v1_test.dart",
             "test/ui_v2/act0_bet_rules_w14_v1_test.dart",
