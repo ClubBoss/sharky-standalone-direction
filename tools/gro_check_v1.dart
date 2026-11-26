@@ -103,7 +103,6 @@ class _GroCheckV1 implements Act0LongSessionObserverV1 {
     addTearDown(() {
       messenger.setMockMethodCallHandler(_shareChannel, null);
       messenger.setMockMethodCallHandler(act0GrowthChannelV1, null);
-      debugDefaultTargetPlatformOverride = null;
     });
     _writeReport();
   }
@@ -219,6 +218,8 @@ class _GroCheckV1 implements Act0LongSessionObserverV1 {
 
   @override
   void finish() {
+    // Reset before testWidgets verifies foundation debug invariants.
+    debugDefaultTargetPlatformOverride = null;
     for (final entry in [_share, _review]) {
       if (!entry.reached) entry.exceptions.add('Learner entry not reached.');
       entry.exceptions.addAll(_routeErrors);
