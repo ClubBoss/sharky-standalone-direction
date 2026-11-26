@@ -2389,24 +2389,38 @@ void registerLongSessionRoutes({
   ({int first, int last})? tierARange,
   Act0LongSessionObserverV1? walkthrough,
   bool cleanWalkthrough = false,
+  bool volumeRoute = false,
 }) {
+  assert(!volumeRoute || (tierARange == null && walkthrough == null));
   assert(!cleanWalkthrough || walkthrough != null);
   assert(
     walkthrough == null ||
         (tierARange != null && tierARange.first == tierARange.last),
   );
   final fullRoute =
+      !volumeRoute &&
       tierARange == null &&
       const bool.fromEnvironment('ACT0_LONG_SESSION_FULL_ROUTE');
   final w7ToW8 =
+      !volumeRoute &&
       tierARange == null &&
       const bool.fromEnvironment('ACT0_LONG_SESSION_W7_TO_W8');
-  final pilot = tierARange == null && act0CurriculumPilotEnabledV1 && !w7ToW8;
+  final pilot =
+      !volumeRoute &&
+      tierARange == null &&
+      act0CurriculumPilotEnabledV1 &&
+      !w7ToW8;
   final lastWorld =
       tierARange?.last ??
-      (pilot ? act0LastCurriculumWorldV1 : (w7ToW8 ? 8 : (fullRoute ? 12 : 7)));
+      (volumeRoute
+          ? 24
+          : (pilot
+                ? act0LastCurriculumWorldV1
+                : (w7ToW8 ? 8 : (fullRoute ? 12 : 7))));
   final firstWorlds = [
-    if (tierARange != null)
+    if (volumeRoute)
+      1
+    else if (tierARange != null)
       tierARange.first
     else if (pilot)
       13
@@ -2421,13 +2435,16 @@ void registerLongSessionRoutes({
     final expectedWorlds = {
       for (var world = firstWorld; world <= lastWorld; world++) world,
     };
+    final expectedMissWorlds = volumeRoute ? {1, 13} : expectedWorlds;
     final useRulesCheck = walkthrough == null && firstWorld == 2;
     final restoreSaved =
         w7ToW8 || pilot || (tierARange != null && firstWorld > 1);
     final checkNextWorld =
         walkthrough == null && tierARange != null && lastWorld < 7;
     testWidgets(
-      walkthrough != null
+      volumeRoute
+          ? 'B99: fresh learner finishes W1–W24 with a miss and reload per volume'
+          : walkthrough != null
           ? 'V9 ${cleanWalkthrough ? "clean " : ""}walkthrough W$firstWorld'
           : 'a ${restoreSaved ? 'returning' : 'fresh'} learner finishes W$firstWorld–W$lastWorld with mistakes, retries and restarts',
       _withWalkthroughV1(walkthrough, (t) async {
@@ -2521,7 +2538,7 @@ void registerLongSessionRoutes({
         final attemptsByTask = <String, int>{};
         var navigationAttempts = 0;
         final runnerFinder = find.byType(Act0LessonRunnerShellV1);
-        final routeStepLimit = fullRoute ? 5200 : 3600;
+        final routeStepLimit = volumeRoute ? 10000 : (fullRoute ? 5200 : 3600);
         var step = 0;
         for (; step < routeStepLimit && !complete; step++) {
           expect(t.takeException(), isNull, reason: 'At route step $step');
@@ -2578,7 +2595,10 @@ void registerLongSessionRoutes({
                 )
                 .runner;
             if (runner.phase == Act0LessonPhaseV1.drill) {
-              await answerAct0RoutePracticeV1(t, correct: walkthrough != null);
+              await answerAct0RoutePracticeV1(
+                t,
+                correct: volumeRoute || walkthrough != null,
+              );
             } else {
               await tapAct0RoutePracticeKeyV1(
                 t,
@@ -2656,7 +2676,7 @@ void registerLongSessionRoutes({
                 await pumpSourceChoreographyToDecisionV1(t, runner.table);
               final wrong = runner.options
                   .where(
-                    (o) => walkthrough == null
+                    (o) => walkthrough == null && !volumeRoute
                         ? !o.isCorrect
                         : o.quality == Act0FeedbackQualityV1.wrong,
                   )
@@ -2670,7 +2690,8 @@ void registerLongSessionRoutes({
               final injectMiss =
                   !cleanWalkthrough &&
                   (b19Miss ||
-                      (!missedWorlds.contains(world) &&
+                      (expectedMissWorlds.contains(world) &&
+                          !missedWorlds.contains(world) &&
                           wrong.isNotEmpty &&
                           (walkthrough != null ||
                               world != 7 ||
@@ -2678,7 +2699,7 @@ void registerLongSessionRoutes({
               final choice = injectMiss
                   ? wrong.first
                   : runner.options.firstWhere(
-                      pilot || walkthrough != null
+                      pilot || volumeRoute || walkthrough != null
                           ? act0RunnerOptionIsPreferredV1
                           : (o) => o.isCorrect,
                     );
@@ -2737,15 +2758,17 @@ void registerLongSessionRoutes({
                 if (b19Miss) confirmedB19Misses.add(taskId);
               }
               answered.add(taskId);
-              final worldAnswered = answered
-                  .where((id) => taskWorld[id] == world)
-                  .length;
-              final worldTotal = taskWorld.values
-                  .where((n) => n == world)
-                  .length;
+              final worldAnswered = volumeRoute
+                  ? 0
+                  : answered.where((id) => taskWorld[id] == world).length;
+              final worldTotal = volumeRoute
+                  ? 0
+                  : taskWorld.values.where((n) => n == world).length;
               if (walkthrough == null &&
                   !restartedWorlds.contains(world) &&
-                  (world == 7
+                  (volumeRoute
+                      ? injectMiss
+                      : world == 7
                       ? taskId == w7Checkpoint && injectMiss
                       : worldAnswered >= worldTotal ~/ 2)) {
                 final before = await _saved(t);
@@ -2755,6 +2778,12 @@ void registerLongSessionRoutes({
                 expect(after['earnedXp'], before['earnedXp']);
                 expect(after['selectedWorldId'], before['selectedWorldId']);
                 expect(after['selectedTaskId'], before['selectedTaskId']);
+                if (volumeRoute) {
+                  expect(
+                    after['learningEvidenceHistory'],
+                    before['learningEvidenceHistory'],
+                  );
+                }
                 restartedWorlds.add(world);
                 // A learner can return to Learn even while an open repair is shown on Home.
                 await _tapFirst(t, [find.text('Learn').last]);
@@ -2773,7 +2802,7 @@ void registerLongSessionRoutes({
             complete =
                 !checkNextWorld &&
                 completed.containsAll(taskWorld.keys) &&
-                (walkthrough == null ||
+                (walkthrough == null && !volumeRoute ||
                     find
                         .byKey(const Key('act0_shell_result_close'))
                         .evaluate()
@@ -2972,7 +3001,7 @@ void registerLongSessionRoutes({
                   w3BlindVsBlindChoicesV1.length +
                   y5bNewChoicesV1.length +
                   (fullRoute ? y5cNewChoicesV1.length : y5cTasksInWorldV1(7));
-        if (walkthrough == null)
+        if (walkthrough == null && !volumeRoute)
           expect(
             tierARange != null
                 ? catalog.worlds
@@ -2989,8 +3018,26 @@ void registerLongSessionRoutes({
           expect(completed, contains('w12_checkpoint_review'));
           expect(completed, containsAll(cur04bSummaryChoicesV1.keys));
         }
-        expect(missedWorlds, cleanWalkthrough ? <int>{} : expectedWorlds);
-        if (walkthrough == null) expect(restartedWorlds, expectedWorlds);
+        if (volumeRoute) {
+          expect(
+            complete,
+            isTrue,
+            reason: 'The learner must exit the final result',
+          );
+          expect(enteredWorlds.toList(), orderedEquals(expectedWorlds));
+          expect(completed.difference(rewards.keys.toSet()), isEmpty);
+          expect(snapshot['completedTaskIds'], unorderedEquals(completed));
+          final catalogCourseXp = taskWorld.keys.fold<int>(
+            0,
+            (sum, id) => sum + rewards[id]!,
+          );
+          final earnedRepairXp = completed
+              .where(repairWorld.containsKey)
+              .fold<int>(0, (sum, id) => sum + rewards[id]!);
+          expect(snapshot['earnedXp'], catalogCourseXp + earnedRepairXp);
+        }
+        expect(missedWorlds, cleanWalkthrough ? <int>{} : expectedMissWorlds);
+        if (walkthrough == null) expect(restartedWorlds, expectedMissWorlds);
         expect(snapshot['skippedTaskIds'], isEmpty);
         expect(
           snapshot['earnedXp'],
@@ -3002,7 +3049,10 @@ void registerLongSessionRoutes({
             (sum, id) => sum + (rewards[id] ?? 0),
           ),
         );
-        expect(confirmedMisses, cleanWalkthrough ? <int>{} : expectedWorlds);
+        expect(
+          confirmedMisses,
+          cleanWalkthrough ? <int>{} : expectedMissWorlds,
+        );
         if (pilot) expect(confirmedB19Misses, b19MissTasks);
         if (fullRoute || pilot) {
           await _mount(t);
@@ -3012,8 +3062,13 @@ void registerLongSessionRoutes({
         }
         expect(t.takeException(), isNull);
       }),
+      skip: volumeRoute && !act0CurriculumPilotEnabledV1,
       timeout: Timeout(
-        Duration(minutes: fullRoute ? 8 : (tierARange != null ? 6 : 5)),
+        Duration(
+          minutes: volumeRoute
+              ? 6
+              : (fullRoute ? 8 : (tierARange != null ? 6 : 5)),
+        ),
       ),
     );
   }
