@@ -718,15 +718,15 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 TASK w14_4_teach [theory] What is enough to decide a low-SPR all-in call?
 CAPTION: Study spr and commitment.
-TEACH: What is enough to decide a low-SPR all-in call? SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare your equity against the shoving range (the hands the opponent would bet all-in with) with the equity required to call.
+TEACH: What is enough to decide a low-SPR all-in call? SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare your equity against the hands the opponent would bet all-in with with the equity required to call.
 Q: What is enough to decide a low-SPR all-in call?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] The actual call price and equity against the shoving range — Correct. A shorter stack can change the price and the result. Compare your equity against the opponent’s all-in hands with the equity required to call.
+  + [correct] The actual call price and equity against the opponent’s all-in hands — Correct. A shorter stack can change the price and the result. Compare your equity against the opponent’s all-in hands with the equity required to call.
   - [wrong] Low SPR and top pair alone — Look again. Top pair can have too little equity against a strong range, even when the SPR is low.
-    BETTER ANSWER: The actual call price and equity against the shoving range
+    BETTER ANSWER: The actual call price and equity against the opponent’s all-in hands
   - [wrong] The players’ starting stacks before preflop — Look again. Preflop chips already invested are in the pot. Use the smaller amount remaining at the start of this street.
-    BETTER ANSWER: The actual call price and equity against the shoving range
+    BETTER ANSWER: The actual call price and equity against the opponent’s all-in hands
 
 TASK w14_4_read_street_start_spr [drill] What is the flop SPR?
 CAPTION: BTN opened and called BB’s raise to 10 BB. Compute SPR at the start of this flop.
@@ -953,9 +953,9 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 ===== WORLD 14 · LESSON where_is_the_mistake · Where is the mistake in this hand? =====
 
-TASK mistake_half_pot [drill] Which annotated action misses the stated sizing plan?
-CAPTION: You told a study partner you would bet half the river pot. Review these annotated actions. BTN opens to 2.75 BB and BB calls. The flop and turn then check through.
-Q: Which annotated action misses the stated sizing plan?
+TASK mistake_half_pot [drill] Which action misses the plan?
+CAPTION: Planned river bet: half-pot. BTN opens to 2.75 BB; BB calls. Flop and turn check through.
+Q: Which action misses the plan?
 HINT [hidden]: (none)
 TABLE: River | You Ac Qd | Board Qs 8c 4h 3d 2s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 REASONING: principle smallest_size_same_job · alt open · edge processRule · stack_matters unknown · assumption You told a study partner you would bet half the river pot. Review these annotated actions. BTN opens to 2.75 BB and BB calls. The flop and turn then check through.
@@ -970,9 +970,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
   + [correct] River · bet 2 BB — Correct. Mistake: River · bet 2 BB. Bet 3 BB, half of the 6 BB river pot, instead.
     FEEDBACK TABLE: River | You Ac Qd | Board Qs 8c 4h 3d 2s | Pot 6 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK mistake_minimum_raise [drill] Which annotated action was illegal at the stated depth?
-CAPTION: Review the actions with enough chips for a full raise. BB led on the turn. Only one annotation breaks the betting rule.
-Q: Which annotated action was illegal at the stated depth?
+TASK mistake_minimum_raise [drill] Which action is illegal?
+CAPTION: Enough chips for a full raise. BB leads on the turn.
+Q: Which action is illegal?
 HINT [hidden]: (none)
 TABLE: Turn | You Ac Qd | Board Qs 8c 4h 3d | Pot 9.5 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 REASONING: principle price_vs_equity · alt lead · edge processRule · stack_matters unknown · assumption Review the actions with enough chips for a full raise. BB led on the turn. Only one annotation breaks the betting rule.
@@ -984,9 +984,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Turn · announce raise to 6 BB
   + [correct] Turn · announce raise to 6 BB — Correct. Mistake: Turn · announce raise to 6 BB. Raise to at least 8 BB: match the 4 BB lead and add at least that much again.
 
-TASK mistake_already_committed [drill] Where did BTN incorrectly track the chips?
-CAPTION: The replay pauses before BTN responds to the flop raise. Both players can afford the full match. The three annotations include one claimed amount.
-Q: Where did BTN incorrectly track the chips?
+TASK mistake_already_committed [drill] Which chip count is wrong?
+CAPTION: Before BTN responds to the flop raise, both players can afford the full match.
+Q: Which chip count is wrong?
 HINT [hidden]: (none)
 TABLE: Flop | You Ah Qh | Board Qs 7c 4d | Pot 17.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
 REASONING: principle blind_price_defense · alt first_bet · edge processRule · stack_matters unknown · assumption The replay pauses before BTN responds to the flop raise. Both players can afford the full match. The three annotations include one claimed amount.
@@ -998,9 +998,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Flop · count another 9 BB to call
   + [correct] Flop · count another 9 BB to call — Correct. Mistake: Flop · count another 9 BB to call. Count 6 BB more to call, subtracting your 3 BB from the 9 BB raise total.
 
-TASK mistake_turn_straight_call [drill] Which choice is the mistake in the reviewed line?
-CAPTION: Replay stops before the river. Under the teaching model the legal winning rivers are the four fives and four tens. You know your cards and the turn board, no ties or later chips. BB led 4 BB on the turn.
-Q: Which choice is the mistake in the reviewed line?
+TASK mistake_turn_straight_call [drill] Which action is mistaken?
+CAPTION: Model: four fives and four tens win on the river. No ties or later bets; only your cards and board are known. BB leads 4 BB.
+Q: Which action is mistaken?
 HINT [hidden]: (none)
 TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 9.5 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Facts high card, open-ended, completion cards 8
 REASONING: principle price_vs_equity · alt check · edge processRule · stack_matters unknown · assumption Replay stops before the river. Under the teaching model the legal winning rivers are the four fives and four tens. You know your cards and the turn board, no ties or later chips. BB led 4 BB on the turn.
@@ -1015,9 +1015,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Turn · call 4 BB
     FEEDBACK TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 9.5 BB | To call 4 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, open-ended, completion cards 8
 
-TASK mistake_turn_flush_fold [drill] Which annotated action misses a profitable chance to win chips?
-CAPTION: The study model counts all nine unseen hearts as winning rivers and the other rivers as losses. There are no ties, raises or later betting. BB leads 1 BB on the turn.
-Q: Which annotated action misses a profitable chance to win chips?
+TASK mistake_turn_flush_fold [drill] Which action loses value?
+CAPTION: Model: nine unseen hearts win; other rivers lose. No ties, raises or later bets. BB leads 1 BB.
+Q: Which action loses value?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 6h | Board Kh 8h 3c 2d | Pot 6.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts high card, flush draw, completion cards 9
 REASONING: principle price_vs_equity · alt count · edge processRule · stack_matters unknown · assumption The study model counts all nine unseen hearts as winning rivers and the other rivers as losses. There are no ties, raises or later betting. BB leads 1 BB on the turn.
@@ -1029,9 +1029,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
   - [wrong] Turn · count nine winning hearts — Look again. Four hearts are visible, so the model has nine remaining winners. Mistake: Turn · fold to 1 BB. Call 1 BB: 9 of 46 rivers win (19.6%), above the 13.3% price.
     BETTER ANSWER: Turn · fold to 1 BB
 
-TASK mistake_worse_calls [drill] Where does the reviewed plan leave chips on the table?
-CAPTION: For this replay only, BB calls a 3 BB river bet with K-J or K-T and folds Q-J. Weight every legal combination equally. The earlier checks are given history.
-Q: Where does the reviewed plan leave chips on the table?
+TASK mistake_worse_calls [drill] Which choice loses value?
+CAPTION: Model: BB calls 3 BB on the river with K-J or K-T, folds Q-J. Legal combos equally weighted.
+Q: Which choice loses value?
 HINT [hidden]: (none)
 TABLE: River | You Kh Qd | Board Ks 8c 4d 3h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 REASONING: principle value_vs_worse · alt flop · edge processRule · stack_matters unknown · assumption For this replay only, BB calls a 3 BB river bet with K-J or K-T and folds Q-J. Weight every legal combination equally. The earlier checks are given history.
@@ -1046,9 +1046,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: River · check K-Q behind
     FEEDBACK TABLE: River | You Kh Qd | Board Ks 8c 4d 3h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK mistake_bluff_calls [drill] Which annotated river action is worse than checking?
-CAPTION: BB checks the river. At 3 BB and 7 BB the equally weighted teaching roster calls KcQd 8h9h 7h7c 4s5s KcJc 8hTc and folds Ah7h Qs7s Qd9d As9s. Your hand loses to every holding on a showdown. Review BTN’s proposed line.
-Q: Which annotated river action is worse than checking?
+TASK mistake_bluff_calls [drill] Which action is worse than checking?
+CAPTION: Model: BB checks. At 3 BB or 7 BB, equally weighted KcQd 8h9h 7h7c 4s5s KcJc 8hTc call; Ah7h Qs7s Qd9d As9s fold. You lose every showdown.
+Q: Which action is worse than checking?
 HINT [hidden]: (none)
 TABLE: River | You Jh Td | Board Ks 8c 4d 3h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
 REASONING: principle folds_better · alt price · edge processRule · stack_matters unknown · assumption BB checks the river. At 3 BB and 7 BB the equally weighted teaching roster calls KcQd 8h9h 7h7c 4s5s KcJc 8hTc and folds Ah7h Qs7s Qd9d As9s. Your hand loses to every holding on a showdown. Review BTN’s proposed line.
@@ -1063,9 +1063,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: River · bluff for 7 BB
     FEEDBACK TABLE: River | You Jh Td | Board Ks 8c 4d 3h 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
-TASK mistake_known_blocker [drill] Which note counts too many opponent combinations?
-CAPTION: The river review compares all K-Q combinations without suit restrictions. Ks is on the board and Kh is in your hand. No queen is visible. These are notes made before a choice; there is no result shown.
-Q: Which note counts too many opponent combinations?
+TASK mistake_known_blocker [drill] Which count is wrong?
+CAPTION: Count K-Q across suits. Ks on board, Kh in your hand; no queen visible.
+Q: Which count is wrong?
 HINT [hidden]: (none)
 TABLE: River | You Kh Jd | Board Ks 9c 5h 3d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 REASONING: principle combos_and_blockers · alt board · edge processRule · stack_matters unknown · assumption The river review compares all K-Q combinations without suit restrictions. Ks is on the board and Kh is in your hand. No queen is visible. These are notes made before a choice; there is no result shown.
@@ -1080,9 +1080,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: River · record twelve possible K-Q hands
     FEEDBACK TABLE: River | You Kh Jd | Board Ks 9c 5h 3d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK mistake_matched_amount [drill] Which note is wrong when the two players match the wager?
-CAPTION: After preflop BTN and BB each contributed 2.5 BB. On the river BB goes all-in for its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.
-Q: Which note is wrong when the two players match the wager?
+TASK mistake_matched_amount [drill] Which note is wrong?
+CAPTION: BTN and BB paid 2.5 BB preflop each. River: BB announces all-in 15 BB; BTN has 6 BB left. Pot displays the matched cap.
+Q: Which note is wrong?
 HINT [hidden]: (none)
 TABLE: River | You Ac Qd | Board Qs 8c 4h 3d 2s | Pot 11.5 BB | To call 6 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 REASONING: principle stack_depth_changes_play · alt dead_sb · edge processRule · stack_matters unknown · assumption After preflop BTN and BB each contributed 2.5 BB. On the river BB goes all-in for its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.
@@ -1094,9 +1094,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: River · count all 15 BB as matched
   + [correct] River · count all 15 BB as matched — Correct. Mistake: River · count all 15 BB as matched. Count 6 BB as matched, not 15 BB. The unmatched 9 BB returns to BB.
 
-TASK mistake_implied_cap [drill] Where does the review invent a payoff the table cannot pay?
-CAPTION: Study replay: BB leads 3 BB on the turn. After a matching call, BB has 3 BB left. BTN has at least that much. The model treats nine rivers as clean and lets BB pay its whole remaining stack on each hit.
-Q: Where does the review invent a payoff the table cannot pay?
+TASK mistake_implied_cap [drill] Which payoff is impossible?
+CAPTION: BB leads 3 BB on turn, leaving 3 BB after your call. BTN covers. Model: nine clean rivers win; BB pays its remaining stack on hits.
+Q: Which payoff is impossible?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah Jh | Board Kh 7h 4c 2d | Pot 8.5 BB | To call 3 BB | Seat BTN | Active btn | Decision btn | Facts high card, flush draw, completion cards 9
 REASONING: principle implied_odds · alt call · edge processRule · stack_matters unknown · assumption Study replay: BB leads 3 BB on the turn. After a matching call, BB has 3 BB left. BTN has at least that much. The model treats nine rivers as clean and lets BB pay its whole remaining stack on each hit.
@@ -1110,9 +1110,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
 
 ===== WORLD 14 · LESSON turn_card_impact · Which turn card changes the decision? =====
 
-TASK turn_heart_completes [drill] Which turn lets you call instead of folding?
-CAPTION: Imagine BB could hold KsKd KcKd 8s8d, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2c turn. Choose call only when it earns more than folding.
-Q: Which turn lets you call instead of folding?
+TASK turn_heart_completes [drill] Call instead?
+CAPTION: BB: KsKd KcKd 8s8d (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2c.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You Ah 6h | Board Kh 8h 3c | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts high card, two-tone, flush draw, completion cards 9
 REASONING: principle board_changes_strength · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1127,9 +1127,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Qh
     FEEDBACK TABLE: Flop | You Ah 6h | Board Kh 8h 3c | Pot 9.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, two-tone, flush draw, completion cards 9
 
-TASK turn_heart_pairs_board [drill] Which turn makes folding better than calling?
-CAPTION: Imagine BB could hold KsKd KcKd 8s8d, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a Qh turn. Choose call only when it earns more than folding.
-Q: Which turn makes folding better than calling?
+TASK turn_heart_pairs_board [drill] Fold instead?
+CAPTION: BB: KsKd KcKd 8s8d (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus Qh.
+Q: Fold instead?
 HINT [hidden]: (none)
 TABLE: Flop | You Ah 6h | Board Kh 8h 3c | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts high card, two-tone, flush draw, completion cards 9
 REASONING: principle price_vs_equity · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is KsKd KcKd 8s8d, with equal weight per legal combo on each street. Compare a Qh turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1144,9 +1144,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: 3h
     FEEDBACK TABLE: Flop | You Ah 6h | Board Kh 8h 3c | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, two-tone, flush draw, completion cards 9
 
-TASK turn_straight_completes [drill] Which new card makes the call profitable?
-CAPTION: Imagine BB could hold AsAd AcAs QhQc, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2d turn. Choose call only when it earns more than folding.
-Q: Which new card makes the call profitable?
+TASK turn_straight_completes [drill] Call instead?
+CAPTION: BB: AsAd AcAs QhQc (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2d.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You 7d 6c | Board 9h 8s 2c | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts high card, rainbow, open-ended, completion cards 8
 REASONING: principle board_changes_strength · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AsAd AcAs QhQc, with equal weight per legal combo on each street. Compare a 2d turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1161,9 +1161,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
   + [correct] Td — Correct. If Td turns: The ten completes your straight. More rivers now preserve the win against the listed overpairs than before the turn was known. If 2d turns: 18.2% (Fold). If Td turns: 97.0% (Call). A call needs 33.3% showdown share.
     FEEDBACK TABLE: Flop | You 7d 6c | Board 9h 8s 2c | Pot 9.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts high card, rainbow, open-ended, completion cards 8
 
-TASK turn_overcard_beats_pair [drill] Which turn forces you to fold at this price?
-CAPTION: Imagine BB could hold AcKc AdKd AcTd, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2c turn. Choose call only when it earns more than folding.
-Q: Which turn forces you to fold at this price?
+TASK turn_overcard_beats_pair [drill] Fold instead?
+CAPTION: BB: AcKc AdKd AcTd (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2c.
+Q: Fold instead?
 HINT [hidden]: (none)
 TABLE: Flop | You Qs Qd | Board Jh 8s 3d | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
 REASONING: principle board_changes_strength · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AcKc AdKd AcTd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1178,9 +1178,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Ah
     FEEDBACK TABLE: Flop | You Qs Qd | Board Jh 8s 3d | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow, backdoor straight
 
-TASK turn_remove_high_draw [drill] Which alternative turn changes a fold into a call?
-CAPTION: Imagine BB could hold AhKc AhJc ThTc Ah9h, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a As turn. Choose call only when it earns more than folding.
-Q: Which alternative turn changes a fold into a call?
+TASK turn_remove_high_draw [drill] Call instead?
+CAPTION: BB: AhKc AhJc ThTc Ah9h (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus As.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You 8h 7h | Board Qh 7s 2h | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair, two-tone, flush draw, completion cards 9
 REASONING: principle combos_and_blockers · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AhKc AhJc ThTc Ah9h, with equal weight per legal combo on each street. Compare a As turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1195,9 +1195,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: 9h
     FEEDBACK TABLE: Flop | You 8h 7h | Board Qh 7s 2h | Pot 9.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, middle pair, two-tone, flush draw, completion cards 9
 
-TASK turn_counterfeit_two_pair [drill] Which card makes a once-profitable call lose chips?
-CAPTION: Imagine BB could hold AcAd AsAh QcQd, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2c turn. Choose call only when it earns more than folding.
-Q: Which card makes a once-profitable call lose chips?
+TASK turn_counterfeit_two_pair [drill] Fold instead?
+CAPTION: BB: AcAd AsAh QcQd (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2c.
+Q: Fold instead?
 HINT [hidden]: (none)
 TABLE: Flop | You 8c 6s | Board 8h 6d Ks | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts two pair, rainbow
 REASONING: principle range_vs_board · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AcAd AsAh QcQd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1212,9 +1212,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
   + [correct] Kh — Correct. If Kh turns: The turn pairs the king. BB’s overpairs can use both board kings, overtaking your two pair from the flop. If 2c turns: 81.8% (Call). If Kh turns: 9.1% (Fold). A call needs 33.3% showdown share.
     FEEDBACK TABLE: Flop | You 8c 6s | Board 8h 6d Ks | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts two pair, rainbow
 
-TASK turn_redraw_good [drill] Which turn gives you enough showdown share to call?
-CAPTION: Imagine BB could hold AhJh AhTh QhJh, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2h turn. Choose call only when it earns more than folding.
-Q: Which turn gives you enough showdown share to call?
+TASK turn_redraw_good [drill] Call instead?
+CAPTION: BB: AhJh AhTh QhJh (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2h.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You 9d 9c | Board 9s 5h 4h | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts set, pocket pair, two-tone
 REASONING: principle stack_depth_changes_play · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AhJh AhTh QhJh, with equal weight per legal combo on each street. Compare a 2h turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1229,9 +1229,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: 5s
     FEEDBACK TABLE: Flop | You 9d 9c | Board 9s 5h 4h | Pot 9.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts set, pocket pair, two-tone
 
-TASK turn_board_four_to_straight [drill] Which card leaves too little showdown share to call?
-CAPTION: Imagine BB could hold JdTd JcTh Tc5c, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2c turn. Choose call only when it earns more than folding.
-Q: Which card leaves too little showdown share to call?
+TASK turn_board_four_to_straight [drill] Fold instead?
+CAPTION: BB: JdTd JcTh Tc5c (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2c.
+Q: Fold instead?
 HINT [hidden]: (none)
 TABLE: Flop | You Ad Ac | Board 9c 8d 6h | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, overpair, pocket pair, rainbow
 REASONING: principle range_vs_board · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is JdTd JcTh Tc5c, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1246,9 +1246,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: 7s
     FEEDBACK TABLE: Flop | You Ad Ac | Board 9c 8d 6h | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
 
-TASK turn_dead_draw [drill] Can either offered turn make a call profitable?
-CAPTION: Imagine BB could hold Js8s JsTs Js9s, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 3c turn. Choose call only when it earns more than folding.
-Q: Can either offered turn make a call profitable?
+TASK turn_dead_draw [drill] Call instead?
+CAPTION: BB: Js8s JsTs Js9s (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 3c.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You Ac Ks | Board Jd Jh Jc | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts three of a kind, rainbow, paired board, backdoor straight
 REASONING: principle combos_and_blockers · alt good · edge processRule · stack_matters unknown · assumption BB’s study range is Js8s JsTs Js9s, with equal weight per legal combo on each street. Compare a 3c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1263,9 +1263,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
   + [correct] None of these — Correct. Neither card changes the decision: Every possible opponent hand already has four jacks. Neither offered turn nor its remaining rivers can beat that in this matchup. If 3c turns: 0.0% (Fold). A call needs 33.3% showdown share.
     FEEDBACK TABLE: Flop | You Ac Ks | Board Jd Jh Jc | Pot 9.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts three of a kind, rainbow, paired board, backdoor straight
 
-TASK turn_turn_makes_set [drill] Which card changes the correct play to a call?
-CAPTION: Imagine BB could hold AhQh AsKd AcJd, with equal weight per legal combination. Imagine BB bets 9.5 BB on the turn into the 9.5 BB pot. If you call, go straight to showdown after the river; ties earn half. Compare each offered turn with a 2c turn. Choose call only when it earns more than folding.
-Q: Which card changes the correct play to a call?
+TASK turn_turn_makes_set [drill] Call instead?
+CAPTION: BB: AhQh AsKd AcJd (equal-weight legal combos). Pot-sized turn bet; river checkdown; split ties. Versus 2c.
+Q: Call instead?
 HINT [hidden]: (none)
 TABLE: Flop | You 5h 5s | Board Ad 9c 2h | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, pocket pair, rainbow, backdoor straight
 REASONING: principle implied_odds · alt unchanged · edge processRule · stack_matters unknown · assumption BB’s study range is AhQh AsKd AcJd, with equal weight per legal combo on each street. Compare a 2c turn with the offered alternatives at the stated pot-sized bet. After a call there is no further betting; ties earn half.
@@ -1282,9 +1282,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
 
 ===== WORLD 14 · LESSON slightly_harder · A slightly harder next step =====
 
-TASK harder_dirty_flush [drill] Which response earns more in this model?
-CAPTION: For example, assume BB holds Ks Kd. After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model. Replace the top-pair holding with a set.
-Q: Which response earns more in this model?
+TASK harder_dirty_flush [drill] Which play earns more?
+CAPTION: Suppose BB holds the king of spades and the king of diamonds (Ks Kd). After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 6h | Board Kh 8h 3c 2d | Pot 14.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 94.5
@@ -1297,9 +1297,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You Ah 6h | Board Kh 8h 3c 2d | Pot 14.5 BB | To call 3 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, flush draw, completion cards 9
 
-TASK harder_straight_price_rises [drill] Which response earns more in this model?
-CAPTION: For example, assume BB holds Qh Qs. After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model. Increase the turn lead while keeping opponent holding and prior contributions fixed.
-Q: Which response earns more in this model?
+TASK harder_straight_price_rises [drill] Which play earns more?
+CAPTION: Suppose BB holds the queen of hearts and the queen of spades (Qh Qs). After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 18 BB | To call 6.5 BB | Seat HJ | Active hj | Decision hj | Facts high card, open-ended, completion cards 8
 EFFECTIVE: BB 94.5
@@ -1312,9 +1312,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Fold
     FEEDBACK TABLE: Turn | You 7d 6c | Board 9h 8s 2c Qd | Pot 18 BB | To call 6.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3 | Facts high card, open-ended, completion cards 8
 
-TASK harder_remove_missed_hearts [drill] Which response earns more in this model?
-CAPTION: BB bets each legal combination of 88 44 AhJh AhTh QhJh QhTh with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Swap the queen’s suit to hearts.
-Q: Which response earns more in this model?
+TASK harder_remove_missed_hearts [drill] Which play earns more?
+CAPTION: BB bets each legal combination of 88 44 AhJh AhTh QhJh QhTh with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You Kd Qh | Board Ks 8h 4h 7c 2s | Pot 18.5 BB | To call 7 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 94.5
@@ -1327,9 +1327,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Fold
     FEEDBACK TABLE: River | You Kd Qh | Board Ks 8h 4h 7c 2s | Pot 18.5 BB | To call 7 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK harder_leave_misses_unblocked [drill] Which response earns more in this model?
-CAPTION: BB bets each legal combination of 99 55 AcKc KcJc QcJc KcTc with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Swap the kicker’s suit from clubs to hearts.
-Q: Which response earns more in this model?
+TASK harder_leave_misses_unblocked [drill] Which play earns more?
+CAPTION: BB bets each legal combination of 99 55 AcKc KcJc QcJc KcTc with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You Ad Jh | Board As 9c 5c 4d 2s | Pot 19.5 BB | To call 8 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair
 EFFECTIVE: BB 94.5
@@ -1342,9 +1342,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Call 8 BB
     FEEDBACK TABLE: River | You Ad Jh | Board As 9c 5c 4d 2s | Pot 19.5 BB | To call 8 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK harder_river_value_added [drill] Which response earns more in this model?
-CAPTION: BB bets each legal combination of 88 44 KJ JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Add weaker K-J bets to a formerly polarized range.
-Q: Which response earns more in this model?
+TASK harder_river_value_added [drill] Which play earns more?
+CAPTION: BB bets each legal combination of 88 44 KJ JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You Ks Qd | Board Kh 8d 4c 3s 2c | Pot 20.5 BB | To call 9 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 94.5
@@ -1357,9 +1357,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Call 9 BB
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 8d 4c 3s 2c | Pot 20.5 BB | To call 9 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK harder_paired_river_boats [drill] Which response earns more in this model?
-CAPTION: BB bets each legal combination of 99 44 Q9s JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. In the earlier river calling example, suppose the turn three is replaced with a second nine.
-Q: Which response earns more in this model?
+TASK harder_paired_river_boats [drill] Which play earns more?
+CAPTION: BB bets each legal combination of 99 44 Q9s JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You As Qd | Board Qs 9h 4c 9d 2h | Pot 21.5 BB | To call 10 BB | Seat HJ | Active hj | Decision hj | Facts two pair, paired board
 EFFECTIVE: BB 94.5
@@ -1372,9 +1372,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Call 10 BB
     FEEDBACK TABLE: River | You As Qd | Board Qs 9h 4c 9d 2h | Pot 21.5 BB | To call 10 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
 
-TASK harder_worse_calls_larger [drill] Which action earns the most chips in this model?
-CAPTION: BB has one equally weighted legal combination from KQ QJ QT 99 55 JTs. Checking goes to showdown. At 4 BB BB calls KQ QJ QT 99 55 and folds the rest.  At 10 BB BB calls KQ 99 55 and folds the rest. Remove a folding miss from the range. The paid groups stay fixed, so count how the denominator changes. Compare the listed response groups at each offered size.
-Q: Which action earns the most chips in this model?
+TASK harder_worse_calls_larger [drill] Which play earns more?
+CAPTION: BB has one equally weighted legal combination from KQ QJ QT 99 55 JTs. Checking goes to showdown. At 4 BB BB calls KQ QJ QT 99 55 and folds the rest.  At 10 BB BB calls KQ 99 55 and folds the rest.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You As Qd | Board Qs 9c 5d 4h 2s | Pot 11.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 94.5
@@ -1390,9 +1390,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Bet 4 BB
     FEEDBACK TABLE: River | You As Qd | Board Qs 9c 5d 4h 2s | Pot 11.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
-TASK harder_overbet_passes_value [drill] Which action earns the most chips in this model?
-CAPTION: BB has one equally weighted legal combination from JhTh Th8h 8h6h 99 KK KQ. Checking goes to showdown. At 5 BB BB calls JhTh Th8h 8h6h 99 KK KQ and folds the rest.  At 15 BB BB calls JhTh Th8h 8h6h 99 KK and folds the rest. Remove the weaker K-J group, which paid only at the smaller size. Recount the extra calls at that size. Compare the listed response groups at each offered size.
-Q: Which action earns the most chips in this model?
+TASK harder_overbet_passes_value [drill] Which play earns more?
+CAPTION: BB has one equally weighted legal combination from JhTh Th8h 8h6h 99 KK KQ. Checking goes to showdown. At 5 BB BB calls JhTh Th8h 8h6h 99 KK KQ and folds the rest.  At 15 BB BB calls JhTh Th8h 8h6h 99 KK and folds the rest.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You Ah Qh | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat HJ | Active hj | Decision hj | Facts flush
 EFFECTIVE: BB 94.5
@@ -1408,9 +1408,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Bet 15 BB
     FEEDBACK TABLE: River | You Ah Qh | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
 
-TASK harder_block_weaker_flushes [drill] Which action earns the most chips in this model?
-CAPTION: BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h 99 44 KQ KJ. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h 99 44 KQ KJ and folds the rest.  At 18 BB BB calls QhJh JhTh Th8h 8h6h 99 44 and folds the rest. Suppose Qh is replaced with Th. Both of your hands retain the nut flush, but the legal worse flushes and kings that pay change. Compare the listed response groups at each offered size.
-Q: Which action earns the most chips in this model?
+TASK harder_block_weaker_flushes [drill] Which play earns more?
+CAPTION: BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h 99 44 KQ KJ. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h 99 44 KQ KJ and folds the rest.  At 18 BB BB calls QhJh JhTh Th8h 8h6h 99 44 and folds the rest.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: River | You Ah Th | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat CO | Active co | Decision co | Facts flush
 EFFECTIVE: BB 94.5
@@ -1426,9 +1426,9 @@ TRAIL: preflop: SB posts 0.5 · preflop: BB posts 1 · preflop: UTG folds · pre
     BETTER ANSWER: Bet 5 BB
     FEEDBACK TABLE: River | You Ah Th | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts flush
 
-TASK harder_shorter_implied_payment [drill] Which option earns more under the short stack’s payoff cap?
-CAPTION: For example, assume BB holds Ks Kd and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, limited by the chips it has left. Other rivers check through. Compare call and fold. Reduce only BB’s starting stack from 22 BB to 13 BB. Suppose BB holds Ks Kd in this teaching replay. The set pays only on clean hearts, limited by its remaining chips.
-Q: Which option earns more under the short stack’s payoff cap?
+TASK harder_shorter_implied_payment [drill] Which play earns more?
+CAPTION: Suppose BB holds the king of spades and the king of diamonds (Ks Kd) and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, limited by the chips it has left. Other rivers check through. Compare call and fold.
+Q: Which play earns more?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah 6h | Board Kh 8h 3c 2d | Pot 16 BB | To call 4.5 BB | Seat HJ | Active hj | Decision hj | Facts high card, flush draw, completion cards 9
 EFFECTIVE: BB 7.5

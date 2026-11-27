@@ -10,11 +10,7 @@
     ],
     "19.lesson_length_corridor": [
       "@lesson:slightly_harder|too_long",
-      "@lesson:turn_card_impact|too_long",
       "@lesson:where_is_the_mistake|too_long"
-    ],
-    "E11": [
-      "w14_4_teach|shoving"
     ]
   },
   "W15": {
