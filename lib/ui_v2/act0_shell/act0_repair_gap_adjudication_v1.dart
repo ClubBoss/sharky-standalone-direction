@@ -2792,7 +2792,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_11',
-    sourceLessonId: 'table_trigger_multiway_and_spr',
+    sourceLessonId: 'post_session_review_loop',
     sourceTaskId: 'w11_review_loop_intro',
     misconception:
         'Misread the deciding cue; chose Lost a big pot and felt bad / Need more wins next time',
