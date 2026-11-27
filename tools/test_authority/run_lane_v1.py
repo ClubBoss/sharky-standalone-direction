@@ -200,6 +200,19 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        # E41 (2026-11-27): without the pilot define these snapshot tests are skipped, so the
+        # W13–W24 fixtures silently drifted from 23.11 until the lead found it. Separate process.
+        "name": "Vol2 pilot catalog snapshots",
+        "shard_with": "repair intent",
+        "cmd": [
+            "flutter", "test",
+            "--dart-define=SHARKY_W13_PLUS_PILOT=true",
+            "test/ui_v2/act0_catalog_truth_guards_v1_test.dart",
+            "--plain-name", "pilot catalog snapshot",
+            "-r", "compact",
+        ],
+    },
+    {
         "name": "durable learner truth and assessment interaction (LDR-01)",
         "cmd": [
             "flutter",
