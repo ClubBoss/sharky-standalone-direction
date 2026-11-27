@@ -8,8 +8,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "You told a study partner you would bet half the river pot. Review these annotated actions. BTN opens to 2.75 BB and BB calls. The flop and turn then check through.",
-      question: "Which annotated action misses the stated sizing plan?",
+          "Planned river bet: half-pot. BTN opens to 2.75 BB; BB calls. Flop and turn check through.",
+      question: "Which action misses the plan?",
       choices: const [
         (
           "river_bet",
@@ -69,9 +69,8 @@ final _b19PilotLessons = [
       id: "mistake_minimum_raise",
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
-      caption:
-          "Review the actions with enough chips for a full raise. BB led on the turn. Only one annotation breaks the betting rule.",
-      question: "Which annotated action was illegal at the stated depth?",
+      caption: "Enough chips for a full raise. BB leads on the turn.",
+      question: "Which action is illegal?",
       choices: const [
         (
           "short_raise",
@@ -132,8 +131,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "The replay pauses before BTN responds to the flop raise. Both players can afford the full match. The three annotations include one claimed amount.",
-      question: "Where did BTN incorrectly track the chips?",
+          "Before BTN responds to the flop raise, both players can afford the full match.",
+      question: "Which chip count is wrong?",
       choices: const [
         (
           "price",
@@ -198,8 +197,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "Replay stops before the river. Under the teaching model the legal winning rivers are the four fives and four tens. You know your cards and the turn board, no ties or later chips. BB led 4 BB on the turn.",
-      question: "Which choice is the mistake in the reviewed line?",
+          "Model: four fives and four tens win on the river. No ties or later bets; only your cards and board are known. BB leads 4 BB.",
+      question: "Which action is mistaken?",
       choices: const [
         (
           "bad_call",
@@ -260,9 +259,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "The study model counts all nine unseen hearts as winning rivers and the other rivers as losses. There are no ties, raises or later betting. BB leads 1 BB on the turn.",
-      question:
-          "Which annotated action misses a profitable chance to win chips?",
+          "Model: nine unseen hearts win; other rivers lose. No ties, raises or later bets. BB leads 1 BB.",
+      question: "Which action loses value?",
       choices: const [
         (
           "fold",
@@ -323,8 +321,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "For this replay only, BB calls a 3 BB river bet with K-J or K-T and folds Q-J. Weight every legal combination equally. The earlier checks are given history.",
-      question: "Where does the reviewed plan leave chips on the table?",
+          "Model: BB calls 3 BB on the river with K-J or K-T, folds Q-J. Legal combos equally weighted.",
+      question: "Which choice loses value?",
       choices: const [
         (
           "check",
@@ -385,8 +383,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "BB checks the river. At 3 BB and 7 BB the equally weighted teaching roster calls KcQd 8h9h 7h7c 4s5s KcJc 8hTc and folds Ah7h Qs7s Qd9d As9s. Your hand loses to every holding on a showdown. Review BTN’s proposed line.",
-      question: "Which annotated river action is worse than checking?",
+          "Model: BB checks. At 3 BB or 7 BB, equally weighted KcQd 8h9h 7h7c 4s5s KcJc 8hTc call; Ah7h Qs7s Qd9d As9s fold. You lose every showdown.",
+      question: "Which action is worse than checking?",
       choices: const [
         (
           "big",
@@ -447,8 +445,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "The river review compares all K-Q combinations without suit restrictions. Ks is on the board and Kh is in your hand. No queen is visible. These are notes made before a choice; there is no result shown.",
-      question: "Which note counts too many opponent combinations?",
+          "Count K-Q across suits. Ks on board, Kh in your hand; no queen visible.",
+      question: "Which count is wrong?",
       choices: const [
         (
           "count",
@@ -509,8 +507,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "After preflop BTN and BB each contributed 2.5 BB. On the river BB goes all-in for its last 15 BB. BTN has 6 BB behind. The action line includes the full announced wager. The displayed pot caps the wager at the 6 BB you can match.",
-      question: "Which note is wrong when the two players match the wager?",
+          "BTN and BB paid 2.5 BB preflop each. River: BB announces all-in 15 BB; BTN has 6 BB left. Pot displays the matched cap.",
+      question: "Which note is wrong?",
       choices: const [
         (
           "all",
@@ -574,8 +572,8 @@ final _b19PilotLessons = [
       lesson: "where_is_the_mistake",
       lessonTitle: "Where is the mistake in this hand?",
       caption:
-          "Study replay: BB leads 3 BB on the turn. After a matching call, BB has 3 BB left. BTN has at least that much. The model treats nine rivers as clean and lets BB pay its whole remaining stack on each hit.",
-      question: "Where does the review invent a payoff the table cannot pay?",
+          "BB leads 3 BB on turn, leaving 3 BB after your call. BTN covers. Model: nine clean rivers win; BB pays its remaining stack on hits.",
+      question: "Which payoff is impossible?",
       choices: const [
         (
           "extra",
@@ -1090,8 +1088,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "For example, assume BB holds Ks Kd. After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model. Replace the top-pair holding with a set.",
-      question: "Which response earns more in this model?",
+          "Suppose BB holds the king of spades and the king of diamonds (Ks Kd). After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 3 BB offered, price = 3/17.5 = 17.1%. Harder case W/T/L=7/0/37, E=7/44. Call EV = 7/44×35/2−3 = -19/88 BB, fold=0. Comparison W/T/L=12/0/32, EV(call)=3/11×35/2−3=39/22 BB, fold=0. Suppose the comparison hand is Ah 6h; board Kh 8h 3c 2d; bet in BB 3.0; opponent Kc Qs; best option call; call EV in BB 1.77273. Model EV (BB): call -0.21591, fold 0. The stated sizes fit both players’ remaining stacks. Fold. Two hearts pair the board, making kings a full house; the clean winners come up short of the price. Edge: 0.21591 BB.",
       choices: const [
@@ -1155,8 +1153,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "For example, assume BB holds Qh Qs. After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model. Increase the turn lead while keeping opponent holding and prior contributions fixed.",
-      question: "Which response earns more in this model?",
+          "Suppose BB holds the queen of hearts and the queen of spades (Qh Qs). After a call, see any remaining river and go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 6.5 BB offered, price = 6.5/24.5 = 26.5%. Harder case W/T/L=8/0/36, E=2/11. Call EV = 2/11×49/2−13/2 = -45/22 BB, fold=0. Comparison W/T/L=8/0/36, EV(call)=2/11×31/2−2=9/11 BB, fold=0. Suppose the comparison hand is 7d 6c; board 9h 8s 2c Qd; bet in BB 2.0; opponent Qh Qs; best option call; call EV in BB 0.81818. Model EV (BB): call -2.04545, fold 0. The stated sizes fit both players’ remaining stacks. Fold. Your eight winners stay the same while the larger bet raises the share you need. Edge: 2.04545 BB.",
       choices: const [
@@ -1220,8 +1218,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB bets each legal combination of 88 44 AhJh AhTh QhJh QhTh with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Swap the queen’s suit to hearts.",
-      question: "Which response earns more in this model?",
+          "BB bets each legal combination of 88 44 AhJh AhTh QhJh QhTh with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 7 BB offered, price = 7/25.5 = 27.5%. Harder case W/T/L=2/0/6, E=1/4. Call EV = 1/4×51/2−7 = -5/8 BB, fold=0. Comparison W/T/L=4/0/6, EV(call)=2/5×51/2−7=16/5 BB, fold=0. Suppose the comparison hand is Kd Qd; board Ks 8h 4h 7c 2s; bet in BB 7.0; opponent 88 44 AhJh AhTh QhJh QhTh; best option call; call EV in BB 3.2. Model EV (BB): call -0.625, fold 0. The stated sizes fit both players’ remaining stacks. Fold. Your queen removes two missed heart holdings, leaving too few bluffs to meet the price. Edge: 0.625 BB.",
       choices: const [
@@ -1287,8 +1285,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB bets each legal combination of 99 55 AcKc KcJc QcJc KcTc with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Swap the kicker’s suit from clubs to hearts.",
-      question: "Which response earns more in this model?",
+          "BB bets each legal combination of 99 55 AcKc KcJc QcJc KcTc with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 8 BB offered, price = 8/27.5 = 29.1%. Harder case W/T/L=3/0/7, E=3/10. Call EV = 3/10×55/2−8 = 1/4 BB, fold=0. Comparison W/T/L=1/0/7, EV(call)=1/8×55/2−8=-73/16 BB, fold=0. Suppose the comparison hand is Ad Jc; board As 9c 5c 4d 2s; bet in BB 8.0; opponent 99 55 AcKc KcJc QcJc KcTc; best option fold; call EV in BB -4.5625. Model EV (BB): call 0.25, fold 0. The stated sizes fit both players’ remaining stacks. Call. Keeping the missed club draws available increases the winning share enough to pay the price. Edge: 0.25 BB.",
       choices: const [
@@ -1354,8 +1352,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB bets each legal combination of 88 44 KJ JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. Add weaker K-J bets to a formerly polarized range.",
-      question: "Which response earns more in this model?",
+          "BB bets each legal combination of 88 44 KJ JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 9 BB offered, price = 9/29.5 = 30.5%. Harder case W/T/L=16/0/6, E=8/11. Call EV = 8/11×59/2−9 = 137/11 BB, fold=0. Comparison W/T/L=8/0/6, EV(call)=4/7×59/2−9=55/7 BB, fold=0. Suppose the comparison hand is Ks Qd; board Kh 8d 4c 3s 2c; bet in BB 9.0; opponent 88 44 JTs 76s; best option call; call EV in BB 7.85714. Model EV (BB): call 12.45455, fold 0. The stated sizes fit both players’ remaining stacks. Call. You beat missed draws and the modeled weaker kings. Count both groups against the price. Edge: 12.45455 BB.",
       choices: const [
@@ -1421,8 +1419,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB bets each legal combination of 99 44 Q9s JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model. In the earlier river calling example, suppose the turn three is replaced with a second nine.",
-      question: "Which response earns more in this model?",
+          "BB bets each legal combination of 99 44 Q9s JTs 76s with equal weight. After a call, go directly to showdown without more bets. Compare call and fold under this study model.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 10 BB offered, price = 10/31.5 = 31.7%. Harder case W/T/L=8/0/5, E=8/13. Call EV = 8/13×63/2−10 = 122/13 BB, fold=0. Comparison W/T/L=8/0/7, EV(call)=8/15×63/2−10=34/5 BB, fold=0. Suppose the comparison hand is As Qd; board Qs 9h 4c 3d 2h; bet in BB 10.0; opponent 99 44 Q9s JTs 76s; best option call; call EV in BB 6.8. Model EV (BB): call 9.38462, fold 0. The stated sizes fit both players’ remaining stacks. Call. The second nine changes the value group, but the legal betting range still contains enough misses. Edge: 9.38462 BB.",
       choices: const [
@@ -1488,8 +1486,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB has one equally weighted legal combination from KQ QJ QT 99 55 JTs. Checking goes to showdown. At 4 BB BB calls KQ QJ QT 99 55 and folds the rest.  At 10 BB BB calls KQ 99 55 and folds the rest. Remove a folding miss from the range. The paid groups stay fixed, so count how the denominator changes. Compare the listed response groups at each offered size.",
-      question: "Which action earns the most chips in this model?",
+          "BB has one equally weighted legal combination from KQ QJ QT 99 55 JTs. Checking goes to showdown. At 4 BB BB calls KQ QJ QT 99 55 and folds the rest.  At 10 BB BB calls KQ 99 55 and folds the rest.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 14/17 = 161/17 BB. At 4 BB, EV = (4/34)P + (30/34)[4/5 × (P+2B) − B] = 197/17 BB. At 10 BB, EV = (20/34)P + (14/34)[4/7 × (P+2B) − B] = 171/17 BB. Comparison: P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 16/19 = 184/19 BB. At 4 BB, EV = (8/38)P + (30/38)[4/5 × (P+2B) − B] = 220/19 BB. At 10 BB, EV = (24/38)P + (14/38)[4/7 × (P+2B) − B] = 194/19 BB. Suppose the comparison hand is As Qd; board Qs 9c 5d 4h 2s; opponent KQ, QJ, QT, 99, 55, JTs, 87s; best option bet_4. Model EV (BB): check 9.47059, bet_4 11.58824, bet_10 10.05882. The stated sizes fit both players’ remaining stacks. Bet 4 BB. The small size retains Q-J and Q-T, while stronger sets pay both sizes. Edge: 1.52942 BB.",
       choices: const [
@@ -1559,8 +1557,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB has one equally weighted legal combination from JhTh Th8h 8h6h 99 KK KQ. Checking goes to showdown. At 5 BB BB calls JhTh Th8h 8h6h 99 KK KQ and folds the rest.  At 15 BB BB calls JhTh Th8h 8h6h 99 KK and folds the rest. Remove the weaker K-J group, which paid only at the smaller size. Recount the extra calls at that size. Compare the listed response groups at each offered size.",
-      question: "Which action earns the most chips in this model?",
+          "BB has one equally weighted legal combination from JhTh Th8h 8h6h 99 KK KQ. Checking goes to showdown. At 5 BB BB calls JhTh Th8h 8h6h 99 KK KQ and folds the rest.  At 15 BB BB calls JhTh Th8h 8h6h 99 KK and folds the rest.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 1 = 23/2 BB. At 5 BB, EV = (0/18)P + (18/18)[1 × (P+2B) − B] = 33/2 BB. At 15 BB, EV = (9/18)P + (9/18)[1 × (P+2B) − B] = 19 BB. Comparison: P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 1 = 23/2 BB. At 5 BB, EV = (0/30)P + (30/30)[1 × (P+2B) − B] = 33/2 BB. At 15 BB, EV = (21/30)P + (9/30)[1 × (P+2B) − B] = 16 BB. Suppose the comparison hand is Ah Qh; board Kh 9h 4h 7c 2s; opponent JhTh, Th8h, 8h6h, 99, KK, KQ, KJ; best option bet_5. Model EV (BB): check 11.5, bet_5 16.5, bet_15 19.0. The stated sizes fit both players’ remaining stacks. Bet 15 BB. Enough flushes and sets pay the larger wager to beat the smaller one that also gets K-Q. Edge: 2.5 BB.",
       choices: const [
@@ -1630,8 +1628,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h 99 44 KQ KJ. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h 99 44 KQ KJ and folds the rest.  At 18 BB BB calls QhJh JhTh Th8h 8h6h 99 44 and folds the rest. Suppose Qh is replaced with Th. Both of your hands retain the nut flush, but the legal worse flushes and kings that pay change. Compare the listed response groups at each offered size.",
-      question: "Which action earns the most chips in this model?",
+          "BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h 99 44 KQ KJ. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h 99 44 KQ KJ and folds the rest.  At 18 BB BB calls QhJh JhTh Th8h 8h6h 99 44 and folds the rest.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 1 = 23/2 BB. At 5 BB, EV = (0/32)P + (32/32)[1 × (P+2B) − B] = 33/2 BB. At 18 BB, EV = (24/32)P + (8/32)[1 × (P+2B) − B] = 16 BB. Comparison: P = 5.5 (CO) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. Check EV = P × 1 = 23/2 BB. At 5 BB, EV = (0/30)P + (30/30)[1 × (P+2B) − B] = 33/2 BB. At 18 BB, EV = (21/30)P + (9/30)[1 × (P+2B) − B] = 169/10 BB. Suppose the comparison hand is Ah Qh; board Kh 9h 4h 7c 2s; opponent QhJh, JhTh, Th8h, 8h6h, 99, 44, KQ, KJ; best option bet_18. Model EV (BB): check 11.5, bet_5 16.5, bet_18 16.0. The stated sizes fit both players’ remaining stacks. Bet 5 BB. Your ten blocks two of the flush calls, and the king calls at the small price make up the difference. Edge: 0.5 BB.",
       choices: const [
@@ -1701,8 +1699,8 @@ final _b19PilotLessons = [
       lesson: "slightly_harder",
       lessonTitle: "A slightly harder next step",
       caption:
-          "For example, assume BB holds Ks Kd and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, limited by the chips it has left. Other rivers check through. Compare call and fold. Reduce only BB’s starting stack from 22 BB to 13 BB. Suppose BB holds Ks Kd in this teaching replay. The set pays only on clean hearts, limited by its remaining chips.",
-      question: "Which option earns more under the short stack’s payoff cap?",
+          "Suppose BB holds the king of spades and the king of diamonds (Ks Kd) and starts with 13 BB. If you call and an unpaired heart comes, BB checks and pays a river bet up to 12 BB, limited by the chips it has left. Other rivers check through. Compare call and fold.",
+      question: "Which play earns more?",
       explanation:
           "P = 5.5 (HJ) + 0.5 (SB) + 5.5 (BB) = 11.5 BB. With 4.5 BB offered, price = 4.5/20.5 = 22.0%. Enumerate 44 rivers after removing both hands. W/T/L=7/0/37. Remaining after the matched turn=13−5.5−4.5=3. EV(call)=7/44×(20.5+3)−4.5=-67/88; fold=0. Comparison remaining=22−5.5−4.5=12, EV(call)=59/88. Comparison: BB starting stack in BB 22; river payoff cap in BB 12; best option call; call EV in BB 0.67045. Model EV (BB): call -0.76136, fold 0. At 22 BB the opponent can pay 12 extra BB and the call is best; at 13 BB it can pay only 3. Fold. The short stack can pay only 3 BB more on a win, which does not make the draw worth its current price. Edge: 0.76136 BB.",
       choices: const [
@@ -1880,29 +1878,19 @@ Act0LessonTaskV1 _b92TurnDrillV1({
     lesson: 'turn_card_impact',
     lessonTitle: 'Which turn card changes the decision?',
     caption:
-        'Imagine BB could hold $rangeText, with equal weight per legal '
-        'combination. Imagine BB bets ${_act0BbLabelV1(price.bet)} on the turn '
-        'into the ${_act0BbLabelV1(price.pot - price.due)} pot. '
-        'If you call, go straight to showdown after the river; ties earn half. '
-        'Compare each offered turn with a $reference turn. Choose call only '
-        'when it earns more than folding.',
+        'BB: $rangeText (equal-weight legal combos). Pot-sized turn bet; '
+        'river checkdown; split ties. Versus $reference.',
     question: switch (id) {
-      'turn_heart_completes' => 'Which turn lets you call instead of folding?',
-      'turn_heart_pairs_board' =>
-        'Which turn makes folding better than calling?',
-      'turn_straight_completes' => 'Which new card makes the call profitable?',
-      'turn_overcard_beats_pair' =>
-        'Which turn forces you to fold at this price?',
-      'turn_remove_high_draw' =>
-        'Which alternative turn changes a fold into a call?',
-      'turn_counterfeit_two_pair' =>
-        'Which card makes a once-profitable call lose chips?',
-      'turn_redraw_good' =>
-        'Which turn gives you enough showdown share to call?',
-      'turn_board_four_to_straight' =>
-        'Which card leaves too little showdown share to call?',
-      'turn_dead_draw' => 'Can either offered turn make a call profitable?',
-      'turn_turn_makes_set' => 'Which card changes the correct play to a call?',
+      'turn_heart_completes' ||
+      'turn_straight_completes' ||
+      'turn_remove_high_draw' ||
+      'turn_redraw_good' ||
+      'turn_dead_draw' ||
+      'turn_turn_makes_set' => 'Call instead?',
+      'turn_heart_pairs_board' ||
+      'turn_overcard_beats_pair' ||
+      'turn_counterfeit_two_pair' ||
+      'turn_board_four_to_straight' => 'Fold instead?',
       _ => throw ArgumentError.value(id),
     },
     explanation: reason,

@@ -652,5 +652,11 @@
     "detail": "wrong: fold → fold because the new flushes make the price too high / the earlier calls decide the river question",
     "reason": "The existing fold is still wrong because the modeled equity clears the price. The new statement is a wrong sunk-cost explanation rather than a new legal action.",
     "package": "B170"
+  },
+  {
+    "task": "w14_4_teach",
+    "detail": "correct: the actual call price and equity against the shoving range → the actual call price and equity against the opponent’s all-in hands",
+    "reason": "The opponent’s all-in hands are the same range of hands as the shoving range. The call is still judged by comparing equity against that range with the required equity from the actual call price.",
+    "package": "B168"
   }
 ]
