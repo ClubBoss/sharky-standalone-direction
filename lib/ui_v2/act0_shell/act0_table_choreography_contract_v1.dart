@@ -65,6 +65,7 @@ class Act0TableChoreographyPlanV1 {
     required this.heroSeatId,
     required this.beats,
     this.verifiedHistory,
+    this.verifiedHistoryEndsAtClosedStreet = false,
   });
 
   final Act0TableChoreographyStreetV1 initialStreet;
@@ -72,6 +73,10 @@ class Act0TableChoreographyPlanV1 {
   final String heroSeatId;
   final List<Act0TableChoreographyBeatV1> beats;
   final Act0HandTimelinePrefixV1? verifiedHistory;
+
+  // Proof-only explanation: the recorded betting round is closed and the
+  // learner is evaluating a hypothetical continuation, not taking a turn.
+  final bool verifiedHistoryEndsAtClosedStreet;
 
   int get initialBoardCardCount => initialStreet.boardCardCount;
 }
@@ -106,10 +111,23 @@ class Act0TableChoreographyFrameV1 {
 Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
   Act0TableStateV1 table, {
   bool actorFocusSafe = true,
+}) => _planForTableV1(table, actorFocusSafe: actorFocusSafe);
+
+/// History certification can additionally prove non-autoplay single-bet
+/// explanations without changing the runtime choreography contract.
+Act0TableChoreographyPlanV1? act0TableHistoryProofPlanForTableV1(
+  Act0TableStateV1 table,
+) => _planForTableV1(table, includeBetHistoryProof: true);
+
+Act0TableChoreographyPlanV1? _planForTableV1(
+  Act0TableStateV1 table, {
+  bool actorFocusSafe = true,
+  bool includeBetHistoryProof = false,
 }) {
   // B157: an explicitly non-autoplay explanation can still carry a complete
   // recorded hand. Expose the verified plan through the same contract as
-  // played hands, but only for the narrow checked-street cohort below.
+  // played hands. B163 additionally admits single-bet explanations on the
+  // explicit proof path; existing runtime/replay callers retain their plans.
   // Runtime animation is independently gated by autoPlayHistory.
   final checkedHistoryOnly =
       table.scope == Act0TableScopeV1.explanation && !table.autoPlayHistory;
@@ -188,11 +206,19 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     return null;
   }
 
+  final betHistory = checkedHistoryOnly && extended && includeBetHistoryProof
+      ? _singleBetHeadsUpHistoryV1(table, parsed, finalStreet)
+      : null;
   if (checkedHistoryOnly &&
-      (!extended || !_isCheckedHeadsUpHistoryV1(table, parsed, finalStreet))) {
+      (!extended ||
+          (betHistory == null &&
+              !_isCheckedHeadsUpHistoryV1(table, parsed, finalStreet)))) {
     return null;
   }
-  final verified = extended ? _verifyExtendedHistoryV1(table, parsed) : null;
+  final closedStreet = betHistory == _BetHistoryBoundaryV1.closedStreet;
+  final verified = extended
+      ? _verifyExtendedHistoryV1(table, parsed, closedStreet: closedStreet)
+      : null;
   if (extended && verified == null) return null;
   // A complete replay can establish a newly dealt decision street before its
   // first action. The board is authored evidence for the reveal, not an
@@ -376,6 +402,7 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     heroSeatId: heroSeatId,
     beats: List<Act0TableChoreographyBeatV1>.unmodifiable(beats),
     verifiedHistory: verified?.timeline,
+    verifiedHistoryEndsAtClosedStreet: closedStreet,
   );
 }
 
@@ -432,6 +459,77 @@ bool _isCheckedHeadsUpHistoryV1(
     }
   }
   return true;
+}
+
+enum _BetHistoryBoundaryV1 { decision, closedStreet }
+
+// The B163 proof dialect is intentionally limited to a single preflop open
+// and call, four recorded folds, and postflop check/bet/call rounds. Shape
+// alone is not a certificate: the same typed ledger verifies every actor,
+// amount and street transition below. No raises or all-ins are admitted here.
+_BetHistoryBoundaryV1? _singleBetHeadsUpHistoryV1(
+  Act0TableStateV1 table,
+  List<_ParsedTrailItemV1> parsed,
+  Act0TableChoreographyStreetV1 finalStreet,
+) {
+  if (finalStreet == Act0TableChoreographyStreetV1.preflop ||
+      parsed.any((item) => item.explicitAllIn))
+    return null;
+  final preflop = parsed
+      .where((item) => item.street == Act0TableChoreographyStreetV1.preflop)
+      .toList();
+  final shape = preflop
+      .map(
+        (item) => switch (item.action) {
+          _TrailActionV1.blind => 'p',
+          _TrailActionV1.folds => 'f',
+          _TrailActionV1.raises => 'r',
+          _TrailActionV1.calls => 'c',
+          _ => '?',
+        },
+      )
+      .join();
+  if (!const {'ppfrfffc', 'ppffrffc', 'ppfffrfc'}.contains(shape)) return null;
+  final folded = preflop
+      .where((item) => item.action == _TrailActionV1.folds)
+      .map((item) => item.actorSeat?.seatId)
+      .toSet();
+  if (folded.length != 4 ||
+      table.seats.any(
+        (seat) =>
+            seat.isFolded != folded.contains(seat.seatId) ||
+            seat.isInHand == folded.contains(seat.seatId),
+      ))
+    return null;
+
+  var sawBet = false;
+  var boundary = _BetHistoryBoundaryV1.decision;
+  for (final street in Act0TableChoreographyStreetV1.values.skip(1)) {
+    final actions = parsed.where((item) => item.street == street).toList();
+    final shape = actions
+        .map(
+          (item) => switch (item.action) {
+            _TrailActionV1.checks => 'x',
+            _TrailActionV1.bets => 'b',
+            _TrailActionV1.calls => 'c',
+            _ => '?',
+          },
+        )
+        .join();
+    if (shape.contains('b')) sawBet = true;
+    if (street.index > finalStreet.index) {
+      if (shape.isNotEmpty) return null;
+    } else if (street.index < finalStreet.index) {
+      if (!const {'xx', 'bc', 'xbc'}.contains(shape)) return null;
+    } else if (const {'bc', 'xbc'}.contains(shape)) {
+      // A called final street is a legal closed prefix, not a Hero turn.
+      // Only non-autoplay explanations arrive here.
+      boundary = _BetHistoryBoundaryV1.closedStreet;
+    } else if (!const {'', 'x', 'b', 'xb'}.contains(shape)) {
+      return null;
+    }
+  }
+  return sawBet ? boundary : null;
 }
 
 Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(
@@ -873,8 +971,9 @@ String _bbLabelV1(double bb) =>
 ({Act0HandTimelinePrefixV1 timeline, Map<int, Act0HandActionV1> actions})?
 _verifyExtendedHistoryV1(
   Act0TableStateV1 table,
-  List<_ParsedTrailItemV1> parsed,
-) {
+  List<_ParsedTrailItemV1> parsed, {
+  bool closedStreet = false,
+}) {
   final source = table.handContributions;
   final actor = table.decisionSeatId ?? table.activeSeatId;
   final finalStreet = _streetFromLabelV1(table.streetLabel);
@@ -1008,7 +1107,16 @@ _verifyExtendedHistoryV1(
       explicitAllInActions: explicitAllIns,
       heroSeat: table.heroSeatId,
     ).beforeDecision;
-    if (timeline.decisionError(actor) != null) return null;
+    if (closedStreet) {
+      // Replay must be legal AND nobody may have a pending decision on this
+      // board. Do not turn an incorrect actor into a successful certificate.
+      if (timeline.replayError() != null ||
+          stacks.keys.any((seat) => timeline.decisionError(seat) == null)) {
+        return null;
+      }
+    } else if (timeline.decisionError(actor) != null) {
+      return null;
+    }
     final actions = timeline.events.whereType<Act0HandActionV1>().toList();
     return (
       timeline: timeline,

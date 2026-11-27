@@ -288,8 +288,8 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
         final nineMax = r.table.tableFormat == Act0TableFormatV1.nineMax;
         final plan = nineMax
             ? null
-            : act0TableChoreographyPlanForTableV1(r.table);
-        // The canonical parser admits non-autoplay checked explanations only
+            : act0TableHistoryProofPlanForTableV1(r.table);
+        // The canonical parser admits non-autoplay history explanations only
         // with a verified full replay. Do not treat an arbitrary explanation
         // timeline (or a partial plan) as a certificate.
         final checkedHistory =
@@ -303,7 +303,10 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
             (r.table.scope == Act0TableScopeV1.playedHand || checkedHistory) &&
             timeline?.coverage == Act0HandHistoryCoverageV1.complete) {
           final actor = r.table.decisionSeatId ?? r.table.activeSeatId;
-          final error = actor == null || actor.isEmpty
+          final error =
+              plan?.verifiedHistoryEndsAtClosedStreet == true ||
+                  actor == null ||
+                  actor.isEmpty
               ? timeline!.replayError()
               : timeline!.decisionError(actor);
           rows.add(
