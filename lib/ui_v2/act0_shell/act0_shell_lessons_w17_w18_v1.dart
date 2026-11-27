@@ -551,7 +551,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "Re-raise to 11 BB",
             Act0FeedbackQualityV1.correct,
-            "Raise to 11 BB because CO must add 8.5 BB, a larger share of the final pot than the 5.5 BB call against a raise to 8 BB.",
+            "Raise to 11 BB rather than 8 BB because if CO calls, CO pays 8.5 BB instead of 5.5 BB, a larger share of the final pot.",
           ),
           (
             "alternative",
@@ -1074,7 +1074,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Call rather than fold because your 40.8% equity against the stated BB range clears the 18.5% price.",
+            "Call 6 BB rather than fold because BB bets with the stated range and your 40.8% equity clears the 18.5% price.",
           ),
           (
             "fold",
@@ -1179,7 +1179,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 23 BB",
             Act0FeedbackQualityV1.correct,
-            "Call rather than fold because your 53.6% equity against the stated BB range clears the 34.6% price.",
+            "Call 23 BB rather than fold because BB bets with the stated range and your 53.6% equity clears the 34.6% price.",
           ),
           (
             "fold",
@@ -1432,7 +1432,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "4-bet and fold to the all-in",
             Act0FeedbackQualityV1.correct,
-            "The thirteen wins of the existing pot cover the seven new investments you lose when BTN goes all-in.",
+            "4-bet to 21 BB rather than fold now because BTN folds in 13 of 20 trials. Those pot wins cover the seven new investments lost when BTN goes all-in.",
           ),
           (
             "alternative",
@@ -1531,7 +1531,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 12 BB",
             Act0FeedbackQualityV1.correct,
-            "Call rather than fold because your 40.0% equity against the stated BB range clears the 27.0% price.",
+            "Call 12 BB rather than fold because BB bets all-in with the stated range and your 40.0% equity clears the 27.0% price.",
           ),
           (
             "fold",
@@ -1975,7 +1975,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "answer",
             "Raise to 3 BB",
             Act0FeedbackQualityV1.correct,
-            "Raise because BB calls in the model, creating a 6 BB pot. Completing instead gives BB a check and no chance to trigger a limp-reraise.",
+            "Raise to 3 BB rather than complete and plan to re-raise: BB calls the raise, creating a 6 BB pot, but checks after a completion.",
           ),
           (
             "alternative",
@@ -2302,7 +2302,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "bet_6",
             "Bet 6 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 6 BB because CO still pays this size with weaker aces and pocket pairs, unlike the larger bet. Checking misses a payment.",
+            "Bet 6 BB instead of 16 BB because CO still pays the smaller size with weaker aces and pocket pairs. Checking misses a payment.",
           ),
           (
             "bet_16",
@@ -2398,7 +2398,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold rather than call because your 27.2% equity against the stated BB range falls below the 37.4% price. A low SPR does not remove this price.",
+            "Fold rather than call because BB bets all-in with the stated range and your 27.2% equity falls below the 37.4% price. A low SPR does not remove this price.",
           ),
           (
             "call",
@@ -2508,7 +2508,7 @@ final _world17Pilot = _act0PilotWorldV1(
             "call",
             "Call 15 BB",
             Act0FeedbackQualityV1.correct,
-            "Call rather than fold because your 83.2% equity against the stated BB range clears the 19.1% price.",
+            "Call 15 BB rather than fold because BB bets with the stated range and your 83.2% equity clears the 19.1% price.",
           ),
           (
             "fold",
@@ -2862,7 +2862,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 4 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 4 BB because HJ and BB can pay with overpairs, worse nines and smaller full houses. The lone quads group does not outweigh those branches.",
+            "Bet 4 BB rather than check because HJ and BB can pay with overpairs, worse nines and smaller full houses. The lone quads group does not outweigh those calls.",
           ),
           (
             "check",
@@ -3317,7 +3317,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Bet 4 BB",
             Act0FeedbackQualityV1.correct,
-            "Six immediate wins of the 8 BB pot more than cover four losses of 4 BB.",
+            "Bet 4 BB rather than check because HJ and BB both fold in six of ten paths: six wins of 8 BB cover four losses of 4 BB.",
           ),
           (
             "alternative",
@@ -3424,7 +3424,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Check",
             Act0FeedbackQualityV1.correct,
-            "Joint folds are only six in sixteen. The eight BB collected per success do not cover ten failed wagers of seven BB.",
+            "Check rather than bet 7 BB because CO and BB both fold in six of sixteen events. Six wins of 8 BB do not cover ten losses of 7 BB.",
           ),
           (
             "alternative",
@@ -3672,7 +3672,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "answer",
             "Check behind",
             Act0FeedbackQualityV1.correct,
-            "Check behind because CO is last and both earlier players checked. No flop action remains after this check.",
+            "Check behind rather than bet 2 BB because CO acts last and both earlier players checked. Checking ends flop action without adding chips.",
           ),
           (
             "alternative",
@@ -5096,7 +5096,7 @@ final _world18Pilot = _act0PilotWorldV1(
             "bet",
             "Bet 5 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 5 BB because CO and BB have worse hands that call, including two pair and lower sets.",
+            "Bet 5 BB rather than check because CO and BB call with worse hands, including two pair and lower sets.",
           ),
           (
             "check",
