@@ -192,14 +192,6 @@
       "w19_6_day7_audit_which_hands_fold|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_6_read_self_audit_ratio|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·29": [
-      "w19_1_day7_counter_changes_with_strategy|answer",
-      "w19_1_read_information_value|answer",
-      "w19_4_read_predictable_single_size|answer"
-    ],
-    "G1·30": [
-      "w19_6_guided_depth_changes_counter|call"
     ]
   },
   "W20": {
@@ -318,14 +310,6 @@
     "E11": [
       "w23_4_read_raise_number|shove",
       "w23_4_teach|shove"
-    ],
-    "G1·29": [
-      "w23_4_day7_four_bet_value_response|answer",
-      "w23_6_day7_choose_chart_only_matching_line|answer"
-    ],
-    "G1·30": [
-      "w23_3_day7_different_prices_different_calls|answer",
-      "w23_4_transfer_five_bet_price_flips|answer"
     ]
   },
   "W24": {
@@ -341,21 +325,6 @@
       "w24_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_6_read_raise_bluff_risk|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·29": [
-      "w24_1_transfer_keep_middle_check|check",
-      "w24_2_transfer_bluff_threshold_overpot|answer",
-      "w24_4_guided_overbet_collect_nut_value|bet_9",
-      "w24_4_transfer_effective_price_river|call",
-      "w24_6_checkpoint_value_check_raise|raise_12",
-      "w24_6_guided_raise_blocker_bluff|raise_13"
-    ],
-    "G1·30": [
-      "w24_1_guided_condensed_bluff_catcher|call",
-      "w24_2_day7_call_price_vs_range_mdf|answer",
-      "w24_3_transfer_indifferent_range_blocks|answer",
-      "w24_4_transfer_effective_price_river|call",
-      "w24_6_checkpoint_value_check_raise|raise_12"
     ]
   }
 }

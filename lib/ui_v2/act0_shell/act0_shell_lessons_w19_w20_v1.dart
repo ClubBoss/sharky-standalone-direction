@@ -61,7 +61,7 @@ final _world19Pilot = _act0PilotWorldV1(
             "answer",
             "Call against the miss and fold against the set",
             Act0FeedbackQualityV1.correct,
-            "BB uses the same 4 BB bet with both hands, but calling wins against the miss and loses against the set, so full information separates the actions. Real play still needs range weights and price.",
+            "BB bets 4 BB with either holding, so the oracle can call the miss and fold to the set. To call in both branches because the bet was the same would lose against the set. Real play needs range weights and price.",
           ),
           (
             "alternative",
@@ -382,7 +382,7 @@ final _world19Pilot = _act0PilotWorldV1(
             "answer",
             "Call A and fold B",
             Act0FeedbackQualityV1.correct,
-            "BB’s 5 BB bet sets the same price in both models, so call A because the extra bluffs make calling profitable; fold B because you beat none of B’s betting hands.",
+            "BB bets 5 BB in both models. Call A and fold B because only A adds enough bluffs for a profitable call. To call both because the price is identical would lose money against B.",
           ),
           (
             "alternative",
@@ -1400,7 +1400,7 @@ final _world19Pilot = _act0PilotWorldV1(
             "answer",
             "Call that size with any hand beating the miss group",
             Act0FeedbackQualityV1.correct,
-            "Once BB sees that the large size contains exclusively missed draws, a call wins because BB’s hand beats the entire betting range.",
+            "BB should call rather than fold more often to the large size because that size contains only missed draws, and BB beats the entire betting range.",
           ),
           (
             "alternative",
@@ -2354,7 +2354,7 @@ final _world19Pilot = _act0PilotWorldV1(
             "call",
             "Call 12 BB",
             Act0FeedbackQualityV1.correct,
-            "Call because your 36.8% equity against the BB all-in range clears the 27.0% price; folding gives up a positive expectation at this depth.",
+            "Call rather than fold because BB bets its last 12 BB with a range against which your equity is 36.8%, above the 27.0% price.",
           ),
           (
             "fold",
