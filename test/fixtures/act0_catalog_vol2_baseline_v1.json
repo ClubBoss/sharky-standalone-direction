@@ -45,16 +45,8 @@
       "w16_5_guided_turn_overbet_nuts|bet_25"
     ]
   },
-  "W17": {
-    "18.same_format_streak": [
-      "w17_2_guided_size_oop|statement"
-    ]
-  },
-  "W18": {
-    "E11": [
-      "w18_5_read_overlimp|limp behind"
-    ]
-  },
+  "W17": {},
+  "W18": {},
   "W19": {
     "D6.history_support": [
       "w19_3_guided_depth_split|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -65,14 +57,6 @@
     ]
   },
   "W20": {
-    "17.single_format_lesson": [
-      "@lesson:image_and_ecology|statement",
-      "@lesson:timing_and_live_tells|statement"
-    ],
-    "18.same_format_streak": [
-      "w20_1_teach|statement",
-      "w20_5_teach|statement"
-    ],
     "D6.history_support": [
       "w20_1_guided_compare_matched_timing|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_3_transfer_stakes_discomfort_caveat|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -80,19 +64,7 @@
       "w20_5_guided_keep_table_welcoming|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
-  "W21": {
-    "17.single_format_lesson": [
-      "@lesson:session_checkpoint|statement",
-      "@lesson:structure_and_stopping|statement",
-      "@lesson:table_selection_and_reciprocality|statement",
-      "@lesson:tag_and_review|statement",
-      "@lesson:tilt_and_variance|statement"
-    ],
-    "18.same_format_streak": [
-      "w21_1_teach|statement",
-      "w21_5_teach|statement"
-    ]
-  },
+  "W21": {},
   "W22": {
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
