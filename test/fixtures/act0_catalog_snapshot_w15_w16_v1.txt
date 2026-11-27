@@ -333,7 +333,7 @@ Q: What would a BB bet now be called?
 HINT [hidden]: (none)
 TABLE: Flop | You 8d 6d | Board 8h 6c 3s | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Facts two pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB 8d 6d stack 97.5 BB
-TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · Flop dealt
   + [correct] A lead into the preflop aggressor — Correct. A BB bet comes before BTN gets a flop action. This is a lead by the preflop caller.
     FEEDBACK TABLE: Flop | You 8d 6d | Board 8h 6c 3s | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2 | Facts two pair, rainbow
   - [wrong] A stab after a check — Look again. BTN has not checked on this street. A stab here would require the aggressor’s check first.
@@ -411,7 +411,7 @@ EFFECTIVE: BTN 97.5
 REASONING: principle flop_raise_shape · alt alternative · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 95.5 BB bet 2 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB
-  + [correct] Raise sets and the Ah Jh or Kh Jh flush draws — Correct. BB raises sets for value and the two heart draws as bluffs because those draws can improve. BB calls with the modeled top pairs.
+  + [correct] Raise sets and the Ah Jh or Kh Jh flush draws — Correct. BB raises sets for value and heart draws as bluffs because they can improve. To raise sets and strong top pairs together would omit bluffs; BB calls with the modeled top pairs instead.
   - [wrong] Raise sets and strong top pairs together — Look again. Raising top pair alongside sets misses the bluff end of the polarized policy.
     BETTER ANSWER: Raise sets and the Ah Jh or Kh Jh flush draws
   - [wrong] Reserve raises for top pair because the board has two hearts — Look again. Raising top pair misses both the strongest made hands and the bluffs with draws.
