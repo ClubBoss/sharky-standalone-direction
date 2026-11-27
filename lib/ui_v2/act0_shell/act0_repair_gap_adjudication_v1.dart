@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'act0_shell_state_v1.dart';
@@ -2791,7 +2792,7 @@ act0RepairGapAdjudicationsV1 = <Act0RepairGapAdjudicationV1>[
   ),
   Act0RepairGapAdjudicationV1(
     sourceWorldId: 'world_11',
-    sourceLessonId: 'table_trigger_multiway_and_spr',
+    sourceLessonId: 'post_session_review_loop',
     sourceTaskId: 'w11_review_loop_intro',
     misconception:
         'Misread the deciding cue; chose Lost a big pot and felt bad / Need more wins next time',
@@ -5942,6 +5943,7 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
   required String choiceId,
   String diagnosticVariantId = '',
 }) {
+  lessonId = act0CanonicalLessonForTaskV1(worldId, lessonId, taskId);
   final fallback = diagnosticVariantId.isEmpty
       ? _foundationRepairDefaults[(worldId, lessonId, taskId, choiceId)] ??
             (act0IsNineSeatLessonV1(lessonId)

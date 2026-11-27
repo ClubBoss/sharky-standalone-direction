@@ -380,7 +380,12 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
           !evidence.isCorrect &&
           (occurrence.isEmpty || attempt.id == occurrence) &&
           evidence.worldId == record.worldId &&
-          evidence.lessonId == record.lessonId &&
+          act0CanonicalLessonForTaskV1(
+                evidence.worldId,
+                evidence.lessonId,
+                evidence.taskId,
+              ) ==
+              record.lessonId &&
           evidence.taskId == record.taskId &&
           evidence.choiceId == record.selectedOptionId;
     }).firstOrNull;

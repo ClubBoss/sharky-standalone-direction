@@ -1,5 +1,6 @@
 import 'act0_verified_transfer_v1.dart';
 import 'act0_retry_option_order_v1.dart';
+import 'act0_lesson_identity_alias_v1.dart';
 export 'act0_verified_transfer_v1.dart'
     show act0FirstValueSameSignalRepMappingV1;
 import 'act0_action_reason_v1.dart';
@@ -816,7 +817,8 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       .where(
         (r) =>
             r.worldId == worldId &&
-            r.lessonId == lessonId &&
+            act0CanonicalLessonForTaskV1(r.worldId, r.lessonId, r.taskId) ==
+                lessonId &&
             r.taskId == taskId,
       )
       .fold<int>(
@@ -5109,6 +5111,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                       ),
                       Act0ShellTabV1.profile => act0AcademyYouRuntimeV1(
                         context,
+                        onW1RulesCheck:
+                            !(kDebugMode &&
+                                    widget.debugLegacyPlacementOnStart) &&
+                                _canTakeW1RulesCheckV1
+                            ? _beginW1RulesCheckV1
+                            : null,
                         passedW1RulesCheck:
                             _w1RulesBestScoreV1 >=
                             Act0W1RulesResultV1.passingScore,
@@ -6968,7 +6976,7 @@ class _Act0RetentionMemoryEntryV1 {
     }
     return _Act0RetentionMemoryEntryV1(
       taskId: taskId,
-      lessonId: lessonId,
+      lessonId: act0CanonicalLessonForTaskV1(worldId, lessonId, taskId),
       worldId: worldId,
       status: status,
       attempts: attempts,

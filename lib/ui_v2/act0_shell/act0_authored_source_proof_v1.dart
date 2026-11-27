@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_action_reason_v1.dart';
 import 'act0_number_entry_runner_v1.dart';
 import 'dart:convert';
@@ -23,6 +24,17 @@ String? act0AuthoredSourceFingerprintV1({
       task.taskId.trim().isEmpty) {
     return null;
   }
+  // B151 changed placement and teaching only. Keep the existing assessment
+  // revision for this exact source; any changed assessment field still hashes.
+  final movedReviewIntro =
+      worldId == 'world_11' &&
+      task.taskId == act0W11ReviewIntroTaskIdV1 &&
+      act0CanonicalLessonForTaskV1(worldId, lessonId, task.taskId) ==
+          act0W11ReviewIntroLessonV1 &&
+      task.runner.lessonTitle == 'Post-session review habit';
+  final fingerprintLessonId = movedReviewIntro
+      ? act0W11ReviewIntroOldLessonV1
+      : lessonId;
   final table = task.runner.table;
   final sizingPresets = task.runner.sizingConfig.presets.toList()
     ..sort((a, b) => a.id.compareTo(b.id));
@@ -46,14 +58,14 @@ String? act0AuthoredSourceFingerprintV1({
   final cardFocusRevision = act0PredecisionCardFocusSourceRevisionV1(task);
   final answerCueRevision = act0PrechoiceAnswerCueSourceRevisionV1(
     task,
-    lessonId: lessonId,
+    lessonId: fingerprintLessonId,
   );
   final payload = <Object?>[
     'act0_authored_source_v1',
     if (cardFocusRevision != null) cardFocusRevision,
     if (answerCueRevision != null) answerCueRevision,
     worldId,
-    lessonId,
+    fingerprintLessonId,
     task.taskId,
     task.phase.name,
     task.stepKind.name,
@@ -61,7 +73,9 @@ String? act0AuthoredSourceFingerprintV1({
     task.resolvedTaskFamily.name,
     task.tablePresentation.name,
     task.runner.lessonId,
-    task.runner.lessonTitle,
+    movedReviewIntro
+        ? 'Multiway pots and stack depth'
+        : task.runner.lessonTitle,
     task.runner.caption,
     task.runner.hint,
     task.runner.question,
@@ -437,6 +451,7 @@ Act0CurrentAuthoredSourceProofV1? act0CurrentAuthoredSourceProofForTaskV1({
 }
 
 Act0LessonTaskV1? _resolveTask(String worldId, String lessonId, String taskId) {
+  lessonId = act0CanonicalLessonForTaskV1(worldId, lessonId, taskId);
   final catalog = act0IsNineSeatLessonV1(lessonId)
       ? Act0ShellStateV1.learnerCatalog(nineSeatPreview: true)
       : Act0ShellStateV1.sample;

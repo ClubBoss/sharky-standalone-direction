@@ -7097,8 +7097,12 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
   - [wrong] The last pot you won — Look again. A past result says little about the next bettor or the cost of a new call.
     BETTER ANSWER: Price and the player read
 
+===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
+
 TASK w11_review_loop_intro [theory] One leak one fix
 CAPTION: Review one useful hand.
+TEACH: Close the cycle daily. Session plan starts the day, trigger reads guide live play, and review sets tomorrow’s focus. That cycle compounds skill.
+TEACH LABELS: Plan, Trigger, Review, Daily cycle
 Q: Which note is most useful?
 HINT [hidden]: (none)
 TABLE: Seat CO | Center Hypothetical example | Empty board Use the stated premise | Facts no applicable hand facts
@@ -7108,8 +7112,6 @@ SEATS: UTG | HJ | CO | BTN dealer | SB | BB
     BETTER ANSWER: BB called 8 into 18 versus a tight turn range
   - [wrong] Need more wins next time — Look again. A win target has no hand cue. It does not explain how to avoid the next price error.
     BETTER ANSWER: BB called 8 into 18 versus a tight turn range
-
-===== WORLD 11 · LESSON post_session_review_loop · Post-session review habit =====
 
 TASK w11_review_pick_leak [drill] Pick priority leak
 CAPTION: Your log shows four bad BB calls and one missed value bet. Your goal is to find one repeated decision you can work on next session.

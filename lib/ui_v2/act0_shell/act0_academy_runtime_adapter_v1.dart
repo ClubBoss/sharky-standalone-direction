@@ -218,6 +218,7 @@ Widget act0AcademyYouRuntimeV1(
   Map<String, VoidCallback> skillPractice = const {},
   Act0LeakDashboardV1 Function()? openLeakDashboard,
   bool passedW1RulesCheck = false,
+  VoidCallback? onW1RulesCheck,
   required Act0ProfileShellV1 legacy,
   Act0BetaLearningMetricsV1 Function()? betaLearningMetrics,
   DateTime Function()? nowUtc,
@@ -292,6 +293,7 @@ Widget act0AcademyYouRuntimeV1(
                           },
                     onDeleteLocalData: _guard(isCurrent, onDeleteLocalData),
                     onReplayWelcome: _guard(isCurrent, legacy.onReplayWelcome),
+                    onW1RulesCheck: _guard(isCurrent, onW1RulesCheck),
                     onRetakePlacement: _guard(
                       isCurrent,
                       legacy.onRetakePlacement,
@@ -312,12 +314,14 @@ Widget act0AcademyYouRuntimeV1(
 class _AcademySettingsRouteV1 extends StatefulWidget {
   const _AcademySettingsRouteV1({
     this.onReplayWelcome,
+    this.onW1RulesCheck,
     required this.onRetakePlacement,
     this.onRecoveryOptions,
     this.onDeleteLocalData,
     this.onOpenBetaMetrics,
   });
   final VoidCallback? onReplayWelcome;
+  final VoidCallback? onW1RulesCheck;
   final VoidCallback? onRetakePlacement;
   final VoidCallback? onRecoveryOptions;
   final VoidCallback? onDeleteLocalData;
@@ -497,6 +501,9 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
               onReplayWelcome: widget.onReplayWelcome == null
                   ? null
                   : () => _returnToShell(widget.onReplayWelcome!),
+              onW1RulesCheck: widget.onW1RulesCheck == null
+                  ? null
+                  : () => _returnToShell(widget.onW1RulesCheck!),
               onRetakePlacement: widget.onRetakePlacement == null
                   ? null
                   : () => _returnToShell(widget.onRetakePlacement!),

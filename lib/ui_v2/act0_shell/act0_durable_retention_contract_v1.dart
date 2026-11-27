@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_action_reason_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'dart:convert';
@@ -147,7 +148,11 @@ class Act0DurableRetentionHistoryV1 {
         Act0DueReviewItemV1(
           conceptFamilyId: refreshed.conceptFamilyId,
           worldId: refreshed.worldId,
-          lessonId: refreshed.sourceLessonId,
+          lessonId: act0CanonicalLessonForTaskV1(
+            refreshed.worldId,
+            refreshed.sourceLessonId,
+            refreshed.sourceTaskId,
+          ),
           taskId: refreshed.sourceTaskId,
           nextDueAtUtc: refreshed.nextDueAtUtc!,
           repeatedMissCount: refreshed.incorrectCount,

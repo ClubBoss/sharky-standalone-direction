@@ -32,6 +32,7 @@ class Act0AcademySettingsLeafInputV1 {
     this.onOpenSupport,
     this.onReplayWelcome,
     this.onRetakePlacement,
+    this.onW1RulesCheck,
     this.onOpenPrivacy,
     this.onOpenTerms,
     this.onBack,
@@ -56,6 +57,7 @@ class Act0AcademySettingsLeafInputV1 {
   final VoidCallback? onOpenSupport;
   final VoidCallback? onReplayWelcome;
   final VoidCallback? onRetakePlacement;
+  final VoidCallback? onW1RulesCheck;
   final VoidCallback? onOpenPrivacy;
   final VoidCallback? onOpenTerms;
   final VoidCallback? onBack;
@@ -209,11 +211,13 @@ class Act0AcademySettingsLeafV1 extends StatelessWidget {
                     input.onReplayWelcome,
                   ),
                   _row(
-                    'Retake placement',
+                    input.onW1RulesCheck != null
+                        ? 'Take the W1 rules check'
+                        : 'Retake placement',
                     'Check your starting world',
                     Icons.fact_check_outlined,
                     'act0_academy_settings_leaf_placement',
-                    input.onRetakePlacement,
+                    input.onW1RulesCheck ?? input.onRetakePlacement,
                   ),
                   _row(
                     'Terms of Use',

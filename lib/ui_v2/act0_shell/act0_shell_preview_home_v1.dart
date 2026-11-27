@@ -2103,7 +2103,12 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
           .where(
             (record) =>
                 record.worldId == resume.worldId &&
-                record.lessonId == resume.lessonId &&
+                act0CanonicalLessonForTaskV1(
+                      record.worldId,
+                      record.lessonId,
+                      record.taskId,
+                    ) ==
+                    resume.lessonId &&
                 record.taskId == resume.taskId &&
                 record.choiceId == resume.selectedOptionId &&
                 !record.isDiagnosticLearningEntry &&

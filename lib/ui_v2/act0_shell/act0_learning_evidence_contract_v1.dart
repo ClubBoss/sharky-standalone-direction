@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'dart:convert';
 
 import 'package:crypto/crypto.dart';
@@ -870,7 +871,11 @@ class Act0LearningEvidenceHistoryV1 {
       if (record.isDiagnosticLearningEntry) continue;
       final key = jsonEncode([
         record.worldId,
-        record.lessonId,
+        act0CanonicalLessonForTaskV1(
+          record.worldId,
+          record.lessonId,
+          record.taskId,
+        ),
         record.taskId,
         record.isPlacementAssessment,
       ]);

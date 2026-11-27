@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'act0_review_mistake_history_v1.dart';
@@ -173,7 +174,11 @@ class Act0RepairIntentV1 {
       targetFingerprint: map['targetFingerprint']?.toString() ?? '',
       repairOccurrenceId: map['repairOccurrenceId']?.toString().trim() ?? '',
       sourceWorldId: sourceWorldId,
-      sourceLessonId: sourceLessonId,
+      sourceLessonId: act0CanonicalLessonForTaskV1(
+        sourceWorldId,
+        sourceLessonId,
+        sourceTaskId,
+      ),
       sourceTaskId: sourceTaskId,
       choiceId: choiceId,
       result: result,
@@ -183,7 +188,11 @@ class Act0RepairIntentV1 {
       skillAtomId: skillAtomId,
       skillLabel: skillLabel,
       targetWorldId: targetWorldId,
-      targetLessonId: targetLessonId,
+      targetLessonId: act0CanonicalLessonForTaskV1(
+        targetWorldId,
+        targetLessonId,
+        targetTaskId,
+      ),
       targetTaskId: targetTaskId,
       mappingType: mappingType,
       reasonCode: reasonCode,
@@ -449,7 +458,12 @@ Act0RepairGoalResolutionV1 act0RepairGoalResolutionForIntentV1(
     return held('source_occurrence_unconfirmed');
   final source = sources.single;
   if (source.worldId != row.sourceWorldId ||
-      source.lessonId != row.sourceLessonId ||
+      act0CanonicalLessonForTaskV1(
+            source.worldId,
+            source.lessonId,
+            source.taskId,
+          ) !=
+          row.sourceLessonId ||
       source.taskId != row.sourceTaskId ||
       source.sourceTaskId != row.sourceTaskId ||
       source.choiceId != row.sourceChoiceId ||
@@ -660,7 +674,12 @@ bool act0RepairGoalOutcomeIsEligibleV1({
       outcome.sourceTaskId != intent.sourceTaskId ||
       outcome.repairTaskId != row.targetTaskId ||
       outcome.targetWorldId != row.targetWorldId ||
-      outcome.targetLessonId != row.targetLessonId ||
+      act0CanonicalLessonForTaskV1(
+            outcome.targetWorldId,
+            outcome.targetLessonId,
+            outcome.targetTaskId,
+          ) !=
+          row.targetLessonId ||
       outcome.targetTaskId != row.targetTaskId ||
       outcome.repairAttemptId.isEmpty ||
       outcome.correctChoiceId != row.targetCorrectChoiceId ||
@@ -687,7 +706,12 @@ bool act0RepairGoalOutcomeIsEligibleV1({
       !attempt.isPlacementAssessment &&
       !attempt.isDiagnosticLearningEntry &&
       attempt.worldId == row.targetWorldId &&
-      attempt.lessonId == row.targetLessonId &&
+      act0CanonicalLessonForTaskV1(
+            attempt.worldId,
+            attempt.lessonId,
+            attempt.taskId,
+          ) ==
+          row.targetLessonId &&
       attempt.taskId == row.targetTaskId &&
       attempt.sourceTaskId == row.targetTaskId &&
       attempt.choiceId == outcome.selectedChoiceId &&
@@ -757,7 +781,11 @@ Act0RepairIntentV1? act0RepairIntentForRecordedOutcomeV1({
   final candidate = Act0RepairIntentV1(
     repairOccurrenceId: outcome.repairOccurrenceId,
     sourceWorldId: source.worldId,
-    sourceLessonId: source.lessonId,
+    sourceLessonId: act0CanonicalLessonForTaskV1(
+      source.worldId,
+      source.lessonId,
+      source.taskId,
+    ),
     sourceTaskId: source.taskId,
     choiceId: source.choiceId,
     result: source.resultKind,
@@ -767,7 +795,11 @@ Act0RepairIntentV1? act0RepairIntentForRecordedOutcomeV1({
     skillAtomId: source.skillAtomId,
     skillLabel: row.goalId,
     targetWorldId: outcome.targetWorldId,
-    targetLessonId: outcome.targetLessonId,
+    targetLessonId: act0CanonicalLessonForTaskV1(
+      outcome.targetWorldId,
+      outcome.targetLessonId,
+      outcome.targetTaskId,
+    ),
     targetTaskId: outcome.targetTaskId,
     mappingType: row.mappingType,
     reasonCode: 'legacy_relation_revalidated',

@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'dart:convert';
 
 import 'act0_authored_source_proof_v1.dart';
@@ -64,8 +65,11 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
   final taskSkills = <String, List<String>>{};
   final lessons = <String, Set<String>>{};
   final tasks = <String, Set<String>>{};
-  String identity(String world, String lesson, String task) =>
-      jsonEncode([world, lesson, task]);
+  String identity(String world, String lesson, String task) => jsonEncode([
+    world,
+    act0CanonicalLessonForTaskV1(world, lesson, task),
+    task,
+  ]);
   for (final world in worlds.where(
     (world) =>
         world.worldNumber >= 1 && world.worldNumber <= act0SkillMapLastWorldV1,
