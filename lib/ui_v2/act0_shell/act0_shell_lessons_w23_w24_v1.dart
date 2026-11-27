@@ -1037,7 +1037,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Fold now. Call would work against the 2 BB counterfactual.",
             Act0FeedbackQualityV1.correct,
-            "Fold because your 27% misses the price of calling the current 3 BB BTN open. Against the 2 BB open, the same share clears the cheaper price.",
+            "Fold because BTN raises to 3 BB and your 27% equity falls short of the call price. When BTN raises to 2 BB instead, the same equity clears the cheaper price.",
           ),
           (
             "alternative",
@@ -1369,7 +1369,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Call 13 BB",
             Act0FeedbackQualityV1.correct,
-            "Call because your jacks have 37.8% equity against BTN’s stated range, above the shorter all-in’s 18.2% price. Folding gives up positive expected value.",
+            "Call rather than fold because BTN raises all-in with a range against which your jacks have 37.8% equity, above the 18.2% price.",
           ),
           (
             "alternative",
@@ -1487,7 +1487,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "4-bet to 21 BB",
             Act0FeedbackQualityV1.correct,
-            "Raise to 21 BB because BTN calls with weaker hands, paying 13 BB more than its initial 8 BB. A flat call misses those extra payments.",
+            "Raise to 21 BB because BTN calls with weaker hands, paying 13 BB more than its initial 8 BB. The “flat call 5.5 BB” option misses those extra payments.",
           ),
           (
             "alternative",
@@ -2313,7 +2313,7 @@ final _world23Pilot = _act0PilotWorldV1(
             "answer",
             "Call 2.5 BB",
             Act0FeedbackQualityV1.correct,
-            "QJs belongs to the listed BTN calls versus one CO open. The trail matches that chart prefix.",
+            "Call QJs rather than fold because the CO open and BTN seat match the chart row that lists QJs as a call.",
           ),
           (
             "alternative",
@@ -2544,7 +2544,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "call",
             "Call 8 BB",
             Act0FeedbackQualityV1.correct,
-            "Call because your 53.3% equity against this BB range clears the 29.1% price. Folding gives up a profitable call.",
+            "Call rather than fold because BB bets 15 equally weighted combos, eight of which you beat. Your 53.3% equity clears the 29.1% price.",
           ),
           (
             "fold",
@@ -2656,7 +2656,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "check",
             "Check",
             Act0FeedbackQualityV1.correct,
-            "Check K-J because BB calls either size with too many better hands; checking preserves the hand’s showdown share.",
+            "Check K-J instead of betting 2 BB because BB calls with too many better hands. Checking preserves the hand’s showdown share.",
           ),
           (
             "bet_2",
@@ -3150,7 +3150,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Check",
             Act0FeedbackQualityV1.correct,
-            "Five wins of 11.5 BB are smaller than five losses of 14 BB.",
+            "Check rather than bet 14 BB because BB folds only five times: five wins of 11.5 BB are smaller than five losses of 14 BB.",
           ),
           (
             "alternative",
@@ -3257,7 +3257,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold because BB’s two bluffs in ten events give you 20% equity, short of the 29.7% call price.",
+            "Fold instead of calling because BB bets with just two bluffs in ten events, giving you 20% equity, short of the 29.7% call price.",
           ),
           (
             "alternative",
@@ -3609,7 +3609,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "answer",
             "Fold",
             Act0FeedbackQualityV1.correct,
-            "Fold because BB’s remaining bluff share is 2 in 10, below the one-third call price.",
+            "Fold instead of calling because BB bets with only two remaining bluff units out of ten. The 20% winning share is below the one-third call price.",
           ),
           (
             "alternative",
@@ -3955,7 +3955,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "bet_9",
             "Bet 9 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 9 BB because BB still calls with lower flushes, sets and Q-9. Their larger payments outweigh the broader 3 BB caller count.",
+            "Bet 9 BB instead of 3 BB because BB still calls with lower flushes, sets and Q-9. The larger payments outweigh the fewer calls.",
           ),
           (
             "bet_3",
@@ -4048,7 +4048,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "call",
             "Call 9 BB",
             Act0FeedbackQualityV1.correct,
-            "Call. Your 25.0% equity against this BB range clears the 20.2% price. The shorter cap gives a cheaper showdown.",
+            "Call rather than fold because BB bets its last 9 BB with a range against which your 25.0% equity clears the 20.2% price. The shorter all-in gives a cheaper showdown.",
           ),
           (
             "fold",
@@ -4894,7 +4894,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "raise_13",
             "Check-raise to 13 BB",
             Act0FeedbackQualityV1.correct,
-            "Check-raise to 13 BB because BTN folds enough pairs to cover the risk; your A♥ removes nut-flush possibilities. The larger raise costs more without extra folds.",
+            "Check-raise to 13 BB rather than 24 BB because BTN folds enough pairs at either size to make the smaller bluff profitable. Your A♥ removes nut-flush possibilities; the larger raise risks more without extra folds.",
           ),
           (
             "raise_24",
@@ -5013,7 +5013,7 @@ final _world24Pilot = _act0PilotWorldV1(
             "raise_12",
             "Check-raise to 12 BB",
             Act0FeedbackQualityV1.correct,
-            "Check-raise to 12 BB. The response retains worse aces as well as lower sets, so those extra payments beat the call and the larger raise.",
+            "Check-raise to 12 BB rather than 18 BB because BTN calls with worse aces as well as lower sets. Those extra payments also beat calling 4 BB.",
           ),
           (
             "raise_18",

@@ -25,7 +25,7 @@ EFFECTIVE: BB 97.5
 REASONING: principle equilibrium_or_counter · alt alternative · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Qd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93.5 BB bet 4 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB bets 4 BB
-  + [correct] Call against the miss and fold against the set — Correct. BB uses the same 4 BB bet with both hands, but calling wins against the miss and loses against the set, so full information separates the actions. Real play still needs range weights and price.
+  + [correct] Call against the miss and fold against the set — Correct. BB bets 4 BB with either holding, so the oracle can call the miss and fold to the set. To call in both branches because the bet was the same would lose against the set. Real play needs range weights and price.
   - [wrong] Call in both branches because the bet was the same — Look again. Calling the set loses the 4 BB call even though both hands use the same bet size.
     BETTER ANSWER: Call against the miss and fold against the set
   - [wrong] The oracle must also guess which card group is present — Look again. Guessing gives up the information advantage granted to the benchmark.
@@ -71,7 +71,7 @@ EFFECTIVE: BB 97.5
 REASONING: principle equilibrium_or_counter · alt alternative · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
-  + [correct] Call A and fold B — Correct. BB’s 5 BB bet sets the same price in both models, so call A because the extra bluffs make calling profitable; fold B because you beat none of B’s betting hands.
+  + [correct] Call A and fold B — Correct. BB bets 5 BB in both models. Call A and fold B because only A adds enough bluffs for a profitable call. To call both because the price is identical would lose money against B.
   - [wrong] Call both because the price is identical — Look again. Calling B loses the 5 BB call because B has no hands you beat.
     BETTER ANSWER: Call A and fold B
   - [wrong] Fold both because the same sizing hides the cards — Look again. Folding A gives up a profitable call even though the opponent’s private cards remain unknown.
@@ -252,7 +252,7 @@ EFFECTIVE: BB 97.5
 REASONING: principle protect_against_adjustment · alt alternative · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ Ad Qs stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks · turn: HJ checks · river: BB checks
-  + [correct] Call that size with any hand beating the miss group — Correct. Once BB sees that the large size contains exclusively missed draws, a call wins because BB’s hand beats the entire betting range.
+  + [correct] Call that size with any hand beating the miss group — Correct. BB should call rather than fold more often to the large size because that size contains only missed draws, and BB beats the entire betting range.
     FEEDBACK TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Fold more often to the large size — Look again. The bet supplies a positive terminal call when their hand always wins.
     BETTER ANSWER: Call that size with any hand beating the miss group
@@ -429,7 +429,7 @@ POTS: main 44.5 (BB, BTN)
 REASONING: principle audit_your_response · alt fold · edge priceBeatsEquity 4.39474 BB · stack_matters true · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jc stack 12 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 12 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB all-in 12 BB
-  + [correct] Call 12 BB — Correct. Call because your 36.8% equity against the BB all-in range clears the 27.0% price; folding gives up a positive expectation at this depth.
+  + [correct] Call 12 BB — Correct. Call rather than fold because BB bets its last 12 BB with a range against which your equity is 36.8%, above the 27.0% price.
   - [wrong] Fold — Look again. Folding keeps your last 12 BB but gives up the 4.39 BB modeled average gain from calling.
     BETTER ANSWER: Call 12 BB
 
