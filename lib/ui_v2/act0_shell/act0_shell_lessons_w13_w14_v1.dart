@@ -3738,13 +3738,13 @@ final _world14Pilot = _act0PilotWorldV1(
         caption: "Study spr and commitment.",
         question: "What is enough to decide a low-SPR all-in call?",
         teach:
-            "SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare the range’s equity with the actual final-pot price.",
+            "SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare your equity against the shoving range (the hands the opponent would bet all-in with) with the equity required to call.",
         choices: const [
           (
             "answer",
             "The actual call price and equity against the shoving range",
             Act0FeedbackQualityV1.correct,
-            "A shorter stack can change the price and the result. Check the shoving range’s equity before committing.",
+            "A shorter stack can change the price and the result. Compare your equity against the opponent’s all-in hands with the equity required to call.",
           ),
           (
             "alternative",

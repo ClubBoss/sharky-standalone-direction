@@ -718,11 +718,11 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 TASK w14_4_teach [theory] What is enough to decide a low-SPR all-in call?
 CAPTION: Study spr and commitment.
-TEACH: What is enough to decide a low-SPR all-in call? SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare the range’s equity with the actual final-pot price.
+TEACH: What is enough to decide a low-SPR all-in call? SPR compares the shorter remaining stack with the street-start pot. A low SPR limits later bets. It does not make every top pair a call. For an all-in, compare your equity against the shoving range (the hands the opponent would bet all-in with) with the equity required to call.
 Q: What is enough to decide a low-SPR all-in call?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] The actual call price and equity against the shoving range — Correct. A shorter stack can change the price and the result. Check the shoving range’s equity before committing.
+  + [correct] The actual call price and equity against the shoving range — Correct. A shorter stack can change the price and the result. Compare your equity against the opponent’s all-in hands with the equity required to call.
   - [wrong] Low SPR and top pair alone — Look again. Top pair can have too little equity against a strong range, even when the SPR is low.
     BETTER ANSWER: The actual call price and equity against the shoving range
   - [wrong] The players’ starting stacks before preflop — Look again. Preflop chips already invested are in the pot. Use the smaller amount remaining at the start of this street.
