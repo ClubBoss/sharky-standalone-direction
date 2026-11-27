@@ -1,6 +1,7 @@
 import '../skin/act0_skin_components_v1.dart';
 import '../skin/act0_skin_tokens_v1.dart';
 import '../act0_shell_state_v1.dart';
+import '../act0_curriculum_pilot_v1.dart';
 import '../act0_learning_record_card_v1.dart';
 import '../act0_w14_skill_state_v1.dart';
 import '../act0_skill_progress_v1.dart';
@@ -379,8 +380,17 @@ class Act0AcademyYouLeafV1 extends StatelessWidget {
     );
   }
 
+  int get _skillMapLastWorld {
+    if (!act0CurriculumPilotEnabledV1) return act0SkillMapLastWorldV1;
+    final lastWorld = input.worlds.fold<int>(0, (last, world) {
+      final number = world.worldNumber;
+      return number > last && number <= act0SkillMapLastWorldV1 ? number : last;
+    });
+    return lastWorld == 0 ? act0SkillMapLastWorldV1 : lastWorld;
+  }
+
   Widget _skillsDetails() => _progressDetails(
-    'Skills · W1–W$act0SkillMapLastWorldV1',
+    'Skills · W1–W$_skillMapLastWorld',
     [
       if (input.checkedW1Topics.isNotEmpty) ...[
         const Text(

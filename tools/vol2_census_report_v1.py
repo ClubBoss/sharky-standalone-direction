@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Summarize the generated W13–W24 G1 census for the world-pair fix packages."""
+"""Summarize the generated W13–W26 G1 census for the world-pair fix packages."""
 
 import argparse
 import json
@@ -7,12 +7,12 @@ from collections import Counter
 from pathlib import Path
 
 BASELINE = Path(__file__).resolve().parents[1] / "test/fixtures/act0_catalog_vol2_baseline_v1.json"
-WORLDS = tuple(f"W{n}" for n in range(13, 25))
+WORLDS = tuple(f"W{n}" for n in range(13, 27))
 
 
 def report(baseline):
     if set(baseline) != set(WORLDS):
-        raise ValueError("Generate the full W13–W24 baseline first (see the census test TODO).")
+        raise ValueError("Generate the full W13–W26 baseline first (see the census test TODO).")
     rules = sorted({rule for findings in baseline.values() for rule in findings})
     totals = Counter()
     tasks = Counter()

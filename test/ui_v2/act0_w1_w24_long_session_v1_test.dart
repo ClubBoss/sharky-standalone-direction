@@ -30,7 +30,7 @@ void main() {
 
   // Always run the release-prefix contract, including in the pilot build.
   test('W1–W12 route/XP unchanged; W13 unlock requires W12 and pilot', () {
-    final lastWorld = act0CurriculumPilotEnabledV1 ? 24 : 12;
+    final lastWorld = act0CurriculumPilotEnabledV1 ? 26 : 12;
     expect(act0LastCurriculumWorldV1, lastWorld);
     expect(act0DailyPracticeLastWorldV1, lastWorld);
     expect(
@@ -65,6 +65,41 @@ void main() {
       );
     }
   });
+
+  test(
+    'W25 and W26 unlock only after their predecessor is complete',
+    () {
+      final completed = <String>{};
+      for (final world in worlds.where((world) => world.worldNumber <= 23)) {
+        completed.addAll(
+          world.lessons
+              .expand((lesson) => lesson.courseTaskList)
+              .map((task) => task.taskId),
+        );
+      }
+      List<Act0WorldCardV1> project() => act0ProgressWorldsV1(
+        worlds,
+        pathClosedTaskIds: completed,
+        earnedTaskIds: completed,
+      );
+      expect(project()[24].isSelectable, isFalse);
+      completed.addAll(
+        worlds[23].lessons
+            .expand((lesson) => lesson.courseTaskList)
+            .map((task) => task.taskId),
+      );
+      expect(project()[24].status, Act0WorldStateV1.current);
+      expect(project()[25].isSelectable, isFalse);
+      completed.addAll(
+        worlds[24].lessons
+            .expand((lesson) => lesson.courseTaskList)
+            .map((task) => task.taskId),
+      );
+      expect(project()[25].status, Act0WorldStateV1.current);
+      expect(project()[25].isSelectable, isTrue);
+    },
+    skip: !act0CurriculumPilotEnabledV1,
+  );
 
   // Isolate the pool boundary from the expensive, unseeded route below. Mark
   // the base drills seen today so an eligible W13 drill must surface in the
