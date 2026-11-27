@@ -119,10 +119,21 @@ Act0TableChoreographyPlanV1? act0TableHistoryProofPlanForTableV1(
   Act0TableStateV1 table,
 ) => _planForTableV1(table, includeBetHistoryProof: true);
 
+/// Full D6 finder proof, including B164 non-autoplay decision histories.
+/// Keep B157/B163 callers on their existing plan cohorts.
+Act0TableChoreographyPlanV1? act0TableD6HistoryProofPlanForTableV1(
+  Act0TableStateV1 table,
+) => _planForTableV1(
+  table,
+  includeBetHistoryProof: true,
+  includeDecisionHistoryProof: true,
+);
+
 Act0TableChoreographyPlanV1? _planForTableV1(
   Act0TableStateV1 table, {
   bool actorFocusSafe = true,
   bool includeBetHistoryProof = false,
+  bool includeDecisionHistoryProof = false,
 }) {
   // B157: an explicitly non-autoplay explanation can still carry a complete
   // recorded hand. Expose the verified plan through the same contract as
@@ -209,9 +220,15 @@ Act0TableChoreographyPlanV1? _planForTableV1(
   final betHistory = checkedHistoryOnly && extended && includeBetHistoryProof
       ? _singleBetHeadsUpHistoryV1(table, parsed, finalStreet)
       : null;
+  final decisionHistory =
+      checkedHistoryOnly &&
+      extended &&
+      includeDecisionHistoryProof &&
+      _isPreflopOrThreeWayDecisionHistoryV1(table, parsed, finalStreet);
   if (checkedHistoryOnly &&
       (!extended ||
           (betHistory == null &&
+              !decisionHistory &&
               !_isCheckedHeadsUpHistoryV1(table, parsed, finalStreet)))) {
     return null;
   }
@@ -404,6 +421,67 @@ Act0TableChoreographyPlanV1? _planForTableV1(
     verifiedHistory: verified?.timeline,
     verifiedHistoryEndsAtClosedStreet: closedStreet,
   );
+}
+
+// B164: the decision prefix must contain every action from the two blinds.
+// Calls before an opening raise are limps; raises are street totals. The
+// existing typed ledger, not the shape, validates the amounts and next actor.
+bool _isPreflopOrThreeWayDecisionHistoryV1(
+  Act0TableStateV1 table,
+  List<_ParsedTrailItemV1> parsed,
+  Act0TableChoreographyStreetV1 finalStreet,
+) {
+  if (parsed.any((item) => item.explicitAllIn)) return false;
+  final preflop = parsed
+      .where((item) => item.street == Act0TableChoreographyStreetV1.preflop)
+      .toList();
+  final shape = preflop
+      .map(
+        (item) => switch (item.action) {
+          _TrailActionV1.blind => 'p',
+          _TrailActionV1.folds => 'f',
+          _TrailActionV1.raises => 'r',
+          _TrailActionV1.calls => 'c',
+          _ => '?',
+        },
+      )
+      .join();
+  final folded = preflop
+      .where((item) => item.action == _TrailActionV1.folds)
+      .map((item) => item.actorSeat?.seatId)
+      .toSet();
+  if (table.seats.any(
+    (seat) =>
+        seat.isFolded != folded.contains(seat.seatId) ||
+        seat.isInHand == folded.contains(seat.seatId),
+  ))
+    return false;
+
+  if (finalStreet == Act0TableChoreographyStreetV1.preflop) {
+    return parsed.length == preflop.length &&
+        RegExp(r'^pp[frc]*$').hasMatch(shape);
+  }
+
+  // One open and two calls; every completed postflop street must contain
+  // all three checks, while the decision street stops before Hero checks.
+  if (folded.length != 3 ||
+      !RegExp(r'^pp[frc]{6}$').hasMatch(shape) ||
+      'r'.allMatches(shape).length != 1 ||
+      'c'.allMatches(shape).length != 2)
+    return false;
+  for (final street in Act0TableChoreographyStreetV1.values.skip(1)) {
+    final actions = parsed.where((item) => item.street == street).toList();
+    final expected = street.index > finalStreet.index
+        ? 0
+        : street == finalStreet
+        ? 2
+        : 3;
+    if (actions.length != expected ||
+        actions.any((item) => item.action != _TrailActionV1.checks)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 // B157: the two six-max single-open/call shapes, ending after the first

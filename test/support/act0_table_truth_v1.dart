@@ -288,7 +288,7 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
         final nineMax = r.table.tableFormat == Act0TableFormatV1.nineMax;
         final plan = nineMax
             ? null
-            : act0TableHistoryProofPlanForTableV1(r.table);
+            : act0TableD6HistoryProofPlanForTableV1(r.table);
         // The canonical parser admits non-autoplay history explanations only
         // with a verified full replay. Do not treat an arbitrary explanation
         // timeline (or a partial plan) as a certificate.
