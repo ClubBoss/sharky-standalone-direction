@@ -21,9 +21,6 @@
     "8.active_caller": [
       "w15_5_day7_check_before_raiser|bb",
       "w15_5_guided_lead_two_pair|bb"
-    ],
-    "D6.history_support": [
-      "w15_5_read_first_flop_actor|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W16": {
@@ -34,11 +31,6 @@
       "h5_w16_3_transfer_jam_nut_straight|option[flop_bet].reason|bring the pot to 52.5 BB|expected 20.5",
       "h5_w16_6_day7_last_bet_independent|feedbackReason|bring the pot to 9.5 BB|expected 5.5",
       "h5_w16_6_day7_last_bet_independent|option[flop_bet].reason|bring the pot to 9.5 BB|expected 5.5"
-    ],
-    "D6.history_support": [
-      "w16_4_read_probe_sequence|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_5_day7_called_turn_overbet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_5_read_turn_overbet_leverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "G1·28": [
       "h5_w16_3_guided_thin_third_street|flop_bet",
@@ -60,11 +52,6 @@
   "W17": {
     "18.same_format_streak": [
       "w17_2_guided_size_oop|statement"
-    ],
-    "D6.history_support": [
-      "w17_3_guided_count_caller_coverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_4_day7_spr_after_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_6_read_lower_spr_mechanics|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W18": {
@@ -113,7 +100,6 @@
   "W22": {
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_4_day7_change_input_requires_new_query|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_checkpoint_audit_pruned_solver_result|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_day7_read_lead_plan|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
