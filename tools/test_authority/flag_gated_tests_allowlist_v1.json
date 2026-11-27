@@ -1,0 +1,12 @@
+[
+  {
+    "define": "SHARKY_ACADEMY_HOME_PREVIEW",
+    "reason": "Existing Academy opt-in integration suite has no preview-on CI command on the baseline; lane pending.",
+    "until": "2026-12-11"
+  },
+  {
+    "define": "actionReasonV1",
+    "reason": "Existing action-reason pilot has flag-on tests but no CI define on the baseline; lane pending.",
+    "until": "2026-12-11"
+  }
+]

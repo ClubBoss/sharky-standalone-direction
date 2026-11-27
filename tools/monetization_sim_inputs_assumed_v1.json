@@ -1,0 +1,121 @@
+{
+  "daily_lessons": {
+    "low": 1,
+    "base": 3,
+    "high": 6,
+    "status": "assumed",
+    "source": "Internal scenario benchmark: l0-audit/econ.py profiles (1, 3, 6, 10 lessons/active day); PLAN 1.3 estimates 3–5 weeks for ordinary course completion. Not measured."
+  },
+  "d1_retention": {
+    "low": 0.2,
+    "base": 0.3,
+    "high": 0.45,
+    "status": "assumed",
+    "source": "Adjust global D1 26%, iOS 27%; upper stress case spans PLAN B0 Day 2 target 40%. https://www.adjust.com/resources/guides/user-retention/"
+  },
+  "d7_retention": {
+    "low": 0.08,
+    "base": 0.15,
+    "high": 0.25,
+    "status": "assumed",
+    "source": "Adjust global D7 13%; range spans PLAN B0 Day 7 target 20% (one-day offset in Sharky). https://www.adjust.com/glossary/retention-rate/"
+  },
+  "d30_retention": {
+    "low": 0.03,
+    "base": 0.07,
+    "high": 0.15,
+    "status": "assumed",
+    "source": "Adjust global D30 7%, regional 4–6%, iOS 8%; upper stress case is not a measured Sharky rate. https://www.adjust.com/resources/guides/user-retention/"
+  },
+  "practice_repeat_day": {
+    "low": 7,
+    "base": 21,
+    "high": 35,
+    "status": "assumed",
+    "source": "Internal stress window: PLAN 1.3 course duration 3–5 weeks, with an early week-one repeat case. No published Sharky novelty benchmark; repeat day must be observed."
+  },
+  "trial_to_paid": {
+    "low": 0.2,
+    "base": 0.35,
+    "high": 0.5,
+    "status": "assumed",
+    "source": "RevenueCat 2026 trial-duration medians roughly 25–43%; wider rounded stress range. https://www.revenuecat.com/state-of-subscription-apps/"
+  },
+  "monthly_price_usd": {
+    "low": 5,
+    "base": 10,
+    "high": 15,
+    "status": "assumed",
+    "source": "RevenueCat 2026 gaming monthly median around $5, education around $10; $15 upper stress price, not a recommendation. https://www.revenuecat.com/state-of-subscription-apps/"
+  },
+  "monthly_churn": {
+    "low": 0.15,
+    "base": 0.25,
+    "high": 0.35,
+    "status": "assumed",
+    "source": "RevenueCat 2026 six-month monthly subscription retention medians 14–26%; equivalent constant monthly churn about 20–30%, wider stress range. Early renewal churn differs in reality. https://www.revenuecat.com/state-of-subscription-apps/"
+  },
+  "offer_to_trial": {
+    "low": 0.1,
+    "base": 0.25,
+    "high": 0.5,
+    "status": "assumed",
+    "source": "RevenueCat 2026 install-to-trial medians 4.4–8.9% across prices; conditional late-offer rate unknown. Broad sensitivity scenarios, not an equivalent benchmark. https://www.revenuecat.com/state-of-subscription-apps/"
+  },
+  "trial_days": {
+    "low": 3,
+    "base": 7,
+    "high": 14,
+    "status": "assumed",
+    "source": "RevenueCat 2026 trial duration buckets; seven-day trials common in education. https://www.revenuecat.com/state-of-subscription-apps/"
+  },
+  "bankroll_pace_fraction": {
+    "low": 0.3,
+    "base": 0.6,
+    "high": 0.9,
+    "status": "assumed",
+    "source": "Internal PLAN 1.3 and l0-audit/econ.py soft slowdown/refill variants; broad pace stress levels, not an observed currency or pacing benchmark."
+  },
+  "persistent_activity_fraction": {
+    "low": 0.25,
+    "base": 0.5,
+    "high": 0.75,
+    "status": "assumed",
+    "source": "Structural sensitivity: exact-day Adjust retention benchmarks do not establish cross-day correlation. Quarter/half/three-quarter persistent cohort bracket; replace with longitudinal beta observations if available."
+  },
+  "post_d30_half_life_days": {
+    "low": 30,
+    "base": 90,
+    "high": 180,
+    "status": "assumed",
+    "source": "Structural sensitivity: Adjust D30 benchmark ends at day 30; one/three/six-month decay scenarios for finite course plus continuing practice, not measured long-term app activity."
+  },
+  "wall_offer_to_paid": {
+    "low": 0.05,
+    "base": 0.15,
+    "high": 0.3,
+    "status": "assumed",
+    "source": "RevenueCat 2026 D35 install-to-paid medians 2.1% freemium, 10.7% hard wall; contextual only, NOT conditional offer conversion. Broad eligible-user sensitivity range, no Sharky WTP data. https://www.revenuecat.com/state-of-subscription-apps/ Separate wall offer parameter; same starting bracket avoids assuming a winner."
+  },
+  "bankroll_offer_to_paid": {
+    "low": 0.05,
+    "base": 0.15,
+    "high": 0.3,
+    "status": "assumed",
+    "source": "RevenueCat 2026 D35 install-to-paid medians 2.1% freemium, 10.7% hard wall; contextual only, NOT conditional offer conversion. Broad eligible-user sensitivity range, no Sharky WTP data. https://www.revenuecat.com/state-of-subscription-apps/ Separate bankroll offer parameter; same starting bracket avoids assuming a winner."
+  },
+  "practice_offer_to_paid": {
+    "low": 0.05,
+    "base": 0.15,
+    "high": 0.3,
+    "status": "assumed",
+    "source": "RevenueCat 2026 D35 install-to-paid medians 2.1% freemium, 10.7% hard wall; contextual only, NOT conditional offer conversion. Broad eligible-user sensitivity range, no Sharky WTP data. https://www.revenuecat.com/state-of-subscription-apps/ Separate practice offer parameter; same starting bracket avoids assuming a winner."
+  },
+  "practice_participation": {
+    "low": 0.25,
+    "base": 0.5,
+    "high": 0.75,
+    "status": "assumed",
+    "source": "Internal structural sensitivity: PLAN B0 targets and Beta activity practice steps enable observed participation; no published Sharky range. Quarter/half/three-quarter eligible active users scenarios, not a measured rate."
+  }
+}

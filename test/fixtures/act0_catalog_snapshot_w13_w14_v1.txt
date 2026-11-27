@@ -238,14 +238,14 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 TASK w13_4_teach [theory] What can make the same showdown equity worth less in a played hand?
 CAPTION: Study equity realization.
-TEACH: What can make the same showdown equity worth less in a played hand? Showdown equity assumes you get to see the last card. Realization is how much of that share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.
+TEACH: What can make the same showdown equity worth less in a played hand? Showdown equity assumes you get to see the last card. Equity realization means the share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.
 Q: What can make the same showdown equity worth less in a played hand?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] A later bet that forces you to fold some potential wins — Correct. A later bet can end your hand before showdown. Those surrendered wins reduce the amount you can realize.
   - [wrong] Moving seats changes the raw equity of identical cards and ranges — Look again. Holding cards, board and ranges fixed holds showdown equity fixed. Position changes the betting choices you face.
     BETTER ANSWER: A later bet that forces you to fold some potential wins
-  - [wrong] The full share is always paid on the turn — Look again. Chips are awarded at showdown or when everyone else folds. A turn equity number is not a payout.
+  - [wrong] The full equity share is paid out on the turn — Look again. Chips are awarded at showdown or when everyone else folds. A turn equity number is not a payout.
     BETTER ANSWER: A later bet that forces you to fold some potential wins
 
 TASK w13_4_read_check_behind [drill] What option does acting last give you here?
@@ -311,9 +311,9 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 ===== WORLD 13 · LESSON backdoor_draws · Backdoor draws =====
 
-TASK w13_5_teach [theory] What is true of a backdoor flush draw on the flop?
+TASK w13_5_teach [theory] Two remaining cards
 CAPTION: Study backdoor draws.
-TEACH: What is true of a backdoor flush draw on the flop? A backdoor draw needs help on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.
+TEACH: Two remaining cards A backdoor flush draw is a draw that needs a card of the right suit on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.
 Q: What is true of a backdoor flush draw on the flop?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -335,7 +335,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Either the turn or river is a spade — Look again. One more of that suit leaves four spades. You cannot use four cards as a flush.
     BETTER ANSWER: Both turn and river are spades
     FEEDBACK TABLE: Flop | You As 7s | Board Ts 8d 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts high card, rainbow, backdoor flush, backdoor straight
-  - [wrong] Any two cards that pair the board — Look again. Board rank pairs alone add no suited cards. If the board pairs, an opponent may also make a full house.
+  - [wrong] Pairing the board across the two remaining cards — Look again. Board rank pairs alone add no suited cards. If the board pairs, an opponent may also make a full house.
     BETTER ANSWER: Both turn and river are spades
     FEEDBACK TABLE: Flop | You As 7s | Board Ts 8d 4c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts high card, rainbow, backdoor flush, backdoor straight
 
@@ -394,9 +394,9 @@ Q: What should decide whether you follow your earlier raise with a c-bet?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] The board and how the other range reacts — Correct. A c-bet works when the opposing range gives it a purpose. The board and likely calls or folds matter more than having raised first.
-  - [wrong] The preflop raiser should always bet — Look again. A check can protect your showdown share when betting only keeps strong hands in. Initiative does not force a bet.
+  - [wrong] The preflop raise obliges the raiser to c-bet — Look again. A check can protect your showdown share when betting only keeps strong hands in. Initiative does not force a bet.
     BETTER ANSWER: The board and how the other range reacts
-  - [wrong] The last actor always has initiative — Look again. Position determines who acts last. Aggression determines initiative, so the two can belong to different seats.
+  - [wrong] Acting last gives a player the initiative — Look again. Position determines who acts last. Aggression determines initiative, so the two can belong to different seats.
     BETTER ANSWER: The board and how the other range reacts
 
 TASK w13_6_read_check_raise_transfer [drill] Who has taken over the aggression on this flop?
@@ -473,7 +473,7 @@ TABLE: Facts no applicable hand facts
   + [correct] When more worse made hands will pay — Correct. A smaller bet can get calls from weaker pairs that fold to a larger size. Estimate those calls before choosing the amount.
   - [wrong] Whenever you have a medium-strength hand — Look again. A medium-strength hand may earn more by checking if betting keeps only stronger hands in the pot.
     BETTER ANSWER: When more worse made hands will pay
-  - [wrong] When only sets and bluffs use it — Look again. Sets and bluffs describe a polarized selection. A merged range also bets some hands between those ends.
+  - [wrong] When sets and bluffs form the betting range — Look again. Sets and bluffs describe a polarized selection. A merged range also bets some hands between those ends.
     BETTER ANSWER: When more worse made hands will pay
 
 TASK w14_1_read_underbet [drill] Which amount is an underbet?
@@ -554,7 +554,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 TASK w14_2_teach [theory] Which group is polarized?
 CAPTION: Study polarized sizing.
-TEACH: Which group is polarized? A polarized betting range uses strong value and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.
+TEACH: Which group is polarized? Strong value means hands that can bet profitably for calls from worse hands. A polarized betting range uses very strong value hands and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.
 Q: Which group is polarized?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -576,7 +576,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Merged across one-pair hands — Look again. The hand list leaves A-K out. It uses sets and unpaired hands rather than a continuous group of made hands.
     BETTER ANSWER: Polarized
     FEEDBACK TABLE: River | Board Kh 8d 5h 3s 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  - [wrong] Value only — Look again. The listed unpaired hands have no pair on this board. The line includes bluffs.
+  - [wrong] A pure value range — Look again. The listed unpaired hands have no pair on this board. The line includes bluffs.
     BETTER ANSWER: Polarized
     FEEDBACK TABLE: River | Board Kh 8d 5h 3s 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
 
@@ -645,7 +645,7 @@ Q: What justifies using two sizes instead of one in a stated model?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] The two sizes serve different classes and improve average EV — Correct. Choose distinct sizes when they improve payoffs for different hands. A single size can still be a reasonable simplification.
-  - [wrong] A second size always makes a policy more profitable — Look again. If the responses and payoffs are the same, an extra size adds a decision without a gain.
+  - [wrong] Adding a second size itself increases profitability — Look again. If the responses and payoffs are the same, an extra size adds a decision without a gain.
     BETTER ANSWER: The two sizes serve different classes and improve average EV
   - [wrong] The biggest size tells you a specific opponent hand — Look again. A size may change the likely types of hands. It does not expose an exact holding.
     BETTER ANSWER: The two sizes serve different classes and improve average EV
@@ -797,7 +797,7 @@ Q: What makes the chip size rise under a constant pot fraction?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Each call increases the pot used for the next size — Correct. Your bet and the call go into the pot. The same fraction therefore represents more chips on the next street.
-  - [wrong] Only the bet stays in the pot — Look again. A matched call adds the same amount as the bet. Count both contributions.
+  - [wrong] The bet enters the pot but the call does not — Look again. A matched call adds the same amount as the bet. Count both contributions.
     BETTER ANSWER: Each call increases the pot used for the next size
   - [wrong] The fraction is applied again to the original pot — Look again. The plan uses the updated pot. Reusing the opening pot would repeat the chip amount.
     BETTER ANSWER: Each call increases the pot used for the next size

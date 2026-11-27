@@ -1236,7 +1236,7 @@ final _world13Pilot = _act0PilotWorldV1(
         question:
             "What can make the same showdown equity worth less in a played hand?",
         teach:
-            "Showdown equity assumes you get to see the last card. Realization is how much of that share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.",
+            "Showdown equity assumes you get to see the last card. Equity realization means the share you actually turn into chips after future bets and folds. In position, a check behind can close a street. Stack depth changes the bets still possible.",
         choices: const [
           (
             "future_price",
@@ -1252,7 +1252,7 @@ final _world13Pilot = _act0PilotWorldV1(
           ),
           (
             "all_automatic",
-            "The full share is always paid on the turn",
+            "The full equity share is paid out on the turn",
             Act0FeedbackQualityV1.wrong,
             "Chips are awarded at showdown or when everyone else folds. A turn equity number is not a payout.",
           ),
@@ -1639,14 +1639,14 @@ final _world13Pilot = _act0PilotWorldV1(
         id: "w13_5_teach",
         lesson: "backdoor_draws",
         lessonTitle: "Backdoor draws",
-        title: "What is true of a backdoor flush draw on the flop?",
+        title: "Two remaining cards",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption: "Study backdoor draws.",
         question: "What is true of a backdoor flush draw on the flop?",
         teach:
-            "A backdoor draw needs help on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.",
+            "A backdoor flush draw is a draw that needs a card of the right suit on both the turn and river. With exactly three cards of one suit across your hand and the flop, both remaining cards must be of that suit. A backdoor straight also needs both cards. With 7-6 on A-9-2, an 8 plus either a 5 or a ten completes it. Completing either draw is different from winning the pot.",
         choices: const [
           (
             "both",
@@ -1698,7 +1698,7 @@ final _world13Pilot = _act0PilotWorldV1(
           ),
           (
             "rank",
-            "Any two cards that pair the board",
+            "Pairing the board across the two remaining cards",
             Act0FeedbackQualityV1.wrong,
             "Board rank pairs alone add no suited cards. If the board pairs, an opponent may also make a full house.",
           ),
@@ -2069,13 +2069,13 @@ final _world13Pilot = _act0PilotWorldV1(
           ),
           (
             "automatic",
-            "The preflop raiser should always bet",
+            "The preflop raise obliges the raiser to c-bet",
             Act0FeedbackQualityV1.wrong,
             "A check can protect your showdown share when betting only keeps strong hands in. Initiative does not force a bet.",
           ),
           (
             "position",
-            "The last actor always has initiative",
+            "Acting last gives a player the initiative",
             Act0FeedbackQualityV1.wrong,
             "Position determines who acts last. Aggression determines initiative, so the two can belong to different seats.",
           ),
@@ -2494,7 +2494,7 @@ final _world14Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "When only sets and bluffs use it",
+            "When sets and bluffs form the betting range",
             Act0FeedbackQualityV1.wrong,
             "Sets and bluffs describe a polarized selection. A merged range also bets some hands between those ends.",
           ),
@@ -2880,7 +2880,7 @@ final _world14Pilot = _act0PilotWorldV1(
         caption: "Study polarized sizing.",
         question: "Which group is polarized?",
         teach:
-            "A polarized betting range uses strong value and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.",
+            "Strong value means hands that can bet profitably for calls from worse hands. A polarized betting range uses very strong value hands and bluffs, with many medium-strength hands checking. A larger size can support that split. Size alone cannot tell you whether any specific bet is value or a bluff.",
         choices: const [
           (
             "answer",
@@ -2932,7 +2932,7 @@ final _world14Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Value only",
+            "A pure value range",
             Act0FeedbackQualityV1.wrong,
             "The listed unpaired hands have no pair on this board. The line includes bluffs.",
           ),
@@ -3304,7 +3304,7 @@ final _world14Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A second size always makes a policy more profitable",
+            "Adding a second size itself increases profitability",
             Act0FeedbackQualityV1.wrong,
             "If the responses and payoffs are the same, an extra size adds a decision without a gain.",
           ),
@@ -4198,7 +4198,7 @@ final _world14Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only the bet stays in the pot",
+            "The bet enters the pot but the call does not",
             Act0FeedbackQualityV1.wrong,
             "A matched call adds the same amount as the bet. Count both contributions.",
           ),

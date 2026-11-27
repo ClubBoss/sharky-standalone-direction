@@ -1,0 +1,494 @@
+[
+  {
+    "task": "w13_4_teach",
+    "detail": "wrong: the full share is always paid on the turn → the full equity share is paid out on the turn",
+    "reason": "Equity is a probability-weighted showdown share, not chips paid on the turn; a later fold can forfeit potential wins.",
+    "package": "B133"
+  },
+  {
+    "task": "w13_5_read_running_spades",
+    "detail": "wrong: any two cards that pair the board → pairing the board across the two remaining cards",
+    "reason": "Pairing board ranks does not ensure the two additional spades needed to reach five spades.",
+    "package": "B133"
+  },
+  {
+    "task": "w13_6_teach",
+    "detail": "wrong: the preflop raiser should always bet / the last actor always has initiative → the preflop raise obliges the raiser to c-bet / acting last gives a player the initiative",
+    "reason": "Preflop aggression does not require a c-bet; acting last determines position, not which player has betting initiative.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_1_teach",
+    "detail": "wrong: when only sets and bluffs use it → when sets and bluffs form the betting range",
+    "reason": "A range of sets and bluffs is polarized, not the merged strong-and-medium value range asked about; worse made-hand calls justify the small value bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_2_read_polar_range",
+    "detail": "wrong: value only → a pure value range",
+    "reason": "The listed unpaired hands are bluffs alongside sets, so the 8 BB range is not pure value.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_3_teach",
+    "detail": "wrong: a second size always makes a policy more profitable → adding a second size itself increases profitability",
+    "reason": "Adding a second size alone does not increase EV if responses and payoffs remain identical.",
+    "package": "B133"
+  },
+  {
+    "task": "w14_5_teach",
+    "detail": "wrong: only the bet stays in the pot → the bet enters the pot but the call does not",
+    "reason": "Both the bet and its matched call increase the pot for the next street.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_1_teach",
+    "detail": "wrong: any low-card flop makes a wide c-bet safe → low flop ranks by themselves make a wide c-bet safe",
+    "reason": "Low ranks alone do not make broad c-betting safe; connected low boards can favor the caller’s pairs and draws.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_3_teach",
+    "detail": "wrong: a set should always disguise its strength → having a set is enough reason to hide its strength",
+    "reason": "A set alone does not justify slowplaying; a passive opponent may check again instead of paying a delayed bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_4_teach",
+    "detail": "wrong: the preflop raiser never has good flush coverage → raising preflop rules out good flush coverage",
+    "reason": "A preflop raiser can have flushes; legal suited combinations depend on the actual range and board blockers.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_6_teach",
+    "detail": "wrong: only sets and high-equity semibluffs raise / every raise uses the same amount → the raising range consists of sets and high-equity semibluffs / the raising range uses one size",
+    "reason": "Sets plus semibluffs describe polarization, not merged raising; using one size does not distinguish merged and polarized ranges.",
+    "package": "B133"
+  },
+  {
+    "task": "w15_6_read_polar_on_two_tone",
+    "detail": "wrong: raise only top pair because the board has two hearts → reserve raises for top pair because the board has two hearts",
+    "reason": "The stipulated top pairs call; the polarized raise includes sets and heart-draw bluffs instead.",
+    "package": "B133"
+  },
+  {
+    "task": "w16_5_teach",
+    "detail": "wrong: every time you act first → when your position lets you act first",
+    "reason": "Acting first permits a lead but cannot by itself lower showdown cost; opponent calls and raises determine whether the block bet helps.",
+    "package": "B133"
+  },
+  {
+    "task": "w16_6_read_runout_two_sides",
+    "detail": "wrong: every single-spade hand makes a flush → holding one spade is enough to make a flush",
+    "reason": "Three board spades plus one hole-card spade make four spades, not the five needed for a flush.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_3_guided_count_caller_coverage",
+    "detail": "wrong: the premium pairs only → the premium pairs rather than the caller’s group",
+    "reason": "Each listed suited caller class supplies the two missing straight ranks; premium pocket pairs cannot supply two distinct ranks here.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_4_teach",
+    "detail": "wrong: only when a 4-bet matches the 3-bet → when the 4-bet matches the 3-bet rather than increasing it",
+    "reason": "Matching a 3-bet is a call, not a 4-bet, which must increase the wager.",
+    "package": "B133"
+  },
+  {
+    "task": "w17_6_teach",
+    "detail": "wrong: every checked 3-bet flop signals a trap → a checked flop in a 3-bet pot signals a trap",
+    "reason": "A check in a 3-bet pot alone cannot establish a trap or justify checking back; weak and marginal hands can check too.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_teach",
+    "detail": "wrong: a three-way pot can never be value-bet → a third player prevents value betting",
+    "reason": "A third player does not prevent value betting; multiple worse ranges may still pay a strong hand.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_read_compression_vs_hand_label",
+    "detail": "wrong: every call is a bluff → the callers have bluff holdings rather than made hands",
+    "reason": "The stated continuing groups contain sets and top pairs, not bluff holdings.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_1_day7_multiple_value_calls",
+    "detail": "wrong: only the first player can pay → the first player can pay, but the second cannot",
+    "reason": "Both modeled players have worse made hands that can call the river bet, including after the first calls.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_teach",
+    "detail": "wrong: always the opening raiser / always the first player to check → the opening raiser / the first player to check",
+    "reason": "Neither being the opener nor checking first guarantees last action; a live player behind can still bet.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_read_three_way_nuts",
+    "detail": "wrong: only co → co rather than btn or bb",
+    "reason": "The stated CO overpairs cannot supply both T and 9; BTN and BB can each hold T9s for the nut straight.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_transfer_oop_check_may_face_bet",
+    "detail": "wrong: it closes all action because the blind checked → it ends the betting round because the blind checked",
+    "reason": "BTN remains live and has not acted, so CO’s check after BB does not close the betting round.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_3_day7_connected_caller_edge",
+    "detail": "wrong: every hand in bb’s full range is a straight → bb’s full range consists of straights",
+    "reason": "The listed straight classes demonstrate a subset of BB’s range, not that its full range contains only straights.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_4_teach",
+    "detail": "wrong: every pot if its hand is best / only its own chips back → the main and side pots if its hand is best / its own contribution, without the matched chips",
+    "reason": "A short stack cannot win the side pot it did not match, but can win opponents’ matched contributions in the eligible main pot.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_4_read_side_pot_layers",
+    "detail": "wrong: 60.5 bb all in the main pot → 60.5 bb in a single main pot",
+    "reason": "The 8 BB starting pot plus three 7.5 BB matches gives 30.5 BB main; the two extra 10 BB contributions give 20 BB side, not a single 60.5 BB main.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_5_guided_short_raise_no_reopen",
+    "detail": "wrong: yes, because any extra amount reopens → yes, because increasing the wager is enough to reopen",
+    "reason": "The increase from 6 to 9 BB is only 3 BB, below the stated 6 BB full-raise threshold for reopening.",
+    "package": "B133"
+  },
+  {
+    "task": "w18_5_day7_full_raise_reopens",
+    "detail": "wrong: no. all-in wagers never reopen → no. an all-in wager cannot reopen betting",
+    "reason": "An all-in can be a full raise; the increase from 5 to 11 BB is 6 BB and reopens action under the stated rule.",
+    "package": "B133"
+  },
+  {
+    "task": "w19_1_teach",
+    "detail": "wrong: the equilibrium maximizes profit against every actual opponent → the equilibrium is the profit-maximizing response to an opponent’s actual strategy",
+    "reason": "An equilibrium prevents profitable unilateral deviations against its equilibrium counterpart, but a different opponent may permit a more profitable best response.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_1_transfer_pick_baseline_when_uncertain",
+    "detail": "wrong: assume the quick bet is always a bluff / assume that opponent uses every equilibrium frequency → classify the quick bet as a bluff from its speed / treat the opponent’s strategy as matching the equilibrium frequencies",
+    "reason": "A single quick bet does not establish bluff frequency, and using an equilibrium baseline does not establish that an unknown opponent follows it.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_2_teach",
+    "detail": "wrong: to every street for players on that site / to every individual at that stake → across the streets played on that site / to individual players at that stake as their personal tendency",
+    "reason": "Pool tendencies are specific to comparable decision nodes, and neither other streets nor individual players necessarily share the measured average.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_teach",
+    "detail": "wrong: all preflop hands that the regular played → the regular’s complete preflop hand sample",
+    "reason": "The full preflop sample includes hands that never reach the relevant river decision, so it is not the appropriate denominator.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_transfer_overcalls_draws",
+    "detail": "wrong: change all preflop opening charts → revise the preflop opening strategy across positions",
+    "reason": "A read about calls in a specific postflop node does not establish a reason to revise preflop opening ranges.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_3_day7_anonymous_fastfold",
+    "detail": "wrong: no evidence of any kind → anonymity makes the available evidence unusable",
+    "reason": "Anonymity limits player-specific histories but leaves observable evidence about format, action line, size and stack depth.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_4_day7_simplify_mix",
+    "detail": "wrong: a pure action is unexploitable against every response → a pure action is protected against changes in the opponent’s response",
+    "reason": "A pure action tied against one fixed strategy need not remain equally profitable against a changed opponent response.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_5_teach",
+    "detail": "wrong: any amount of checking occurred → the opponent checked at some point in the hand",
+    "reason": "Checking does not establish a range cap because strong hands may check and weaker hands can improve later.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_5_transfer_no_attack_into_traps",
+    "detail": "wrong: co holding any missed hands → co having missed hands in the retained range",
+    "reason": "The retained full houses disprove a cap below them but do not exclude missed hands that the model explicitly retains.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_6_teach",
+    "detail": "wrong: all hands dealt in the session / only the hands you called and lost → the total number of hands dealt in the session / the number of losing calls",
+    "reason": "Session-wide hands include irrelevant decisions, while losing calls omit folds and winning calls, so neither denominator measures defense at the target node.",
+    "package": "B134"
+  },
+  {
+    "task": "w19_6_day7_audit_which_hands_fold",
+    "detail": "wrong: call all marginal pairs until the count reaches mdf → use marginal-pair calls to raise defense to mdf",
+    "reason": "Against the observed value-heavy range, meeting MDF alone does not make marginal-pair calls profitable.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_1_read_time_bank_context",
+    "detail": "wrong: the river bet is almost always a bluff → the river betting range is overwhelmingly bluffs",
+    "reason": "One elapsed time is insufficient to infer that the river betting range is predominantly bluffs.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_1_transfer_live_baseline_break",
+    "detail": "wrong: ignore every live behavior forever → exclude live behavior from your long-term reads",
+    "reason": "Discarding live behavior categorically misses repeated comparable observations that can support a meaningful read.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_3_teach",
+    "detail": "wrong: the player plays at the same time every day → the player keeps a consistent daily playing schedule",
+    "reason": "A consistent playing schedule may identify a regular but does not show a high calling frequency at a specific node.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_3_transfer_stakes_discomfort_caveat",
+    "detail": "wrong: every large river bluff now wins → large river bluffs now win through the player’s risk aversion",
+    "reason": "One fold and a remark about stakes suggest a hypothesis but establish neither risk aversion as the cause nor a profitable bluff frequency.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_4_teach",
+    "detail": "wrong: all players behind call every raise size → players behind respond to raises by calling at each size",
+    "reason": "Players calling raises at each size undermine isolation rather than supporting a raise to play heads-up.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_4_read_more_limpers_change_price",
+    "detail": "wrong: only the limper you target / only the larger blind → the targeted limper, excluding players outside that match-up / bb, with hj and sb excluded",
+    "reason": "Ignoring the other limper or either blind misses live players whose calls could prevent a heads-up pot.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_5_teach",
+    "detail": "wrong: it permanently makes every future value bet profitable → the shown bluff secures lasting profitability for future value bets",
+    "reason": "Showing a bluff may change an opponent’s calls but does not guarantee lasting value-bet profitability across opponents and sizes.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_5_transfer_image_changes_value",
+    "detail": "wrong: reset your entire read on every player at the table → rebuild your reads for the whole table from this regular’s calls",
+    "reason": "The regular’s observed calls support a specific adjustment against that player rather than a reset of every table read.",
+    "package": "B134"
+  },
+  {
+    "task": "w20_6_read_confirmation_counterexample",
+    "detail": "wrong: only the two hands you remember / discard all seven because the player surprised you → the two bluffs from your memory, without the other notes / discard the seven notes because the player surprised you",
+    "reason": "Keeping only the two memorable bluffs biases the sample, while discarding all seven notes loses the matched evidence.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_2_transfer_stop_win_based_on_behavior",
+    "detail": "wrong: continue automatically because the result is positive → keep playing based on the positive result",
+    "reason": "A positive result does not override the prewritten stop condition once both the profit marker and the specified process failures occur.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_3_guided_find_own_leak",
+    "detail": "wrong: give up all misses because your defense is too wide → remove missed hands from the bluff range because your defense is too wide",
+    "reason": "Fifteen folds in twenty opportunities show overfolding rather than excessive defense, making additional opponent bluffs profitable here.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_5_teach",
+    "detail": "wrong: all pots you lost → a record of the session’s lost pots",
+    "reason": "Selecting lost pots by outcome can omit flawed river value decisions in pots that were won.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_5_transfer_review_without_result",
+    "detail": "wrong: skip the ledger and reconstruct from your result only → reconstruct the call from your result instead of the ledger",
+    "reason": "The outcome alone cannot reconstruct the action and contribution amounts needed to evaluate the call price.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_6_teach",
+    "detail": "wrong: book a win every short session / never meet a stronger opponent → finish each short session with a profit / arrange to face opponents no stronger than you",
+    "reason": "Short-session profit is subject to variance and available opponents cannot be fully controlled, so neither is a reliable actionable goal.",
+    "package": "B134"
+  },
+  {
+    "task": "w21_6_guided_plan_if_then",
+    "detail": "wrong: i will win back any lost profit before taking a break → recover the lost profit before taking a break",
+    "reason": "Tying a break to recovering lost profit can prolong play despite the decision-process leak the rule is intended to address.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_2_guided_indifference_mix",
+    "detail": "wrong: a only / b only → a with 100% weight / b with 100% weight",
+    "reason": "Pure A lets the minimizing player choose the second column for a row payoff of −1, while pure B lets that player choose the first column for the same payoff.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_3_teach",
+    "detail": "wrong: you always bet against 60% of the opponent’s holdings → bet against 60% of the opponent’s holdings using a pure betting strategy",
+    "reason": "A 60% action frequency describes how often the given hand bets at the node, not a pure bet against 60% of hidden opponent holdings.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_5_read_output_as_scope",
+    "detail": "wrong: always bet every king-high flop / never check this hand → use a pure betting strategy across king-high flops / remove check from this hand’s strategy",
+    "reason": "One queried node cannot justify pure betting across king-high flops or eliminating a check that ties the bet in that model.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_5_transfer_population_query",
+    "detail": "wrong: replace every opponent action at every street → replace the opponent’s complete strategy across streets",
+    "reason": "The observed response supports changing the matched river node, not replacing unrelated opponent strategies across streets.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_teach",
+    "detail": "wrong: only how often you wish the opponent would fold / a commitment to bet every later street → a desired fold frequency, without the follow-up branches / commit to betting the turn and river in advance",
+    "reason": "A flop betting plan must account for called and raised branches and adapt to later cards rather than rely on desired folds or predetermined barrels.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_checkpoint_audit_pruned_solver_result",
+    "detail": "wrong: apply an equilibrium label to any strategy produced → treat the solver’s output as an equilibrium by virtue of its source",
+    "reason": "A solver output is conditional on its entered action tree, so omitted relevant raises and legal sizes must be evaluated before claiming a best response.",
+    "package": "B134"
+  },
+  {
+    "task": "w22_6_day7_read_lead_plan",
+    "detail": "wrong: a decision to call every raise because you have top pair / only a play for the one river you most want → commit top pair to calling raises based on its rank / plan for the desired river card and leave the others unplanned",
+    "reason": "Top pair must compare call price and equity against possible flushes, while the plan must account for other legal river cards as well as the desired one.",
+    "package": "B134"
+  },
+  {
+    "task": "mistake_known_blocker",
+    "detail": "wrong: river · keep all four queens available → river · keep four queens available",
+    "reason": "All four queens are unseen; excluding Ks and Kh leaves 8 KQ combos, so this note is not the mistake.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_board_four_to_straight",
+    "detail": "correct: bad for your showdown share → 7s",
+    "reason": "7s completes every modeled opponent straight; reference 2c 79.55% → 1.14%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_board_four_to_straight",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 3c / 4c",
+    "reason": "Both blanks 79.55% = reference; both preserve call and neither is the requested fold turn.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_counterfeit_two_pair",
+    "detail": "correct: bad for your showdown share → kh",
+    "reason": "Kh pairs the board, opponent overpairs overtake Hero's two pair; 2c 81.82% → 9.09%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_counterfeit_two_pair",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 4c / 3c",
+    "reason": "Both 81.82% = reference; both preserve call, not the requested fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_dead_draw",
+    "detail": "correct: unchanged showdown share → none of these",
+    "reason": "All opponent hands have four jacks; reference 3c and both offered cards give 0%, so no profitable call exists.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_dead_draw",
+    "detail": "wrong: good for your showdown share / bad for your showdown share → 2d / qc",
+    "reason": "2d and Qc each leave 0% versus quads; neither makes calling profitable.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_completes",
+    "detail": "correct: good for your showdown share → qh",
+    "reason": "Qh completes ace-high flush versus sets; reference 2c 15.91% → 77.27%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_completes",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 7c",
+    "reason": "Both leave draw uncompleted, 15.91%; neither changes reference fold into call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_pairs_board",
+    "detail": "correct: bad for your showdown share → 3h",
+    "reason": "3h gives each set a full house despite Hero's flush; Qh 77.27% → 0%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_pairs_board",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 2h / 4h",
+    "reason": "Each makes the same flush versus sets, 77.27% = reference; both remain calls.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_overcard_beats_pair",
+    "detail": "correct: bad for your showdown share → ah",
+    "reason": "Ah pairs every opponent ace, overtaking QQ; 2c 88.64% → 4.55%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_overcard_beats_pair",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 7c / 4c",
+    "reason": "7c 85.61% and 4c 88.64% remain above 33⅓%; neither changes the call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_redraw_good",
+    "detail": "correct: good for your showdown share → 5s",
+    "reason": "5s makes full house which modeled draws cannot beat; 2h 22.73% → 100%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_redraw_good",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 6h / 3h",
+    "reason": "Both complete opponents' flushes; 22.73% = reference, so both remain folds.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_remove_high_draw",
+    "detail": "correct: good for your showdown share → 9h",
+    "reason": "9h makes Hero's flush and removes Ah9h from the range; As 25.00% → 84.09%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_remove_high_draw",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → ad / ac",
+    "reason": "Ad and Ac both leave 25.00% against the legal range, so both remain folds.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_straight_completes",
+    "detail": "correct: good for your showdown share → td",
+    "reason": "Td completes Hero's 6–T straight, giving 96.97% versus 2d 18.18%; fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_straight_completes",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
+    "reason": "Neither completes the straight; each leaves 18.18%, so folds remain correct.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_turn_makes_set",
+    "detail": "correct: good for your showdown share → 5c",
+    "reason": "5c makes a set that stays ahead on every modeled river; 2c 4.55% → 100%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_turn_makes_set",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
+    "reason": "Both improve share to 13.64% (including straight outs) but it is still below 33⅓%; neither is the requested call turn.",
+    "package": "B145"
+  }
+]

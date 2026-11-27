@@ -29,7 +29,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Any low-card flop makes a wide c-bet safe",
+            "Low flop ranks by themselves make a wide c-bet safe",
             Act0FeedbackQualityV1.wrong,
             "Low does not mean disconnected. Count the caller’s pairs and straight draws on a connected low board.",
           ),
@@ -807,7 +807,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A set should always disguise its strength",
+            "Having a set is enough reason to hide its strength",
             Act0FeedbackQualityV1.wrong,
             "A passive opponent may check again. Then the free card costs immediate value without adding a later bet.",
           ),
@@ -1196,7 +1196,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "The preflop raiser never has good flush coverage",
+            "Raising preflop rules out good flush coverage",
             Act0FeedbackQualityV1.wrong,
             "Suit-blocked classes determine the legal flushes. The label preflop raiser does not supply those counts.",
           ),
@@ -1953,13 +1953,13 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only sets and high-equity semibluffs raise",
+            "The raising range consists of sets and high-equity semibluffs",
             Act0FeedbackQualityV1.wrong,
             "That describes a polarized shape. Strong one-pair hands stay in the calling range in that policy.",
           ),
           (
             "other",
-            "Every raise uses the same amount",
+            "The raising range uses one size",
             Act0FeedbackQualityV1.wrong,
             "One amount can serve either a merged or polarized range. Identify which hands use it.",
           ),
@@ -1995,7 +1995,7 @@ final _world15Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Raise only top pair because the board has two hearts",
+            "Reserve raises for top pair because the board has two hearts",
             Act0FeedbackQualityV1.wrong,
             "Raising top pair misses both the strongest made hands and the bluffs with draws.",
           ),
@@ -4300,7 +4300,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every time you act first",
+            "When your position lets you act first",
             Act0FeedbackQualityV1.wrong,
             "Position only supplies the option to bet. Opponent responses determine the cost.",
           ),
@@ -4779,7 +4779,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Every single-spade hand makes a flush",
+            "Holding one spade is enough to make a flush",
             Act0FeedbackQualityV1.wrong,
             "One private spade plus three board spades gives just four spades. A flush requires five.",
           ),

@@ -11,7 +11,7 @@ Q: What supports a frequent c-bet in a given model?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] The board favors a broad part of the betting range and opponents respond profitably — Correct. Coverage and responses matter across several hand classes. A dry label alone cannot tell you to bet the whole range.
-  - [wrong] Any low-card flop makes a wide c-bet safe — Look again. Low does not mean disconnected. Count the caller’s pairs and straight draws on a connected low board.
+  - [wrong] Low flop ranks by themselves make a wide c-bet safe — Look again. Low does not mean disconnected. Count the caller’s pairs and straight draws on a connected low board.
     BETTER ANSWER: The board favors a broad part of the betting range and opponents respond profitably
   - [wrong] Having opened before the flop is enough — Look again. The prior raise gives initiative. This flop and the opponent’s continuing range still decide which hands benefit from betting.
     BETTER ANSWER: The board favors a broad part of the betting range and opponents respond profitably
@@ -168,7 +168,7 @@ Q: Which fact supports checking back a dry-board set as a trap?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] The opponent will often bet later with hands that fold now — Correct. A delayed bet can recover value from hands a flop bet drives out. Position lets your check close the current street.
-  - [wrong] A set should always disguise its strength — Look again. A passive opponent may check again. Then the free card costs immediate value without adding a later bet.
+  - [wrong] Having a set is enough reason to hide its strength — Look again. A passive opponent may check again. Then the free card costs immediate value without adding a later bet.
     BETTER ANSWER: The opponent will often bet later with hands that fold now
   - [wrong] Many draws are eager to pay a bet now — Look again. Those calls favor taking value now. Checking lets the draws see the turn without paying.
     BETTER ANSWER: The opponent will often bet later with hands that fold now
@@ -247,7 +247,7 @@ TABLE: Facts no applicable hand facts
   + [correct] Which strong combinations survive in each range — Correct. Count flushes or trips using the actual board and ranges. The same texture label can support different actions in different models.
   - [wrong] Whether the paired rank is high, by itself — Look again. A high pair gives clues about which opens contain trips. The caller can still hold trips or a full house. Count both ranges.
     BETTER ANSWER: Which strong combinations survive in each range
-  - [wrong] The preflop raiser never has good flush coverage — Look again. Suit-blocked classes determine the legal flushes. The label preflop raiser does not supply those counts.
+  - [wrong] Raising preflop rules out good flush coverage — Look again. Suit-blocked classes determine the legal flushes. The label preflop raiser does not supply those counts.
     BETTER ANSWER: Which strong combinations survive in each range
 
 TASK w15_4_read_monotone [drill] How many legal BB combos already make a flush?
@@ -397,9 +397,9 @@ Q: What makes a flop raising range merged?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Some strong one-pair hands raise alongside stronger hands — Correct. That middle value band connects the raise range between its strongest hands and weaker candidates. The calls must justify including it.
-  - [wrong] Only sets and high-equity semibluffs raise — Look again. That describes a polarized shape. Strong one-pair hands stay in the calling range in that policy.
+  - [wrong] The raising range consists of sets and high-equity semibluffs — Look again. That describes a polarized shape. Strong one-pair hands stay in the calling range in that policy.
     BETTER ANSWER: Some strong one-pair hands raise alongside stronger hands
-  - [wrong] Every raise uses the same amount — Look again. One amount can serve either a merged or polarized range. Identify which hands use it.
+  - [wrong] The raising range uses one size — Look again. One amount can serve either a merged or polarized range. Identify which hands use it.
     BETTER ANSWER: Some strong one-pair hands raise alongside stronger hands
 
 TASK w15_6_read_polar_on_two_tone [drill] Which policy is polarized for a check-raise here?
@@ -408,12 +408,13 @@ Q: Which policy is polarized for a check-raise here?
 HINT [hidden]: (none)
 TABLE: Flop | Board Qh 7c 2h | Pot 7.5 BB | To call 2 BB | Seat BB | Active bb | Decision bb | Facts two-tone
 EFFECTIVE: BTN 97.5
+REASONING: principle flop_raise_shape · alt alternative · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 95.5 BB bet 2 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB
   + [correct] Raise sets and the Ah Jh or Kh Jh flush draws — Correct. BB raises sets for value and the two heart draws as bluffs because those draws can improve. BB calls with the modeled top pairs.
   - [wrong] Raise sets and strong top pairs together — Look again. Raising top pair alongside sets misses the bluff end of the polarized policy.
     BETTER ANSWER: Raise sets and the Ah Jh or Kh Jh flush draws
-  - [wrong] Raise only top pair because the board has two hearts — Look again. Raising top pair misses both the strongest made hands and the bluffs with draws.
+  - [wrong] Reserve raises for top pair because the board has two hearts — Look again. Raising top pair misses both the strongest made hands and the bluffs with draws.
     BETTER ANSWER: Raise sets and the Ah Jh or Kh Jh flush draws
 
 TASK w15_6_guided_wet_check_raise [drill] What is the best response to BTN’s flop bet in this model?
@@ -503,6 +504,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah Kd | Board Ks 7d 2c 3h | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair
 EFFECTIVE: BB 95.5
+REASONING: principle barrel_on_range_shift · alt check · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ Ah Kd stack 95.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ bets 2 BB · flop: BB calls 2 BB · turn: BB checks
   + [correct] Bet 4 BB — Correct. Bet 4 BB because BB still calls with weaker kings and underpairs on the 3h. That earns more than checking or betting 9 BB.
@@ -520,6 +522,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: Turn | You As Qd | Board Kc 9h 4h 2h | Pot 9.5 BB | Seat HJ | Active hj | Decision hj | Facts high card
 EFFECTIVE: BB 95.5
+REASONING: principle barrel_on_range_shift · alt bet_4 · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ As Qd stack 95.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ bets 2 BB · flop: BB calls 2 BB · turn: BB checks
   + [correct] Check — Correct. Check back because BB can now call with made flushes and other strong hands. A second bluff earns less.
@@ -582,6 +585,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ah Jd | Board Ac 9c 7s 3d 2h | Pot 9.5 BB | To call 4 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 97.5
+REASONING: principle commitment_by_price · alt fold · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Jd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 93.5 BB bet 4 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB bets 4 BB
   + [correct] Call 4 BB — Correct. Call because your 45.5% equity against BB’s betting range clears the 29.6% price. Folding gives up that gain.
@@ -595,6 +599,7 @@ HINT [hidden]: (none)
 TABLE: River | You As Jd | Board Ac 8d 4s 2c 2d | Pot 32.5 BB | To call 12 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
 EFFECTIVE: BB 12
 POTS: main 44.5 (BB, BTN)
+REASONING: principle commitment_by_price · alt fold · edge priceBeatsEquity · stack_matters true · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Jd stack 12 BB | SB folded stack 99.5 BB | BB stack 0 BB allIn 12 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB all-in 12 BB
   + [correct] Call 12 BB — Correct. Call because your 36.8% equity against BB’s betting range clears the 27.0% price. Folding earns less here; the deeper price flips the comparison.
@@ -610,6 +615,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Qs Jd | Board Qh 8c 4d 2s 3c | Pot 24.5 BB | To call 13 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 94.5
+REASONING: principle commitment_by_price · alt call · edge equityBelowPrice · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jd stack 94.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 81.5 BB bet 13 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO bets 3 BB · flop: BB calls 3 BB · turn: BB checks · turn: CO checks · river: BB bets 13 BB
   + [correct] Fold — Correct. Fold because your 14.3% equity against BB’s betting range falls below the 34.7% price. Calling loses chips.
@@ -653,6 +659,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: River | You Ah Jd | Board Js 8c 4d 3h 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 92.5
+REASONING: principle street_value_budget · alt bet_8 · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Jd stack 92.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB · river: BB checks
   + [correct] Bet 3 BB — Correct. Bet 3 BB because BB calls with more weak jacks than sets on this blank river. Checking misses those payments.
@@ -670,6 +677,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: River | You 8h 7h | Board Td 9c 6s 2c 3d | Pot 112.5 BB | Seat BTN | Active btn | Decision btn | Facts straight
 EFFECTIVE: BB 44
+REASONING: principle street_value_budget · alt bet_18 · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 8h 7h stack 44 BB | SB folded stack 99.5 BB | BB stack 44 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB more · flop: BB checks · flop: BTN bets 16 BB · flop: BB calls 16 BB · turn: BB checks · turn: BTN bets 30 BB · turn: BB calls 30 BB · river: BB checks
   + [correct] Jam 44 BB — Correct. Go all-in for 44 BB because BB still calls with sets and two pair. Another 8-7 splits at either size; the smaller bet earns less.
@@ -688,6 +696,7 @@ Q: Which river action follows from this response?
 HINT [hidden]: (none)
 TABLE: River | You Kc Td | Board Kh 9s 6d Ac 2h | Pot 9.5 BB | Seat CO | Active co | Decision co | Facts one pair, middle pair
 EFFECTIVE: BB 95.5
+REASONING: principle street_value_budget · alt alternative · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Kc Td stack 95.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 95.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: CO checks · river: BB checks
   + [correct] Check back — Correct. Check because BB folds worse hands and calls with stronger hands on the river. K-T already earned its modeled street of value.
@@ -736,6 +745,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: Turn | You Ah Qd | Board 8s 4c 2d Qh | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair
 EFFECTIVE: BB 97.5
+REASONING: principle delayed_attack · alt check · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ Ah Qd stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks
   + [correct] Bet 3 BB — Correct. Bet 3 BB because the turn queen improves your A-Q and BB calls with weaker queens, lower pairs and a draw.
@@ -753,6 +763,7 @@ Q: Which play takes a free river card?
 HINT [hidden]: (none)
 TABLE: Turn | You Qh Jh | Board Ts 7h 3h 2c | Pot 10.5 BB | Seat BTN | Active btn | Decision btn | Facts high card, flush draw, completion cards 9
 EFFECTIVE: CO 95.5
+REASONING: principle delayed_attack · alt alternative · edge realizesPosition · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 95.5 BB | BTN dealer Qh Jh stack 95.5 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN calls 2.5 BB · preflop: SB folds · preflop: BB folds · flop: CO bets 2 BB · flop: BTN calls 2 BB · turn: CO checks
   + [correct] Check behind — Correct. Check behind because BTN acts last. Checking ends the turn without an extra wager and keeps your draw in the hand.
@@ -790,7 +801,7 @@ Q: When can a block bet lower your showdown cost?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] When the opponent calls many worse hands and rarely raises that size — Correct. Compare this branch with what the opponent bets if you check. A small lead cannot stop an opponent who will raise.
-  - [wrong] Every time you act first — Look again. Position only supplies the option to bet. Opponent responses determine the cost.
+  - [wrong] When your position lets you act first — Look again. Position only supplies the option to bet. Opponent responses determine the cost.
     BETTER ANSWER: When the opponent calls many worse hands and rarely raises that size
   - [wrong] Whenever you want to deny a river draw — Look again. The final board is complete on the river. This bet is about response and showdown cost.
     BETTER ANSWER: When the opponent calls many worse hands and rarely raises that size
@@ -818,6 +829,7 @@ Q: Which option earns the most here?
 HINT [hidden]: (none)
 TABLE: Turn | You Qh Jh | Board Ts 9c 3s 8d | Pot 20.5 BB | Seat BTN | Active btn | Decision btn | Facts straight
 EFFECTIVE: BB 90
+REASONING: principle pressure_or_price · alt bet_7 · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jh stack 90 BB | SB folded stack 99.5 BB | BB stack 90 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks
   + [correct] Bet 25 BB — Correct. Bet 25 BB because BB still calls with sets and two pair. Those payments outweigh the extra calls to a smaller bet.
@@ -835,6 +847,7 @@ Q: Which river policy earns most?
 HINT [hidden]: (none)
 TABLE: River | You Ks Jc | Board Kh 9s 6d 3c 2h | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair
 EFFECTIVE: BTN 97.5
+REASONING: principle pressure_or_price · alt check_fold · edge moreValueFromWorse · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB Ks Jc stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks
   + [correct] Lead 1 BB — Correct. Lead 1 BB because BTN calls with enough worse kings to outweigh losses against better kings. K-T checks back if you check.
@@ -889,7 +902,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Q-J makes two pair — Look again. The river rank is a deuce. Neither a queen nor a jack was added.
     BETTER ANSWER: Two-spade hands make a flush. Q-J still has a pair.
     FEEDBACK TABLE: River | You Ac Qd | Board Qh 8s 4s 6h 2s | Pot 15.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Every single-spade hand makes a flush — Look again. One private spade plus three board spades gives just four spades. A flush requires five.
+  - [wrong] Holding one spade is enough to make a flush — Look again. One private spade plus three board spades gives just four spades. A flush requires five.
     BETTER ANSWER: Two-spade hands make a flush. Q-J still has a pair.
     FEEDBACK TABLE: River | You Ac Qd | Board Qh 8s 4s 6h 2s | Pot 15.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
@@ -900,6 +913,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ah Qd | Board Qs 8s 4d 6h 2s | Pot 20.5 BB | To call 5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 EFFECTIVE: BB 92.5
+REASONING: principle commitment_recheck · alt fold · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Qd stack 92.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 87.5 BB bet 5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: CO bets 3 BB · turn: BB calls 3 BB · river: BB bets 5 BB
   + [correct] Call 5 BB — Correct. Call because your 66.7% equity against BB’s betting range clears the 19.6% price. Folding gives up that gain.
@@ -912,6 +926,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ac Jd | Board Jh 8c 4s 2d 3c | Pot 30.5 BB | To call 15 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 92.5
+REASONING: principle commitment_recheck · alt fold · edge priceBeatsEquity · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac Jd stack 92.5 BB | SB folded stack 99.5 BB | BB stack 77.5 BB bet 15 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB · river: BB bets 15 BB
   + [correct] Call 15 BB — Correct. Call because your 62.5% equity against BB’s betting range clears the 33.0% price. Folding gives up that gain.
@@ -927,6 +942,7 @@ Q: Call or fold?
 HINT [hidden]: (none)
 TABLE: River | You Ks Qd | Board Kh 8h 5c 2s 3h | Pot 27.5 BB | To call 12 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 92.5
+REASONING: principle commitment_recheck · alt call · edge equityBelowPrice · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Qd stack 92.5 BB | SB folded stack 99.5 BB | BB stack 80.5 BB bet 12 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB · river: BB bets 12 BB
   + [correct] Fold — Correct. Fold because your 18.2% equity against BB’s betting range falls below the 30.4% price. Calling loses chips.
@@ -942,6 +958,7 @@ Q: Which flop action reaches that pot?
 HINT [hidden]: (none)
 TABLE: Flop | You Ah Jd | Board Js 8c 4d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
 EFFECTIVE: BB 97.5
+REASONING: principle pot_geometry · alt flop_check · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Jd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds · Preflop: HJ folds · Preflop: CO folds · Preflop: BTN raises to 2.5 BB · Preflop: SB folds · Preflop: BB calls 1.5 BB more · Flop: BB checks
   + [correct] Bet 2 BB — Correct. Your bet and BB’s matching call bring the pot to 9.5 BB.
@@ -956,6 +973,7 @@ Q: Which flop action reaches that pot?
 HINT [hidden]: (none)
 TABLE: Flop | You 8h 7h | Board Td 9c 6s | Pot 20.5 BB | Seat BTN | Active btn | Decision btn | Facts straight, rainbow
 EFFECTIVE: BB 90
+REASONING: principle pot_geometry · alt flop_check · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 8h 7h stack 90 BB | SB folded stack 99.5 BB | BB stack 90 BB
 TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds · Preflop: HJ folds · Preflop: CO folds · Preflop: BTN raises to 2.5 BB · Preflop: SB folds · Preflop: BB raises to 10 BB · Preflop: BTN calls 7.5 BB more · Flop: BB checks
   + [correct] Bet 16 BB — Correct. Your bet and BB’s matching call bring the pot to 52.5 BB.
@@ -970,6 +988,7 @@ Q: Which flop action reaches that pot?
 HINT [hidden]: (none)
 TABLE: Flop | You Ks Qd | Board Kh 8h 5c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, two-tone
 EFFECTIVE: BB 97.5
+REASONING: principle pot_geometry · alt flop_check · edge processRule · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: Preflop: SB posts 0.5 BB · Preflop: BB posts 1 BB · Preflop: UTG folds · Preflop: HJ folds · Preflop: CO folds · Preflop: BTN raises to 2.5 BB · Preflop: SB folds · Preflop: BB calls 1.5 BB more · Flop: BB checks
   + [correct] Bet 2 BB — Correct. Your bet and BB’s matching call bring the pot to 9.5 BB.
