@@ -13,12 +13,7 @@
       "@lesson:where_is_the_mistake|too_long"
     ]
   },
-  "W15": {
-    "8.active_caller": [
-      "w15_5_day7_check_before_raiser|bb",
-      "w15_5_guided_lead_two_pair|bb"
-    ]
-  },
+  "W15": {},
   "W16": {
     "23.pot_with_bet": [
       "h5_w16_3_guided_thin_third_street|feedbackReason|bring the pot to 9.5 BB|expected 5.5",

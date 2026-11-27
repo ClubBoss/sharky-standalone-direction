@@ -351,7 +351,7 @@ HINT [hidden]: (none)
 TABLE: Flop | You 8c 7c | Board 8s 7d 4h | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Facts two pair, rainbow
 REASONING: principle lead_and_stab · alt check · edge moreValueFromWorse 0.43235 BB · stack_matters false · assumption BTN has an equally weighted legal combo from AA KK QQ JJ TT AKo AQo KQs 88 77 44 65s. If you lead 3 BB, BTN calls with AA KK QQ JJ TT 88 77 44 65s and folds the rest. After check or call, both players check through to showdown.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB 8c 7c stack 97.5 BB
-TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · Flop dealt
   + [correct] Lead 3 BB — Correct. Lead 3 BB. On 8-7-4, BTN’s stated calls include overpairs that your two pair beats. Checking earns less because BTN checks through in this model.
     FEEDBACK TABLE: Flop | You 8c 7c | Board 8s 7d 4h | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2 | Facts two pair, rainbow
   - [wrong] Check — Look again. Checking keeps the full range in. Here BTN never bets after a check, so it misses immediate payments from overpairs.
@@ -381,7 +381,7 @@ HINT [hidden]: (none)
 TABLE: Flop | You Ad 8d | Board Ac 6h 3s | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Facts one pair, top pair, rainbow
 REASONING: principle lead_and_stab · alt bet · edge keepsWorseIn 0.88915 BB · stack_matters false · assumption BTN has an equally weighted legal combo from AKo AQo AJs 66 33 99 88 77 KQs QJs. If you lead 3 BB, BTN calls with AKo AQo AJs 66 33 and folds the rest. After check or call, both players check through to showdown.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer stack 97.5 BB | SB folded stack 99.5 BB | BB Ad 8d stack 97.5 BB
-TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · Flop dealt
   - [wrong] Lead 3 BB — Look again. A lead is available, but the weaker hands fold to 3 BB. The caller group leaves the bet worth less than a check-through.
     BETTER ANSWER: Check
     FEEDBACK TABLE: Flop | You Ad 8d | Board Ac 6h 3s | Pot 5.5 BB | Seat BB | Active bb | Decision bb | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
