@@ -3,6 +3,7 @@
 // main with the Flutter engine.
 import 'dart:convert';
 import 'dart:io';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_verified_transfer_v1.dart';
 
 import 'package:poker_analyzer/models/poker_street.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
@@ -237,6 +238,57 @@ Set<String> _reviewFamilies(_Task source) {
   return families;
 }
 
+/// Potential pairs, not a learner-specific claim that a target is already
+/// completed. Use the same structural admission as the learner route.
+List<Map<String, Object?>> act0InLessonTransferPairsV1() {
+  final worlds = [
+    for (final world in Act0ShellStateV1.sample.worlds.where(
+      (w) => w.worldNumber <= 12,
+    ))
+      world.copyWith(
+        isSelectable: true,
+        isLocked: false,
+        lessons: [
+          for (final lesson in world.lessons)
+            lesson.copyWith(isSelectable: true, isLocked: false),
+        ],
+      ),
+  ];
+  final completed = {
+    for (final world in worlds)
+      for (final lesson in world.lessons)
+        for (final task in lesson.courseTaskList) task.taskId,
+  };
+  final pairs = <Map<String, Object?>>[];
+  for (final world in worlds) {
+    for (final lesson in world.lessons) {
+      for (final task in lesson.courseTaskList) {
+        if (!task.runner.options.any((option) => !option.isCorrect)) continue;
+        final target = act0CompletedTransferTargetV1(
+          task.taskId,
+          worlds,
+          completed,
+        );
+        if (target == null) continue;
+        final repeat = worlds
+            .singleWhere((w) => w.worldId == target.worldId)
+            .lessons
+            .singleWhere((l) => l.lessonId == target.lessonId)
+            .courseTaskList
+            .singleWhere((t) => t.taskId == target.taskId);
+        pairs.add({
+          'world': world.worldNumber,
+          'kind': 'inLessonTransfer',
+          'generatorFamily': null,
+          'source': _snapshot(task),
+          'repeat': _snapshot(repeat),
+        });
+      }
+    }
+  }
+  return pairs;
+}
+
 void main() {
   const out = String.fromEnvironment(
     'OUT',
@@ -275,6 +327,13 @@ void main() {
       'source': _snapshot(source, sourceMetadata),
       'repeat': _snapshot(repeat, repeatMetadata),
     });
+  }
+
+  if (const bool.fromEnvironment('IN_LESSON_TRANSFER')) {
+    File(out)
+      ..createSync(recursive: true)
+      ..writeAsStringSync(jsonEncode({'pairs': act0InLessonTransferPairsV1()}));
+    return;
   }
 
   for (final ids in act0AuthoredRepeatPairsV1) {
