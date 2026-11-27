@@ -1,14 +1,5 @@
 {
-  "W13": {
-    "D6.history_support": [
-      "w13_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w13_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w13_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w13_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w13_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w13_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ]
-  },
+  "W13": {},
   "W14": {
     "17.single_format_lesson": [
       "@lesson:slightly_harder|actionDecision"
@@ -32,13 +23,7 @@
       "turn_redraw_good|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "turn_remove_high_draw|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "turn_straight_completes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "turn_turn_makes_set|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w14_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "turn_turn_makes_set|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
       "w14_4_teach|shoving"
@@ -50,14 +35,8 @@
       "w15_5_guided_lead_two_pair|bb"
     ],
     "D6.history_support": [
-      "w15_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_5_read_first_flop_actor|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_6_read_polar_on_two_tone|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w15_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w15_6_read_polar_on_two_tone|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W16": {
@@ -81,18 +60,12 @@
     "D6.history_support": [
       "w16_1_day7_pair_changes_nuts|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_1_read_nut_change|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_2_read_mdf_vs_price|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_3_read_value_streets|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_4_read_probe_sequence|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_5_day7_called_turn_overbet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_5_read_turn_overbet_leverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_6_read_runout_two_sides|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w16_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w16_6_read_runout_two_sides|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
       "w16_3_day7_one_street_only|jam",
@@ -122,48 +95,36 @@
     "D6.history_support": [
       "w17_1_day7_light_bluff_signal|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_1_read_blocked_aces|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_1_transfer_select_bluff_candidate|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_2_day7_squeeze_fails_if_one_stays|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_2_guided_size_oop|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_2_transfer_squeeze_all_fold|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_3_guided_count_caller_coverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_3_read_cold_call_identity|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_4_day7_spr_after_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_4_read_four_bet_additional_cost|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_5_day7_three_bet_dead_blind|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_5_guided_compare_deep_sizes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_5_read_blind_on_blind_trap|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_6_read_lower_spr_mechanics|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w17_6_read_lower_spr_mechanics|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W18": {
     "D6.history_support": [
       "w18_1_day7_multiple_value_calls|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_1_read_compression_vs_hand_label|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_2_day7_conditional_fold_count|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_2_guided_joint_folds_price|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_2_read_joint_outcome|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_2_transfer_profitable_joint_bluff|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_3_day7_connected_caller_edge|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_3_read_three_way_nuts|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_4_day7_award_eligible_pots|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_4_guided_refund_uncalled|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_4_read_side_pot_layers|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_5_read_overlimp|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_6_day7_tie_with_three_players|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_6_read_blockers_across_two_players|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w18_6_read_blockers_across_two_players|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
       "w18_5_read_overlimp|limp behind"
@@ -177,21 +138,15 @@
     "D6.history_support": [
       "w19_1_day7_counter_changes_with_strategy|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_1_read_information_value|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_1_transfer_pick_baseline_when_uncertain|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_3_day7_anonymous_fastfold|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_3_guided_depth_split|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_3_transfer_overcalls_draws|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_4_read_predictable_single_size|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_5_read_cap_can_vanish|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_5_transfer_no_attack_into_traps|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_6_day7_audit_which_hands_fold|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_6_read_self_audit_ratio|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w19_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w19_6_read_self_audit_ratio|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W20": {
@@ -213,19 +168,13 @@
       "w20_1_day7_distracted_online_sample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_1_guided_compare_matched_timing|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_1_read_time_bank_context|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_1_transfer_live_baseline_break|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_2_read_filter_action_chain|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_3_day7_table_captain_vs_overbluffer|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_3_transfer_stakes_discomfort_caveat|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_5_day7_dont_use_private_image|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_5_guided_keep_table_welcoming|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_6_read_confirmation_counterexample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w20_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w20_6_read_confirmation_counterexample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
       "w20_1_day7_distracted_online_sample|snap-call",
@@ -245,13 +194,7 @@
       "w21_5_teach|statement"
     ],
     "D6.history_support": [
-      "w21_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_5_transfer_review_without_result|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w21_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w21_5_transfer_review_without_result|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W22": {
@@ -270,16 +213,10 @@
     ],
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_1_transfer_river_no_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_4_day7_change_input_requires_new_query|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_6_checkpoint_audit_pruned_solver_result|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_6_day7_read_lead_plan|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w22_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w22_6_day7_read_lead_plan|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W23": {
@@ -292,20 +229,14 @@
       "w23_6_teach|alternative"
     ],
     "D6.history_support": [
-      "w23_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_2_guided_compare_wheel_and_broadway|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_2_read_notation_after_blocker|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_3_guided_bb_two_sizes_compare|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_3_transfer_open_size_buys_folds|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_5_guided_sb_mixed_tree|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_5_transfer_depth_changes_available_payoff|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_6_guided_build_light_three_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_6_read_blocker_value_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w23_6_read_blocker_value_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ],
     "E11": [
       "w23_4_read_raise_number|shove",
@@ -315,16 +246,10 @@
   "W24": {
     "D6.history_support": [
       "w24_1_day7_condensed_calls_sized_bluffs|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_2_guided_overbet_mdf|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_2_read_price_vs_alpha|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_3_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_4_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_5_read_what_thin_raise_costs|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_6_read_raise_bluff_risk|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w24_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+      "w24_6_read_raise_bluff_risk|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   }
 }
