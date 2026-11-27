@@ -412,7 +412,7 @@ class Act0ShellStateV1 {
             for (final lesson in world.lessons) ...[
               // Keep the existing checkpoint terminal (including route practice).
               if (lesson.lessonId == 'player_adjustment_checkpoint')
-                _opponentTypesLessonV1,
+                ..._opponentTypesLessonsV1,
               lesson,
             ],
           ],

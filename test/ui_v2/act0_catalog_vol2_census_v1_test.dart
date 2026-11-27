@@ -109,12 +109,25 @@ Map<String, Act0LessonTaskV1> _vol2Tasks() => {
 
 Future<_Census> _collectCensus(WidgetTester tester) async {
   final allRows = reasoningCatalogRowsV1;
+  // Aggregate all four lesson IDs into the same strict pilot census bucket.
   const opponentLesson = 'opponent_types_pilot';
+  const opponentLessonIds = {
+    opponentLesson,
+    'opponent_types_pilot_2',
+    'opponent_types_pilot_3',
+    'opponent_types_pilot_4',
+  };
   final opponentRows = allRows
-      .where((row) => row.lesson.lessonId == opponentLesson)
+      .where((row) => opponentLessonIds.contains(row.lesson.lessonId))
       .toList();
   if (act0OpponentStylesEnabledV1) {
     expect(opponentRows, hasLength(12));
+    for (final id in opponentLessonIds) {
+      expect(
+        opponentRows.where((row) => row.lesson.lessonId == id),
+        hasLength(3),
+      );
+    }
   } else {
     expect(opponentRows, isEmpty);
   }
@@ -148,7 +161,8 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
   };
   void add(int world, String rule, String task, String detail) {
     final key =
-        opponentTaskIds.contains(task) || task == '@lesson:$opponentLesson'
+        opponentTaskIds.contains(task) ||
+            opponentLessonIds.any((id) => task == '@lesson:$id')
         ? opponentLesson
         : 'W$world';
     if (!findings.containsKey(key)) return;

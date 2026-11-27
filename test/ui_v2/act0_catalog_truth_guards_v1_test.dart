@@ -46,6 +46,13 @@ const _qualityBaselinePath =
 
 const _json = JsonEncoder.withIndent('  ');
 
+const _opponentLessonIds = [
+  'opponent_types_pilot',
+  'opponent_types_pilot_2',
+  'opponent_types_pilot_3',
+  'opponent_types_pilot_4',
+];
+
 final _praiseAtStart = RegExp(
   r'^(?:(?:almost (?:got it|there|right)|clean execution|'
   r'close (?:call|count|idea|on the ladder|read|start)|'
@@ -905,31 +912,36 @@ TASK w13_4_teach [theory] Equity realization
   test('opponent styles flag off preserves the numbered route and XP', () {
     final off = Act0ShellStateV1.catalog(opponentStylesV1: false);
     final on = Act0ShellStateV1.catalog(opponentStylesV1: true);
-    final lesson = on.lessonById('opponent_types_pilot');
+    final lessons = _opponentLessonIds.map(on.lessonById).toList();
+    final tasks = lessons.expand((lesson) => lesson.taskList).toList();
     expect(
       off.worlds
           .expand((world) => world.lessons)
           .map((lesson) => lesson.lessonId),
-      isNot(contains(lesson.lessonId)),
+      isNot(anyElement(isIn(_opponentLessonIds))),
     );
-    expect(
-      on.worldById('world_10').lessons.last.lessonId,
-      'player_adjustment_checkpoint',
-    );
-    expect(
-      Act0ShellStateV1.learnerCatalog(
-        opponentStylesV1: true,
-      ).lessonById(lesson.lessonId).taskList,
-      hasLength(12),
-    );
-    expect(lesson.taskList, hasLength(12));
+    final learner = Act0ShellStateV1.learnerCatalog(opponentStylesV1: true);
+    for (final lesson in lessons) {
+      expect(lesson.taskList, hasLength(3));
+      expect(
+        learner.lessonById(lesson.lessonId).taskList.map((task) => task.taskId),
+        orderedEquals(lesson.taskList.map((task) => task.taskId)),
+      );
+    }
+    expect(tasks, hasLength(12));
     for (final (index, world) in off.worlds.indexed) {
       final enabled = on.worlds[index];
       if (world.worldNumber == 10) {
         expect(
-          enabled.lessons.where((entry) => entry.lessonId != lesson.lessonId),
-          orderedEquals(world.lessons),
+          enabled.lessons,
+          orderedEquals([
+            for (final lesson in world.lessons) ...[
+              if (lesson.lessonId == 'player_adjustment_checkpoint') ...lessons,
+              lesson,
+            ],
+          ]),
         );
+        expect(enabled.lessons.last.lessonId, 'player_adjustment_checkpoint');
       } else {
         expect(enabled, same(world));
       }
@@ -946,9 +958,9 @@ TASK w13_4_teach [theory] Equity realization
       sha256.convert(utf8.encode(jsonEncode(route))).toString(),
       '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
     );
-    for (var index = 0; index < lesson.taskList.length; index += 2) {
-      final first = lesson.taskList[index];
-      final second = lesson.taskList[index + 1];
+    for (var index = 0; index < tasks.length; index += 2) {
+      final first = tasks[index];
+      final second = tasks[index + 1];
       expect(
         first.runner.table.handContributions!.entries.map(
           (entry) => (entry.street, entry.seatId, entry.kind, entry.amountBb),
@@ -982,16 +994,22 @@ TASK w13_4_teach [theory] Equity realization
               ).readAsStringSync(),
             )
             as YamlMap;
-    final lesson = Act0ShellStateV1.catalog(
-      opponentStylesV1: true,
-    ).lessonById('opponent_types_pilot');
-    expect(lesson.title, spec['title']);
+    final catalog = Act0ShellStateV1.catalog(opponentStylesV1: true);
+    final lessons = _opponentLessonIds.map(catalog.lessonById).toList();
+    for (final (i, lesson) in lessons.indexed) {
+      expect(
+        lesson.title,
+        i == 0 ? spec['title'] : '${spec['title']} (Part ${i + 1})',
+      );
+      expect(lesson.taskList, hasLength(3));
+    }
+    final authoredTasks = lessons.expand((lesson) => lesson.taskList).toList();
     final tasks = spec['tasks'] as YamlList;
     expect(
-      lesson.taskList.map((task) => task.taskId),
+      authoredTasks.map((task) => task.taskId),
       orderedEquals(tasks.map((task) => task['id'])),
     );
-    for (final (i, task) in lesson.taskList.indexed) {
+    for (final (i, task) in authoredTasks.indexed) {
       final source = tasks[i] as YamlMap;
       final r = task.runner;
       final facts = CatalogPokerFacts(r.table);
@@ -1067,17 +1085,27 @@ TASK w13_4_teach [theory] Equity realization
   test('Opponent types pilot catalog snapshot', () {
     final catalog = Act0ShellStateV1.catalog(opponentStylesV1: true);
     final world = catalog.worldById('world_10');
-    final lesson = catalog.lessonById('opponent_types_pilot');
     final rows = [
-      for (final task in lesson.taskList)
-        (
-          world: world,
-          lesson: lesson,
-          task: task,
-          lessonIndex: world.lessons.indexOf(lesson),
-        ),
+      for (final lesson in _opponentLessonIds.map(catalog.lessonById))
+        for (final task in lesson.taskList)
+          (
+            world: world,
+            lesson: lesson,
+            task: task,
+            lessonIndex: world.lessons.indexOf(lesson),
+          ),
     ];
     expect(rows, hasLength(12));
+    final quality = runCatalogQualityAudit(rows: rows);
+    expect(
+      quality.findings.where(
+        (finding) =>
+            finding.startsWith('17.single_format_lesson|') ||
+            finding.startsWith('19.lesson_length_corridor|'),
+      ),
+      isEmpty,
+      reason: 'Each STYLES lesson must satisfy the unchanged G1 lesson guards.',
+    );
     final current =
         renderCatalogTaskSectionV1(rows).join('\n').trimRight() + '\n';
     final fixture = File(

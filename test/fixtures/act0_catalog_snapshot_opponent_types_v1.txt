@@ -56,6 +56,8 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   + [correct] Bet 10 BB — Correct. Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.
     FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
+===== WORLD 10 · LESSON opponent_types_pilot_2 · Opponent Types: Same Spot, Different Read (Part 2) =====
+
 TASK opponent_types_p02_tight_aggressive [drill] Which option earns the most chips in this model?
 CAPTION: Tight-aggressive: this player tends to release marginal pairs when facing a river bet after checking. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ 99 96; against 10 BB, BB calls AQ KQ 99 96. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
 Q: Which option earns the most chips in this model?
@@ -110,6 +112,8 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: Bet 4 BB
     FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
+===== WORLD 10 · LESSON opponent_types_pilot_3 · Opponent Types: Same Spot, Different Read (Part 3) =====
+
 TASK opponent_types_p04_tight_passive [drill] Call the extra chips or fold in this model?
 CAPTION: Tight-passive: this player rarely check-raises with anything weaker than two pair; occasional bluffs are possible. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 8s7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.
 TEACH: Call the extra chips or fold in this model? Compare the equity of your hand against the raising range with the call price.
@@ -153,6 +157,8 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] Call 13.5 BB — Look again. Calling loses too much against the value-heavy raising range.
     BETTER ANSWER: Fold
   + [correct] Fold — Correct. Fold. The occasional missed draw does not supply enough winning combinations for a call at this price.
+
+===== WORLD 10 · LESSON opponent_types_pilot_4 · Opponent Types: Same Spot, Different Read (Part 4) =====
 
 TASK opponent_types_p05_very_loose_aggressive [drill] Call the extra chips or fold in this model?
 CAPTION: Very loose-aggressive: this player tends to make large river check-raises with many missed draws as well as strong hands. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the raising range is TT 77 KT AJ QJ J9s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot. Calling ends betting.
