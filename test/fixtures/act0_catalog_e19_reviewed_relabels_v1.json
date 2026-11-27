@@ -490,5 +490,29 @@
     "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
     "reason": "Both improve share to 13.64% (including straight outs) but it is still below 33⅓%; neither is the requested call turn.",
     "package": "B145"
+  },
+  {
+    "task": "w24_1_read_classify_river_groups",
+    "detail": "wrong: the betting group consists only of one-pair hands / the callers have only made straights → the betting group is a one-pair range / the callers have a made-straight range",
+    "reason": "The betting group still includes sets and two unpaired classes and the Q-x callers pair the queen without a straight, so both options stay wrong.",
+    "package": "B140"
+  },
+  {
+    "task": "w24_3_guided_fractional_bluff_weight",
+    "detail": "wrong: all of the third combo → the third combo at full weight",
+    "reason": "Three full-weight bluff combos exceed the required 18/7, so full weight on the third combo stays wrong.",
+    "package": "B140"
+  },
+  {
+    "task": "w24_4_teach",
+    "detail": "wrong: a card removing only the opponent’s folding misses / any ace on any board → a card removing folding misses while leaving the calling range intact / an ace chosen by rank rather than board texture",
+    "reason": "Removing folding misses leaves fewer hands that release, and an ace helps only when its removal matters on this line, so both options stay wrong.",
+    "package": "B140"
+  },
+  {
+    "task": "w23_1_teach",
+    "detail": "wrong: any player has matched the big blind voluntarily → a player has matched the big blind voluntarily",
+    "reason": "A voluntary match of the big blind is a limp, which removes the unopened condition, so the option stays wrong; only the absolute qualifier was dropped.",
+    "package": "B140"
   }
 ]

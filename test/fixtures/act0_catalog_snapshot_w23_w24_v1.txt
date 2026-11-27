@@ -13,7 +13,7 @@ TABLE: Facts no applicable hand facts
   + [correct] Everybody before your seat has folded, and that seat is covered — Correct. A limp or raise creates a different prefix. Verify the position and stack scope first.
   - [wrong] At least one player has already raised — Look again. This is a response-to-open situation.
     BETTER ANSWER: Everybody before your seat has folded, and that seat is covered
-  - [wrong] Any player has matched the big blind voluntarily — Look again. A limp enters the pot and removes the unopened condition.
+  - [wrong] A player has matched the big blind voluntarily — Look again. A limp enters the pot and removes the unopened condition.
     BETTER ANSWER: Everybody before your seat has folded, and that seat is covered
 
 TASK w23_1_read_utg_medium_hj [drill] Which action does that opening row give?
@@ -455,10 +455,10 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 97.5 BB | BTN
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB checks
   + [correct] Sets for value and misses for bluffs against one-pair bluff catchers — Correct. The sets all beat the listed queens. The missed holdings lose to those queens.
     FEEDBACK TABLE: River | Board Qs 8d 4h 3c 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  - [wrong] The betting group consists only of one-pair hands — Look again. It includes sets and two unpaired classes.
+  - [wrong] The betting group is a one-pair range — Look again. It includes sets and two unpaired classes.
     BETTER ANSWER: Sets for value and misses for bluffs against one-pair bluff catchers
     FEEDBACK TABLE: River | Board Qs 8d 4h 3c 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  - [wrong] The callers have only made straights — Look again. The stated Q-x group pairs the queen. None completes a straight.
+  - [wrong] The callers have a made-straight range — Look again. The stated Q-x group pairs the queen. None completes a straight.
     BETTER ANSWER: Sets for value and misses for bluffs against one-pair bluff catchers
     FEEDBACK TABLE: River | Board Qs 8d 4h 3c 2s | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
 
@@ -626,7 +626,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] 3/7 of the third combo — Look again. That is the target bluff-to-value ratio, not the residual weight of this third combo.
     BETTER ANSWER: 4/7 of the third combo
     FEEDBACK TABLE: River | Board Kh 8d 5c 3s 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
-  - [wrong] All of the third combo — Look again. Three full bluff combos exceed the required 18/7.
+  - [wrong] The third combo at full weight — Look again. Three full bluff combos exceed the required 18/7.
     BETTER ANSWER: 4/7 of the third combo
     FEEDBACK TABLE: River | Board Kh 8d 5c 3s 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts no applicable hand facts
 
@@ -674,9 +674,9 @@ Q: Which blocker is often useful for a zero-recovery overbet bluff?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] A card removing strong likely calls while leaving likely folds available — Correct. Removal can increase the share that folds at the contemplated wager. Count its net effect.
-  - [wrong] A card removing only the opponent’s folding misses — Look again. It leaves fewer hands that release, which can harm the bluff.
+  - [wrong] A card removing folding misses while leaving the calling range intact — Look again. It leaves fewer hands that release, which can harm the bluff.
     BETTER ANSWER: A card removing strong likely calls while leaving likely folds available
-  - [wrong] Any ace on any board — Look again. An ace helps only if its removal matters at this size and line.
+  - [wrong] An ace chosen by rank rather than board texture — Look again. An ace helps only if its removal matters at this size and line.
     BETTER ANSWER: A card removing strong likely calls while leaving likely folds available
 
 TASK w24_4_read_nut_flush_removal [drill] How many of those exact flush combos remain legal?
