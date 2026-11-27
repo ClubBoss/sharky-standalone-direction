@@ -658,5 +658,101 @@
     "detail": "correct: the actual call price and equity against the shoving range → the actual call price and equity against the opponent’s all-in hands",
     "reason": "The opponent’s all-in hands are the same range of hands as the shoving range. The call is still judged by comparing equity against that range with the required equity from the actual call price.",
     "package": "B168"
+  },
+  {
+    "task": "w17_2_transfer_squeeze_all_fold",
+    "detail": "correct: fold. the model loses 1.25 bb for the squeeze → −1.25 bb for squeezing: fold",
+    "reason": "The stipulated ten equal-weight outcomes yield (5 × 6.5 − 5 × 9)/10 = −1.25 BB for squeezing; folding is still preferred, a positive return or tie is still wrong.",
+    "package": "B171"
+  },
+  {
+    "task": "w17_2_transfer_squeeze_all_fold",
+    "detail": "wrong: squeeze. it earns 1.25 bb / the two actions tie → +1.25 bb for squeezing: squeeze / 0 bb for squeezing: tie",
+    "reason": "The stipulated ten equal-weight outcomes yield (5 × 6.5 − 5 × 9)/10 = −1.25 BB for squeezing; folding is still preferred, a positive return or tie is still wrong.",
+    "package": "B171"
+  },
+  {
+    "task": "w18_5_read_overlimp",
+    "detail": "correct: limp behind → calling the blind after other callers",
+    "reason": "Matching the 1 BB blind after earlier calls without a raise is the same action as limping behind.",
+    "package": "B171"
+  },
+  {
+    "task": "w20_1_guided_compare_matched_timing",
+    "detail": "wrong: the player is 83.3% value whenever acting quickly / quick bets are 5/12 value → 83.3% value whenever the player acts quickly / 5/12 quick bets were value",
+    "reason": "83.3% is observed only in the six visible matched quick bets, not all quick actions; the overgeneralization remains wrong. The 5/12 choice still uses the wrong denominator.",
+    "package": "B171"
+  },
+  {
+    "task": "w20_5_read_third_level",
+    "detail": "correct: what range does the regular assign me after seeing that bluff → 3",
+    "reason": "Identifying what the opponent thinks you hold is third-level thinking, not reading your own hand or the opponent’s holdings.",
+    "package": "B171"
+  },
+  {
+    "task": "w20_5_read_third_level",
+    "detail": "wrong: what exact hand do i hold / which holdings could the regular have → 1 / 2",
+    "reason": "Identifying what the opponent thinks you hold is third-level thinking, not reading your own hand or the opponent’s holdings.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_1_guided_follow_pause_protocol",
+    "detail": "correct: sit out before the next hand and reset → 0 more hands: pause and reset",
+    "reason": "Two rushed decisions already meet the prewritten trigger; pause before another hand rather than chasing a win or rushing again.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_1_guided_follow_pause_protocol",
+    "detail": "wrong: play until you win one back / increase your pace to rebuild focus → 1 win before pausing / 1 more hand at a faster pace",
+    "reason": "Two rushed decisions already meet the prewritten trigger; pause before another hand rather than chasing a win or rushing again.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_2_read_time_vs_condition",
+    "detail": "correct: the condition-based rule → 0 minutes: the decision-quality rule fired",
+    "reason": "The two recorded deviations trigger the stop now at minute 30, not because the 45-minute cap has expired or because both conditions must be met.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_2_read_time_vs_condition",
+    "detail": "wrong: the time limit / neither rule until minute 45 → 0 minutes: the time limit fired / 15 minutes: wait for the time limit",
+    "reason": "The two recorded deviations trigger the stop now at minute 30, not because the 45-minute cap has expired or because both conditions must be met.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_3_guided_find_own_leak",
+    "detail": "correct: bluff this node more when you fold 75% → 75% folds: bluff this river size more",
+    "reason": "15 of 20 folds is 75%, above the 33.3% break-even threshold; 25% is the call share, and changing another street does not address this leak.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_3_guided_find_own_leak",
+    "detail": "wrong: remove missed hands from the bluff range because your defense is too wide / change a different street’s value sizes → 25% folds: cut bluffs at this size / 75% folds: change value sizes on another street",
+    "reason": "15 of 20 folds is 75%, above the 33.3% break-even threshold; 25% is the call share, and changing another street does not address this leak.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_5_guided_choose_review_priority",
+    "detail": "correct: missed thin value → 1 bb more: missed thin value",
+    "reason": "Three 1 BB missed-value decisions total 3 BB, exceeding the single 2 BB bluff cost. The bluff and equal-cost alternatives remain wrong.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_5_guided_choose_review_priority",
+    "detail": "wrong: the expensive bluff / the two categories tie → 1 bb more: the expensive bluff / 0 bb difference: the categories tie",
+    "reason": "Three 1 BB missed-value decisions total 3 BB, exceeding the single 2 BB bluff cost. The bluff and equal-cost alternatives remain wrong.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_6_checkpoint_select_end_and_tag",
+    "detail": "correct: stop before the next deal and tag both skipped checks → 2 tags: stop before the next deal",
+    "reason": "The two skipped checks meet the stopping threshold and both must be tagged regardless of their results. Continuing or excluding the won hand remains wrong.",
+    "package": "B171"
+  },
+  {
+    "task": "w21_6_checkpoint_select_end_and_tag",
+    "detail": "wrong: stay because the good game will restore focus / stop but omit the winning hand from review → 2 tags: keep playing / 1 tag: stop but omit the won hand",
+    "reason": "The two skipped checks meet the stopping threshold and both must be tagged regardless of their results. Continuing or excluding the won hand remains wrong.",
+    "package": "B171"
   }
 ]

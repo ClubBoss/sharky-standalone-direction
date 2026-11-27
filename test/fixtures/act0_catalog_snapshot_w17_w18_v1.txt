@@ -115,18 +115,18 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   - [wrong] The prices are equal — Look again. The fixed opening contribution and small blind mean the price does change with the re-raise.
     BETTER ANSWER: Re-raise to 11 BB
 
-TASK w17_2_transfer_squeeze_all_fold [drill] Under that pure-bluff stress test, does the squeeze beat folding?
+TASK w17_2_transfer_squeeze_all_fold [drill] Which modeled average for the squeeze supports the better choice?
 CAPTION: HJ opened 2.5 BB, CO called, and BTN acts. BTN would add 9 BB. An outcome means one possible result. In ten mutually exclusive, equal-weight results, all remaining players fold in five. In five, somebody continues and the re-raise has zero recovery.
-Q: Under that pure-bluff stress test, does the squeeze beat folding?
+Q: Which modeled average for the squeeze supports the better choice?
 HINT [hidden]: (none)
 TABLE: Preflop | You Ad 5d | Pot 6.5 BB | To call 2.5 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 97.5 BB raise 2.5 BB | CO stack 97.5 BB | BTN dealer Ad 5d stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO calls 2.5 BB
-  + [correct] Fold. The model loses 1.25 BB for the squeeze — Correct. Five wins of 6.5 BB fail to cover five losses of 9 BB. The stress test excludes showdown recovery.
-  - [wrong] Squeeze. It earns 1.25 BB — Look again. The loss in a failed squeeze exceeds the gain when everyone folds.
-    BETTER ANSWER: Fold. The model loses 1.25 BB for the squeeze
-  - [wrong] The two actions tie — Look again. A half-and-half split ties only if the current pot and risk are equal.
-    BETTER ANSWER: Fold. The model loses 1.25 BB for the squeeze
+  + [correct] −1.25 BB for squeezing: fold — Correct. Five wins of 6.5 BB fail to cover five losses of 9 BB. The stress test excludes showdown recovery.
+  - [wrong] +1.25 BB for squeezing: squeeze — Look again. The loss in a failed squeeze exceeds the gain when everyone folds.
+    BETTER ANSWER: −1.25 BB for squeezing: fold
+  - [wrong] 0 BB for squeezing: tie — Look again. A half-and-half split ties only if the current pot and risk are equal.
+    BETTER ANSWER: −1.25 BB for squeezing: fold
 
 TASK w17_2_day7_squeeze_fails_if_one_stays [review] What does the listed branch give BTN?
 ENTRY: drill
@@ -789,11 +789,11 @@ HINT [hidden]: (none)
 TABLE: Preflop | You 7s 6s | Pot 3.5 BB | To call 1 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ stack 99 BB | CO stack 99 BB | BTN dealer 7s 6s stack 100 BB | SB stack 99.5 BB | BB stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ calls 1 BB · preflop: CO calls 1 BB
-  + [correct] Limp behind — Correct. BTN calls the blind after other players already limped.
+  + [correct] Calling the blind after other callers — Correct. BTN calls the blind after other players already limped.
   - [wrong] A squeeze — Look again. A squeeze re-raises an opening raise after a caller. There was no raise here.
-    BETTER ANSWER: Limp behind
+    BETTER ANSWER: Calling the blind after other callers
   - [wrong] A cold call of a raise — Look again. Nobody has made an opening raise.
-    BETTER ANSWER: Limp behind
+    BETTER ANSWER: Calling the blind after other callers
 
 TASK w18_5_guided_short_raise_no_reopen [drill] Can CO now re-raise?
 CAPTION: BB checks, CO bets 6 BB and BTN raises all-in to 9 BB. BB calls 9 BB. Use the house rule that a lone short all-in increment below the last full wager does not reopen action for a player who already acted.
