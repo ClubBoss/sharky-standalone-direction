@@ -525,13 +525,13 @@ HINT [hidden]: (none)
 TABLE: River | You Ks Qd | Board Kh 9d 5c 3s 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ks Qd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB checks
-  + [correct] Five — Correct. There is one check leaf, two direct responses ending the bet, and two responses to the raise.
+  + [correct] 5 — Correct. There is one check leaf, two direct responses ending the bet, and two responses to the raise.
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9d 5c 3s 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Four — Look again. This typically treats the raise itself as terminal although CO still has two options.
-    BETTER ANSWER: Five
+  - [wrong] 4 — Look again. This typically treats the raise itself as terminal although CO still has two options.
+    BETTER ANSWER: 5
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9d 5c 3s 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Six — Look again. The intermediate BB raise is a node. It cannot also count as a leaf.
-    BETTER ANSWER: Five
+  - [wrong] 6 — Look again. The intermediate BB raise is a node. It cannot also count as a leaf.
+    BETTER ANSWER: 5
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9d 5c 3s 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w22_1_transfer_river_no_chance_node [drill] What should be the next node?
@@ -830,13 +830,13 @@ HINT [hidden]: (none)
 TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Kc Qc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
-  + [correct] A candidate heuristic to test on a matching board family — Correct. One tie is a starting point. Compare several nodes before using an in-game default.
+  + [correct] A possible rule of thumb to test on similar boards — Correct. One tie is a starting point. Compare several nodes before using an in-game default.
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] Use a pure betting strategy across king-high flops — Look again. The single query tested one node with one range pair and set of sizes.
-    BETTER ANSWER: A candidate heuristic to test on a matching board family
+    BETTER ANSWER: A possible rule of thumb to test on similar boards
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
   - [wrong] Remove check from this hand’s strategy — Look again. The two actions tied in the supplied model.
-    BETTER ANSWER: A candidate heuristic to test on a matching board family
+    BETTER ANSWER: A possible rule of thumb to test on similar boards
     FEEDBACK TABLE: Flop | You Kc Qc | Board Kh 7d 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w22_5_guided_heuristic_tolerance [drill] Which rule follows?
@@ -847,13 +847,13 @@ HINT [hidden]: (none)
 TABLE: Flop | You Ad Kd | Board Ks 8c 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow, backdoor flush
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad Kd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
-  + [correct] Use the simplification in the first two nodes with an exception for the third — Correct. Only the third exceeds the per-node tolerance. The average does not remove that exception.
+  + [correct] 2 nodes: use it in the first two, with an exception for the third — Correct. Only the third exceeds the per-node tolerance. The average does not remove that exception.
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8c 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor flush
-  - [wrong] Use it everywhere because two of the three pass — Look again. The stated acceptance test is per-node. One failing node blocks the all-node rule.
-    BETTER ANSWER: Use the simplification in the first two nodes with an exception for the third
+  - [wrong] 3 nodes: use it throughout because two pass — Look again. The stated acceptance test is per-node. One failing node blocks the all-node rule.
+    BETTER ANSWER: 2 nodes: use it in the first two, with an exception for the third
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8c 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor flush
-  - [wrong] Reject it in the first two as well — Look again. Both of those costs are below the threshold.
-    BETTER ANSWER: Use the simplification in the first two nodes with an exception for the third
+  - [wrong] 0 nodes: reject it in the first two as well — Look again. Both of those costs are below the threshold.
+    BETTER ANSWER: 2 nodes: use it in the first two, with an exception for the third
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8c 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus hero_0, hero_1, board_0, board_1, board_2 | Facts one pair, top pair, rainbow, backdoor flush
 
 TASK w22_5_transfer_population_query [drill] What model change answers that question?
@@ -865,7 +865,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
   + [correct] Freeze that opponent response at the observed node and recompute your best response — Correct. The target is payoff against a stated deviation. Keep a sensitivity check for the uncertain fold estimate.
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 9d 4s 3c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
-  - [wrong] Use the baseline output without changing the opponent model — Look again. That answers a different question about the original policy.
+  - [wrong] Use the original output without changing the opponent model — Look again. That answers a different question about the original policy.
     BETTER ANSWER: Freeze that opponent response at the observed node and recompute your best response
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 9d 4s 3c 2d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
   - [wrong] Replace the opponent’s complete strategy across streets — Look again. The observation only supports a change at the matched river node.
@@ -929,13 +929,13 @@ EFFECTIVE: BB 97.5
 REASONING: principle future_branches_before_bet · alt alternative · edge processRule 1.625 BB · stack_matters false · assumption none
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Kd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
-  + [correct] Check plan — Correct. The check plan wins because its four returns sum to 6 BB, compared with −0.5 BB for the bet plan at this BTN node.
+  + [correct] Check plan: 1.5 BB average — Correct. The check plan wins because its four returns sum to 6 BB, compared with −0.5 BB for the bet plan at this BTN node.
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8s 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor flush
-  - [wrong] Bet plan because its best outcome is higher — Look again. The costly bet branches offset the higher single return; the check plan earns more.
-    BETTER ANSWER: Check plan
+  - [wrong] Bet plan because its 5.5 BB peak is higher — Look again. The costly bet branches offset the higher single return; the check plan earns more.
+    BETTER ANSWER: Check plan: 1.5 BB average
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8s 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor flush
-  - [wrong] Both plans tie because their second branch matches — Look again. Matching one branch does not offset the negative bet returns in the others. The check plan earns more.
-    BETTER ANSWER: Check plan
+  - [wrong] Both plans tie because branch two returns 2 BB — Look again. Matching one branch does not offset the negative bet returns in the others. The check plan earns more.
+    BETTER ANSWER: Check plan: 1.5 BB average
     FEEDBACK TABLE: Flop | You Ad Kd | Board Ks 8s 3d | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, two-tone, backdoor flush
 
 TASK w22_6_checkpoint_audit_pruned_solver_result [drill] What is required before calling the result a best response for this spot?

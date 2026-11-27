@@ -2720,19 +2720,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Five",
+            "5",
             Act0FeedbackQualityV1.correct,
             "There is one check leaf, two direct responses ending the bet, and two responses to the raise.",
           ),
           (
             "alternative",
-            "Four",
+            "4",
             Act0FeedbackQualityV1.wrong,
             "This typically treats the raise itself as terminal although CO still has two options.",
           ),
           (
             "other",
-            "Six",
+            "6",
             Act0FeedbackQualityV1.wrong,
             "The intermediate BB raise is a node. It cannot also count as a leaf.",
           ),
@@ -4355,7 +4355,7 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "A candidate heuristic to test on a matching board family",
+            "A possible rule of thumb to test on similar boards",
             Act0FeedbackQualityV1.correct,
             "One tie is a starting point. Compare several nodes before using an in-game default.",
           ),
@@ -4449,19 +4449,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Use the simplification in the first two nodes with an exception for the third",
+            "2 nodes: use it in the first two, with an exception for the third",
             Act0FeedbackQualityV1.correct,
             "Only the third exceeds the per-node tolerance. The average does not remove that exception.",
           ),
           (
             "alternative",
-            "Use it everywhere because two of the three pass",
+            "3 nodes: use it throughout because two pass",
             Act0FeedbackQualityV1.wrong,
             "The stated acceptance test is per-node. One failing node blocks the all-node rule.",
           ),
           (
             "other",
-            "Reject it in the first two as well",
+            "0 nodes: reject it in the first two as well",
             Act0FeedbackQualityV1.wrong,
             "Both of those costs are below the threshold.",
           ),
@@ -4549,7 +4549,7 @@ final _world22Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Use the baseline output without changing the opponent model",
+            "Use the original output without changing the opponent model",
             Act0FeedbackQualityV1.wrong,
             "That answers a different question about the original policy.",
           ),
@@ -4870,19 +4870,19 @@ final _world22Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Check plan",
+            "Check plan: 1.5 BB average",
             Act0FeedbackQualityV1.correct,
             "The check plan wins because its four returns sum to 6 BB, compared with −0.5 BB for the bet plan at this BTN node.",
           ),
           (
             "alternative",
-            "Bet plan because its best outcome is higher",
+            "Bet plan because its 5.5 BB peak is higher",
             Act0FeedbackQualityV1.wrong,
             "The costly bet branches offset the higher single return; the check plan earns more.",
           ),
           (
             "other",
-            "Both plans tie because their second branch matches",
+            "Both plans tie because branch two returns 2 BB",
             Act0FeedbackQualityV1.wrong,
             "Matching one branch does not offset the negative bet returns in the others. The check plan earns more.",
           ),
