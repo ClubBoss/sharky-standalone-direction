@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_authored_source_proof_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_repair_intent_contract_v1.dart';
@@ -294,13 +295,23 @@ bool act0RepairCurrentViewHasUnconfirmedLaterSourceAttemptV1({
       continue;
     final isSource =
         record.worldId == intent.sourceWorldId &&
-        record.lessonId == intent.sourceLessonId &&
+        act0CanonicalLessonForTaskV1(
+              record.worldId,
+              record.lessonId,
+              record.taskId,
+            ) ==
+            intent.sourceLessonId &&
         record.taskId == intent.sourceTaskId &&
         record.authoredSourceFingerprint == sourceFingerprint;
     final isTargetRepair =
         record.runKind == 'repair' &&
         record.worldId == intent.targetWorldId &&
-        record.lessonId == intent.targetLessonId &&
+        act0CanonicalLessonForTaskV1(
+              record.worldId,
+              record.lessonId,
+              record.taskId,
+            ) ==
+            intent.targetLessonId &&
         record.taskId == intent.targetTaskId &&
         record.authoredSourceFingerprint == targetFingerprint;
     if (!isSource && !isTargetRepair) continue;

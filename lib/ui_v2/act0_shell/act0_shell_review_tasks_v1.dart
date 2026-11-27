@@ -104,6 +104,7 @@ String act0Day7FamilyForSourceV1({
   required String taskId,
   required String family,
 }) {
+  lessonId = act0CanonicalLessonForTaskV1(worldId, lessonId, taskId);
   if (act0CurriculumPilotEnabledV1) {
     // Match the authored principle in this lesson, not a generic table cue.
     // Existing durable family IDs are left unchanged.

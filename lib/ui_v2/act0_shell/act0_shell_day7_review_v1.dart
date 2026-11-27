@@ -443,7 +443,8 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
   required int xp,
   required String caption,
   required String question,
-  required String teach,
+  String teach = '',
+  List<Act0TeachingStepV1>? teachingSteps,
   required List<(String, String, Act0FeedbackQualityV1, String)> choices,
   required Act0TableStateV1 table,
   Act0TaskFamilyV1? family,
@@ -481,9 +482,9 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
       nextLessonId: null,
       returnTarget: 'learn',
       table: table,
-      teachingSteps: [
-        if (teach.isNotEmpty) Act0TeachingStepV1(title: title, body: teach),
-      ],
+      teachingSteps:
+          teachingSteps ??
+          [if (teach.isNotEmpty) Act0TeachingStepV1(title: title, body: teach)],
     ),
   );
 }

@@ -1860,7 +1860,7 @@
     "w11_review_loop_intro": {
       "identity": [
         "world_11",
-        "table_trigger_multiway_and_spr",
+        "post_session_review_loop",
         "w11_review_loop_intro",
         "theory",
         "learn",

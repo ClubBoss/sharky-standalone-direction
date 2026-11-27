@@ -44,9 +44,10 @@ void main() {
             for (final task in lesson.courseTaskList)
               [world.worldId, lesson.lessonId, task.taskId, task.rewardXp],
     ];
+    // B151: W11 review-loop intro changes lesson; task order and XP stay fixed.
     expect(
       sha256.convert(utf8.encode(jsonEncode(route))).toString(),
-      '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
+      '4188b79e962253220a409352ab8859c06b09f6ccc0f543421ff5b11a2aa018d1',
     );
   });
 

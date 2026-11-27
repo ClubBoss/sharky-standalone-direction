@@ -1013,39 +1013,60 @@ class _Act0SkinTaskHeaderV1State extends State<Act0SkinTaskHeaderV1> {
     // Fixed height: the mode label must never change the header's layout.
     return SizedBox(
       height: 48,
-      child: Row(
-        children: [
-          _closeButton,
-          Expanded(
-            child: Semantics(
-              label: 'Lesson progress',
-              value: count,
-              child: CustomPaint(
-                size: const Size(0, _T.courseProgressHeight),
-                painter: _TaskHeaderProgressPainterV1(
-                  widget.total > 0
-                      ? (widget.step / widget.total).clamp(0.0, 1.0)
-                      : 0,
-                  Directionality.of(context),
+      child: LayoutBuilder(
+        builder: (context, constraints) => Row(
+          children: [
+            _closeButton,
+            Expanded(
+              child: Semantics(
+                label: 'Lesson progress',
+                value: count,
+                child: CustomPaint(
+                  size: const Size(0, _T.courseProgressHeight),
+                  painter: _TaskHeaderProgressPainterV1(
+                    widget.total > 0
+                        ? (widget.step / widget.total).clamp(0.0, 1.0)
+                        : 0,
+                    Directionality.of(context),
+                  ),
                 ),
               ),
             ),
-          ),
-          const SizedBox(width: _T.gapMd),
-          if (widget.modeLabel case final mode?)
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(count, style: _T.captionStyle),
-                Text(mode, style: _T.tag.copyWith(color: _T.accent)),
-              ],
-            )
-          else
-            Text(count, style: _T.captionStyle),
-          if (widget.onHelp != null) _helpButton else const SizedBox(width: 48),
-        ],
+            const SizedBox(width: _T.gapMd),
+            // Leave room for both touch targets and a visible progress track.
+            // Long labels (including Rules check · 10 of 10) must not overflow.
+            ConstrainedBox(
+              constraints: BoxConstraints(
+                maxWidth: (constraints.maxWidth - 96 - 2 * _T.gapMd).clamp(
+                  0.0,
+                  double.infinity,
+                ),
+              ),
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: widget.modeLabel != null
+                    ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(count, style: _T.captionStyle),
+                          Text(
+                            widget.modeLabel!,
+                            style: _T.tag.copyWith(color: _T.accent),
+                          ),
+                        ],
+                      )
+                    : Text(count, style: _T.captionStyle),
+              ),
+            ),
+            if (widget.onHelp != null)
+              _helpButton
+            else
+              const SizedBox(width: 48),
+          ],
+        ),
       ),
     );
   }

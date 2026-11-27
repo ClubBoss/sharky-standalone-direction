@@ -1,7 +1,9 @@
 part of 'act0_shell_preview_screen_v1.dart';
 
-String _w1ResumeLessonV1(String worldId, String lessonId, String taskId) {
-  if (worldId != 'world_1') return lessonId;
+String _resumeLessonIdentityV1(String worldId, String lessonId, String taskId) {
+  if (worldId != 'world_1') {
+    return act0CanonicalLessonForTaskV1(worldId, lessonId, taskId);
+  }
   return switch ((lessonId, taskId)) {
     (
       'what_poker_is',
@@ -136,7 +138,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
     }.where(validTaskIds.contains).toSet();
     skippedTaskIds.addAll(compatSkipTaskIds.difference(completedTaskIds));
 
-    final resumedLessonId = _w1ResumeLessonV1(
+    final resumedLessonId = _resumeLessonIdentityV1(
       parsed.selectedWorldId,
       parsed.selectedLessonId,
       parsed.selectedTaskId,
@@ -168,6 +170,25 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ),
       );
     }
+    // B151: the task IDs and earned XP are unchanged. The shortened lesson
+    // may now be complete even when its old final task was the resume cursor.
+    if (completedLessonIds.contains(act0W11ReviewIntroLessonV1) &&
+        completedLessonIds.contains(act0W11ReviewIntroOldLessonV1) &&
+        !completedTaskIds.contains(act0W11ReviewIntroTaskIdV1)) {
+      skippedTaskIds.add(act0W11ReviewIntroTaskIdV1);
+    }
+    final w11 = state.worlds
+        .where((world) => world.worldId == 'world_11')
+        .firstOrNull;
+    for (final lesson in (w11?.lessons ?? const <Act0LessonCardV1>[]).where(
+      (lesson) =>
+          lesson.lessonId == act0W11ReviewIntroOldLessonV1 ||
+          lesson.lessonId == act0W11ReviewIntroLessonV1,
+    )) {
+      if (act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds)) {
+        completedLessonIds.add(lesson.lessonId);
+      }
+    }
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
 
     _routePracticeV1 =
@@ -176,7 +197,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
           state.worlds,
           closedTaskIds,
           resumedLessonId: lessonResume != null
-              ? _w1ResumeLessonV1(
+              ? _resumeLessonIdentityV1(
                   lessonResume.worldId,
                   lessonResume.lessonId,
                   lessonResume.taskId,
@@ -360,7 +381,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..clear()
         ..addEntries(
           parsed.pendingDecisionAssistance.map((receipt) {
-            final lessonId = _w1ResumeLessonV1(
+            final lessonId = _resumeLessonIdentityV1(
               receipt.worldId,
               receipt.lessonId,
               receipt.taskId,
@@ -368,8 +389,8 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
             if (lessonId == receipt.lessonId) {
               return MapEntry(receipt.key, receipt);
             }
-            // A moved task keeps its assistance marker. The old fingerprint
-            // cannot certify an independent answer at the new source.
+            // A moved task keeps its assistance marker and captured revision.
+            // Only an unchanged assessment fingerprint can match the new source.
             final movedReceipt = _Act0PendingDecisionAssistanceV1(
               worldId: receipt.worldId,
               lessonId: lessonId,
@@ -414,7 +435,12 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         (record) =>
             !record.isPlacementAssessment &&
             !record.isDiagnosticLearningEntry &&
-            record.lessonId == selectedLesson.lessonId,
+            act0CanonicalLessonForTaskV1(
+                  record.worldId,
+                  record.lessonId,
+                  record.taskId,
+                ) ==
+                selectedLesson.lessonId,
       );
       _lessonRunEvidenceBoundariesV1
         ..clear()
@@ -477,7 +503,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       // Q3 shortened these authored sequences. Keep their task and feedback
       // cursor when loading an older save, then run the ordinary validation.
       if (savedResume != null) {
-        final newLessonId = _w1ResumeLessonV1(
+        final newLessonId = _resumeLessonIdentityV1(
           savedResume.worldId,
           savedResume.lessonId,
           savedResume.taskId,

@@ -1,3 +1,4 @@
+import 'act0_lesson_identity_alias_v1.dart';
 import 'act0_attempt_archive_v1.dart';
 import 'act0_repair_gap_adjudication_v1.dart';
 import 'act0_concept_error_contract_v1.dart';
@@ -191,7 +192,15 @@ Act0LessonTaskV1? _decisionTask(
   return state?.worlds
       .where((world) => world.worldId == record.worldId)
       .expand((world) => world.lessons)
-      .where((lesson) => lesson.lessonId == record.lessonId)
+      .where(
+        (lesson) =>
+            lesson.lessonId ==
+            act0CanonicalLessonForTaskV1(
+              record.worldId,
+              record.lessonId,
+              taskId,
+            ),
+      )
       .expand((lesson) => lesson.taskList)
       .where((task) => task.taskId == taskId)
       .firstOrNull;

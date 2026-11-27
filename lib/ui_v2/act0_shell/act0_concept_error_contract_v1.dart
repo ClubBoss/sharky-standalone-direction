@@ -1,3 +1,5 @@
+import 'act0_lesson_identity_alias_v1.dart';
+
 /// Stable, source-owned misconception identity for canonical Act0 decisions.
 ///
 /// These ids are internal evidence values. They are never learner-visible and
@@ -413,7 +415,12 @@ Act0ConceptErrorDefinitionV1? act0ConceptErrorDefinitionForTaskV1({
   required String lessonId,
   required String taskId,
 }) {
-  final lessonKey = '${worldId.trim()}/${lessonId.trim()}';
+  final canonicalLesson = act0CanonicalLessonForTaskV1(
+    worldId.trim(),
+    lessonId.trim(),
+    taskId.trim(),
+  );
+  final lessonKey = '${worldId.trim()}/$canonicalLesson';
   final taskKey = '$lessonKey/${taskId.trim()}';
   for (final definition in act0ConceptErrorDefinitionsV1) {
     if (definition.taskKeys.contains(taskKey)) {

@@ -40,7 +40,7 @@ void main() {
     // Same current ordered route/XP baseline as act0_curriculum_pilot_v1_test.
     expect(
       sha256.convert(utf8.encode(jsonEncode(baseRoute))).toString(),
-      '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
+      '4188b79e962253220a409352ab8859c06b09f6ccc0f543421ff5b11a2aa018d1',
     );
     final incomplete = {...baseIds}..remove(baseRoute.last[2]);
     List<Act0WorldCardV1> project(Set<String> ids) => act0ProgressWorldsV1(

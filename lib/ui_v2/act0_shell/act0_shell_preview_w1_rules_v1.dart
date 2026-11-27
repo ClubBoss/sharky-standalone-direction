@@ -21,6 +21,12 @@ extension _PreviewW1RulesV1 on _Act0ShellPreviewScreenV1State {
   void _closeW1RulesCheckV1() {
     final origin = _rulesOriginTabV1;
     final answers = _w1RulesAnswersV1;
+    if (origin == null && answers != null) {
+      // Leaving the initial check starts the normal W1 lesson with no award.
+      // Settings/Learn retakes instead return to their originating tab.
+      _openRulesStartLessonV1('world_1');
+      return;
+    }
     if (answers != null) {
       _recordW1RulesEventV1('w1_rules_check_abandoned', answers.length + 1);
     }
