@@ -27,12 +27,6 @@
     ]
   },
   "W16": {
-    "18.same_format_streak": [
-      "w16_6_guided_scare_card_call|actionDecision"
-    ],
-    "21.duplicate_wrong_reason": [
-      "h5_w16_6_day7_last_bet_independent|flop_check"
-    ],
     "23.pot_with_bet": [
       "h5_w16_3_guided_thin_third_street|feedbackReason|bring the pot to 9.5 BB|expected 5.5",
       "h5_w16_3_guided_thin_third_street|option[flop_bet].reason|bring the pot to 9.5 BB|expected 5.5",
@@ -41,17 +35,10 @@
       "h5_w16_6_day7_last_bet_independent|feedbackReason|bring the pot to 9.5 BB|expected 5.5",
       "h5_w16_6_day7_last_bet_independent|option[flop_bet].reason|bring the pot to 9.5 BB|expected 5.5"
     ],
-    "8.active_caller": [
-      "w16_4_day7_turn_equity_lead|bb"
-    ],
     "D6.history_support": [
       "w16_4_read_probe_sequence|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_5_day7_called_turn_overbet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w16_5_read_turn_overbet_leverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "E11": [
-      "w16_3_day7_one_street_only|jam",
-      "w16_3_transfer_jam_nut_straight|jam"
     ],
     "G1·28": [
       "h5_w16_3_guided_thin_third_street|flop_bet",
