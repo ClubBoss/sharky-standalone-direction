@@ -3626,7 +3626,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
         choices: const [
           (
             "bet_44",
-            "Jam 44 BB",
+            "All-in 44 BB",
             Act0FeedbackQualityV1.correct,
             "Go all-in for 44 BB because BB still calls with sets and two pair. Another 8-7 splits at either size; the smaller bet earns less.",
           ),
@@ -3765,7 +3765,7 @@ final _world16SourceV1 = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Jam as shown value",
+            "All-in for value",
             Act0FeedbackQualityV1.wrong,
             "The stipulated continuing hands are stronger. Increasing the bet costs more against these callers.",
           ),
@@ -4248,13 +4248,13 @@ final _world16SourceV1 = _act0PilotWorldV1(
             ),
             Act0ContributionV1(
               PokerStreet.flop,
-              "btn",
+              "bb",
               Act0ContributionKindV1.wager,
               2,
             ),
             Act0ContributionV1(
               PokerStreet.flop,
-              "bb",
+              "btn",
               Act0ContributionKindV1.wager,
               2,
             ),
@@ -4268,9 +4268,8 @@ final _world16SourceV1 = _act0PilotWorldV1(
             Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
             Act0ActionTrailItemV1(label: "preflop: SB folds"),
             Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
-            Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN bets 2 BB"),
-            Act0ActionTrailItemV1(label: "flop: BB calls 2 BB"),
+            Act0ActionTrailItemV1(label: "flop: BB bets 2 BB"),
+            Act0ActionTrailItemV1(label: "flop: BTN calls 2 BB"),
           ],
           bets: const {},
         ).copyWith(showDecisionPremise: true),
@@ -4881,27 +4880,33 @@ final _world16SourceV1 = _act0PilotWorldV1(
         id: "w16_6_guided_scare_card_call",
         lesson: "commitment_checkpoint",
         lessonTitle: "Commitment checkpoint",
-        title: "Call or fold?",
+        title: "Which statement explains the river decision?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "BB bets 5 BB with a legal combo from AsJs KsJs JsTs 88 44 KQo QJo 99, equally weighted. Compare calling with folding. A call closes the betting for this model.",
-        question: "Call or fold?",
+        question: "Which statement explains the river decision?",
         teach:
             "Keep the new flushes in the betting range and count the weaker bets too.",
         choices: const [
           (
             "call",
-            "Call 5 BB",
+            "Call 5 BB because the equity clears the price",
             Act0FeedbackQualityV1.correct,
             "Call because your 66.7% equity against BB’s betting range clears the 19.6% price. Folding gives up that gain.",
           ),
           (
             "fold",
-            "Fold",
+            "Fold because the new flushes make the price too high",
             Act0FeedbackQualityV1.wrong,
             "Folding saves the call now and forfeits a modeled gain of 12.00 BB.",
+          ),
+          (
+            "prior_calls",
+            "The earlier calls decide the river question",
+            Act0FeedbackQualityV1.wrong,
+            "Treating earlier calls as a commitment can cost chips when the betting range changes. Compare your equity with the current river price instead.",
           ),
         ],
         table: _day7TableV1(
@@ -5273,12 +5278,59 @@ final _world16Pilot = _act0PilotWorldV1(
         3000,
         threeBet: true,
       ),
-      _w16HandPlaythroughV1(
-        'w16_6_day7_last_bet_independent',
-        200,
-        300,
-        riverLead: 1200,
-      ),
+      _w16LastBetPlaythroughV1(),
     ]),
   ],
 );
+
+// Keep the recorded hand and its answer grades while giving this checkpoint
+// its own explanation of the missed flop target.
+Act0LessonTaskV1 _w16LastBetPlaythroughV1() {
+  final task = _w16HandPlaythroughV1(
+    'w16_6_day7_last_bet_independent',
+    200,
+    300,
+    riverLead: 1200,
+  );
+  final decisions = task.multiStreet!.decisions;
+  final flop = decisions.first;
+  final revisedFlop = flop.copyWith(
+    options: [
+      for (final option in flop.options)
+        if (option.id == 'flop_check')
+          Act0RunnerOptionV1(
+            id: option.id,
+            label: option.label,
+            amountLabel: option.amountLabel,
+            isCorrect: option.isCorrect,
+            quality: option.quality,
+            preferredLabel: option.preferredLabel,
+            betterAnswerLabel: option.betterAnswerLabel,
+            feedbackTitle: option.feedbackTitle,
+            feedbackReason:
+                'Checking misses the 9.5 BB goal because neither player adds chips on the flop. This hand continues with the recorded play: Bet 2 BB.',
+          )
+        else
+          option,
+    ],
+  );
+  final hand = Act0MultiStreetV1(decisions.last.table.handTimelinePrefix!, [
+    for (final runner in [revisedFlop, ...decisions.skip(1)])
+      (
+        boundary: runner.table.handTimelinePrefix!.events.length,
+        runner: runner,
+        authoredChoiceId: runner.options
+            .singleWhere(act0RunnerOptionIsPreferredV1)
+            .id,
+      ),
+  ]);
+  return Act0LessonTaskV1(
+    taskId: task.taskId,
+    title: task.title,
+    phase: task.phase,
+    taskFamily: task.taskFamily,
+    runner: hand.decisions.first,
+    rewardXp: task.rewardXp,
+    multiStreet: hand,
+  );
+}

@@ -628,5 +628,29 @@
     "detail": "correct: a format-matched baseline or pool estimate → a starting strategy or player-group estimate for this format",
     "reason": "Anonymity prevents linking a named player’s history to this opponent, but a starting strategy or aggregate estimate from the same format remains usable.",
     "package": "B169b"
+  },
+  {
+    "task": "w16_3_transfer_jam_nut_straight",
+    "detail": "correct: jam 44 bb → all-in 44 bb",
+    "reason": "Both name the same 44 BB all-in; the authored correct option and size are unchanged.",
+    "package": "B170"
+  },
+  {
+    "task": "w16_3_day7_one_street_only",
+    "detail": "wrong: jam as shown value → all-in for value",
+    "reason": "Both propose an all-in for value against the stipulated stronger calling group; the option remains wrong.",
+    "package": "B170"
+  },
+  {
+    "task": "w16_6_guided_scare_card_call",
+    "detail": "correct: call 5 bb → call 5 bb because the equity clears the price",
+    "reason": "The existing correct call now states why the modeled equity exceeds the price; same action, amount and grade.",
+    "package": "B170"
+  },
+  {
+    "task": "w16_6_guided_scare_card_call",
+    "detail": "wrong: fold → fold because the new flushes make the price too high / the earlier calls decide the river question",
+    "reason": "The existing fold is still wrong because the modeled equity clears the price. The new statement is a wrong sunk-cost explanation rather than a new legal action.",
+    "package": "B170"
   }
 ]
