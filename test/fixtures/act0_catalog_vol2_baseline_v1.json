@@ -75,39 +75,12 @@
       "w17_2_guided_size_oop|statement"
     ],
     "D6.history_support": [
-      "w17_1_day7_light_bluff_signal|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_1_read_blocked_aces|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_1_transfer_select_bluff_candidate|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_2_day7_squeeze_fails_if_one_stays|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_2_guided_size_oop|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_2_transfer_squeeze_all_fold|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_3_guided_count_caller_coverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_3_read_cold_call_identity|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_4_day7_spr_after_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_4_read_four_bet_additional_cost|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_5_day7_three_bet_dead_blind|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_5_guided_compare_deep_sizes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w17_5_read_blind_on_blind_trap|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w17_6_read_lower_spr_mechanics|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
   "W18": {
-    "D6.history_support": [
-      "w18_1_day7_multiple_value_calls|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_1_read_compression_vs_hand_label|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_2_day7_conditional_fold_count|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_2_guided_joint_folds_price|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_2_read_joint_outcome|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_2_transfer_profitable_joint_bluff|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_3_day7_connected_caller_edge|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_3_read_three_way_nuts|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_4_day7_award_eligible_pots|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_4_guided_refund_uncalled|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_4_read_side_pot_layers|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_5_read_overlimp|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_6_day7_tie_with_three_players|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w18_6_read_blockers_across_two_players|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
     "E11": [
       "w18_5_read_overlimp|limp behind"
     ]
@@ -158,17 +131,6 @@
       "w22_6_day7_read_lead_plan|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
     ]
   },
-  "W23": {
-    "D6.history_support": [
-      "w23_2_guided_compare_wheel_and_broadway|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_2_read_notation_after_blocker|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_3_guided_bb_two_sizes_compare|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_3_transfer_open_size_buys_folds|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_5_guided_sb_mixed_tree|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_5_transfer_depth_changes_available_payoff|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_6_guided_build_light_three_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
-      "w23_6_read_blocker_value_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ]
-  },
+  "W23": {},
   "W24": {}
 }
