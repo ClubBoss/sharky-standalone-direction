@@ -3049,13 +3049,13 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A slow river bet always has strong value",
+            "A slow river bet signals a strong value range",
             Act0FeedbackQualityV1.wrong,
             "The speed changed along with the street and action, so you cannot attribute the difference to hand strength.",
           ),
           (
             "other",
-            "A flop snap-call proves a later bluff",
+            "An immediate flop call proves a later bluff",
             Act0FeedbackQualityV1.wrong,
             "The given events do not connect flop speed with this river range.",
           ),
@@ -3880,7 +3880,7 @@ final _world20Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Treat risk aversion as a hypothesis and keep the existing priced baseline",
+            "Treat risk aversion as a hypothesis and keep the decision based on the current range and price",
             Act0FeedbackQualityV1.correct,
             "One fold could have been an obvious miss. A matched series of folds with other evidence could strengthen the hypothesis.",
           ),
@@ -4228,7 +4228,7 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Limp behind",
+            "Call 1 BB",
             Act0FeedbackQualityV1.wrong,
             "Limping gives neither earlier limper a reason to leave before a later raise.",
           ),

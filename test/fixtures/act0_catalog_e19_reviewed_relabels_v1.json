@@ -514,5 +514,71 @@
     "detail": "wrong: any player has matched the big blind voluntarily → a player has matched the big blind voluntarily",
     "reason": "A voluntary match of the big blind is a limp, which removes the unopened condition, so the option stays wrong; only the absolute qualifier was dropped.",
     "package": "B140"
+  },
+  {
+    "task": "w20_1_day7_distracted_online_sample",
+    "detail": "wrong: a slow river bet always has strong value / a flop snap-call proves a later bluff → a slow river bet signals a strong value range / an immediate flop call proves a later bluff",
+    "reason": "Unmatched immediate flop calls and a slow river bet cannot establish either a value-heavy river range or a later bluff.",
+    "package": "B167"
+  },
+  {
+    "task": "w20_3_transfer_stakes_discomfort_caveat",
+    "detail": "correct: treat risk aversion as a hypothesis and keep the existing priced baseline → treat risk aversion as a hypothesis and keep the decision based on the current range and price",
+    "reason": "One observed fold does not establish the player’s river fold frequency, so retaining the current range and price while testing the hypothesis is sound.",
+    "package": "B167"
+  },
+  {
+    "task": "w20_4_guided_isolation_two_sizes",
+    "detail": "wrong: limp behind → call 1 bb",
+    "reason": "Calling the 1 BB limp does not isolate CO, while the 6 BB raise isolates CO in seven of ten paths versus three for 4 BB.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_1_guided_count_tree_leaves",
+    "detail": "correct: five → 5",
+    "reason": "The check, direct fold and call, and two responses to a raise total five terminal paths.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_1_guided_count_tree_leaves",
+    "detail": "wrong: four / six → 4 / 6",
+    "reason": "Four omits a terminal path and six counts the intermediate raise as a leaf, so both remain incorrect.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_5_read_output_as_scope",
+    "detail": "correct: a candidate heuristic to test on a matching board family → a possible rule of thumb to test on similar boards",
+    "reason": "A tie at a single modeled node supports a possible rule to test, not a strategy for untested boards.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_5_guided_heuristic_tolerance",
+    "detail": "correct: use the simplification in the first two nodes with an exception for the third → 2 nodes: use it in the first two, with an exception for the third",
+    "reason": "The first two costs of 0.02 and 0.04 BB meet the 0.10 BB ceiling, with the 0.28 BB node requiring an exception.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_5_guided_heuristic_tolerance",
+    "detail": "wrong: use it everywhere because two of the three pass / reject it in the first two as well → 3 nodes: use it throughout because two pass / 0 nodes: reject it in the first two as well",
+    "reason": "Accepting all three includes a node above tolerance, and rejecting all three discards two nodes below tolerance.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_5_transfer_population_query",
+    "detail": "wrong: use the baseline output without changing the opponent model → use the original output without changing the opponent model",
+    "reason": "The original balanced-defense model cannot answer the payoff question against the observed overfold unless that response is changed.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_6_guided_compare_branch_plans",
+    "detail": "correct: check plan → check plan: 1.5 bb average",
+    "reason": "The check plan returns (3+2+0+1)/4 = 1.5 BB on average, exceeding the bet plan’s −0.125 BB.",
+    "package": "B167"
+  },
+  {
+    "task": "w22_6_guided_compare_branch_plans",
+    "detail": "wrong: bet plan because its best outcome is higher / both plans tie because their second branch matches → bet plan because its 5.5 bb peak is higher / both plans tie because branch two returns 2 bb",
+    "reason": "A 5.5 BB peak or one shared 2 BB outcome cannot outweigh the remaining branches, so neither claim beats the check plan’s average.",
+    "package": "B167"
   }
 ]

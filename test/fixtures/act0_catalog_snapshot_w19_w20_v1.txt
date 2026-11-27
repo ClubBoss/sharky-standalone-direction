@@ -534,9 +534,9 @@ TABLE: River | You As Td | Board Ah 9c 5s 2d 2h | Pot 13.5 BB | To call 8 BB | S
 SEATS: UTG folded stack 100 BB | HJ As Td stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 89.5 BB bet 8 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks · turn: HJ checks · river: BB bets 8 BB
   + [correct] No calibrated bluff split from those observations — Correct. The earlier events were small flop calls with automation. They do not measure slow river bets.
-  - [wrong] A slow river bet always has strong value — Look again. The speed changed along with the street and action, so you cannot attribute the difference to hand strength.
+  - [wrong] A slow river bet signals a strong value range — Look again. The speed changed along with the street and action, so you cannot attribute the difference to hand strength.
     BETTER ANSWER: No calibrated bluff split from those observations
-  - [wrong] A flop snap-call proves a later bluff — Look again. The given events do not connect flop speed with this river range.
+  - [wrong] An immediate flop call proves a later bluff — Look again. The given events do not connect flop speed with this river range.
     BETTER ANSWER: No calibrated bluff split from those observations
 
 ===== WORLD 20 · LESSON sizing_and_filtering · Sizing and filtering =====
@@ -665,13 +665,13 @@ HINT [hidden]: (none)
 TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Facts high card
 SEATS: UTG folded stack 100 BB | HJ Jc Tc stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks · turn: HJ checks · river: BB checks
-  + [correct] Treat risk aversion as a hypothesis and keep the existing priced baseline — Correct. One fold could have been an obvious miss. A matched series of folds with other evidence could strengthen the hypothesis.
+  + [correct] Treat risk aversion as a hypothesis and keep the decision based on the current range and price — Correct. One fold could have been an obvious miss. A matched series of folds with other evidence could strengthen the hypothesis.
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
   - [wrong] Large river bluffs now win through the player’s risk aversion — Look again. The premise gives no fold frequency and no information about the folded hand.
-    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the existing priced baseline
+    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the decision based on the current range and price
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
   - [wrong] The player definitely cannot afford the game — Look again. You cannot infer a private financial situation from one remark and action.
-    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the existing priced baseline
+    BETTER ANSWER: Treat risk aversion as a hypothesis and keep the decision based on the current range and price
     FEEDBACK TABLE: River | You Jc Tc | Board Ks 8h 5d 3c 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts high card
 
 TASK w20_3_day7_table_captain_vs_overbluffer [review] Whose evidence first supports calling more with hands that beat bluffs but lose to value bets?
@@ -728,7 +728,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
   + [correct] Raise to 6 BB — Correct. Raise to 6 BB because CO is the sole caller in seven of ten branches, versus three at 4 BB. The larger raise meets your stated goal.
   - [wrong] Raise to 4 BB — Look again. Its cost is lower, but this exercise asks which branch reaches heads-up more often.
     BETTER ANSWER: Raise to 6 BB
-  - [wrong] Limp behind — Look again. Limping gives neither earlier limper a reason to leave before a later raise.
+  - [wrong] Call 1 BB — Look again. Limping gives neither earlier limper a reason to leave before a later raise.
     BETTER ANSWER: Raise to 6 BB
 
 TASK w20_4_transfer_skip_marginal_isolation [drill] Which available action sees the flop without paying extra?
