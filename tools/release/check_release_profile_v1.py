@@ -17,7 +17,7 @@ SDK_DEFINES = {
     "FLUTTER_FRAMEWORK_REVISION", "FLUTTER_ENGINE_REVISION", "FLUTTER_DART_VERSION",
 }
 B89_FLAGS = {
-    "goalRouteV1", "numberEntryV1", "warmupV1", "actionReasonV1", "liveRoomV1",
+    "goalRouteV1", "numberEntryV1", "warmupV1", "opponentStylesV1", "actionReasonV1", "liveRoomV1",
     "SHARKY_LEAK_DASHBOARD_V1", "SHARKY_STREET_SUMMARY_PREVIEW",
     "SHARKY_W13_PLUS_PILOT",
 }

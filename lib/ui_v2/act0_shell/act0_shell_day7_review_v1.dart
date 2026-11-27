@@ -451,6 +451,7 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
   String? signal,
   String? explanation,
   bool repairOnly = false,
+  bool guidedDecision = false,
 }) {
   final answers = _wave6AuthoredChoicesV1(choices);
   return Act0LessonTaskV1(
@@ -461,6 +462,7 @@ Act0LessonTaskV1 _wave6AuthoredTaskV1({
     stepKind: step,
     taskFamily: family,
     repairOnly: repairOnly,
+    guidedDecision: guidedDecision,
     runner: Act0RunnerStateV1(
       lessonId: xp == 0 && !repairOnly ? lesson : id,
       lessonTitle: lessonTitle,

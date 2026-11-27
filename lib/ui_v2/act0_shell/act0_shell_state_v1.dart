@@ -43,6 +43,7 @@ part 'act0_shell_lessons_w17_w18_v1.dart';
 part 'act0_shell_lessons_w19_w20_v1.dart';
 part 'act0_shell_lessons_w21_w22_v1.dart';
 part 'act0_shell_lessons_w23_w24_v1.dart';
+part 'act0_shell_lessons_opponent_types_v1.dart';
 part 'act0_shell_lessons_b19_v1.dart';
 part 'act0_shell_lessons_ninemax_v1.dart';
 part 'act0_shell_lessons_live_room_v1.dart';
@@ -261,16 +262,35 @@ class Act0ShellStateV1 {
   static final sample = learnerCatalog();
   static final _learnerSixSeatCatalog = catalog(
     nineSeatPreview: false,
+    opponentStylesV1: false,
   ).forLearners();
   static final _learnerNineSeatCatalog = catalog(
     nineSeatPreview: true,
+    opponentStylesV1: false,
   ).forLearners(nineSeatPreview: true);
 
   static Act0ShellStateV1 learnerCatalog({
     bool nineSeatPreview = act0NineSeatDebugEnabledV1,
-  }) => kDebugMode && nineSeatPreview
-      ? _learnerNineSeatCatalog
-      : _learnerSixSeatCatalog;
+    bool opponentStylesV1 = act0OpponentStylesEnabledV1,
+  }) {
+    if (kDebugMode && opponentStylesV1) {
+      return nineSeatPreview
+          ? _learnerNineSeatOpponentStylesCatalog
+          : _learnerOpponentStylesCatalog;
+    }
+    return kDebugMode && nineSeatPreview
+        ? _learnerNineSeatCatalog
+        : _learnerSixSeatCatalog;
+  }
+
+  static final _learnerOpponentStylesCatalog = catalog(
+    nineSeatPreview: false,
+    opponentStylesV1: true,
+  ).forLearners();
+  static final _learnerNineSeatOpponentStylesCatalog = catalog(
+    nineSeatPreview: true,
+    opponentStylesV1: true,
+  ).forLearners(nineSeatPreview: true);
 
   Act0ShellStateV1 forLearners({bool nineSeatPreview = false}) {
     final routedLessons = <Act0LessonCardV1, Act0LessonCardV1?>{};
@@ -340,15 +360,66 @@ class Act0ShellStateV1 {
     _act0NineSeatWorldsV1,
   );
 
+  static final _opponentStylesWorlds = _withOpponentStylesV1(
+    _act0PreviewWorlds,
+  );
+  static final _nineSeatOpponentStylesWorlds = _withOpponentStylesV1(
+    _act0NineSeatWorldsV1,
+  );
+  static final _opponentStylesCatalog = _buildCatalog(
+    null,
+    _opponentStylesWorlds,
+  );
+  static final _opponentStylesCatalogWithLiveRoom = _buildCatalog(
+    _act0LiveRoomV1,
+    _opponentStylesWorlds,
+  );
+  static final _nineSeatOpponentStylesCatalog = _buildCatalog(
+    null,
+    _nineSeatOpponentStylesWorlds,
+  );
+  static final _nineSeatOpponentStylesCatalogWithLiveRoom = _buildCatalog(
+    _act0LiveRoomV1,
+    _nineSeatOpponentStylesWorlds,
+  );
+
   static Act0ShellStateV1 catalog({
     bool liveRoomV1 = const bool.fromEnvironment('liveRoomV1'),
     bool nineSeatPreview = act0NineSeatDebugEnabledV1,
-  }) => switch ((liveRoomV1, kDebugMode && nineSeatPreview)) {
-    (true, true) => _nineSeatCatalogWithLiveRoom,
-    (false, true) => _nineSeatCatalog,
-    (true, false) => _catalogWithLiveRoom,
-    (false, false) => _numberedCatalog,
+    bool opponentStylesV1 = act0OpponentStylesEnabledV1,
+  }) => switch ((
+    liveRoomV1,
+    kDebugMode && nineSeatPreview,
+    kDebugMode && opponentStylesV1,
+  )) {
+    (true, true, true) => _nineSeatOpponentStylesCatalogWithLiveRoom,
+    (false, true, true) => _nineSeatOpponentStylesCatalog,
+    (true, false, true) => _opponentStylesCatalogWithLiveRoom,
+    (false, false, true) => _opponentStylesCatalog,
+    (true, true, false) => _nineSeatCatalogWithLiveRoom,
+    (false, true, false) => _nineSeatCatalog,
+    (true, false, false) => _catalogWithLiveRoom,
+    (false, false, false) => _numberedCatalog,
   };
+
+  static List<Act0WorldCardV1> _withOpponentStylesV1(
+    List<Act0WorldCardV1> worlds,
+  ) => [
+    for (final world in worlds)
+      if (world.worldNumber == 10)
+        world.copyWith(
+          lessons: [
+            for (final lesson in world.lessons) ...[
+              // Keep the existing checkpoint terminal (including route practice).
+              if (lesson.lessonId == 'player_adjustment_checkpoint')
+                _opponentTypesLessonV1,
+              lesson,
+            ],
+          ],
+        )
+      else
+        world,
+  ];
 
   static Act0ShellStateV1 _buildCatalog(
     Act0WorldCardV1? liveRoom,
