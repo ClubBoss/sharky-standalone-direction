@@ -241,6 +241,14 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        "name": "action reason default OFF", "shard_with": "repair outcome + queue",
+        "cmd": ["flutter", "test", "test/ui_v2/act0_action_reason_v1_test.dart", "-r", "compact"],
+    },
+    {
+        "name": "action reason pilot ON", "shard_with": "repair outcome + queue",
+        "cmd": ["flutter", "test", "--dart-define=actionReasonV1=true", "test/ui_v2/act0_action_reason_v1_test.dart", "-r", "compact"],
+    },
+    {
         "name": "source scope, showdown disclosure and replay chronology (Q0)",
         "cmd": [
             "flutter",
