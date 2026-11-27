@@ -306,25 +306,28 @@ void main() {
         ),
         isTrue,
       );
+      final b153 = _b153DeclaredDelta(repair);
       expect(
         repairSnapshot['sameSignalMapped'],
-        292 - _legacyFallbacksWithoutSourceClue.length,
+        292 - _legacyFallbacksWithoutSourceClue.length + b153.mapped,
       );
       expect(
         repairSnapshot['fallbackOnly'],
-        22 + _legacyFallbacksWithoutSourceClue.length,
+        22 + _legacyFallbacksWithoutSourceClue.length - b153.mapped,
       );
-      expect(repairSnapshot['unresolvedProductGap'], 3);
+      expect(repairSnapshot['unresolvedProductGap'], 3 + b153.gap);
       expect(
         repairSnapshot['unrecordedFallback'],
-        2 + _legacyFallbacksWithoutSourceClue.length,
+        2 +
+            _legacyFallbacksWithoutSourceClue.length -
+            b153.reclassifiedRawFallbacks,
       );
       // The historical comparison restores the old M-ratio price mapping
       // and the intro's old seat mapping. The live rows use their actual goals.
       final zone = repair.singleWhere(
         (row) => row.row.task.taskId == 'w9_m_ratio_table_window_transfer',
       );
-      expect(zone.mappingType, 'exact');
+      expect(zone.mappingType, 'unresolved_product_gap');
       expect(zone.fallbackOnly, isTrue);
       final revisedButton = repair.singleWhere(
         (row) => row.row.task.taskId == 'button_advantage_find_button',
@@ -336,26 +339,31 @@ void main() {
       final historicalRepairComparison = <String, Object?>{
         ...repairSnapshot,
         'sameSignalMapped':
-            (repairSnapshot['sameSignalMapped'] as int) +
+            (repairSnapshot['sameSignalMapped'] as int) -
+            b153.mapped +
             priorDeclaredMappings +
             _legacyFallbacksWithoutSourceClue.length,
         'fallbackOnly':
-            (repairSnapshot['fallbackOnly'] as int) -
+            (repairSnapshot['fallbackOnly'] as int) +
+            b153.mapped -
             priorDeclaredMappings -
             _legacyFallbacksWithoutSourceClue.length,
         'unresolvedProductGap':
             (repairSnapshot['unresolvedProductGap'] as int) -
+            b153.gap -
             currentGaps.length,
       };
       expect(repairSnapshot['incorrectOptions'], 529);
-      expect(repairSnapshot['exactReplayCovered'], 17);
+      expect(repairSnapshot['exactReplayCovered'], 17 + b153.exact);
       expect(historicalRepairComparison['sameSignalMapped'], 298);
       expect(historicalRepairComparison['fallbackOnly'], 15 + 1);
-      expect(repairSnapshot['intentionalExactReplay'], 17);
+      expect(repairSnapshot['intentionalExactReplay'], 17 + b153.exact);
       expect(historicalRepairComparison['unresolvedProductGap'], 0);
       expect(
         repairSnapshot['unrecordedFallback'],
-        2 + _legacyFallbacksWithoutSourceClue.length,
+        2 +
+            _legacyFallbacksWithoutSourceClue.length -
+            b153.reclassifiedRawFallbacks,
       );
       expect(repairSnapshot['unmapped'], 0);
       expect(repairSnapshot['currentErrorTypes'], <String, int>{
@@ -382,7 +390,7 @@ void main() {
       });
       expect(act0ConceptErrorDefinitionsV1, hasLength(20));
       expect(act0RepairGapAdjudicationsV1.take(37), hasLength(37));
-      expect(act0RepairGapAdjudicationsV1, hasLength(41));
+      expect(act0RepairGapAdjudicationsV1, hasLength(306));
       final fallbackInventory = (repairSnapshot['fallbackInventory'] as List)
           .cast<Map<String, Object?>>();
       // Both context questions have explicit same-task replay, preserving
@@ -496,8 +504,8 @@ void main() {
     );
     expect(source.task.runner.table.toCallLabel, 'To call 15.5 BB');
     final legacy = _declaredRepairRow(source);
-    expect(legacy.fallbackOnly, isFalse);
-    expect(legacy.mappingType, 'repair');
+    expect(legacy.fallbackOnly, isTrue);
+    expect(legacy.mappingType, 'unresolved_product_gap');
     for (final choice in source.incorrectOptions) {
       final intent = _incorrectOptionRow(source, choice).intent;
       expect(intent?.missedSignalId, 'pot_to_call');
@@ -655,6 +663,7 @@ void main() {
     }
 
     final allRepair = rows.map(_declaredRepairRow).toList(growable: false);
+    final b153 = _b153DeclaredDelta(allRepair);
     final incorrect = <_IncorrectOptionRow>[
       for (final row in rows)
         for (final option in row.incorrectOptions)
@@ -670,27 +679,32 @@ void main() {
     );
     expect(
       allRepair.where((row) => row.sameSignalMapped),
-      hasLength(294 - _legacyFallbacksWithoutSourceClue.length),
+      hasLength(294 - _legacyFallbacksWithoutSourceClue.length + b153.mapped),
     );
     expect(
       allRepair.where((row) => row.fallbackOnly),
-      hasLength(22 + _legacyFallbacksWithoutSourceClue.length),
+      hasLength(22 + _legacyFallbacksWithoutSourceClue.length - b153.mapped),
     );
     expect(
-      allRepair.where((row) => row.sameSignalMapped).length +
+      allRepair.where((row) => row.sameSignalMapped).length -
+          b153.mapped +
           currentGaps.length +
           3 +
           _legacyFallbacksWithoutSourceClue.length,
       300,
     );
     expect(
-      allRepair.where((row) => row.fallbackOnly).length -
+      allRepair.where((row) => row.fallbackOnly).length +
+          b153.mapped -
           currentGaps.length -
           3 -
           _legacyFallbacksWithoutSourceClue.length,
       15 + 1,
     );
-    expect(allRepair.where((row) => row.exactReplay), hasLength(17));
+    expect(
+      allRepair.where((row) => row.exactReplay),
+      hasLength(17 + b153.exact),
+    );
     expect(
       incorrect.where(
         (row) => row.currentErrorType == 'misread_mindset_discipline',
@@ -733,7 +747,7 @@ void main() {
         'button_advantage_find_button',
         'w9_m_ratio_table_window_transfer',
         ..._legacyFallbacksWithoutSourceClue,
-      },
+      }.difference(b153.changedIds),
       reason: 'Legacy fallbacks do not stand in for checked typed repairs.',
     );
     expect(
@@ -741,7 +755,7 @@ void main() {
           .where((row) => row.mappingType == 'unresolved_product_gap')
           .map((row) => row.row.task.taskId)
           .toSet(),
-      _newW01OrderGapIds,
+      {..._newW01OrderGapIds, ...b153.gapIds},
     );
     expect(allRepair.where((row) => !row.intentAvailable), isEmpty);
     for (final repair in extensionRepair) {
@@ -1254,6 +1268,80 @@ List<_Row> _assessedSourceRows({bool historical = false}) => <_Row>[
                   : null,
             ),
 ];
+
+/// Current B153 declarations replace the historical generic route for live
+/// rows. Frozen Wave 6 rows still use the archived declaration verbatim.
+({
+  int mapped,
+  int exact,
+  int gap,
+  int reclassifiedRawFallbacks,
+  Set<String> changedIds,
+  Set<String> gapIds,
+})
+_b153DeclaredDelta(List<_RepairRow> repair) {
+  var mapped = 0, exact = 0, gap = 0;
+  final changedIds = <String>{};
+  final gapIds = <String>{};
+  final reclassifiedRawFallbackIds = <String>{};
+  for (final row in repair) {
+    if (row.row.archived != null || row.row.worldNumber < 7) continue;
+    final id = row.row.task.taskId;
+    final adjudication = act0RepairGapAdjudicationForSourceTaskV1(id);
+    if (adjudication == null) continue;
+    changedIds.add(id);
+    final priorRawExact =
+        _legacyFallbacksWithoutSourceClue.contains(id) ||
+        id == 'w9_m_ratio_table_window_transfer';
+    final alternate =
+        adjudication.outcome ==
+        Act0RepairGapOutcomeV1.alternateSameSignalTarget;
+    final familiar =
+        adjudication.outcome == Act0RepairGapOutcomeV1.intentionalExactReplay;
+    final unresolved =
+        adjudication.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap;
+    expect(row.mappingType, adjudication.mappingType, reason: id);
+    expect(row.sameSignalMapped, alternate, reason: id);
+    expect(row.exactReplay, familiar, reason: id);
+    mapped += (alternate ? 1 : 0) - (priorRawExact ? 0 : 1);
+    if (priorRawExact) reclassifiedRawFallbackIds.add(id);
+    if (familiar) exact++;
+    if (unresolved) {
+      gap++;
+      gapIds.add(id);
+    }
+  }
+  // Pin the 18 live legacy raw fallbacks deliberately adjudicated by B153.
+  // Historical W11/W12 rows retain their frozen declarations.
+  expect(reclassifiedRawFallbackIds, const <String>{
+    'w9_ev_two_results',
+    'w9_survival_stack_tradeoff',
+    'w9_survival_recap',
+    'w9_m_ratio_lap_count',
+    'w9_m_ratio_ante_cost',
+    'w9_m_ratio_recap',
+    'w9_bubble_premium_gap',
+    'w9_bubble_cover_seat',
+    'w9_bubble_recap',
+    'w9_prize_model_inputs',
+    'w9_m_ratio_table_window_transfer',
+    'w10_find_limper',
+    'w10_player_type_recap',
+    'w10_isolate_limper_bb',
+    'w10_one_lever_recap',
+    'w10_find_turn_raiser',
+    'w10_guardrails_recap',
+    'w10_river_price_check',
+  });
+  return (
+    mapped: mapped,
+    exact: exact,
+    gap: gap,
+    reclassifiedRawFallbacks: reclassifiedRawFallbackIds.length,
+    changedIds: changedIds,
+    gapIds: gapIds,
+  );
+}
 
 _RepairRow _repairRow(_Row row, {bool declaredMetadataOnly = false}) {
   final intents = row.incorrectOptions

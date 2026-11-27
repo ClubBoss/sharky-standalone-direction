@@ -1,4 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
+
+import '../../tools/transfer_novelty_check_v1.dart';
+import '../support/act0_b153_transfer_novelty_v1.dart';
+import '../support/act0_catalog_snapshot_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_concept_error_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
@@ -96,7 +100,7 @@ void main() {
       'world_3/same_hand_different_seat/same_hand_different_seat_w3_same_hand_recap',
     ];
     // Preserve the original 37 dispositions as a cohort when lesson ownership moves.
-    expect(act0RepairGapAdjudicationsV1, hasLength(41));
+    expect(act0RepairGapAdjudicationsV1, hasLength(306));
     final rows = act0RepairGapAdjudicationsV1.take(37).toList();
     expect(rows, hasLength(37));
     expect(
@@ -170,15 +174,19 @@ void main() {
       }
     }
     expect(counts, <Act0RepairGapOutcomeV1, int>{
-      Act0RepairGapOutcomeV1.alternateSameSignalTarget: 21,
+      Act0RepairGapOutcomeV1.alternateSameSignalTarget: 20,
+      // B153 removes the old W8 alternate: both offered the answer 20 BB.
+      Act0RepairGapOutcomeV1.unresolvedProductGap: 1,
       // The prior 15 dispositions remain; this one context definition adds one.
       Act0RepairGapOutcomeV1.intentionalExactReplay: 15 + 1,
     });
     expect(
-      rows.where(
-        (row) => row.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap,
-      ),
-      isEmpty,
+      rows
+          .where(
+            (row) => row.outcome == Act0RepairGapOutcomeV1.unresolvedProductGap,
+          )
+          .map((row) => row.sourceTaskId),
+      ['what_poker_is_side_pot_intro'],
     );
     final blindsReview = rows.singleWhere(
       (row) => row.sourceTaskId == 'blinds_review',
@@ -208,6 +216,179 @@ void main() {
     expect(coPlayersBehind.targetWorldId, isNull);
     expect(coPlayersBehind.targetLessonId, isNull);
     expect(coPlayersBehind.targetTaskId, isNull);
+  });
+  test('B153 accounts for every G1 miss with earlier, non-exact targets', () {
+    final snapshot = readB153Snapshot();
+    final routeIndex = {
+      for (final (index, task) in snapshot.values.indexed) task.id: index,
+    };
+    final lessonOrder = <(int, String), int>{};
+    for (final task in snapshot.values.where((task) => task.course)) {
+      lessonOrder.putIfAbsent((
+        task.world,
+        task.lesson,
+      ), () => lessonOrder.length);
+    }
+    final live = {
+      for (final row in [...catalogTasks, ...day7CatalogTasks])
+        '${row.world.worldId}/${row.lesson.lessonId}/${row.task.taskId}':
+            row.task,
+    };
+    final expected = snapshot.values
+        .where((task) => task.world >= 7 && task.world <= 12 && task.hasMiss)
+        .map((task) => task.id)
+        .toSet();
+    final rows = act0RepairGapAdjudicationsV1
+        .where((row) => int.parse(row.sourceWorldId.substring(6)) >= 7)
+        .toList();
+    expect(rows.map((row) => row.sourceTaskId).toSet(), expected);
+    expect(
+      rows.length,
+      expected.length,
+      reason: 'Exactly one disposition per source',
+    );
+    final counts = <int, List<int>>{
+      for (var w = 7; w <= 12; w++) w: [0, 0, 0],
+    };
+    final alternates = <String>{};
+    String label(Act0RunnerOptionV1 option) => option.amountLabel.isEmpty
+        ? option.label.trim()
+        : '${option.label.trim()} [${option.amountLabel.trim()}]';
+    for (final row in rows) {
+      final source = snapshot[row.sourceTaskId]!;
+      final sourceTask =
+          live['${row.sourceWorldId}/${row.sourceLessonId}/${row.sourceTaskId}'];
+      expect(sourceTask, isNotNull, reason: row.sourceTaskId);
+      expect(source.world, int.parse(row.sourceWorldId.substring(6)));
+      expect(source.lesson, row.sourceLessonId);
+      expect(
+        sourceTask!.runner.options.any(
+          (option) =>
+              option.quality == Act0FeedbackQualityV1.wrong ||
+              option.quality == Act0FeedbackQualityV1.suboptimal,
+        ),
+        isTrue,
+      );
+      expect(
+        act0ConceptErrorDefinitionForTaskV1(
+          worldId: row.sourceWorldId,
+          lessonId: row.sourceLessonId,
+          taskId: row.sourceTaskId,
+        )?.id,
+        row.conceptErrorId,
+      );
+      expect(row.leaksOriginalAnswer, isFalse);
+      expect(row.requiresFutureKnowledge, isFalse);
+      final concept = act0ConceptErrorDefinitionForTaskV1(
+        worldId: row.sourceWorldId,
+        lessonId: row.sourceLessonId,
+        taskId: row.sourceTaskId,
+      )!;
+      final mapping = act0FirstValueSameSignalRepMappingV1(
+        nextRepId: 'repeat_${concept.eligibleRepairFamily}',
+        skillAtomId: concept.eligibleRepairFamily,
+        sourceSignalId: concept.id,
+        sourceTaskId: row.sourceTaskId,
+        receiptOutcome: 'repair_started',
+      );
+      expect(mapping?.mappingType, row.mappingType, reason: row.sourceTaskId);
+      expect(
+        mapping?.taskId,
+        row.targetTaskId ?? row.sourceTaskId,
+        reason: row.sourceTaskId,
+      );
+      expect(row.learnerEquivalenceRationale, isNotEmpty);
+      expect(
+        row.learnerEquivalenceRationale,
+        isNot('same concept and signal; different authored decision'),
+      );
+      if (row.outcome == Act0RepairGapOutcomeV1.alternateSameSignalTarget) {
+        counts[source.world]![0]++;
+        alternates.add(row.sourceTaskId);
+        expect(row.candidateTargetIds, [row.targetTaskId]);
+        final target = snapshot[row.targetTaskId]!;
+        final targetTask =
+            live['${row.targetWorldId}/${row.targetLessonId}/${row.targetTaskId}'];
+        expect(targetTask, isNotNull, reason: row.targetTaskId);
+        expect(
+          target.course,
+          isTrue,
+          reason: 'Day 7-only content is not a route target',
+        );
+        expect(targetTask!.phase, Act0LessonPhaseV1.drill);
+        expect(routeIndex[target.id], lessThan(routeIndex[source.id]!));
+        expect(target.world, lessThanOrEqualTo(source.world));
+        expect(
+          lessonOrder[(target.world, target.lesson)],
+          lessThanOrEqualTo(lessonOrder[(source.world, source.lesson)]!),
+          reason: 'Review-only sources cannot point to later lessons',
+        );
+        expect(target.world, int.parse(row.targetWorldId!.substring(6)));
+        expect(target.lesson, row.targetLessonId);
+        expect(
+          act0ConceptErrorDefinitionForTaskV1(
+            worldId: row.targetWorldId!,
+            lessonId: row.targetLessonId!,
+            taskId: target.id,
+          )?.id,
+          row.conceptErrorId,
+        );
+        expect(
+          source.correct.toSet().intersection(target.choices.toSet()),
+          isEmpty,
+          reason: row.sourceTaskId,
+        );
+        expect(
+          sourceTask.runner.options
+              .where((o) => o.quality.isPreferred)
+              .map(label)
+              .toSet()
+              .intersection(targetTask.runner.options.map(label).toSet()),
+          isEmpty,
+          reason: row.sourceTaskId,
+        );
+        final witness = b153Witnesses[source.id]!;
+        expect(witness.$1, target.id);
+        final novelty = classifyTransferPairV2(
+          b153Spot(source, witness.$2, witness.$4, witness.$5),
+          b153Spot(target, witness.$3, witness.$4, witness.$6),
+        );
+        expect(novelty.exactReplay, isFalse);
+        expect(
+          novelty.result.classification,
+          TransferNoveltyV1.changedDecision,
+          reason: row.sourceTaskId,
+        );
+      } else {
+        expect(row.candidateTargetIds, isEmpty);
+        expect(row.targetTaskId, isNull);
+        expect(row.targetWorldId, isNull);
+        expect(row.targetLessonId, isNull);
+        switch (row.outcome) {
+          case Act0RepairGapOutcomeV1.intentionalExactReplay:
+            counts[source.world]![1]++;
+          case Act0RepairGapOutcomeV1.unresolvedProductGap:
+            counts[source.world]![2]++;
+          default:
+            fail('B153 must not declare new content: ${row.sourceTaskId}');
+        }
+      }
+    }
+    expect(alternates, b153Witnesses.keys.toSet());
+    expect(counts, {
+      7: [5, 0, 16],
+      8: [14, 1, 35],
+      9: [5, 9, 23],
+      10: [5, 7, 33],
+      11: [4, 11, 40],
+      12: [11, 13, 34],
+    });
+    for (final entry in counts.entries) {
+      // ignore: avoid_print
+      print(
+        'B153 W${entry.key}: ${entry.value[0]} alternate / ${entry.value[1]} exact / ${entry.value[2]} gap',
+      );
+    }
   });
 }
 
