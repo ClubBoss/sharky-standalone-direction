@@ -1,0 +1,1818 @@
+world: null
+title: 'Opponent Types: Same Spot, Different Read'
+stage: YAML spec for content review (B146b; catalog placement pending)
+format: 6-max cash Hold’em study fixtures, 0.5/1 BB blinds, no ante or rake
+source_anchors:
+- B146b · VI-37 (0.184), opponent type lesson brief
+- l0-audit/specs/w25_spec.yaml
+- l0-audit/specs/codex_batch_w25_w36_brief.md and codex_batch_w14_w24_brief.md
+- l0-audit/reasoning/design_note_decision_reasoning_v3.md §§1–3 and §9
+proposed_principles:
+- id: value_vs_frequent_caller
+  introduced_in: opponent_types_pilot
+  definition: Value bet when enough worse hands tend to call; check or choose a smaller size when the continuing range
+    makes that better.
+- id: respect_rare_raise
+  introduced_in: opponent_types_pilot
+  definition: A rare raise may be value-heavy; compare the modeled winning share with the actual call price rather
+    than assuming every raise is strong.
+model_contract:
+  ranges: Equally weighted legal combinations within the explicitly stated study range. Rank labels include all suits
+    unless specified; remove known cards. The simplified response groups model tendencies, not guaranteed actions
+    or universal frequencies.
+  enumeration: Compare best five-card hands at river showdown, enumerate legal combinations and paid chips by seat.
+    Tie equity counts half heads-up. No future cards or wagers are modeled.
+  payout: Incremental chip EV from the decision. Check ends the hand, opponent folds award the current pot to Hero,
+    and calls include matched amounts only. Past contributions are sunk.
+  grades: One correct answer per task. Main-route actions within 5% of the current pot are acceptable; Clearly worse
+    reasonable options are suboptimal; large decision errors may be wrong. No Day 7 tasks in this pilot.
+  pairing: Consecutive tasks with the same pNN id prefix share cards, stacks, action history, pot, call price and
+    choices. Only the stated tendency and its range/response model change, with derived reasoning and grades.
+lessons:
+- id: opponent_types_pilot
+  principle_id: value_vs_frequent_caller
+  sequence:
+  - guided
+  - guided
+  - independent
+  - independent
+  - independent
+  - independent
+  - guided
+  - guided
+  - independent
+  - independent
+  - independent
+  - independent
+owner_concepts: {}
+tasks:
+- id: opponent_types_p01_loose_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: guided
+  street: river
+  hero:
+    seat: BTN
+    cards: Ks Jh
+  board: Kc 8d 4s 3h 2c
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  pot_before_bet: 11.5
+  pot_with_bet: 11.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Loose-passive: this player tends to call river bets with weaker pairs, even fairly large bets. BB has
+    checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9
+    88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ KT K9 88 44 87; against 8
+    BB, BB calls KQ KT K9 88 44 87. Other listed hands fold; no raises are modeled. This is a simplified range model,
+    not a guarantee about a real player.'
+  teach: Compare the hands that pay with the hands that beat you.
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: suboptimal
+    feedback: Check misses value from weaker kings and eights.
+    suboptimal_kind: clearly_worse
+  - id: bet_4
+    label: Bet 4 BB
+    grade: suboptimal
+    feedback: Bet 4 BB gets calls, but the same weaker hands also pay 8 BB.
+    suboptimal_kind: clearly_worse
+  - id: bet_8
+    label: Bet 8 BB
+    grade: correct
+    feedback: Bet 8 BB. Weaker kings and eights tend to pay; the same calls earn more than betting 4 BB.
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_4
+  opponent_read: BB’s check can conceal stronger hands, but this frequent caller tends to pay with weaker kings and
+    eights.
+  pre_choice_assumption: 'Loose-passive: this player tends to call river bets with weaker pairs, even fairly large
+    bets. BB has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo
+    of KQ KT K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ KT K9 88 44 87;
+    against 8 BB, BB calls KQ KT K9 88 44 87. Other listed hands fold; no raises are modeled. This is a simplified
+    range model, not a guarantee about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: more_value_from_worse
+    edge_bb: 1.21739
+    explanation: Bet 8 BB. Weaker kings and eights tend to pay; the same calls earn more than betting 4 BB.
+  why_correct: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14; EV
+    = (4/46)×11.5 + (42/46)×[(2/3)×(11.5+2×4)−4] = 212/23 BB. 8 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14;
+    EV = (4/46)×11.5 + (42/46)×[(2/3)×(11.5+2×8)−8] = 240/23 BB. Best Bet 8 BB beats Bet 4 BB by 28/23 BB (1.21739
+    BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - KQ
+      - KT
+      - K9
+      - '88'
+      - '44'
+      - '87'
+      - 76s
+      eligible_combos: 46
+      combos_by_class:
+        KQ: 8
+        KT: 8
+        K9: 8
+        '88': 3
+        '44': 3
+        '87': 12
+        76s: 4
+      outcomes:
+        wins: 32
+        ties: 0
+        losses: 14
+      equity_pct: 69.6
+    response_by_size:
+      bet_4:
+        bet_bb: 4.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KQ
+          - KT
+          - K9
+          - '88'
+          - '44'
+          - '87'
+          eligible_combos: 42
+          combos_by_class:
+            KQ: 8
+            KT: 8
+            K9: 8
+            '88': 3
+            '44': 3
+            '87': 12
+          outcomes:
+            wins: 28
+            ties: 0
+            losses: 14
+          equity_pct: 66.7
+        fold_combos: 4
+      bet_8:
+        bet_bb: 8.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KQ
+          - KT
+          - K9
+          - '88'
+          - '44'
+          - '87'
+          eligible_combos: 42
+          combos_by_class:
+            KQ: 8
+            KT: 8
+            K9: 8
+            '88': 3
+            '44': 3
+            '87': 12
+          outcomes:
+            wins: 28
+            ties: 0
+            losses: 14
+          equity_pct: 66.7
+        fold_combos: 4
+    expected_ev_bb:
+      check: 8.0
+      bet_4: 9.21739
+      bet_8: 10.43478
+- id: opponent_types_p01_tight_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: guided
+  street: river
+  hero:
+    seat: BTN
+    cards: Ks Jh
+  board: Kc 8d 4s 3h 2c
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  pot_before_bet: 11.5
+  pot_with_bet: 11.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Tight-passive: this player tends to check and give up weaker pairs against river bets. BB has checked
+    the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9 88 44 87
+    76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ 88 44; against 8 BB, BB calls KQ 88
+    44. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a
+    real player.'
+  teach: Compare the hands that pay with the hands that beat you.
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: correct
+    feedback: Check. The weaker pairs tend to fold while the stronger hands pay; betting 4 BB would lose extra chips.
+  - id: bet_4
+    label: Bet 4 BB
+    grade: suboptimal
+    feedback: Betting 4 BB risks extra chips against stronger hands without getting weaker calls in this model.
+    suboptimal_kind: clearly_worse
+  - id: bet_8
+    label: Bet 8 BB
+    grade: suboptimal
+    feedback: Betting 8 BB loses even more when stronger hands continue.
+    suboptimal_kind: clearly_worse
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_4
+  opponent_read: BB’s check need not mean weakness; this selective caller may still hold a stronger king or set.
+  pre_choice_assumption: 'Tight-passive: this player tends to check and give up weaker pairs against river bets. BB
+    has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT
+    K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ 88 44; against 8 BB, BB
+    calls KQ 88 44. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee
+    about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: cheaper_same_result
+    edge_bb: 1.21739
+    explanation: Check. The weaker pairs tend to fold while the stronger hands pay; betting 4 BB would lose extra
+      chips.
+  why_correct: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV
+    = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×4)−4] = 156/23 BB. 8 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14;
+    EV = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×8)−8] = 128/23 BB. Best Check beats Bet 4 BB by 28/23 BB (1.21739 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - KQ
+      - KT
+      - K9
+      - '88'
+      - '44'
+      - '87'
+      - 76s
+      eligible_combos: 46
+      combos_by_class:
+        KQ: 8
+        KT: 8
+        K9: 8
+        '88': 3
+        '44': 3
+        '87': 12
+        76s: 4
+      outcomes:
+        wins: 32
+        ties: 0
+        losses: 14
+      equity_pct: 69.6
+    response_by_size:
+      bet_4:
+        bet_bb: 4.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KQ
+          - '88'
+          - '44'
+          eligible_combos: 14
+          combos_by_class:
+            KQ: 8
+            '88': 3
+            '44': 3
+          outcomes:
+            wins: 0
+            ties: 0
+            losses: 14
+          equity_pct: 0.0
+        fold_combos: 32
+      bet_8:
+        bet_bb: 8.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KQ
+          - '88'
+          - '44'
+          eligible_combos: 14
+          combos_by_class:
+            KQ: 8
+            '88': 3
+            '44': 3
+          outcomes:
+            wins: 0
+            ties: 0
+            losses: 14
+          equity_pct: 0.0
+        fold_combos: 32
+    expected_ev_bb:
+      check: 8.0
+      bet_4: 6.78261
+      bet_8: 5.56522
+- id: opponent_types_p02_loose_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Qh Jd
+  board: Qs 9c 6h 4d 2s
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 2'
+  - 'flop: BB calls 2'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 3'
+  - 'turn: BB calls 3'
+  - 'river: BB checks'
+  pot_before_bet: 15.5
+  pot_with_bet: 15.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Loose-passive: this player tends to call down with marginal pairs. BB has checked the river (pot 15.5
+    BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all
+    equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10 BB, BB
+    calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified range model,
+    not a guarantee about a real player.'
+  teach: ''
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: suboptimal
+    feedback: Check gives up extra value from weaker queens and nines.
+    suboptimal_kind: clearly_worse
+  - id: bet_5
+    label: Bet 5 BB
+    grade: suboptimal
+    feedback: Bet 5 BB earns value, but the same range pays 10 BB.
+    suboptimal_kind: clearly_worse
+  - id: bet_10
+    label: Bet 10 BB
+    grade: correct
+    feedback: Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_5
+  opponent_read: BB’s check leaves weaker queens and nines that may pay even a larger bet.
+  pre_choice_assumption: 'Loose-passive: this player tends to call down with marginal pairs. BB has checked the river
+    (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98
+    87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10
+    BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified
+    range model, not a guarantee about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: more_value_from_worse
+    edge_bb: 1.05263
+    explanation: Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.
+  why_correct: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28;
+    EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×5)−5] = 206/19 BB. 10 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28;
+    EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×10)−10] = 226/19 BB. Best Bet 10 BB beats Bet 5 BB by 20/19 BB (1.05263
+    BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - AQ
+      - KQ
+      - QT
+      - Q8
+      - Q7
+      - Q5
+      - '99'
+      - '96'
+      - '98'
+      - 87s
+      eligible_combos: 76
+      combos_by_class:
+        AQ: 8
+        KQ: 8
+        QT: 8
+        Q8: 8
+        Q7: 8
+        Q5: 8
+        '99': 3
+        '96': 9
+        '98': 12
+        87s: 4
+      outcomes:
+        wins: 48
+        ties: 0
+        losses: 28
+      equity_pct: 63.2
+    response_by_size:
+      bet_5:
+        bet_bb: 5.0
+        continuing_range:
+          seat: BB
+          classes:
+          - AQ
+          - KQ
+          - QT
+          - Q8
+          - Q7
+          - Q5
+          - '99'
+          - '96'
+          - '98'
+          eligible_combos: 72
+          combos_by_class:
+            AQ: 8
+            KQ: 8
+            QT: 8
+            Q8: 8
+            Q7: 8
+            Q5: 8
+            '99': 3
+            '96': 9
+            '98': 12
+          outcomes:
+            wins: 44
+            ties: 0
+            losses: 28
+          equity_pct: 61.1
+        fold_combos: 4
+      bet_10:
+        bet_bb: 10.0
+        continuing_range:
+          seat: BB
+          classes:
+          - AQ
+          - KQ
+          - QT
+          - Q8
+          - Q7
+          - Q5
+          - '99'
+          - '96'
+          - '98'
+          eligible_combos: 72
+          combos_by_class:
+            AQ: 8
+            KQ: 8
+            QT: 8
+            Q8: 8
+            Q7: 8
+            Q5: 8
+            '99': 3
+            '96': 9
+            '98': 12
+          outcomes:
+            wins: 44
+            ties: 0
+            losses: 28
+          equity_pct: 61.1
+        fold_combos: 4
+    expected_ev_bb:
+      check: 9.78947
+      bet_5: 10.84211
+      bet_10: 11.89474
+- id: opponent_types_p02_tight_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Qh Jd
+  board: Qs 9c 6h 4d 2s
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 2'
+  - 'flop: BB calls 2'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 3'
+  - 'turn: BB calls 3'
+  - 'river: BB checks'
+  pot_before_bet: 15.5
+  pot_with_bet: 15.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Tight-aggressive: this player tends to release marginal pairs when facing a river bet after checking.
+    BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ
+    KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ 99 96;
+    against 10 BB, BB calls AQ KQ 99 96. Other listed hands fold; no raises are modeled. This is a simplified range
+    model, not a guarantee about a real player.'
+  teach: ''
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: correct
+    feedback: Check. A bet of 5 BB would run into stronger queens or better while weaker pairs tend to fold.
+  - id: bet_5
+    label: Bet 5 BB
+    grade: suboptimal
+    feedback: Betting 5 BB gets calls from hands that beat you in this model.
+    suboptimal_kind: clearly_worse
+  - id: bet_10
+    label: Bet 10 BB
+    grade: suboptimal
+    feedback: Betting 10 BB increases the loss against the same stronger hands.
+    suboptimal_kind: clearly_worse
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_5
+  opponent_read: BB can check stronger queens or two pair; the tighter continuing range gives worse queens little
+    weight.
+  pre_choice_assumption: 'Tight-aggressive: this player tends to release marginal pairs when facing a river bet after
+    checking. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal
+    combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ
+    KQ 99 96; against 10 BB, BB calls AQ KQ 99 96. Other listed hands fold; no raises are modeled. This is a simplified
+    range model, not a guarantee about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: cheaper_same_result
+    edge_bb: 1.84211
+    explanation: Check. A bet of 5 BB would run into stronger queens or better while weaker pairs tend to fold.
+  why_correct: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28;
+    EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×5)−5] = 151/19 BB. 10 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28;
+    EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×10)−10] = 116/19 BB. Best Check beats Bet 5 BB by 35/19 BB (1.84211 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - AQ
+      - KQ
+      - QT
+      - Q8
+      - Q7
+      - Q5
+      - '99'
+      - '96'
+      - '98'
+      - 87s
+      eligible_combos: 76
+      combos_by_class:
+        AQ: 8
+        KQ: 8
+        QT: 8
+        Q8: 8
+        Q7: 8
+        Q5: 8
+        '99': 3
+        '96': 9
+        '98': 12
+        87s: 4
+      outcomes:
+        wins: 48
+        ties: 0
+        losses: 28
+      equity_pct: 63.2
+    response_by_size:
+      bet_5:
+        bet_bb: 5.0
+        continuing_range:
+          seat: BB
+          classes:
+          - AQ
+          - KQ
+          - '99'
+          - '96'
+          eligible_combos: 28
+          combos_by_class:
+            AQ: 8
+            KQ: 8
+            '99': 3
+            '96': 9
+          outcomes:
+            wins: 0
+            ties: 0
+            losses: 28
+          equity_pct: 0.0
+        fold_combos: 48
+      bet_10:
+        bet_bb: 10.0
+        continuing_range:
+          seat: BB
+          classes:
+          - AQ
+          - KQ
+          - '99'
+          - '96'
+          eligible_combos: 28
+          combos_by_class:
+            AQ: 8
+            KQ: 8
+            '99': 3
+            '96': 9
+          outcomes:
+            wins: 0
+            ties: 0
+            losses: 28
+          equity_pct: 0.0
+        fold_combos: 48
+    expected_ev_bb:
+      check: 9.78947
+      bet_5: 7.94737
+      bet_10: 6.10526
+- id: opponent_types_p03_loose_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ad Th
+  board: Tc 7s 5h 3c 2d
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 2'
+  - 'turn: BB calls 2'
+  - 'river: BB checks'
+  pot_before_bet: 15.5
+  pot_with_bet: 15.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Loose-passive: this player tends to stick with top pair even against larger river bets. BB has checked
+    the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55
+    76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76; against 9 BB,
+    BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified range model,
+    not a guarantee about a real player.'
+  teach: ''
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: suboptimal
+    feedback: Checking gives up value from weaker tens and sevens.
+    suboptimal_kind: clearly_worse
+  - id: bet_4
+    label: Bet 4 BB
+    grade: suboptimal
+    feedback: Bet 4 BB earns value but the larger bet gets the same calls.
+    suboptimal_kind: clearly_worse
+  - id: bet_9
+    label: Bet 9 BB
+    grade: correct
+    feedback: Bet 9 BB. Weaker tens and sevens still pay, so the larger bet earns more than betting 4 BB.
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_4
+  opponent_read: BB may hold a set, but frequent calls with weaker tens can make a larger value bet worthwhile.
+  pre_choice_assumption: 'Loose-passive: this player tends to stick with top pair even against larger river bets.
+    BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT
+    QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76;
+    against 9 BB, BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified
+    range model, not a guarantee about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: more_value_from_worse
+    edge_bb: 3.51852
+    explanation: Bet 9 BB. Weaker tens and sevens still pay, so the larger bet earns more than betting 4 BB.
+  why_correct: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV
+    = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×4)−4] = 448/27 BB. 9 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6;
+    EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×9)−9] = 181/9 BB. Best Bet 9 BB beats Bet 4 BB by 95/27 BB (3.51852
+    BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - KT
+      - QT
+      - JT
+      - T9
+      - '77'
+      - '55'
+      - '76'
+      - 86s
+      eligible_combos: 54
+      combos_by_class:
+        KT: 8
+        QT: 8
+        JT: 8
+        T9: 8
+        '77': 3
+        '55': 3
+        '76': 12
+        86s: 4
+      outcomes:
+        wins: 48
+        ties: 0
+        losses: 6
+      equity_pct: 88.9
+    response_by_size:
+      bet_4:
+        bet_bb: 4.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KT
+          - QT
+          - JT
+          - T9
+          - '77'
+          - '55'
+          - '76'
+          eligible_combos: 50
+          combos_by_class:
+            KT: 8
+            QT: 8
+            JT: 8
+            T9: 8
+            '77': 3
+            '55': 3
+            '76': 12
+          outcomes:
+            wins: 44
+            ties: 0
+            losses: 6
+          equity_pct: 88.0
+        fold_combos: 4
+      bet_9:
+        bet_bb: 9.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KT
+          - QT
+          - JT
+          - T9
+          - '77'
+          - '55'
+          - '76'
+          eligible_combos: 50
+          combos_by_class:
+            KT: 8
+            QT: 8
+            JT: 8
+            T9: 8
+            '77': 3
+            '55': 3
+            '76': 12
+          outcomes:
+            wins: 44
+            ties: 0
+            losses: 6
+          equity_pct: 88.0
+        fold_combos: 4
+    expected_ev_bb:
+      check: 13.77778
+      bet_4: 16.59259
+      bet_9: 20.11111
+- id: opponent_types_p03_tight_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ad Th
+  board: Tc 7s 5h 3c 2d
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 100
+    HJ: 100
+    CO: 100
+    BTN: 100
+    SB: 100
+    BB: 100
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 2'
+  - 'turn: BB calls 2'
+  - 'river: BB checks'
+  pot_before_bet: 15.5
+  pot_with_bet: 15.5
+  to_call: 0.0
+  price_pct: null
+  decision_kind: table
+  caption: 'Tight-aggressive: this player tends to defend top pair against a modest river bet but release weaker kickers
+    against larger bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have
+    any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls
+    KT QT JT T9 77 55; against 9 BB, BB calls KT 77 55. Other listed hands fold; no raises are modeled. This is a
+    simplified range model, not a guarantee about a real player.'
+  teach: ''
+  question: Which option earns the most chips in this model?
+  options:
+  - id: check
+    label: Check
+    grade: suboptimal
+    feedback: Checking misses calls from weaker tens at the modest size.
+    suboptimal_kind: clearly_worse
+  - id: bet_4
+    label: Bet 4 BB
+    grade: correct
+    feedback: Bet 4 BB. More weaker tens pay at this size than at 9 BB, earning more overall.
+  - id: bet_9
+    label: Bet 9 BB
+    grade: suboptimal
+    feedback: Bet 9 BB loses too many weaker-ten calls; sets remain in the continuing range.
+    suboptimal_kind: clearly_worse
+  chart_row: null
+  m_ratio: null
+  principle_id: value_vs_frequent_caller
+  best_alternative: bet_9
+  opponent_read: BB may pay a modest size with weaker tens, but the larger-size callers are more concentrated around
+    strong hands.
+  pre_choice_assumption: 'Tight-aggressive: this player tends to defend top pair against a modest river bet but release
+    weaker kickers against larger bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model,
+    BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against
+    4 BB, BB calls KT QT JT T9 77 55; against 9 BB, BB calls KT 77 55. Other listed hands fold; no raises are modeled.
+    This is a simplified range model, not a guarantee about a real player.'
+  stack_matters: false
+  stack_reason: Both offered bets fit the 100 BB starting stacks; there is no later street.
+  edge_vs_alternative:
+    mechanism: more_value_from_worse
+    edge_bb: 1.59259
+    explanation: Bet 4 BB. More weaker tens pay at this size than at 9 BB, earning more overall.
+  why_correct: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+    Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 16/54 folds, 38/54 calls, caller W/T/L=32/0/6; EV
+    = (16/54)×15.5 + (38/54)×[(16/19)×(15.5+2×4)−4] = 424/27 BB. 9 BB: 40/54 folds, 14/54 calls, caller W/T/L=8/0/6;
+    EV = (40/54)×15.5 + (14/54)×[(4/7)×(15.5+2×9)−9] = 127/9 BB. Best Bet 4 BB beats Bet 9 BB by 43/27 BB (1.59259
+    BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - KT
+      - QT
+      - JT
+      - T9
+      - '77'
+      - '55'
+      - '76'
+      - 86s
+      eligible_combos: 54
+      combos_by_class:
+        KT: 8
+        QT: 8
+        JT: 8
+        T9: 8
+        '77': 3
+        '55': 3
+        '76': 12
+        86s: 4
+      outcomes:
+        wins: 48
+        ties: 0
+        losses: 6
+      equity_pct: 88.9
+    response_by_size:
+      bet_4:
+        bet_bb: 4.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KT
+          - QT
+          - JT
+          - T9
+          - '77'
+          - '55'
+          eligible_combos: 38
+          combos_by_class:
+            KT: 8
+            QT: 8
+            JT: 8
+            T9: 8
+            '77': 3
+            '55': 3
+          outcomes:
+            wins: 32
+            ties: 0
+            losses: 6
+          equity_pct: 84.2
+        fold_combos: 16
+      bet_9:
+        bet_bb: 9.0
+        continuing_range:
+          seat: BB
+          classes:
+          - KT
+          - '77'
+          - '55'
+          eligible_combos: 14
+          combos_by_class:
+            KT: 8
+            '77': 3
+            '55': 3
+          outcomes:
+            wins: 8
+            ties: 0
+            losses: 6
+          equity_pct: 57.1
+        fold_combos: 40
+    expected_ev_bb:
+      check: 13.77778
+      bet_4: 15.7037
+      bet_9: 14.11111
+- id: opponent_types_p04_tight_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: guided
+  street: river
+  hero:
+    seat: BTN
+    cards: Ah Jc
+  board: Js 9d 5h 3s 2c
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 20
+    HJ: 20
+    CO: 20
+    BTN: 20
+    SB: 20
+    BB: 20
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  - 'river: BTN bets 4'
+  - 'river: BB raises to 14.5'
+  pot_before_bet: 15.5
+  pot_with_bet: 30.0
+  to_call: 10.5
+  price_pct: 25.9
+  decision_kind: table
+  caption: 'Tight-passive: this player rarely check-raises with anything weaker than two pair; occasional bluffs are
+    possible. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising
+    range is 99 55 33 8s7s, with each legal combo equally weighted. The model includes only the stated possibilities,
+    not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends
+    betting.'
+  teach: Compare the equity of your hand against the raising range with the call price.
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 10.5 BB
+    grade: wrong
+    feedback: Calling needs more winning combinations than the rare bluff provides.
+  - id: fold
+    label: Fold
+    grade: correct
+    feedback: Fold. Sets dominate this modeled raise; calling costs more than the rare bluff can repay.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: call
+  opponent_read: BB’s rare check-raise tends to be weighted toward sets; a missed draw remains possible.
+  pre_choice_assumption: 'Tight-passive: this player rarely check-raises with anything weaker than two pair; occasional
+    bluffs are possible. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model,
+    the raising range is 99 55 33 8s7s, with each legal combo equally weighted. The model includes only the stated
+    possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot.
+    Calling ends betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: equity_below_price
+    edge_bb: 6.45
+    explanation: Fold. Sets dominate this modeled raise; calling costs more than the rare bluff can repay.
+  why_correct: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20 (BB)
+    = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=1/0/9;
+    equity=(1+0/2)/10=10.0%. EV(call)=(1/10)×40.5−10.5=-129/20 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 129/20
+    BB (6.45000 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - '99'
+      - '55'
+      - '33'
+      - 8s7s
+      eligible_combos: 10
+      combos_by_class:
+        '99': 3
+        '55': 3
+        '33': 3
+        8s7s: 1
+      outcomes:
+        wins: 1
+        ties: 0
+        losses: 9
+      equity_pct: 10.0
+    faced_raise_to_bb: 14.5
+    extra_call_bb: 10.5
+    break_even_pct: 25.9
+    expected_ev_bb:
+      call: -6.45
+      fold: 0.0
+- id: opponent_types_p04_loose_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: guided
+  street: river
+  hero:
+    seat: BTN
+    cards: Ah Jc
+  board: Js 9d 5h 3s 2c
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 20
+    HJ: 20
+    CO: 20
+    BTN: 20
+    SB: 20
+    BB: 20
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  - 'river: BTN bets 4'
+  - 'river: BB raises to 14.5'
+  pot_before_bet: 15.5
+  pot_with_bet: 30.0
+  to_call: 10.5
+  price_pct: 25.9
+  decision_kind: table
+  caption: 'Loose-aggressive: this player tends to check-raise both strong hands and many missed draws. BB checks,
+    then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 87s
+    76s T8s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain
+    read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.'
+  teach: Compare the equity of your hand against the raising range with the call price.
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 10.5 BB
+    grade: correct
+    feedback: Call. The missed draws in this raising range give you enough wins at this price; folding gives that
+      up.
+  - id: fold
+    label: Fold
+    grade: wrong
+    feedback: Folding gives up a profitable call against the modeled missed draws.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: fold
+  opponent_read: BB’s check-raise can include sets and missed draws; the latter have meaningful weight.
+  pre_choice_assumption: 'Loose-aggressive: this player tends to check-raise both strong hands and many missed draws.
+    BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is
+    99 55 33 87s 76s T8s, with each legal combo equally weighted. The model includes only the stated possibilities,
+    not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends
+    betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: price_beats_equity
+    edge_bb: 12.64286
+    explanation: Call. The missed draws in this raising range give you enough wins at this price; folding gives that
+      up.
+  why_correct: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20 (BB)
+    = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=12/0/9;
+    equity=(12+0/2)/21=57.1%. EV(call)=(4/7)×40.5−10.5=177/14 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 177/14
+    BB (12.64286 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - '99'
+      - '55'
+      - '33'
+      - 87s
+      - 76s
+      - T8s
+      eligible_combos: 21
+      combos_by_class:
+        '99': 3
+        '55': 3
+        '33': 3
+        87s: 4
+        76s: 4
+        T8s: 4
+      outcomes:
+        wins: 12
+        ties: 0
+        losses: 9
+      equity_pct: 57.1
+    faced_raise_to_bb: 14.5
+    extra_call_bb: 10.5
+    break_even_pct: 25.9
+    expected_ev_bb:
+      call: 12.64286
+      fold: 0.0
+- id: opponent_types_p05_tight_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ks Qh
+  board: Kd Td 7c 4s 2h
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 25
+    HJ: 25
+    CO: 25
+    BTN: 25
+    SB: 25
+    BB: 25
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 4'
+  - 'flop: BB calls 4'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  - 'river: BTN bets 5'
+  - 'river: BB raises to 18.5'
+  pot_before_bet: 18.5
+  pot_with_bet: 37.0
+  to_call: 13.5
+  price_pct: 26.7
+  decision_kind: table
+  caption: 'Tight-aggressive: this player tends to make large river check-raises mostly with strong value hands, with
+    a few missed draws. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model,
+    the raising range is TT 77 KT AdJd, with each legal combo equally weighted. The model includes only the stated
+    possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot.
+    Calling ends betting.'
+  teach: ''
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 13.5 BB
+    grade: wrong
+    feedback: Calling loses too much against the value-heavy raising range.
+  - id: fold
+    label: Fold
+    grade: correct
+    feedback: Fold. The occasional missed draw does not supply enough winning combinations for a call at this price.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: call
+  opponent_read: BB’s large raise tends to represent sets or two pair, though a busted draw is still possible.
+  pre_choice_assumption: 'Tight-aggressive: this player tends to make large river check-raises mostly with strong
+    value hands, with a few missed draws. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For
+    this study model, the raising range is TT 77 KT AdJd, with each legal combo equally weighted. The model includes
+    only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7%
+    of the final pot. Calling ends betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: equity_below_price
+    edge_bb: 9.61538
+    explanation: Fold. The occasional missed draw does not supply enough winning combinations for a call at this price.
+  why_correct: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) + 25
+    (BB) = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=1/0/12;
+    equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−13.5=-125/13 BB; EV(fold)=0. Best Fold beats Call 13.5 BB by 125/13
+    BB (9.61538 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - TT
+      - '77'
+      - KT
+      - AdJd
+      eligible_combos: 13
+      combos_by_class:
+        TT: 3
+        '77': 3
+        KT: 6
+        AdJd: 1
+      outcomes:
+        wins: 1
+        ties: 0
+        losses: 12
+      equity_pct: 7.7
+    faced_raise_to_bb: 18.5
+    extra_call_bb: 13.5
+    break_even_pct: 26.7
+    expected_ev_bb:
+      call: -9.61538
+      fold: 0.0
+- id: opponent_types_p05_very_loose_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ks Qh
+  board: Kd Td 7c 4s 2h
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 25
+    HJ: 25
+    CO: 25
+    BTN: 25
+    SB: 25
+    BB: 25
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 4'
+  - 'flop: BB calls 4'
+  - 'turn: BB checks'
+  - 'turn: BTN checks'
+  - 'river: BB checks'
+  - 'river: BTN bets 5'
+  - 'river: BB raises to 18.5'
+  pot_before_bet: 18.5
+  pot_with_bet: 37.0
+  to_call: 13.5
+  price_pct: 26.7
+  decision_kind: table
+  caption: 'Very loose-aggressive: this player tends to make large river check-raises with many missed draws as well
+    as strong hands. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the
+    raising range is TT 77 KT AJ QJ J9s, with each legal combo equally weighted. The model includes only the stated
+    possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot.
+    Calling ends betting.'
+  teach: ''
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 13.5 BB
+    grade: correct
+    feedback: Call. The extra missed hands give you enough wins to make calling better than folding at the stated
+      price.
+  - id: fold
+    label: Fold
+    grade: wrong
+    feedback: Folding sacrifices a profitable call against the broader modeled raising range.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: fold
+  opponent_read: BB’s raise can represent sets, two pair or a broad set of weaker missed hands.
+  pre_choice_assumption: 'Very loose-aggressive: this player tends to make large river check-raises with many missed
+    draws as well as strong hands. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study
+    model, the raising range is TT 77 KT AJ QJ J9s, with each legal combo equally weighted. The model includes only
+    the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the
+    final pot. Calling ends betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: price_beats_equity
+    edge_bb: 23.22727
+    explanation: Call. The extra missed hands give you enough wins to make calling better than folding at the stated
+      price.
+  why_correct: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) + 25
+    (BB) = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=32/0/12;
+    equity=(32+0/2)/44=72.7%. EV(call)=(8/11)×50.5−13.5=511/22 BB; EV(fold)=0. Best Call 13.5 BB beats Fold by 511/22
+    BB (23.22727 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - TT
+      - '77'
+      - KT
+      - AJ
+      - QJ
+      - J9s
+      eligible_combos: 44
+      combos_by_class:
+        TT: 3
+        '77': 3
+        KT: 6
+        AJ: 16
+        QJ: 12
+        J9s: 4
+      outcomes:
+        wins: 32
+        ties: 0
+        losses: 12
+      equity_pct: 72.7
+    faced_raise_to_bb: 18.5
+    extra_call_bb: 13.5
+    break_even_pct: 26.7
+    expected_ev_bb:
+      call: 23.22727
+      fold: 0.0
+- id: opponent_types_p06_loose_passive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ac 9h
+  board: 9s 8d 6c 4h 2s
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 25
+    HJ: 25
+    CO: 25
+    BTN: 25
+    SB: 25
+    BB: 25
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 3'
+  - 'turn: BB calls 3'
+  - 'river: BB checks'
+  - 'river: BTN bets 6'
+  - 'river: BB raises to 16.5'
+  pot_before_bet: 23.5
+  pot_with_bet: 40.0
+  to_call: 10.5
+  price_pct: 20.8
+  decision_kind: table
+  caption: 'Loose-passive: this player tends to call with weaker hands and rarely check-raises without strong value.
+    An occasional bluff is possible. BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this
+    study model, the raising range is 88 66 98 Js7s, with each legal combo equally weighted. The model includes only
+    the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the
+    final pot. Calling ends betting.'
+  teach: ''
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 10.5 BB
+    grade: wrong
+    feedback: Calling pays off the stronger part of this rare raise too often.
+  - id: fold
+    label: Fold
+    grade: correct
+    feedback: Fold. The raising range is much stronger than the calling range; its rare missed draw cannot justify
+      the call.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: call
+  opponent_read: BB’s change from calling to raising is more consistent with sets or two pair than missed draws in
+    this model.
+  pre_choice_assumption: 'Loose-passive: this player tends to call with weaker hands and rarely check-raises without
+    strong value. An occasional bluff is possible. BB checks, then raises all-in to 16.5 BB total after your 6 BB
+    bet. For this study model, the raising range is 88 66 98 Js7s, with each legal combo equally weighted. The model
+    includes only the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs
+    20.8% of the final pot. Calling ends betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: equity_below_price
+    edge_bb: 6.61538
+    explanation: Fold. The raising range is much stronger than the calling range; its rare missed draw cannot justify
+      the call.
+  why_correct: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) + 25
+    (BB) = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=1/0/12;
+    equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−10.5=-86/13 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 86/13
+    BB (6.61538 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - '88'
+      - '66'
+      - '98'
+      - Js7s
+      eligible_combos: 13
+      combos_by_class:
+        '88': 3
+        '66': 3
+        '98': 6
+        Js7s: 1
+      outcomes:
+        wins: 1
+        ties: 0
+        losses: 12
+      equity_pct: 7.7
+    faced_raise_to_bb: 16.5
+    extra_call_bb: 10.5
+    break_even_pct: 20.8
+    expected_ev_bb:
+      call: -6.61538
+      fold: 0.0
+- id: opponent_types_p06_loose_aggressive
+  lesson: opponent_types_pilot
+  kind: drill
+  learning_role: independent
+  street: river
+  hero:
+    seat: BTN
+    cards: Ac 9h
+  board: 9s 8d 6c 4h 2s
+  blinds:
+    sb: 0.5
+    bb: 1
+    ante_total: 0
+  stacks_start:
+    UTG: 25
+    HJ: 25
+    CO: 25
+    BTN: 25
+    SB: 25
+    BB: 25
+  actions:
+  - 'preflop: SB posts 0.5'
+  - 'preflop: BB posts 1'
+  - 'preflop: UTG folds'
+  - 'preflop: HJ folds'
+  - 'preflop: CO folds'
+  - 'preflop: BTN raises to 2.5'
+  - 'preflop: SB folds'
+  - 'preflop: BB calls 1.5'
+  - 'flop: BB checks'
+  - 'flop: BTN bets 3'
+  - 'flop: BB calls 3'
+  - 'turn: BB checks'
+  - 'turn: BTN bets 3'
+  - 'turn: BB calls 3'
+  - 'river: BB checks'
+  - 'river: BTN bets 6'
+  - 'river: BB raises to 16.5'
+  pot_before_bet: 23.5
+  pot_with_bet: 40.0
+  to_call: 10.5
+  price_pct: 20.8
+  decision_kind: table
+  caption: 'Loose-aggressive: this player tends to turn missed draws into river check-raises more often. BB checks,
+    then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is 88 66 98 J7s
+    JT Q7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain
+    read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends betting.'
+  teach: ''
+  question: Call the extra chips or fold in this model?
+  options:
+  - id: call
+    label: Call 10.5 BB
+    grade: correct
+    feedback: Call. More missed draws enter the raise, creating enough winning combinations at this price; folding
+      loses value.
+  - id: fold
+    label: Fold
+    grade: wrong
+    feedback: Folding gives up a profitable call against the wider raising range.
+  chart_row: null
+  m_ratio: null
+  principle_id: respect_rare_raise
+  best_alternative: fold
+  opponent_read: BB’s check-raise may contain sets or two pair, but plenty of missed draws can also take this line.
+  pre_choice_assumption: 'Loose-aggressive: this player tends to turn missed draws into river check-raises more often.
+    BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is
+    88 66 98 J7s JT Q7s, with each legal combo equally weighted. The model includes only the stated possibilities,
+    not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends
+    betting.'
+  stack_matters: true
+  stack_reason: Both players started with the same short stack. The raise is all-in, so no further raise is possible;
+    a deeper stack can change the options.
+  edge_vs_alternative:
+    mechanism: price_beats_equity
+    edge_bb: 23.16667
+    explanation: Call. More missed draws enter the raise, creating enough winning combinations at this price; folding
+      loses value.
+  why_correct: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) + 25
+    (BB) = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=24/0/12;
+    equity=(24+0/2)/36=66.7%. EV(call)=(2/3)×50.5−10.5=139/6 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 139/6
+    BB (23.16667 BB).'
+  model:
+    opponent_range:
+      seat: BB
+      classes:
+      - '88'
+      - '66'
+      - '98'
+      - J7s
+      - JT
+      - Q7s
+      eligible_combos: 36
+      combos_by_class:
+        '88': 3
+        '66': 3
+        '98': 6
+        J7s: 4
+        JT: 16
+        Q7s: 4
+      outcomes:
+        wins: 24
+        ties: 0
+        losses: 12
+      equity_pct: 66.7
+    faced_raise_to_bb: 16.5
+    extra_call_bb: 10.5
+    break_even_pct: 20.8
+    expected_ev_bb:
+      call: 23.16667
+      fold: 0.0
+self_check:
+  columns:
+  - id
+  - formula
+  - recalculation
+  - rubric_0_to_3
+  rows:
+  - id: opponent_types_p01_loose_passive
+    formula: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14; EV = (4/46)×11.5
+      + (42/46)×[(2/3)×(11.5+2×4)−4] = 212/23 BB. 8 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14; EV = (4/46)×11.5
+      + (42/46)×[(2/3)×(11.5+2×8)−8] = 240/23 BB. Best Bet 8 BB beats Bet 4 BB by 28/23 BB (1.21739 BB).'
+    recalculation: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14; EV
+      = (4/46)×11.5 + (42/46)×[(2/3)×(11.5+2×4)−4] = 212/23 BB. 8 BB: 4/46 folds, 42/46 calls, caller W/T/L=28/0/14;
+      EV = (4/46)×11.5 + (42/46)×[(2/3)×(11.5+2×8)−8] = 240/23 BB. Best Bet 8 BB beats Bet 4 BB by 28/23 BB (1.21739
+      BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p01_tight_passive
+    formula: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV = (32/46)×11.5
+      + (14/46)×[(0)×(11.5+2×4)−4] = 156/23 BB. 8 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV = (32/46)×11.5
+      + (14/46)×[(0)×(11.5+2×8)−8] = 128/23 BB. Best Check beats Bet 4 BB by 28/23 BB (1.21739 BB).'
+    recalculation: 'P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV
+      = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×4)−4] = 156/23 BB. 8 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14;
+      EV = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×8)−8] = 128/23 BB. Best Check beats Bet 4 BB by 28/23 BB (1.21739 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p02_loose_passive
+    formula: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28; EV
+      = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×5)−5] = 206/19 BB. 10 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28;
+      EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×10)−10] = 226/19 BB. Best Bet 10 BB beats Bet 5 BB by 20/19 BB (1.05263
+      BB).'
+    recalculation: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28;
+      EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×5)−5] = 206/19 BB. 10 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28;
+      EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×10)−10] = 226/19 BB. Best Bet 10 BB beats Bet 5 BB by 20/19 BB (1.05263
+      BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p02_tight_aggressive
+    formula: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28; EV
+      = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×5)−5] = 151/19 BB. 10 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28;
+      EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×10)−10] = 116/19 BB. Best Check beats Bet 5 BB by 35/19 BB (1.84211
+      BB).'
+    recalculation: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28;
+      EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×5)−5] = 151/19 BB. 10 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28;
+      EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×10)−10] = 116/19 BB. Best Check beats Bet 5 BB by 35/19 BB (1.84211
+      BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p03_loose_passive
+    formula: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5
+      + (50/54)×[(22/25)×(15.5+2×4)−4] = 448/27 BB. 9 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5
+      + (50/54)×[(22/25)×(15.5+2×9)−9] = 181/9 BB. Best Bet 9 BB beats Bet 4 BB by 95/27 BB (3.51852 BB).'
+    recalculation: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6;
+      EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×4)−4] = 448/27 BB. 9 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6;
+      EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×9)−9] = 181/9 BB. Best Bet 9 BB beats Bet 4 BB by 95/27 BB (3.51852
+      BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p03_tight_aggressive
+    formula: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check
+      equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 16/54 folds, 38/54 calls, caller W/T/L=32/0/6; EV =
+      (16/54)×15.5 + (38/54)×[(16/19)×(15.5+2×4)−4] = 424/27 BB. 9 BB: 40/54 folds, 14/54 calls, caller W/T/L=8/0/6;
+      EV = (40/54)×15.5 + (14/54)×[(4/7)×(15.5+2×9)−9] = 127/9 BB. Best Bet 4 BB beats Bet 9 BB by 43/27 BB (1.59259
+      BB).'
+    recalculation: 'P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable.
+      Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 16/54 folds, 38/54 calls, caller W/T/L=32/0/6;
+      EV = (16/54)×15.5 + (38/54)×[(16/19)×(15.5+2×4)−4] = 424/27 BB. 9 BB: 40/54 folds, 14/54 calls, caller W/T/L=8/0/6;
+      EV = (40/54)×15.5 + (14/54)×[(4/7)×(15.5+2×9)−9] = 127/9 BB. Best Bet 4 BB beats Bet 9 BB by 43/27 BB (1.59259
+      BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p04_tight_passive
+    formula: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20 (BB)
+      = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=1/0/9;
+      equity=(1+0/2)/10=10.0%. EV(call)=(1/10)×40.5−10.5=-129/20 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 129/20
+      BB (6.45000 BB).'
+    recalculation: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20
+      (BB) = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=1/0/9;
+      equity=(1+0/2)/10=10.0%. EV(call)=(1/10)×40.5−10.5=-129/20 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 129/20
+      BB (6.45000 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p04_loose_aggressive
+    formula: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20 (BB)
+      = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=12/0/9;
+      equity=(12+0/2)/21=57.1%. EV(call)=(4/7)×40.5−10.5=177/14 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 177/14
+      BB (12.64286 BB).'
+    recalculation: 'Before raise: 9.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 15.5 BB. After raise: 9.5 (BTN) + 0.5 (SB) + 20
+      (BB) = 30 BB. Extra call=14.5−4=10.5 BB; final pot=30+10.5=40.5 BB; price=10.5/40.5=25.9%. Enumeration W/T/L=12/0/9;
+      equity=(12+0/2)/21=57.1%. EV(call)=(4/7)×40.5−10.5=177/14 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 177/14
+      BB (12.64286 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p05_tight_aggressive
+    formula: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) + 25 (BB)
+      = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=1/0/12;
+      equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−13.5=-125/13 BB; EV(fold)=0. Best Fold beats Call 13.5 BB by 125/13
+      BB (9.61538 BB).'
+    recalculation: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) +
+      25 (BB) = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=1/0/12;
+      equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−13.5=-125/13 BB; EV(fold)=0. Best Fold beats Call 13.5 BB by 125/13
+      BB (9.61538 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p05_very_loose_aggressive
+    formula: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) + 25 (BB)
+      = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=32/0/12;
+      equity=(32+0/2)/44=72.7%. EV(call)=(8/11)×50.5−13.5=511/22 BB; EV(fold)=0. Best Call 13.5 BB beats Fold by 511/22
+      BB (23.22727 BB).'
+    recalculation: 'Before raise: 11.5 (BTN) + 0.5 (SB) + 6.5 (BB) = 18.5 BB. After raise: 11.5 (BTN) + 0.5 (SB) +
+      25 (BB) = 37 BB. Extra call=18.5−5=13.5 BB; final pot=37+13.5=50.5 BB; price=13.5/50.5=26.7%. Enumeration W/T/L=32/0/12;
+      equity=(32+0/2)/44=72.7%. EV(call)=(8/11)×50.5−13.5=511/22 BB; EV(fold)=0. Best Call 13.5 BB beats Fold by 511/22
+      BB (23.22727 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p06_loose_passive
+    formula: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) + 25 (BB)
+      = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=1/0/12;
+      equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−10.5=-86/13 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 86/13
+      BB (6.61538 BB).'
+    recalculation: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) +
+      25 (BB) = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=1/0/12;
+      equity=(1+0/2)/13=7.7%. EV(call)=(1/13)×50.5−10.5=-86/13 BB; EV(fold)=0. Best Fold beats Call 10.5 BB by 86/13
+      BB (6.61538 BB).'
+    rubric_0_to_3: 3
+  - id: opponent_types_p06_loose_aggressive
+    formula: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) + 25 (BB)
+      = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=24/0/12;
+      equity=(24+0/2)/36=66.7%. EV(call)=(2/3)×50.5−10.5=139/6 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 139/6
+      BB (23.16667 BB).'
+    recalculation: 'Before raise: 14.5 (BTN) + 0.5 (SB) + 8.5 (BB) = 23.5 BB. After raise: 14.5 (BTN) + 0.5 (SB) +
+      25 (BB) = 40 BB. Extra call=16.5−6=10.5 BB; final pot=40+10.5=50.5 BB; price=10.5/50.5=20.8%. Enumeration W/T/L=24/0/12;
+      equity=(24+0/2)/36=66.7%. EV(call)=(2/3)×50.5−10.5=139/6 BB; EV(fold)=0. Best Call 10.5 BB beats Fold by 139/6
+      BB (23.16667 BB).'
+    rubric_0_to_3: 3
