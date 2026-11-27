@@ -119,7 +119,7 @@ Act0TableChoreographyPlanV1? act0TableHistoryProofPlanForTableV1(
   Act0TableStateV1 table,
 ) => _planForTableV1(table, includeBetHistoryProof: true);
 
-/// Full D6 finder proof, including B164 non-autoplay decision histories.
+/// Full D6 finder proof, including non-autoplay decision and heads-up histories.
 /// Keep B157/B163 callers on their existing plan cohorts.
 Act0TableChoreographyPlanV1? act0TableD6HistoryProofPlanForTableV1(
   Act0TableStateV1 table,
@@ -127,6 +127,7 @@ Act0TableChoreographyPlanV1? act0TableD6HistoryProofPlanForTableV1(
   table,
   includeBetHistoryProof: true,
   includeDecisionHistoryProof: true,
+  includeReraisedAndOpenStreetProof: true,
 );
 
 Act0TableChoreographyPlanV1? _planForTableV1(
@@ -134,6 +135,7 @@ Act0TableChoreographyPlanV1? _planForTableV1(
   bool actorFocusSafe = true,
   bool includeBetHistoryProof = false,
   bool includeDecisionHistoryProof = false,
+  bool includeReraisedAndOpenStreetProof = false,
 }) {
   // B157: an explicitly non-autoplay explanation can still carry a complete
   // recorded hand. Expose the verified plan through the same contract as
@@ -199,8 +201,34 @@ Act0TableChoreographyPlanV1? _planForTableV1(
               .startsWith('preflop:') ==
           true;
   final parsed = <_ParsedTrailItemV1>[];
+  _ParsedTrailItemV1? terminalDeal;
   for (var index = 0; index < table.actionTrail.length; index++) {
     if (table.actionTrail[index].isNote) continue;
+    if (terminalDeal != null) return null;
+    // B165: a bare dealt marker (or an explicitly empty street) is only
+    // evidence of a reveal, never a player action. Accept it on the new
+    // proof path only, and only at the final, immediately following street.
+    if (checkedHistoryOnly && extended && includeReraisedAndOpenStreetProof) {
+      final marker = RegExp(
+        r'^(flop|turn|river)(?: dealt|:)\s*$',
+        caseSensitive: false,
+      ).firstMatch(table.actionTrail[index].label.trim());
+      if (marker != null) {
+        final street = _streetFromLabelV1(marker.group(1)!);
+        if (street != finalStreet ||
+            parsed.lastOrNull?.street?.index != finalStreet.index - 1) {
+          return null;
+        }
+        terminalDeal = _ParsedTrailItemV1(
+          sourceIndex: index,
+          street: finalStreet,
+          actorSeat: null,
+          action: null,
+          amountLabel: null,
+        );
+        continue;
+      }
+    }
     final item = _parseTrailItemV1(
       table.actionTrail[index].label,
       sourceIndex: index,
@@ -225,10 +253,17 @@ Act0TableChoreographyPlanV1? _planForTableV1(
       extended &&
       includeDecisionHistoryProof &&
       _isPreflopOrThreeWayDecisionHistoryV1(table, parsed, finalStreet);
+  final reraisedOrOpenStreet =
+      checkedHistoryOnly &&
+      extended &&
+      includeReraisedAndOpenStreetProof &&
+      _isReraisedOrOpenStreetHistoryV1(table, parsed, finalStreet);
+  if (terminalDeal != null && !reraisedOrOpenStreet) return null;
   if (checkedHistoryOnly &&
       (!extended ||
           (betHistory == null &&
               !decisionHistory &&
+              !reraisedOrOpenStreet &&
               !_isCheckedHeadsUpHistoryV1(table, parsed, finalStreet)))) {
     return null;
   }
@@ -242,13 +277,14 @@ Act0TableChoreographyPlanV1? _planForTableV1(
   // invented trail action or contribution.
   if (verified != null && parsed.last.street != finalStreet) {
     parsed.add(
-      _ParsedTrailItemV1(
-        sourceIndex: null,
-        street: finalStreet,
-        actorSeat: null,
-        action: null,
-        amountLabel: null,
-      ),
+      terminalDeal ??
+          _ParsedTrailItemV1(
+            sourceIndex: null,
+            street: finalStreet,
+            actorSeat: null,
+            action: null,
+            amountLabel: null,
+          ),
     );
   }
   final first = parsed.first;
@@ -533,6 +569,74 @@ bool _isCheckedHeadsUpHistoryV1(
         : 2;
     if (actions.length != expected ||
         actions.any((item) => item.action != _TrailActionV1.checks)) {
+      return false;
+    }
+  }
+  return true;
+}
+
+// B165: admit only closed six-max heads-up preflop rounds with one caller
+// and up to three raises, followed by ordinary heads-up betting rounds.
+// For a single raise, this additional proof is limited to an empty decision
+// street. The ledger still validates every amount, closure and next actor.
+bool _isReraisedOrOpenStreetHistoryV1(
+  Act0TableStateV1 table,
+  List<_ParsedTrailItemV1> parsed,
+  Act0TableChoreographyStreetV1 finalStreet,
+) {
+  if (finalStreet == Act0TableChoreographyStreetV1.preflop ||
+      parsed.any((item) => item.explicitAllIn)) {
+    return false;
+  }
+  final preflop = parsed
+      .where((item) => item.street == Act0TableChoreographyStreetV1.preflop)
+      .toList();
+  final shape = preflop
+      .map(
+        (item) => switch (item.action) {
+          _TrailActionV1.blind => 'p',
+          _TrailActionV1.folds => 'f',
+          _TrailActionV1.raises => 'r',
+          _TrailActionV1.calls => 'c',
+          _ => '?',
+        },
+      )
+      .join();
+  final raises = 'r'.allMatches(shape).length;
+  if (raises < 1 || raises > 3 || !RegExp(r'^pp[fr]+c$').hasMatch(shape)) {
+    return false;
+  }
+  final folded = preflop
+      .where((item) => item.action == _TrailActionV1.folds)
+      .map((item) => item.actorSeat?.seatId)
+      .toSet();
+  if (folded.length != 4 ||
+      table.seats.any(
+        (seat) =>
+            seat.isFolded != folded.contains(seat.seatId) ||
+            seat.isInHand == folded.contains(seat.seatId),
+      )) {
+    return false;
+  }
+  for (final street in Act0TableChoreographyStreetV1.values.skip(1)) {
+    final shape = parsed
+        .where((item) => item.street == street)
+        .map(
+          (item) => switch (item.action) {
+            _TrailActionV1.checks => 'x',
+            _TrailActionV1.bets => 'b',
+            _TrailActionV1.calls => 'c',
+            _ => '?',
+          },
+        )
+        .join();
+    if (street.index > finalStreet.index) {
+      if (shape.isNotEmpty) return false;
+    } else if (street.index < finalStreet.index) {
+      if (!const {'xx', 'bc', 'xbc'}.contains(shape)) return false;
+    } else if (raises == 1
+        ? shape.isNotEmpty
+        : !const {'', 'x', 'b', 'xb'}.contains(shape)) {
       return false;
     }
   }
