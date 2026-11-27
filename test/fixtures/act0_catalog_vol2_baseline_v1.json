@@ -47,8 +47,7 @@
   "W15": {
     "8.active_caller": [
       "w15_5_day7_check_before_raiser|bb",
-      "w15_5_guided_lead_two_pair|bb",
-      "w15_5_read_first_flop_actor|bb"
+      "w15_5_guided_lead_two_pair|bb"
     ],
     "D6.history_support": [
       "w15_1_guided_compare_cbet_frequency|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -64,9 +63,6 @@
       "w15_5_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_6_read_polar_on_two_tone|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w15_6_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "G1·29": [
-      "w15_6_read_polar_on_two_tone|answer"
     ]
   },
   "W16": {

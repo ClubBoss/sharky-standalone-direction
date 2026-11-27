@@ -1672,6 +1672,7 @@ final _world15Pilot = _act0PilotWorldV1(
                 Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
                 Act0ActionTrailItemV1(label: "preflop: SB folds"),
                 Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
+                Act0ActionTrailItemV1(label: "Flop dealt"),
               ],
               bets: const {},
             ).copyWith(
@@ -1985,7 +1986,7 @@ final _world15Pilot = _act0PilotWorldV1(
             "answer",
             "Raise sets and the Ah Jh or Kh Jh flush draws",
             Act0FeedbackQualityV1.correct,
-            "BB raises sets for value and the two heart draws as bluffs because those draws can improve. BB calls with the modeled top pairs.",
+            "BB raises sets for value and heart draws as bluffs because they can improve. To raise sets and strong top pairs together would omit bluffs; BB calls with the modeled top pairs instead.",
           ),
           (
             "alternative",
