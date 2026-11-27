@@ -113,10 +113,6 @@
     ]
   },
   "W19": {
-    "15.internal_jargon": [
-      "w19_1_transfer_pick_baseline_when_uncertain|baseline",
-      "w19_3_day7_anonymous_fastfold|baseline"
-    ],
     "D6.history_support": [
       "w19_3_guided_depth_split|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_3_transfer_overcalls_draws|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
