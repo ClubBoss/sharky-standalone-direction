@@ -580,5 +580,41 @@
     "detail": "wrong: bet plan because its best outcome is higher / both plans tie because their second branch matches → bet plan because its 5.5 bb peak is higher / both plans tie because branch two returns 2 bb",
     "reason": "A 5.5 BB peak or one shared 2 BB outcome cannot outweigh the remaining branches, so neither claim beats the check plan’s average.",
     "package": "B167"
+  },
+  {
+    "task": "w23_4_teach",
+    "detail": "wrong: every time the shove is larger than an opening raise / only when no hand could fold → when the all-in raise exceeds the opening raise, regardless of who calls / when the opponent has no hands that would fold",
+    "reason": "Size alone cannot establish value, and a profitable value raise can still make part of the opposing range fold. Both choices retain their original wrong claims.",
+    "package": "B169"
+  },
+  {
+    "task": "w23_4_read_raise_number",
+    "detail": "correct: a 5-bet shove → an all-in 5-bet",
+    "reason": "Both name the same all-in raise after a 4-bet; correct.",
+    "package": "B169"
+  },
+  {
+    "task": "w23_4_read_raise_number",
+    "detail": "wrong: a 4-bet shove → an all-in 4-bet",
+    "reason": "Both name a 4-bet, but CO has already made that raise; wrong.",
+    "package": "B169"
+  },
+  {
+    "task": "w23_5_teach",
+    "detail": "wrong: a limp is always required in modern games / any unopened chart must include it → modern play requires a limp / an unopened chart is incomplete without it",
+    "reason": "Neither modern play nor a chart requires the SB limp: it depends on the modeled response and depth, and covered unopened chart rows stop at BTN. Both remain wrong.",
+    "package": "B169"
+  },
+  {
+    "task": "w23_6_teach",
+    "detail": "wrong: only how high its best card can be → its highest card instead of its position and prior action",
+    "reason": "Card rank alone does not identify the context in which a range applies; wrong.",
+    "package": "B169"
+  },
+  {
+    "task": "w23_6_read_blocker_value_four_bet",
+    "detail": "wrong: every aa combo and every aks combo → six aa and four aks combos",
+    "reason": "Six AA and four AKs are the full initial groups; the known ace removes three AA and one AKs, not the full groups. Wrong.",
+    "package": "B169"
   }
 ]

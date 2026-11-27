@@ -1113,13 +1113,13 @@ final _world23Pilot = _act0PilotWorldV1(
         id: "w23_4_teach",
         lesson: "three_four_five_bet",
         lessonTitle: "Three four five bet",
-        title: "When is a 5-bet shove a value action?",
+        title: "When is an all-in 5-bet a value action?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
             "Choose re-raises around weaker paying hands, better folds and stack commitments. A 5-bet is the raise after a 4-bet. When it is all-in, a call ends preflop betting heads-up.",
-        question: "When is a 5-bet shove a value action?",
+        question: "When is an all-in 5-bet a value action?",
         teach:
             "Choose re-raises around weaker paying hands, better folds and stack commitments. A 5-bet is the raise after a 4-bet. When it is all-in, a call ends preflop betting heads-up.",
         choices: const [
@@ -1131,20 +1131,20 @@ final _world23Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every time the shove is larger than an opening raise",
+            "When the all-in raise exceeds the opening raise, regardless of who calls",
             Act0FeedbackQualityV1.wrong,
             "The name and size do not guarantee a profitable caller range.",
           ),
           (
             "other",
-            "Only when no hand could fold",
+            "When the opponent has no hands that would fold",
             Act0FeedbackQualityV1.wrong,
-            "A value shove can still induce folds from some hands.",
+            "A value raise all-in can still lead some hands to fold.",
           ),
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "Text-only principle. Count the legal re-raise order and compare the equity or folds created by the shove.",
+            "Text-only principle. Count the legal re-raise order and compare the equity or folds created by the all-in raise.",
       ),
       _wave6AuthoredTaskV1(
         id: "w23_4_read_raise_number",
@@ -1161,13 +1161,13 @@ final _world23Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "A 5-bet shove",
+            "An all-in 5-bet",
             Act0FeedbackQualityV1.correct,
             "The big blind counts as the initial bet. The raise after the 4-bet is a 5-bet.",
           ),
           (
             "alternative",
-            "A 4-bet shove",
+            "An all-in 4-bet",
             Act0FeedbackQualityV1.wrong,
             "CO’s raise to 22 BB was already the 4-bet.",
           ),
@@ -1594,13 +1594,13 @@ final _world23Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A limp is always required in modern games",
+            "Modern play requires a limp",
             Act0FeedbackQualityV1.wrong,
             "Strategies differ by stakes, stack, ranges and legal actions.",
           ),
           (
             "other",
-            "Any unopened chart must include it",
+            "An unopened chart is incomplete without it",
             Act0FeedbackQualityV1.wrong,
             "The published Sharky unopened rows stop at BTN. A blind-versus-blind model can be studied on its own.",
           ),
@@ -1987,7 +1987,7 @@ final _world23Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Only how high its best card can be",
+            "Its highest card instead of its position and prior action",
             Act0FeedbackQualityV1.wrong,
             "The group can include other playability or blocker properties.",
           ),
@@ -2023,7 +2023,7 @@ final _world23Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Every AA combo and every AKs combo",
+            "Six AA and four AKs combos",
             Act0FeedbackQualityV1.wrong,
             "Three aces and three other suited ace-king combinations remain.",
           ),

@@ -163,14 +163,6 @@
     ]
   },
   "W23": {
-    "16.extreme_wrong_option": [
-      "w23_4_teach|alternative",
-      "w23_4_teach|other",
-      "w23_5_teach|alternative",
-      "w23_5_teach|other",
-      "w23_6_read_blocker_value_four_bet|alternative",
-      "w23_6_teach|alternative"
-    ],
     "D6.history_support": [
       "w23_2_guided_compare_wheel_and_broadway|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_2_read_notation_after_blocker|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -180,10 +172,6 @@
       "w23_5_transfer_depth_changes_available_payoff|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_6_guided_build_light_three_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w23_6_read_blocker_value_four_bet|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "E11": [
-      "w23_4_read_raise_number|shove",
-      "w23_4_teach|shove"
     ]
   },
   "W24": {}
