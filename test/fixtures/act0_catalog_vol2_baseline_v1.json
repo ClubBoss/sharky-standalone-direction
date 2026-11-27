@@ -374,7 +374,6 @@
   },
   "W23": {
     "16.extreme_wrong_option": [
-      "w23_1_teach|other",
       "w23_4_teach|alternative",
       "w23_4_teach|other",
       "w23_5_teach|alternative",
@@ -414,13 +413,6 @@
     ]
   },
   "W24": {
-    "16.extreme_wrong_option": [
-      "w24_1_read_classify_river_groups|alternative",
-      "w24_1_read_classify_river_groups|other",
-      "w24_3_guided_fractional_bluff_weight|other",
-      "w24_4_teach|alternative",
-      "w24_4_teach|other"
-    ],
     "D6.history_support": [
       "w24_1_day7_condensed_calls_sized_bluffs|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w24_1_read_classify_river_groups|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",

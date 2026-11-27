@@ -35,7 +35,7 @@ final _world23Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Any player has matched the big blind voluntarily",
+            "A player has matched the big blind voluntarily",
             Act0FeedbackQualityV1.wrong,
             "A limp enters the pot and removes the unopened condition.",
           ),
@@ -2449,13 +2449,13 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The betting group consists only of one-pair hands",
+            "The betting group is a one-pair range",
             Act0FeedbackQualityV1.wrong,
             "It includes sets and two unpaired classes.",
           ),
           (
             "other",
-            "The callers have only made straights",
+            "The callers have a made-straight range",
             Act0FeedbackQualityV1.wrong,
             "The stated Q-x group pairs the queen. None completes a straight.",
           ),
@@ -3521,7 +3521,7 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "All of the third combo",
+            "The third combo at full weight",
             Act0FeedbackQualityV1.wrong,
             "Three full bluff combos exceed the required 18/7.",
           ),
@@ -3824,13 +3824,13 @@ final _world24Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "A card removing only the opponent’s folding misses",
+            "A card removing folding misses while leaving the calling range intact",
             Act0FeedbackQualityV1.wrong,
             "It leaves fewer hands that release, which can harm the bluff.",
           ),
           (
             "other",
-            "Any ace on any board",
+            "An ace chosen by rank rather than board texture",
             Act0FeedbackQualityV1.wrong,
             "An ace helps only if its removal matters at this size and line.",
           ),
