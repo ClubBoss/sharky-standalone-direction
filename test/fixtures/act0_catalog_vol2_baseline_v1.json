@@ -101,5 +101,63 @@
     ]
   },
   "W23": {},
-  "W24": {}
+  "W24": {},
+  "W25": {
+    "11.btn_share_per_world": [
+      "@world:world_25|"
+    ],
+    "5.semantic_repeat": [
+      "w25_2_transfer_without_heart|question"
+    ],
+    "C5": [
+      "w25_2_guided_nut_flush_blocker|push_fold|FEEDBACK: The 19 BB bet pushes out sets too, but pays too much extra to the remaining flushes."
+    ],
+    "D6.history_support": [
+      "w25_1_day7_paired_card_count|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_1_read_one_pair_removal|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_1_transfer_response_denominator|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_2_day7_threshold_blocker|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_2_read_block_calls_leave_folds|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_3_day7_turn_miss_suit|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_3_read_read_draw_unblock|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_4_day7_four_flush_rank|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_4_read_straight_nut_filter|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_4_transfer_full_house_contrast|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_5_day7_suit_coverage_before_flop|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_5_read_ace_club_scope|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_5_transfer_bluff_vs_live_flushes|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_6_day7_negative_blocker|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_6_guided_change_the_distribution|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w25_6_read_legal_pair_grid|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+    ]
+  },
+  "W26": {
+    "11.btn_share_per_world": [
+      "@world:world_26|"
+    ],
+    "D6.history_support": [
+      "w26_1_day7_deal_or_chop|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_1_read_payout_order|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_2_day7_plan_the_call|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_2_guided_compare_ten_bb|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_2_read_bba_budget|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_2_transfer_twenty_bb_minraise|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_3_day7_draw_and_hand_for_hand|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_3_guided_registration_window|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_3_read_stage_map|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_3_transfer_addon_terms|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_4_day7_equilibrium_claim|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_4_guided_medium_leverage|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_4_read_leverage_target|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_4_transfer_future_blinds|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_5_day7_mystery_phase|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_5_guided_satellite_seat_lock|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_5_read_pko_vs_mystery|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_5_transfer_bounty_reversal|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_6_day7_stopgo_counter|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_6_guided_compare_reshove|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_6_read_short_stack_stopgo|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
+      "w26_6_transfer_checkout_payjump|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
+    ]
+  }
 }
