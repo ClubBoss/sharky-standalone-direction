@@ -1,10 +1,5 @@
 {
   "W13": {
-    "C5": [
-      "w13_4_teach|equity_realization|TEACH: Realization is how much of that share you actually turn into chips after future bets and folds.",
-      "w13_5_teach|122|TEACH: What is true of a backdoor flush draw on the flop?.",
-      "w13_5_teach|backdoor|TEACH: What is true of a backdoor flush draw on the flop?."
-    ],
     "D6.history_support": [
       "w13_1_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w13_2_teach|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -26,9 +21,6 @@
       "@lesson:slightly_harder|too_long",
       "@lesson:turn_card_impact|too_long",
       "@lesson:where_is_the_mistake|too_long"
-    ],
-    "C5": [
-      "w14_2_teach|1201|TEACH: A polarized betting range uses strong value and bluffs, with many medium-strength hands checking."
     ],
     "D6.history_support": [
       "turn_board_four_to_straight|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -133,9 +125,6 @@
     ]
   },
   "W17": {
-    "11.btn_share_per_world": [
-      "@world:world_17|"
-    ],
     "18.same_format_streak": [
       "w17_2_guided_size_oop|statement"
     ],
@@ -177,9 +166,6 @@
     ]
   },
   "W18": {
-    "11.btn_share_per_world": [
-      "@world:world_18|"
-    ],
     "D6.history_support": [
       "w18_1_day7_multiple_value_calls|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w18_1_read_compression_vs_hand_label|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -268,9 +254,6 @@
     "18.same_format_streak": [
       "w20_1_teach|statement",
       "w20_5_teach|statement"
-    ],
-    "C5": [
-      "w20_1_day7_distracted_online_sample|1201|OPTION: A slow river bet always has strong value"
     ],
     "D6.history_support": [
       "w20_1_day7_distracted_online_sample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
