@@ -33,21 +33,21 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: The repeated skipped checks
     FEEDBACK TABLE: Flop | You Ah Ad | Board Qs 8c 4d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, overpair, pocket pair, rainbow
 
-TASK w21_1_guided_follow_pause_protocol [drill] What does the protocol call for now?
+TASK w21_1_guided_follow_pause_protocol [drill] How many more hands should you play before pausing?
 CAPTION: The table shows the hand linked to this session note. The session card says to sit out before the next hand after two rushed decisions. Your log shows exactly two. You have finished the current hand.
-TEACH: What does the protocol call for now? Match what you observed against the rule you chose before the session.
-Q: What does the protocol call for now?
+TEACH: How many more hands should you play before pausing? Match what you observed against the rule you chose before the session.
+Q: How many more hands should you play before pausing?
 HINT [hidden]: (none)
 TABLE: Flop | You Ks Qd | Board Kh 8s 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ks Qd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
-  + [correct] Sit out before the next hand and reset — Correct. The condition is met and the current hand is over. Use the planned pause before choosing whether to resume.
+  + [correct] 0 more hands: pause and reset — Correct. The condition is met and the current hand is over. Use the planned pause before choosing whether to resume.
     FEEDBACK TABLE: Flop | You Ks Qd | Board Kh 8s 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Play until you win one back — Look again. That replaces the observed process trigger with a result you cannot control.
-    BETTER ANSWER: Sit out before the next hand and reset
+  - [wrong] 1 win before pausing — Look again. That replaces the observed process trigger with a result you cannot control.
+    BETTER ANSWER: 0 more hands: pause and reset
     FEEDBACK TABLE: Flop | You Ks Qd | Board Kh 8s 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Increase your pace to rebuild focus — Look again. Rushing was the warning. Playing faster repeats the same behavior.
-    BETTER ANSWER: Sit out before the next hand and reset
+  - [wrong] 1 more hand at a faster pace — Look again. Rushing was the warning. Playing faster repeats the same behavior.
+    BETTER ANSWER: 0 more hands: pause and reset
     FEEDBACK TABLE: Flop | You Ks Qd | Board Kh 8s 4c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w21_1_transfer_loss_with_sound_process [drill] Does the stated condition require ending now?
@@ -97,20 +97,20 @@ TABLE: Facts no applicable hand facts
   - [wrong] Delay until session profit returns to zero — Look again. The stopping reason is session quality or time, not making the result look different.
     BETTER ANSWER: End when the first stopping condition is met
 
-TASK w21_2_read_time_vs_condition [drill] Which rule has fired?
+TASK w21_2_read_time_vs_condition [drill] Which remaining time and reason match the stopping rules?
 CAPTION: The table shows the hand linked to this session note. You set a 45-minute cap and also a trigger to stop after two unjustified deviations. At minute 30 you have recorded two deviations.
-Q: Which rule has fired?
+Q: Which remaining time and reason match the stopping rules?
 HINT [hidden]: (none)
 TABLE: Flop | You Ad Qc | Board Qh 8s 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair, rainbow
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ad Qc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks
-  + [correct] The condition-based rule — Correct. The count met its threshold before the time cap.
+  + [correct] 0 minutes: the decision-quality rule fired — Correct. The count met its threshold before the time cap.
     FEEDBACK TABLE: Flop | You Ad Qc | Board Qh 8s 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] The time limit — Look again. Only 30 of the planned 45 minutes have elapsed.
-    BETTER ANSWER: The condition-based rule
+  - [wrong] 0 minutes: the time limit fired — Look again. Only 30 of the planned 45 minutes have elapsed.
+    BETTER ANSWER: 0 minutes: the decision-quality rule fired
     FEEDBACK TABLE: Flop | You Ad Qc | Board Qh 8s 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
-  - [wrong] Neither rule until minute 45 — Look again. The two rules can fire independently.
-    BETTER ANSWER: The condition-based rule
+  - [wrong] 15 minutes: wait for the time limit — Look again. The two rules can fire independently.
+    BETTER ANSWER: 0 minutes: the decision-quality rule fired
     FEEDBACK TABLE: Flop | You Ad Qc | Board Qh 8s 3d | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
 TASK w21_2_guided_warmup_play_review [drill] Which sequence directly tests that one leak?
@@ -193,21 +193,21 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: The opponent lineup and seat exposure should be reassessed
     FEEDBACK TABLE: Flop | You Ah Qd | Board Qs 9d 3h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
-TASK w21_3_guided_find_own_leak [drill] How could an opponent profit from the same weakness you target?
+TASK w21_3_guided_find_own_leak [drill] Which fold rate and response fit the opponent’s adjustment?
 CAPTION: The table shows the hand linked to this session note. You usually target players who overfold to half-pot river bets. Your own log at a matching node shows 15 folds and 5 calls, with no raises. Assume an opponent knows that policy and can bluff with zero recovery.
-TEACH: How could an opponent profit from the same weakness you target? Calculate how your opponent would attack the very response you target in other players.
-Q: How could an opponent profit from the same weakness you target?
+TEACH: Which fold rate and response fit the opponent’s adjustment? Calculate how your opponent would attack the very response you target in other players.
+Q: Which fold rate and response fit the opponent’s adjustment?
 HINT [hidden]: (none)
 TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Td stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
-  + [correct] Bluff this node more when you fold 75% — Correct. At half pot the bluff requires only one third folds. Your observed response offers more.
+  + [correct] 75% folds: bluff this river size more — Correct. At half pot the bluff requires only one third folds. Your observed response offers more.
     FEEDBACK TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
-  - [wrong] Remove missed hands from the bluff range because your defense is too wide — Look again. The log shows a small defense share, not a wide one.
-    BETTER ANSWER: Bluff this node more when you fold 75%
+  - [wrong] 25% folds: cut bluffs at this size — Look again. The log shows a small defense share, not a wide one.
+    BETTER ANSWER: 75% folds: bluff this river size more
     FEEDBACK TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
-  - [wrong] Change a different street’s value sizes — Look again. The measured leak is the river response at this size.
-    BETTER ANSWER: Bluff this node more when you fold 75%
+  - [wrong] 75% folds: change value sizes on another street — Look again. The measured leak is the river response at this size.
+    BETTER ANSWER: 75% folds: bluff this river size more
     FEEDBACK TABLE: River | You Ah Td | Board Th 8c 4s 2h 2c | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts two pair, paired board
 
 TASK w21_3_transfer_switch_table_when_behind [drill] Which selection fits that rule?
@@ -357,21 +357,21 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: River, single-raised pot, compare small value bet with check
     FEEDBACK TABLE: River | You Jc Jd | Board Th 8s 4c 3d 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, overpair, pocket pair
 
-TASK w21_5_guided_choose_review_priority [drill] Which category comes first under that rule?
+TASK w21_5_guided_choose_review_priority [drill] Which category costs more in total, and by how much?
 CAPTION: The table shows the hand linked to this session note. This review uses the same unit of estimated cost across tags. Three missed thin-value decisions cost an estimated 1 BB each. One overlarge bluff cost an estimated 2 BB. Choose the higher total in this roster.
-TEACH: Which category comes first under that rule? Multiply observed opportunities by cost per recorded decision before prioritizing.
-Q: Which category comes first under that rule?
+TEACH: Which category costs more in total, and by how much? Multiply observed opportunities by cost per recorded decision before prioritizing.
+Q: Which category costs more in total, and by how much?
 HINT [hidden]: (none)
 TABLE: River | You Ah Qd | Board Qs 8d 4s 3h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Ah Qd stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB checks
-  + [correct] Missed thin value — Correct. Three separate 1 BB costs sum to 3 BB, above the 2 BB in the other bucket.
+  + [correct] 1 BB more: missed thin value — Correct. Three separate 1 BB costs sum to 3 BB, above the 2 BB in the other bucket.
     FEEDBACK TABLE: River | You Ah Qd | Board Qs 8d 4s 3h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] The expensive bluff — Look again. It has the largest single cost but the exercise prioritizes total cost.
-    BETTER ANSWER: Missed thin value
+  - [wrong] 1 BB more: the expensive bluff — Look again. It has the largest single cost but the exercise prioritizes total cost.
+    BETTER ANSWER: 1 BB more: missed thin value
     FEEDBACK TABLE: River | You Ah Qd | Board Qs 8d 4s 3h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] The two categories tie — Look again. The supplied totals differ by 1 BB.
-    BETTER ANSWER: Missed thin value
+  - [wrong] 0 BB difference: the categories tie — Look again. The supplied totals differ by 1 BB.
+    BETTER ANSWER: 1 BB more: missed thin value
     FEEDBACK TABLE: River | You Ah Qd | Board Qs 8d 4s 3h 2c | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w21_5_transfer_review_without_result [drill] Which review order removes the result from the judgment?
@@ -454,20 +454,20 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: If I skip the price twice, I tag the hands and sit out before the next deal
     FEEDBACK TABLE: Flop | You Ah Js | Board Jc 9s 5h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2 | Facts one pair, top pair, rainbow
 
-TASK w21_6_checkpoint_select_end_and_tag [drill] What follows from your full plan?
+TASK w21_6_checkpoint_select_end_and_tag [drill] How many decisions should you tag, and should you stop?
 CAPTION: The table shows the hand linked to this session note. You doubled early, the table still looks favorable, and you skipped the price check in two decisions. Your policy requires stopping for that count; your review prioritizes repeat mistakes. The current hand is finished.
-Q: What follows from your full plan?
+Q: How many decisions should you tag, and should you stop?
 HINT [hidden]: (none)
 TABLE: River | You As Kc | Board Ks 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer As Kc stack 97.5 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB checks
-  + [correct] Stop before the next deal and tag both skipped checks — Correct. The objective trigger fired and both decisions can be reviewed. The score and favorable lineup do not override the plan.
+  + [correct] 2 tags: stop before the next deal — Correct. The objective trigger fired and both decisions can be reviewed. The score and favorable lineup do not override the plan.
     FEEDBACK TABLE: River | You As Kc | Board Ks 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Stay because the good game will restore focus — Look again. The evidence against your focus remains and the stop condition was already met.
-    BETTER ANSWER: Stop before the next deal and tag both skipped checks
+  - [wrong] 2 tags: keep playing — Look again. The evidence against your focus remains and the stop condition was already met.
+    BETTER ANSWER: 2 tags: stop before the next deal
     FEEDBACK TABLE: River | You As Kc | Board Ks 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Stop but omit the winning hand from review — Look again. Both decisions match the tag criterion. The result of either hand is separate.
-    BETTER ANSWER: Stop before the next deal and tag both skipped checks
+  - [wrong] 1 tag: stop but omit the won hand — Look again. Both decisions match the tag criterion. The result of either hand is separate.
+    BETTER ANSWER: 2 tags: stop before the next deal
     FEEDBACK TABLE: River | You As Kc | Board Ks 9d 4c 3s 2h | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w21_6_day7_reset_next_block [review] Which goal carries the review into the next block?

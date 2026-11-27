@@ -502,10 +502,10 @@ SEATS: UTG folded stack 100 BB | HJ As Jd stack 97.5 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks · turn: HJ checks · river: BB checks
   + [correct] 5/6 quick bets were value, versus 3/6 delayed — Correct. Use each timing group’s own denominator. The unshown hands still leave selection uncertainty.
     FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] The player is 83.3% value whenever acting quickly — Look again. That generalizes the result beyond the visible cases in the matched node.
+  - [wrong] 83.3% value whenever the player acts quickly — Look again. That generalizes the result beyond the visible cases in the matched node.
     BETTER ANSWER: 5/6 quick bets were value, versus 3/6 delayed
     FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Quick bets are 5/12 value — Look again. Twelve contains delayed bets too. Only six quick bets belong in the denominator.
+  - [wrong] 5/12 quick bets were value — Look again. Twelve contains delayed bets too. Only six quick bets belong in the denominator.
     BETTER ANSWER: 5/6 quick bets were value, versus 3/6 delayed
     FEEDBACK TABLE: River | You As Jd | Board Ah 7s 4c 3d 2h | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
@@ -776,20 +776,20 @@ TABLE: Facts no applicable hand facts
   - [wrong] The shown bluff secures lasting profitability for future value bets — Look again. Different opponents and sizes still have different call ranges.
     BETTER ANSWER: The opponent saw it and subsequently defended comparable bets more often
 
-TASK w20_5_read_third_level [drill] Which question uses the third level of thinking?
+TASK w20_5_read_third_level [drill] Which thinking level considers how the regular sees your range?
 CAPTION: A regular watched your large river bluff reach showdown. You now face the same regular at another similar river after using the same previous actions.
-Q: Which question uses the third level of thinking?
+Q: Which thinking level considers how the regular sees your range?
 HINT [hidden]: (none)
 TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO Qs Jc stack 97.5 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 97.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: CO checks · turn: BB checks · turn: CO checks · river: BB checks
-  + [correct] What range does the regular assign me after seeing that bluff? — Correct. You are modeling the other player’s belief about your range.
+  + [correct] 3 — Correct. You are modeling the other player’s belief about your range.
     FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] What exact hand do I hold? — Look again. That is the first level of reading your own hand.
-    BETTER ANSWER: What range does the regular assign me after seeing that bluff?
+  - [wrong] 1 — Look again. That is the first level of reading your own hand.
+    BETTER ANSWER: 3
     FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [wrong] Which holdings could the regular have? — Look again. That examines the opponent’s hand, which is the second level.
-    BETTER ANSWER: What range does the regular assign me after seeing that bluff?
+  - [wrong] 2 — Look again. That examines the opponent’s hand, which is the second level.
+    BETTER ANSWER: 3
     FEEDBACK TABLE: River | You Qs Jc | Board Qh 8d 5s 3c 2h | Pot 5.5 BB | Seat CO | Active co | Decision co | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w20_5_guided_keep_table_welcoming [drill] Which response keeps the interaction respectful?

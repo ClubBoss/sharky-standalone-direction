@@ -630,31 +630,31 @@ final _world17Pilot = _act0PilotWorldV1(
         lesson: "position_and_squeeze",
         lessonTitle: "Position and squeeze",
         title:
-            "Under that pure-bluff stress test, does the squeeze beat folding?",
+            "Which modeled average for the squeeze supports the better choice?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "HJ opened 2.5 BB, CO called, and BTN acts. BTN would add 9 BB. An outcome means one possible result. In ten mutually exclusive, equal-weight results, all remaining players fold in five. In five, somebody continues and the re-raise has zero recovery.",
         question:
-            "Under that pure-bluff stress test, does the squeeze beat folding?",
+            "Which modeled average for the squeeze supports the better choice?",
         teach: "",
         choices: const [
           (
             "answer",
-            "Fold. The model loses 1.25 BB for the squeeze",
+            "−1.25 BB for squeezing: fold",
             Act0FeedbackQualityV1.correct,
             "Five wins of 6.5 BB fail to cover five losses of 9 BB. The stress test excludes showdown recovery.",
           ),
           (
             "alternative",
-            "Squeeze. It earns 1.25 BB",
+            "+1.25 BB for squeezing: squeeze",
             Act0FeedbackQualityV1.wrong,
             "The loss in a failed squeeze exceeds the gain when everyone folds.",
           ),
           (
             "other",
-            "The two actions tie",
+            "0 BB for squeezing: tie",
             Act0FeedbackQualityV1.wrong,
             "A half-and-half split ties only if the current pot and risk are equal.",
           ),
@@ -4486,7 +4486,7 @@ final _world18Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Limp behind",
+            "Calling the blind after other callers",
             Act0FeedbackQualityV1.correct,
             "BTN calls the blind after other players already limped.",
           ),

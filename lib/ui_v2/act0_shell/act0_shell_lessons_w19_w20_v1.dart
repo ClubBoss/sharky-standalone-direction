@@ -2840,13 +2840,13 @@ final _world20Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "The player is 83.3% value whenever acting quickly",
+            "83.3% value whenever the player acts quickly",
             Act0FeedbackQualityV1.wrong,
             "That generalizes the result beyond the visible cases in the matched node.",
           ),
           (
             "other",
-            "Quick bets are 5/12 value",
+            "5/12 quick bets were value",
             Act0FeedbackQualityV1.wrong,
             "Twelve contains delayed bets too. Only six quick bets belong in the denominator.",
           ),
@@ -4534,30 +4534,32 @@ final _world20Pilot = _act0PilotWorldV1(
         id: "w20_5_read_third_level",
         lesson: "image_and_ecology",
         lessonTitle: "Image and ecology",
-        title: "Which question uses the third level of thinking?",
+        title:
+            "Which thinking level considers how the regular sees your range?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "A regular watched your large river bluff reach showdown. You now face the same regular at another similar river after using the same previous actions.",
-        question: "Which question uses the third level of thinking?",
+        question:
+            "Which thinking level considers how the regular sees your range?",
         teach: "",
         choices: const [
           (
             "answer",
-            "What range does the regular assign me after seeing that bluff?",
+            "3",
             Act0FeedbackQualityV1.correct,
             "You are modeling the other player’s belief about your range.",
           ),
           (
             "alternative",
-            "What exact hand do I hold?",
+            "1",
             Act0FeedbackQualityV1.wrong,
             "That is the first level of reading your own hand.",
           ),
           (
             "other",
-            "Which holdings could the regular have?",
+            "2",
             Act0FeedbackQualityV1.wrong,
             "That examines the opponent’s hand, which is the second level.",
           ),
