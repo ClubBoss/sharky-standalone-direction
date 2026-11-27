@@ -570,8 +570,8 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 ===== WORLD 22 · LESSON equilibrium_and_matrix · Equilibrium and matrix =====
 
 TASK w22_2_teach [theory] What does a best response hold fixed?
-CAPTION: A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. Ties between actions can support a mix.
-TEACH: What does a best response hold fixed? A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. Ties between actions can support a mix.
+CAPTION: A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. A balanced strategy is a way of choosing actions that limits what opponents can gain by adjusting to your patterns. Ties between actions can support a mix.
+TEACH: What does a best response hold fixed? A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. A balanced strategy is a way of choosing actions that limits what opponents can gain by adjusting to your patterns. Ties between actions can support a mix.
 Q: What does a best response hold fixed?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
