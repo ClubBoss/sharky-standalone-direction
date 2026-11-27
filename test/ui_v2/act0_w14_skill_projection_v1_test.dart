@@ -144,43 +144,37 @@ void main() {
     },
   );
 
-  test(
-    'miss stays open after help or another task; its independent retry clears it',
-    () {
-      final missed = _answer(0, 1, correct: false);
-      final helped = _answer(
-        0,
-        2,
-        assistance: Act0DecisionAssistanceV1.quickHint,
-      );
-      final other = _answer(1, 3);
-      final before = _states([
-        other,
-        helped,
-        missed,
-      ]).firstWhere((s) => s.label == 'Table sense');
-      expect(before.stateLabel, 'Needs practice');
-      expect(before.tasksToRevisit, 1);
-      expect(before.helpedOrUnverifiedTasks, 1);
-      expect(before.independentTasks, 1);
-      final after = _states([
-        missed,
-        helped,
-        other,
-        _answer(0, 4),
-      ]).firstWhere((s) => s.label == 'Table sense');
-      expect(after.stateLabel, 'Answers without help');
-      expect(after.tasksToRevisit, 0);
-      expect(after.independentTasks, 2);
-      expect(
-        _states([
-          _answer(0, 1),
-          _answer(0, 2, correct: false),
-        ]).first.stateLabel,
-        'Needs practice',
-      );
-    },
-  );
+  test('miss stays open after help, unrelated task or exact retry', () {
+    final missed = _answer(0, 1, correct: false);
+    final helped = _answer(
+      0,
+      2,
+      assistance: Act0DecisionAssistanceV1.quickHint,
+    );
+    final other = _answer(1, 3);
+    final before = _states([
+      other,
+      helped,
+      missed,
+    ]).firstWhere((s) => s.label == 'Table sense');
+    expect(before.stateLabel, 'Needs practice');
+    expect(before.tasksToRevisit, 1);
+    expect(before.helpedOrUnverifiedTasks, 1);
+    expect(before.independentTasks, 1);
+    final after = _states([
+      missed,
+      helped,
+      other,
+      _answer(0, 4),
+    ]).firstWhere((s) => s.label == 'Table sense');
+    expect(after.stateLabel, 'Needs practice');
+    expect(after.tasksToRevisit, 1);
+    expect(after.independentTasks, 1);
+    expect(
+      _states([_answer(0, 1), _answer(0, 2, correct: false)]).first.stateLabel,
+      'Needs practice',
+    );
+  });
 
   test('every W5–W6 task projects to its authored topic', () {
     const boardLessons = {
@@ -396,8 +390,8 @@ void main() {
     expect(helped.tasksToRevisit, 1);
     final retried = range([...restored.records, _answer(index, 4)]);
     expect(retried.answeredTasks, 1);
-    expect(retried.independentTasks, 1);
-    expect(retried.tasksToRevisit, 0);
+    expect(retried.independentTasks, 0);
+    expect(retried.tasksToRevisit, 1);
   });
 
   test(

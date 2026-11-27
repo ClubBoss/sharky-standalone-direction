@@ -17,6 +17,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_verified_transfer_v1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_w1_rules_check_v1.dart';
 
@@ -2086,96 +2087,108 @@ void _registerFocusedCases() {
     expect(restored['completedTaskIds'], before['completedTaskIds']);
   });
 
-  testWidgets('a W6 suited-combo miss opens the earlier suited comparison', (
-    t,
-  ) async {
-    const taskId = 'w6_checkpoint_table_best_five';
-    const targetId = 'w6_pair_vs_suited_weight_compare';
-    final firstSuitedComparison = act0RepairGoalContractForSourceV1(
-      worldId: 'world_6',
-      lessonId: 'range_thinking_checkpoint',
-      taskId: targetId,
-      choiceId: 'kq_suited',
-    );
-    expect(firstSuitedComparison?.targetTaskId, targetId);
-    expect(firstSuitedComparison?.mappingType, 'intentional_exact');
-    final xp = await _openSavedCourseTask(
-      t,
-      worldId: 'world_6',
-      taskId: taskId,
-    );
-    expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_option_hero_wins')),
-      ]),
-      isTrue,
-    );
+  testWidgets(
+    'a W6 suited-combo miss corrects first and saves the earlier comparison',
+    (t) async {
+      const taskId = 'w6_checkpoint_table_best_five';
+      const targetId = 'w6_pair_vs_suited_weight_compare';
+      // An existing Review relation is not automatically a verified transfer.
+      expect(act0VerifiedTransferTargetV1(taskId), isNull);
+      final firstSuitedComparison = act0RepairGoalContractForSourceV1(
+        worldId: 'world_6',
+        lessonId: 'range_thinking_checkpoint',
+        taskId: targetId,
+        choiceId: 'kq_suited',
+      );
+      expect(firstSuitedComparison?.targetTaskId, targetId);
+      expect(firstSuitedComparison?.mappingType, 'intentional_exact');
+      final xp = await _openSavedCourseTask(
+        t,
+        worldId: 'world_6',
+        taskId: taskId,
+      );
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_shell_option_hero_wins')),
+        ]),
+        isTrue,
+      );
 
-    Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
-        (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
-          (row) => row['sourceTaskId'] == taskId,
-        );
-    Map<dynamic, dynamic> sourceAnswer(Map<String, dynamic> saved) =>
-        (saved['learningEvidenceHistory'] as List).cast<Map>().singleWhere(
-          (row) => row['taskId'] == taskId,
-        );
-    final before = await _saved(t);
-    expect(sourceRepair(before)['targetTaskId'], targetId);
-    expect(sourceAnswer(before)['choiceId'], 'hero_wins');
-    expect(sourceAnswer(before)['isCorrect'], isFalse);
-    expect(before['earnedXp'], xp);
-    expect(
-      await _tapFirst(t, [
-        find.byKey(const Key('act0_shell_feedback_continue_cta')),
-      ]),
-      isTrue,
-    );
-    expect(
-      t
-          .widget<Act0LessonRunnerShellV1>(find.byType(Act0LessonRunnerShellV1))
-          .selectedTaskId,
-      targetId,
-    );
+      Map<dynamic, dynamic> sourceRepair(Map<String, dynamic> saved) =>
+          (saved['openRepairIntents'] as List).cast<Map>().singleWhere(
+            (row) => row['sourceTaskId'] == taskId,
+          );
+      Map<dynamic, dynamic> sourceAnswer(Map<String, dynamic> saved) =>
+          (saved['learningEvidenceHistory'] as List).cast<Map>().singleWhere(
+            (row) => row['taskId'] == taskId,
+          );
+      final before = await _saved(t);
+      expect(sourceRepair(before)['targetTaskId'], targetId);
+      expect(sourceAnswer(before)['choiceId'], 'hero_wins');
+      expect(sourceAnswer(before)['isCorrect'], isFalse);
+      expect(before['earnedXp'], xp);
+      expect(
+        await _tapFirst(t, [
+          find.byKey(const Key('act0_shell_feedback_continue_cta')),
+        ]),
+        isTrue,
+      );
+      expect(
+        t
+            .widget<Act0LessonRunnerShellV1>(
+              find.byType(Act0LessonRunnerShellV1),
+            )
+            .selectedTaskId,
+        taskId,
+      );
 
-    await _mount(t);
-    final restored = await _saved(t);
-    expect(sourceRepair(restored), sourceRepair(before));
-    expect(sourceAnswer(restored), sourceAnswer(before));
-    expect(restored['earnedXp'], xp);
-    expect(restored['completedTaskIds'], before['completedTaskIds']);
-  });
+      await _mount(t);
+      final restored = await _saved(t);
+      expect(sourceRepair(restored), sourceRepair(before));
+      expect(sourceAnswer(restored), sourceAnswer(before));
+      expect(restored['earnedXp'], xp);
+      expect(restored['completedTaskIds'], before['completedTaskIds']);
+    },
+  );
 
-  for (final (name, worldId, taskId, choiceId, targetId) in const [
+  for (final (name, worldId, taskId, choiceId, targetId, transferId) in const [
     (
-      'a W9 yellow-zone miss reopens yellow-zone planning',
+      'a W9 yellow-zone miss corrects first and saves yellow-zone planning',
       'world_9',
       'w9_m_ratio_table_window_transfer',
       'wait_for_red',
       'w9_m_ratio_yellow_zone',
+      null,
     ),
     (
-      'a W10 blind-overfold miss reopens the one-lever exercise',
+      'a W10 blind-overfold miss corrects first and saves the one-lever exercise',
       'world_10',
       'w10_checkpoint_lever_line',
       'fold',
       'w10_vs_nit_open_wider',
+      null,
     ),
     (
-      'a W11 small-blind call miss reopens the value three-bet',
+      'a W11 small-blind call miss corrects first and verifies the value three-bet',
       'world_11',
       'w11_checkpoint_plan_line',
       'call_2_bb',
       'w11_sb_3bet_value',
+      'w11_sb_3bet_value',
     ),
     (
-      'a W12 outcome-bias miss reopens reviewing the decision',
+      'a W12 outcome-bias miss corrects first and verifies reviewing the decision',
       'world_12',
       'w12_checkpoint_process_line',
       'fold_after_last_orbit_s_loss',
       'w12_good_fold_bad_result',
+      'w12_good_fold_bad_result',
     ),
   ]) {
     testWidgets(name, (t) async {
+      // B153 adjudicates transfer novelty, independently of the existing
+      // saved Review obligation. B152's first correction is always exact.
+      expect(act0VerifiedTransferTargetV1(taskId)?.taskId, transferId);
       final xp = await _openSavedCourseTask(
         t,
         worldId: worldId,
@@ -2207,7 +2220,7 @@ void _registerFocusedCases() {
               find.byType(Act0LessonRunnerShellV1),
             )
             .selectedTaskId,
-        targetId,
+        taskId,
       );
 
       await _mount(t);

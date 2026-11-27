@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'act0_authored_source_proof_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
+import 'act0_durable_learning_time_contract_v1.dart';
+import 'act0_verified_transfer_v1.dart';
 import 'act0_learning_evidence_contract_v1.dart';
 import 'act0_shell_state_v1.dart';
 import 'act0_task_skill_map_v1.dart' as task_skills;
@@ -84,15 +86,45 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
   final independent = <String, Set<String>>{};
   final helped = <String, Set<String>>{};
   final missed = <String, Set<String>>{};
-  // Anchors preserve first facts, not the latest outcome. An old first-miss
-  // anchor must not reopen a task whose later retry left the rolling journal.
+  final openMisses = <String, Act0LearningEvidenceRecordV1>{};
+  // Anchors preserve first facts, not current Review debt. They still
+  // prevent a familiar identity from becoming new independent proof when
+  // the original miss has rolled out of the recent journal.
   final recentIds = history.records.map((record) => record.recordId).toSet();
   for (final record in history.provenanceRecords) {
     if (record.isPlacementAssessment || record.isDiagnosticLearningEntry) {
       continue;
     }
     final key = identity(record.worldId, record.lessonId, record.taskId);
-    final skills = taskSkills[key] ?? const <String>[];
+    final unseenFamily = record.reviewKind == Act0ReviewKindV1.unseenTransfer
+        ? act0NewReviewConceptFamilyV1(
+            record.worldId,
+            record.lessonId,
+            record.taskId,
+          )
+        : null;
+    final transferredMisses = [
+      for (final entry in openMisses.entries)
+        if (entry.key != key &&
+            (_isVerifiedTargetV1(entry.value, record) ||
+                (unseenFamily != null &&
+                    entry.value.worldId == record.worldId &&
+                    entry.value.lessonId == record.lessonId &&
+                    act0Day7FamilyForSourceV1(
+                          worldId: entry.value.worldId,
+                          lessonId: entry.value.lessonId,
+                          taskId: entry.value.taskId,
+                          family: entry.value.conceptFamilyId.isNotEmpty
+                              ? entry.value.conceptFamilyId
+                              : entry.value.repairFocusId,
+                        ) ==
+                        unseenFamily)))
+          entry.key,
+    ];
+    final skills = <String>{
+      ...?taskSkills[key],
+      for (final miss in transferredMisses) ...?taskSkills[miss],
+    };
     if (skills.isEmpty) continue;
     final fingerprint = act0CurrentAuthoredSourceFingerprintForIdentityV1(
       worldId: record.worldId,
@@ -102,19 +134,35 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
     final currentSource =
         record.authoredSourceFingerprint.isNotEmpty &&
         record.authoredSourceFingerprint == fingerprint;
+    final sameIdentityMiss = openMisses.containsKey(key);
+    if (currentSource &&
+        !record.isCorrect &&
+        record.startedBy != 'lesson_extra_example') {
+      openMisses[key] = record;
+    }
+    final independentlyCorrect =
+        currentSource && record.isIndependentCorrect && !sameIdentityMiss;
     for (final skill in skills) {
       (answered[skill] ??= {}).add(key);
-      if (!currentSource ||
-          (record.isCorrect && !record.isIndependentCorrect)) {
+      if (!currentSource || (record.isCorrect && !independentlyCorrect)) {
         (helped[skill] ??= {}).add(key);
       } else if (!record.isCorrect) {
-        if (recentIds.contains(record.recordId)) {
+        if (recentIds.contains(record.recordId) &&
+            record.startedBy != 'lesson_extra_example') {
           (missed[skill] ??= {}).add(key);
         }
       } else {
         (independent[skill] ??= {}).add(key);
-        // Another task, or a hinted retry, cannot clear this task's miss.
-        if (recentIds.contains(record.recordId)) missed[skill]?.remove(key);
+        // Same-source retries never clear a skill miss. A verified
+        // different example can; the Review queue has its own closing rule.
+      }
+    }
+    if (independentlyCorrect) {
+      for (final miss in transferredMisses) {
+        openMisses.remove(miss);
+        for (final skill in taskSkills[miss] ?? const <String>[]) {
+          missed[skill]?.remove(miss);
+        }
       }
     }
   }
@@ -130,4 +178,15 @@ List<Act0W14SkillStateV1> act0W14SkillStatesV1({
         tasksToRevisit: missed[label]?.length ?? 0,
       ),
   ];
+}
+
+bool _isVerifiedTargetV1(
+  Act0LearningEvidenceRecordV1 source,
+  Act0LearningEvidenceRecordV1 answer,
+) {
+  final target = act0VerifiedTransferTargetV1(source.taskId);
+  return target != null &&
+      target.worldId == answer.worldId &&
+      target.lessonId == answer.lessonId &&
+      target.taskId == answer.taskId;
 }
