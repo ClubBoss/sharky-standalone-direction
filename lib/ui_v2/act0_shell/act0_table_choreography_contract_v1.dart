@@ -107,8 +107,14 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
   Act0TableStateV1 table, {
   bool actorFocusSafe = true,
 }) {
+  // B157: an explicitly non-autoplay explanation can still carry a complete
+  // recorded hand. Expose the verified plan through the same contract as
+  // played hands, but only for the narrow checked-street cohort below.
+  // Runtime animation is independently gated by autoPlayHistory.
+  final checkedHistoryOnly =
+      table.scope == Act0TableScopeV1.explanation && !table.autoPlayHistory;
   if (!actorFocusSafe ||
-      table.scope != Act0TableScopeV1.playedHand ||
+      (table.scope != Act0TableScopeV1.playedHand && !checkedHistoryOnly) ||
       table.actionTrail.isEmpty ||
       act0BettingRoundOrderTruthForTableV1(table) ==
           Act0BettingRoundOrderTruthV1.contradiction) {
@@ -182,6 +188,10 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     return null;
   }
 
+  if (checkedHistoryOnly &&
+      (!extended || !_isCheckedHeadsUpHistoryV1(table, parsed, finalStreet))) {
+    return null;
+  }
   final verified = extended ? _verifyExtendedHistoryV1(table, parsed) : null;
   if (extended && verified == null) return null;
   // A complete replay can establish a newly dealt decision street before its
@@ -367,6 +377,61 @@ Act0TableChoreographyPlanV1? act0TableChoreographyPlanForTableV1(
     beats: List<Act0TableChoreographyBeatV1>.unmodifiable(beats),
     verifiedHistory: verified?.timeline,
   );
+}
+
+// B157: the two six-max single-open/call shapes, ending after the first
+// flop check or after two fully checked streets and the first river check.
+// Match parsed actions, not display prose or task IDs. The typed ledger still
+// proves the actors, contributions, round closure and next decision separately.
+bool _isCheckedHeadsUpHistoryV1(
+  Act0TableStateV1 table,
+  List<_ParsedTrailItemV1> parsed,
+  Act0TableChoreographyStreetV1 finalStreet,
+) {
+  if (finalStreet != Act0TableChoreographyStreetV1.flop &&
+      finalStreet != Act0TableChoreographyStreetV1.river) {
+    return false;
+  }
+  final preflop = parsed
+      .where((item) => item.street == Act0TableChoreographyStreetV1.preflop)
+      .toList();
+  final shape = preflop
+      .map(
+        (item) => switch (item.action) {
+          _TrailActionV1.blind => 'p',
+          _TrailActionV1.folds => 'f',
+          _TrailActionV1.raises => 'r',
+          _TrailActionV1.calls => 'c',
+          _ => '?',
+        },
+      )
+      .join();
+  if (shape != 'ppffrffc' && shape != 'ppfffrfc') return false;
+  final folded = preflop
+      .where((item) => item.action == _TrailActionV1.folds)
+      .map((item) => item.actorSeat?.seatId)
+      .toSet();
+  if (folded.length != 4 ||
+      table.seats.any(
+        (seat) =>
+            seat.isFolded != folded.contains(seat.seatId) ||
+            seat.isInHand == folded.contains(seat.seatId),
+      )) {
+    return false;
+  }
+  for (final street in Act0TableChoreographyStreetV1.values.skip(1)) {
+    final actions = parsed.where((item) => item.street == street).toList();
+    final expected = street.index > finalStreet.index
+        ? 0
+        : street == finalStreet
+        ? 1
+        : 2;
+    if (actions.length != expected ||
+        actions.any((item) => item.action != _TrailActionV1.checks)) {
+      return false;
+    }
+  }
+  return true;
 }
 
 Act0TableChoreographyFrameV1 act0TableChoreographyFrameAfterBeatV1(

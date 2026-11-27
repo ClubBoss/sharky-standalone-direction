@@ -289,9 +289,18 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
         final plan = nineMax
             ? null
             : act0TableChoreographyPlanForTableV1(r.table);
-        final timeline = r.table.handTimelinePrefix ?? plan?.verifiedHistory;
+        // The canonical parser admits non-autoplay checked explanations only
+        // with a verified full replay. Do not treat an arbitrary explanation
+        // timeline (or a partial plan) as a certificate.
+        final checkedHistory =
+            r.table.scope == Act0TableScopeV1.explanation &&
+            plan?.verifiedHistory?.coverage ==
+                Act0HandHistoryCoverageV1.complete;
+        final timeline = checkedHistory
+            ? plan!.verifiedHistory
+            : r.table.handTimelinePrefix ?? plan?.verifiedHistory;
         if ((nineMax || r.table.tableFormat == Act0TableFormatV1.sixMax) &&
-            r.table.scope == Act0TableScopeV1.playedHand &&
+            (r.table.scope == Act0TableScopeV1.playedHand || checkedHistory) &&
             timeline?.coverage == Act0HandHistoryCoverageV1.complete) {
           final actor = r.table.decisionSeatId ?? r.table.activeSeatId;
           final error = actor == null || actor.isEmpty
@@ -306,7 +315,8 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
               error ?? 'Complete typed history replays legally',
             ),
           );
-        } else if (plan == null) {
+        } else if (plan == null ||
+            r.table.scope == Act0TableScopeV1.explanation) {
           rows.add(
             TableTruthRow(
               task.taskId,
@@ -319,7 +329,8 @@ List<TableTruthRow> auditTableTruth({Iterable<Act0WorldCardV1>? worlds}) {
             ),
           );
         }
-        if (plan != null)
+        // A proof-only explanation does not gain animated learner frames.
+        if (plan != null && r.table.scope != Act0TableScopeV1.explanation)
           for (var i = 0; i < plan.beats.length; i++) {
             states['choreography/$i/${plan.beats[i].kind.name}'] =
                 act0TableForChoreographyFrameV1(
