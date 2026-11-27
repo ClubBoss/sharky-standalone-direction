@@ -150,12 +150,6 @@
     ]
   },
   "W20": {
-    "15.internal_jargon": [
-      "w20_3_transfer_stakes_discomfort_caveat|baseline"
-    ],
-    "16.extreme_wrong_option": [
-      "w20_1_day7_distracted_online_sample|alternative"
-    ],
     "17.single_format_lesson": [
       "@lesson:image_and_ecology|statement",
       "@lesson:timing_and_live_tells|statement"
@@ -175,10 +169,6 @@
       "w20_5_day7_dont_use_private_image|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_5_guided_keep_table_welcoming|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w20_6_read_confirmation_counterexample|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete"
-    ],
-    "E11": [
-      "w20_1_day7_distracted_online_sample|snap-call",
-      "w20_4_guided_isolation_two_sizes|limp behind"
     ]
   },
   "W21": {
@@ -198,19 +188,6 @@
     ]
   },
   "W22": {
-    "15.internal_jargon": [
-      "w22_5_read_output_as_scope|heuristic",
-      "w22_5_transfer_population_query|baseline"
-    ],
-    "17.single_format_lesson": [
-      "@lesson:game_tree|statement",
-      "@lesson:heuristic_extraction|statement",
-      "@lesson:plans_checkpoint|statement"
-    ],
-    "18.same_format_streak": [
-      "w22_1_teach|statement",
-      "w22_4_day7_change_input_requires_new_query|statement"
-    ],
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w22_1_transfer_river_no_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
