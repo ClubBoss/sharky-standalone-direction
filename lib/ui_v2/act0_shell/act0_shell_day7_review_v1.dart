@@ -325,13 +325,13 @@ Act0TableStateV1 _day7TableV1({
   final heroCards = hand.isEmpty
       ? const <Act0CardStateV1>[]
       : _act0LessonCardsV1(hand);
-  final seatIds =
-      occupiedSeatIds ??
-      (format == Act0TableFormatV1.sixMax
-          ? _day7SeatsV1
-          : act0CanonicalSeatOrderForFormatV1(
-              format,
-            ).map((position) => position.toLowerCase()).toList());
+  final seatIds = act0CurriculumPilotEnabledV1 && occupiedSeatIds != null
+      ? occupiedSeatIds
+      : (format == Act0TableFormatV1.sixMax
+            ? _day7SeatsV1
+            : act0CanonicalSeatOrderForFormatV1(
+                format,
+              ).map((position) => position.toLowerCase()).toList());
   final startingStacks = {
     for (final seat in seatIds) seat: stacks[seat] ?? _day7DefaultStackBbV1,
   };

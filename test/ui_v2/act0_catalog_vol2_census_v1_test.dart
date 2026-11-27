@@ -145,6 +145,7 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
     final previous = previousCatalogSnapshotV1(
       path:
           'test/fixtures/act0_catalog_snapshot_w${world}_w${world + 1}_v1.txt',
+      allowMissingPath: world == 25,
     );
     if (previous != null) {
       for (final f in catalogOptionLabelChangesV1(previous, current)) {

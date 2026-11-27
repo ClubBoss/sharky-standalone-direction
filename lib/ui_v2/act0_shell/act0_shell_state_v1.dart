@@ -262,12 +262,14 @@ class Act0ShellStateV1 {
   static final sample = learnerCatalog();
 
   /// Volume I remains independently addressable even in a pilot build.
-  static final volumeOneLearnerCatalog = _buildCatalog(
-    null,
-    List.unmodifiable(
-      _act0PreviewWorlds.where((world) => world.worldNumber <= 12),
-    ),
-  ).forLearners();
+  static final volumeOneLearnerCatalog = act0CurriculumPilotEnabledV1
+      ? _buildCatalog(
+          null,
+          List.unmodifiable(
+            _act0PreviewWorlds.where((world) => world.worldNumber <= 12),
+          ),
+        ).forLearners()
+      : _numberedCatalog.forLearners();
   static final _learnerSixSeatCatalog = catalog(
     nineSeatPreview: false,
   ).forLearners();
@@ -1243,7 +1245,9 @@ class Act0TableStateV1 {
       ? act0PreflopPositionsByCountV1[3]!
       : act0CanonicalSeatOrderForFormatV1(tableFormat);
 
-  bool get usesCanonicalPlayerCount => playerCount == canonicalSeatOrder.length;
+  bool get usesCanonicalPlayerCount => act0CurriculumPilotEnabledV1
+      ? playerCount == canonicalSeatOrder.length
+      : playerCount == act0ExpectedPlayerCountForFormatV1(tableFormat);
 
   /// The observed player can be different from Hero.
   String get decisionActorSeatId => decisionSeatId ?? heroSeat.seatId;

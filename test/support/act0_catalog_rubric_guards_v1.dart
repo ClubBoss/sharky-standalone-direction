@@ -194,7 +194,10 @@ Iterable<CatalogRubricFindingV1> catalogOptionLabelChangesV1(
   }
 }
 
-String? previousCatalogSnapshotV1({String path = catalogSnapshotPathV1}) {
+String? previousCatalogSnapshotV1({
+  String path = catalogSnapshotPathV1,
+  bool allowMissingPath = false,
+}) {
   final environment = Platform.environment;
   final eventPath = environment['GITHUB_EVENT_PATH'];
   final tierA = environment['TEST_AUTHORITY_SHARD']?.endsWith('/3') ?? false;
@@ -217,6 +220,15 @@ String? previousCatalogSnapshotV1({String path = catalogSnapshotPathV1}) {
   }
   final result = Process.runSync('git', ['show', '$revision:$path']);
   if (result.exitCode != 0) {
+    if (allowMissingPath) {
+      // A newly introduced snapshot has no previous labels to compare.
+      // Verify the path is absent from a readable base tree; a missing
+      // revision or another Git failure must still fail in Tier A.
+      final entry = Process.runSync('git', ['ls-tree', revision, '--', path]);
+      if (entry.exitCode == 0 && (entry.stdout as String).trim().isEmpty) {
+        return null;
+      }
+    }
     if (tierA)
       throw StateError('Catalog snapshot at $revision: ${result.stderr}');
     return null;
