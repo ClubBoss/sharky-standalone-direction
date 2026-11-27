@@ -244,7 +244,7 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: Matched current observations that show the opponent defending more
 
 TASK w19_4_read_predictable_single_size [drill] How can this opponent capitalize on that pattern?
-CAPTION: In a practice pool you use your largest river size only with missed draws. An opponent has observed that entire policy and has a hand beating every miss.
+CAPTION: The preflop open size means the amount of the first raise before the flop. In a practice pool you use your largest river size only with missed draws. An opponent has observed that entire policy and has a hand beating every miss.
 Q: How can this opponent capitalize on that pattern?
 HINT [hidden]: (none)
 TABLE: River | You Ad Qs | Board Qd 8s 5c 3h 2d | Pot 5.5 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair
@@ -294,7 +294,7 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 TASK w19_4_day7_simplify_mix [review] What can you conclude for this hand in this model?
 ENTRY: drill
-CAPTION: In a teaching matrix one group of hands has exactly equal EV for check and a small bet against the given policy. All range-level frequencies are being tracked separately.
+CAPTION: A solver is a program that calculates strategies for a specified poker model. In a teaching matrix one group of hands has exactly equal EV for check and a small bet against the given policy. All range-level frequencies are being tracked separately.
 Q: What can you conclude for this hand in this model?
 HINT [hidden]: (none)
 TABLE: River | You Ac Qc | Board Qh 9s 4d 3c 2s | Pot 5.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair

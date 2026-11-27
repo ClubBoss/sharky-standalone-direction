@@ -3021,10 +3021,10 @@ final _world22Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. Ties between actions can support a mix.",
+            "A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. A balanced strategy is a way of choosing actions that limits what opponents can gain by adjusting to your patterns. Ties between actions can support a mix.",
         question: "What does a best response hold fixed?",
         teach:
-            "A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. Ties between actions can support a mix.",
+            "A strategy matrix gives payoffs for all combinations of policies in an abstract game. At equilibrium neither side gains by deviating alone. A balanced strategy is a way of choosing actions that limits what opponents can gain by adjusting to your patterns. Ties between actions can support a mix.",
         choices: const [
           (
             "answer",

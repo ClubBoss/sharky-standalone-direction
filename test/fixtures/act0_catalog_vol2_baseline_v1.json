@@ -204,10 +204,6 @@
       "w19_1_transfer_pick_baseline_when_uncertain|baseline",
       "w19_3_day7_anonymous_fastfold|baseline"
     ],
-    "C5": [
-      "w19_4_day7_simplify_mix|solver|OPTION: Checking loses because the solver mixes",
-      "w19_4_read_predictable_single_size|193|OPTION: Switch only their preflop open size"
-    ],
     "D6.history_support": [
       "w19_1_day7_counter_changes_with_strategy|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
       "w19_1_read_information_value|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",
@@ -336,10 +332,6 @@
     "18.same_format_streak": [
       "w22_1_teach|statement",
       "w22_4_day7_change_input_requires_new_query|statement"
-    ],
-    "C5": [
-      "w22_2_transfer_best_response_not_equilibrium|gto|OPTION: Check because it is part of a balanced mix elsewhere",
-      "w22_3_transfer_sample_frequency_not_quota|gto|OPTION: An automatic bet to balance the previous checks"
     ],
     "D6.history_support": [
       "w22_1_day7_turn_chance_node|choreography/applicability|No supported choreography plan; partial/unsupported histories are not certified complete",

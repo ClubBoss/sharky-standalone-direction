@@ -1392,7 +1392,7 @@ final _world19Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a practice pool you use your largest river size only with missed draws. An opponent has observed that entire policy and has a hand beating every miss.",
+            "The preflop open size means the amount of the first raise before the flop. In a practice pool you use your largest river size only with missed draws. An opponent has observed that entire policy and has a hand beating every miss.",
         question: "How can this opponent capitalize on that pattern?",
         teach: "",
         choices: const [
@@ -1666,7 +1666,7 @@ final _world19Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "In a teaching matrix one group of hands has exactly equal EV for check and a small bet against the given policy. All range-level frequencies are being tracked separately.",
+            "A solver is a program that calculates strategies for a specified poker model. In a teaching matrix one group of hands has exactly equal EV for check and a small bet against the given policy. All range-level frequencies are being tracked separately.",
         question: "What can you conclude for this hand in this model?",
         teach: "",
         choices: const [
