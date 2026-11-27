@@ -223,16 +223,16 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
 
 ===== WORLD 23 · LESSON three_four_five_bet · Three four five bet =====
 
-TASK w23_4_teach [theory] When is a 5-bet shove a value action?
+TASK w23_4_teach [theory] When is an all-in 5-bet a value action?
 CAPTION: Choose re-raises around weaker paying hands, better folds and stack commitments. A 5-bet is the raise after a 4-bet. When it is all-in, a call ends preflop betting heads-up.
-TEACH: When is a 5-bet shove a value action? Choose re-raises around weaker paying hands, better folds and stack commitments. A 5-bet is the raise after a 4-bet. When it is all-in, a call ends preflop betting heads-up.
-Q: When is a 5-bet shove a value action?
+TEACH: When is an all-in 5-bet a value action? Choose re-raises around weaker paying hands, better folds and stack commitments. A 5-bet is the raise after a 4-bet. When it is all-in, a call ends preflop betting heads-up.
+Q: When is an all-in 5-bet a value action?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] When the stated weaker continuations make paying the remaining stack worthwhile — Correct. The re-raise number names the action. The opponent response supplies the value.
-  - [wrong] Every time the shove is larger than an opening raise — Look again. The name and size do not guarantee a profitable caller range.
+  - [wrong] When the all-in raise exceeds the opening raise, regardless of who calls — Look again. The name and size do not guarantee a profitable caller range.
     BETTER ANSWER: When the stated weaker continuations make paying the remaining stack worthwhile
-  - [wrong] Only when no hand could fold — Look again. A value shove can still induce folds from some hands.
+  - [wrong] When the opponent has no hands that would fold — Look again. A value raise all-in can still lead some hands to fold.
     BETTER ANSWER: When the stated weaker continuations make paying the remaining stack worthwhile
 
 TASK w23_4_read_raise_number [drill] What is the name of BTN’s proposed final raise?
@@ -242,11 +242,11 @@ HINT [hidden]: (none)
 TABLE: Preflop | You As Ks | Pot 31.5 BB | To call 14 BB | Seat BTN | Active btn | Decision btn | Facts no applicable hand facts
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO stack 78 BB raise 22 BB | BTN dealer As Ks stack 92 BB raise 8 BB | SB folded stack 99.5 BB | BB folded stack 99 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO raises to 2.5 BB · preflop: BTN raises to 8 BB · preflop: SB folds · preflop: BB folds · preflop: CO raises to 22 BB
-  + [correct] A 5-bet shove — Correct. The big blind counts as the initial bet. The raise after the 4-bet is a 5-bet.
-  - [wrong] A 4-bet shove — Look again. CO’s raise to 22 BB was already the 4-bet.
-    BETTER ANSWER: A 5-bet shove
+  + [correct] An all-in 5-bet — Correct. The big blind counts as the initial bet. The raise after the 4-bet is a 5-bet.
+  - [wrong] An all-in 4-bet — Look again. CO’s raise to 22 BB was already the 4-bet.
+    BETTER ANSWER: An all-in 5-bet
   - [wrong] A call of 22 BB — Look again. Calling pays the difference to 22 BB. Raising all-in above that total increases the wager.
-    BETTER ANSWER: A 5-bet shove
+    BETTER ANSWER: An all-in 5-bet
 
 TASK w23_4_guided_third_seat_facing_reraise [drill] Can the published single-opener BB price row supply an automatic chart decision?
 CAPTION: CO opens to 2.5 BB, BTN folds, and SB raises to 10 BB. You are BB with QTo. CO and SB start with 100 BB.
@@ -303,9 +303,9 @@ Q: What makes a small-blind limp worth including in a toy model?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] It reaches a cheap branch with the candidate hand under the modeled BB response — Correct. The size, chance of a BB raise and payoff afterwards determine whether it fits.
-  - [wrong] A limp is always required in modern games — Look again. Strategies differ by stakes, stack, ranges and legal actions.
+  - [wrong] Modern play requires a limp — Look again. Strategies differ by stakes, stack, ranges and legal actions.
     BETTER ANSWER: It reaches a cheap branch with the candidate hand under the modeled BB response
-  - [wrong] Any unopened chart must include it — Look again. The published Sharky unopened rows stop at BTN. A blind-versus-blind model can be studied on its own.
+  - [wrong] An unopened chart is incomplete without it — Look again. The published Sharky unopened rows stop at BTN. A blind-versus-blind model can be studied on its own.
     BETTER ANSWER: It reaches a cheap branch with the candidate hand under the modeled BB response
 
 TASK w23_5_read_sb_uncovered [drill] Which chart statement is true?
@@ -371,7 +371,7 @@ Q: What should a labeled range always identify?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Its position, prior action and model assumptions — Correct. A hand list without context cannot tell you where it applies.
-  - [wrong] Only how high its best card can be — Look again. The group can include other playability or blocker properties.
+  - [wrong] Its highest card instead of its position and prior action — Look again. The group can include other playability or blocker properties.
     BETTER ANSWER: Its position, prior action and model assumptions
   - [wrong] The action taken by the eventual showdown winner — Look again. That outcome does not establish the correct preflop distribution.
     BETTER ANSWER: Its position, prior action and model assumptions
@@ -384,7 +384,7 @@ TABLE: Preflop | You Ac 4c | Pot 13 BB | To call 7.5 BB | Seat BTN | Active btn 
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ac 4c stack 97.5 BB raise 2.5 BB | SB folded stack 99.5 BB | BB stack 90 BB raise 10 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB
   + [correct] Three AA and one AKs combo — Correct. It removes three pairings between itself and other aces, and its pairing with the king of the same suit.
-  - [wrong] Every AA combo and every AKs combo — Look again. Three aces and three other suited ace-king combinations remain.
+  - [wrong] Six AA and four AKs combos — Look again. Three aces and three other suited ace-king combinations remain.
     BETTER ANSWER: Three AA and one AKs combo
   - [wrong] One AA combo and three AKs combos — Look again. A given ace pairs with three other aces, but only one matching-suit king.
     BETTER ANSWER: Three AA and one AKs combo
