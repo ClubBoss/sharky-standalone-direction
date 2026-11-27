@@ -48,7 +48,41 @@ _Census _readBaseline(File file) {
   };
 }
 
-bool _isVerifiedScopeException(TableTruthRow row) {
+const _explanationScopeDetail =
+    'explanation: source scope must identify physical applicability';
+
+bool _hasNoHandFacts(Act0TableStateV1 table) =>
+    table.scope == Act0TableScopeV1.explanation &&
+    table.seats.isEmpty &&
+    table.actionTrail.isEmpty &&
+    table.heroCards.isEmpty &&
+    table.boardCards.isEmpty &&
+    table.streetLabel.isEmpty &&
+    table.potLabel.isEmpty &&
+    table.toCallLabel.isEmpty &&
+    table.handContributions == null &&
+    table.handTimelinePrefix == null;
+
+bool _isVerifiedScopeException(
+  TableTruthRow row, {
+  Act0LessonTaskV1? task,
+  Set<String> explanationTaskIds = const {},
+}) {
+  // A history is inapplicable to a text-only theory card, but only when
+  // Table Truth independently verifies explanation scope for this task.
+  // Keep all physical tables (including teaching-step overrides) in debt.
+  if (row.invariant == 'D6.history_support') {
+    return row.result == 'EXPLICIT_EXCEPTION' &&
+        task != null &&
+        task.taskId == row.taskId &&
+        explanationTaskIds.contains(row.taskId) &&
+        task.phase == Act0LessonPhaseV1.theory &&
+        task.multiStreet == null &&
+        _hasNoHandFacts(task.runner.table) &&
+        task.runner.teachingSteps.every(
+          (step) => step.table == null || _hasNoHandFacts(step.table!),
+        );
+  }
   // scope.applicability reports the actual raw/projected frame's scope in
   // detail. Require an explicit scope, not just the exception status; other
   // invariants do not carry this scope evidence.
@@ -61,6 +95,17 @@ bool _isVerifiedScopeException(TableTruthRow row) {
                 '${scope.name}: source scope must identify physical applicability',
       );
 }
+
+Set<String> _verifiedExplanationTaskIds(Iterable<TableTruthRow> rows) => {
+  for (final row in rows)
+    if (row.detail == _explanationScopeDetail && _isVerifiedScopeException(row))
+      row.taskId,
+};
+
+Map<String, Act0LessonTaskV1> _vol2Tasks() => {
+  for (final row in catalogTasks)
+    if (_worlds.contains(row.world.worldNumber)) row.task.taskId: row.task,
+};
 
 Future<_Census> _collectCensus(WidgetTester tester) async {
   final allRows = reasoningCatalogRowsV1;
@@ -197,10 +242,18 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
     final parts = entry.key.split('|');
     taskFinding('C5', parts[1], '${parts[2]}|${entry.value}');
   }
-  for (final f in auditTableTruth(
+  final tableTruthRows = auditTableTruth(
     worlds: pilot.map((row) => row.world).toSet(),
-  )) {
-    if (f.result != 'PASS' && !_isVerifiedScopeException(f)) {
+  );
+  final pilotTasks = _vol2Tasks();
+  final explanationTaskIds = _verifiedExplanationTaskIds(tableTruthRows);
+  for (final f in tableTruthRows) {
+    if (f.result != 'PASS' &&
+        !_isVerifiedScopeException(
+          f,
+          task: pilotTasks[f.taskId],
+          explanationTaskIds: explanationTaskIds,
+        )) {
       taskFinding(f.invariant, f.taskId, '${f.variant}|${f.detail}');
     }
   }
@@ -333,15 +386,136 @@ void main() {
     expect(excluded('D6.history_support', status, detail), isFalse);
   });
 
+  test('D6 retires only verified text-only theory exceptions', () {
+    const empty = Act0TableStateV1(
+      scope: Act0TableScopeV1.explanation,
+      tableFormat: Act0TableFormatV1.sixMax,
+      playerCount: 6,
+      seats: [],
+      heroCards: [],
+      boardCards: [],
+      streetLabel: '',
+      potLabel: '',
+      toCallLabel: '',
+      centerLabel: '',
+      highlightedSeatIds: [],
+      highlightedCardIds: [],
+    );
+    Act0LessonTaskV1 task(
+      Act0TableStateV1 table, {
+      Act0LessonPhaseV1 phase = Act0LessonPhaseV1.theory,
+      List<Act0TeachingStepV1> teachingSteps = const [],
+    }) => Act0LessonTaskV1(
+      taskId: 'task',
+      title: 'Text concept',
+      phase: phase,
+      rewardXp: 0,
+      runner: Act0RunnerStateV1(
+        lessonId: 'lesson',
+        lessonTitle: '',
+        lessonSubtitle: '',
+        beatIndex: 1,
+        beatCount: 1,
+        phase: phase,
+        caption: '',
+        hint: '',
+        question: '',
+        options: const [],
+        feedbackTitle: '',
+        feedbackReason: '',
+        primaryCtaLabel: '',
+        nextLessonId: null,
+        returnTarget: 'learn',
+        table: table,
+        teachingSteps: teachingSteps,
+      ),
+    );
+    TableTruthRow scope(
+      String id, {
+      String status = 'EXPLICIT_EXCEPTION',
+      String detail = _explanationScopeDetail,
+    }) => TableTruthRow(id, 'decision', 'scope.applicability', status, detail);
+    final verified = [scope('task')];
+    bool excluded(
+      Act0LessonTaskV1 candidate, {
+      String status = 'EXPLICIT_EXCEPTION',
+      List<TableTruthRow>? evidence,
+    }) => _isVerifiedScopeException(
+      TableTruthRow(
+        'task',
+        'choreography/applicability',
+        'D6.history_support',
+        status,
+        'No supported choreography plan',
+      ),
+      task: candidate,
+      explanationTaskIds: _verifiedExplanationTaskIds(evidence ?? verified),
+    );
+
+    expect(excluded(task(empty)), isTrue);
+    expect(excluded(task(empty), evidence: []), isFalse);
+    expect(excluded(task(empty), evidence: [scope('other')]), isFalse);
+    expect(
+      excluded(task(empty), evidence: [scope('task', status: 'FAIL')]),
+      isFalse,
+    );
+    expect(
+      excluded(
+        task(empty),
+        evidence: [
+          scope(
+            'task',
+            detail: _explanationScopeDetail.replaceFirst(
+              'explanation',
+              'orientation',
+            ),
+          ),
+        ],
+      ),
+      isFalse,
+    );
+    final seated = empty.copyWith(
+      seats: const [
+        Act0SeatStateV1(seatId: 'bb', seatLabel: 'BB', displayName: 'BB'),
+      ],
+    );
+    final withTrail = empty.copyWith(
+      actionTrail: const [Act0ActionTrailItemV1(label: 'BB checks')],
+    );
+    expect(excluded(task(seated)), isFalse);
+    expect(excluded(task(withTrail)), isFalse);
+    expect(excluded(task(empty.copyWith(potLabel: '5 BB'))), isFalse);
+    expect(
+      excluded(
+        task(
+          empty,
+          teachingSteps: [
+            Act0TeachingStepV1(title: 'Example', body: '', table: seated),
+          ],
+        ),
+      ),
+      isFalse,
+    );
+    expect(excluded(task(empty, phase: Act0LessonPhaseV1.drill)), isFalse);
+    final playedHand = task(empty.copyWith(scope: Act0TableScopeV1.playedHand));
+    expect(excluded(playedHand), isFalse);
+    expect(excluded(playedHand, status: 'NEEDS_SOURCE_CONTEXT'), isFalse);
+    expect(excluded(task(empty), status: 'NEEDS_SOURCE_CONTEXT'), isFalse);
+    expect(excluded(task(empty), status: 'FAIL'), isFalse);
+  });
+
   test(
     'Vol2 text-only concepts already declare explanation applicability',
     () {
       final worlds = Act0ShellStateV1.authoredCatalog.worlds.where(
         (world) => _worlds.contains(world.worldNumber),
       );
-      final scopeRows = auditTableTruth(
-        worlds: worlds,
-      ).where((row) => row.invariant == 'scope.applicability').toList();
+      final rows = auditTableTruth(worlds: worlds);
+      final scopeRows = rows
+          .where((row) => row.invariant == 'scope.applicability')
+          .toList();
+      final explanationTaskIds = _verifiedExplanationTaskIds(rows);
+      final pilotTasks = _vol2Tasks();
       expect(scopeRows, isNotEmpty);
       expect(
         scopeRows.map((row) => row.result),
@@ -349,10 +523,50 @@ void main() {
       );
       expect(scopeRows.every(_isVerifiedScopeException), isTrue);
       for (final world in worlds) {
+        final tasks = {
+          for (final lesson in world.lessons)
+            for (final task in lesson.taskList) task.taskId: task,
+        };
+        final before = rows
+            .where(
+              (row) =>
+                  tasks.containsKey(row.taskId) &&
+                  row.invariant == 'D6.history_support' &&
+                  row.result != 'PASS',
+            )
+            .toList();
+        final removed = before
+            .where(
+              (row) => _isVerifiedScopeException(
+                row,
+                task: pilotTasks[row.taskId],
+                explanationTaskIds: explanationTaskIds,
+              ),
+            )
+            .toList();
+        for (final row in before) {
+          final task = tasks[row.taskId]!;
+          final table = task.runner.table;
+          print(
+            'B161 W${world.worldNumber} ${row.taskId} ${row.result} '
+            '${task.phase.name} scope=${table.scope.name} '
+            'seats=${table.seats.length} trail=${table.actionTrail.length} '
+            'retired=${removed.contains(row)}',
+          );
+        }
+        print(
+          'B161 W${world.worldNumber} D6 debt ${before.length} -> '
+          '${before.length - removed.length}',
+        );
         final concepts = world.lessons
             .expand((lesson) => lesson.taskList)
             .where((task) => task.phase == Act0LessonPhaseV1.theory);
         expect(concepts, isNotEmpty, reason: world.worldId);
+        expect(
+          removed.map((row) => row.taskId).toSet(),
+          concepts.map((task) => task.taskId).toSet(),
+          reason: world.worldId,
+        );
         for (final task in concepts) {
           final table = task.runner.table;
           expect(
@@ -379,6 +593,31 @@ void main() {
     },
     skip: !act0CurriculumPilotEnabledV1,
   );
+
+  test('W1–W12 D6 rows cannot enter the Vol2 retirement filter', () {
+    final rows = auditTableTruth(
+      worlds: Act0ShellStateV1.authoredCatalog.worlds.where(
+        (world) => world.worldNumber <= 12,
+      ),
+    );
+    final explanationTaskIds = _verifiedExplanationTaskIds(rows);
+    final pilotTasks = _vol2Tasks();
+    final historyRows = rows.where(
+      (row) => row.invariant == 'D6.history_support',
+    );
+    expect(historyRows, isNotEmpty);
+    for (final row in historyRows) {
+      expect(
+        _isVerifiedScopeException(
+          row,
+          task: pilotTasks[row.taskId],
+          explanationTaskIds: explanationTaskIds,
+        ),
+        isFalse,
+        reason: row.key,
+      );
+    }
+  });
 
   test('ratchet distinguishes world, rule, task and detail', () {
     final baseline = {
