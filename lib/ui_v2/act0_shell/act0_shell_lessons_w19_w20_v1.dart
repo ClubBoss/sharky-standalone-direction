@@ -269,7 +269,7 @@ final _world19Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Start from the documented baseline",
+            "Use the documented starting strategy",
             Act0FeedbackQualityV1.correct,
             "A quick bet alone does not quantify a deviation. New matched samples can justify changing your strategy.",
           ),
@@ -1249,7 +1249,7 @@ final _world19Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "A format-matched baseline or pool estimate",
+            "A starting strategy or player-group estimate for this format",
             Act0FeedbackQualityV1.correct,
             "Anonymity limits individual history. Aggregated, comparable opportunities can still inform your choice.",
           ),

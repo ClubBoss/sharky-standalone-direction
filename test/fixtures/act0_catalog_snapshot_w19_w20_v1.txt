@@ -52,13 +52,13 @@ HINT [hidden]: (none)
 TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat HJ | Active hj | Decision hj | Facts one pair, top pair
 SEATS: UTG folded stack 100 BB | HJ Ks Qd stack 97.5 BB | CO folded stack 100 BB | BTN folded dealer stack 100 BB | SB folded stack 99.5 BB | BB stack 91.5 BB bet 6 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ raises to 2.5 BB · preflop: CO folds · preflop: BTN folds · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: HJ checks · turn: BB checks · turn: HJ checks · river: BB bets 6 BB
-  + [correct] Start from the documented baseline — Correct. A quick bet alone does not quantify a deviation. New matched samples can justify changing your strategy.
+  + [correct] Use the documented starting strategy — Correct. A quick bet alone does not quantify a deviation. New matched samples can justify changing your strategy.
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Classify the quick bet as a bluff from its speed — Look again. Timing has several causes and one event does not establish the relevant breakdown.
-    BETTER ANSWER: Start from the documented baseline
+    BETTER ANSWER: Use the documented starting strategy
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
   - [wrong] Treat the opponent’s strategy as matching the equilibrium frequencies — Look again. A starting strategy guides your decision under uncertainty. It does not determine an unknown opponent’s exact strategy.
-    BETTER ANSWER: Start from the documented baseline
+    BETTER ANSWER: Use the documented starting strategy
     FEEDBACK TABLE: River | You Ks Qd | Board Kh 9s 5c 3d 2h | Pot 11.5 BB | To call 6 BB | Seat HJ | Active hj | Decision hj | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
 TASK w19_1_day7_counter_changes_with_strategy [review] Which response follows?
@@ -223,11 +223,11 @@ HINT [hidden]: (none)
 TABLE: River | You Qh Qd | Board Jh 8d 4c 2s 2h | Pot 10.5 BB | To call 5 BB | Seat BTN | Active btn | Decision btn | Facts two pair, pocket pair, paired board
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Qd stack 97.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB bet 5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN checks · turn: BB checks · turn: BTN checks · river: BB bets 5 BB
-  + [correct] A format-matched baseline or pool estimate — Correct. Anonymity limits individual history. Aggregated, comparable opportunities can still inform your choice.
+  + [correct] A starting strategy or player-group estimate for this format — Correct. Anonymity limits individual history. Aggregated, comparable opportunities can still inform your choice.
   - [wrong] The betting pattern of the named player from another table — Look again. Identity is unavailable, so the history cannot be assigned to this opponent.
-    BETTER ANSWER: A format-matched baseline or pool estimate
+    BETTER ANSWER: A starting strategy or player-group estimate for this format
   - [wrong] Anonymity makes the available evidence unusable — Look again. Format, line, size and depth can still be observed without identifying each player.
-    BETTER ANSWER: A format-matched baseline or pool estimate
+    BETTER ANSWER: A starting strategy or player-group estimate for this format
 
 ===== WORLD 19 · LESSON opponent_adjusts · Opponent adjusts =====
 
