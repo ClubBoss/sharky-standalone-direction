@@ -183,12 +183,8 @@ act0FirstValueSameSignalRepMappingV1({
           'mindset_bridge_checkpoint',
           'w12_checkpoint_process_line',
         );
-      case 'w12_checkpoint_process_line':
-        return target(
-          'world_12',
-          'decision_over_outcome',
-          'w12_bad_call_good_result',
-        );
+      // The checkpoint's outgoing pair is authored by B153 adjudication.
+      // Do not retain a competing explicit target here.
     }
   }
 

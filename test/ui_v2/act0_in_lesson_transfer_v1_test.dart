@@ -313,15 +313,27 @@ void main() {
     final pairs = act0InLessonTransferPairsV1();
     expect(pairs, isNotEmpty);
     final counts = <int, int>{};
+    final targets = <String, String>{};
     for (final pair in pairs) {
       final source = Map<String, dynamic>.from(pair['source'] as Map);
       final target = Map<String, dynamic>.from(pair['repeat'] as Map);
       expect(classifyTransferPairV2(source, target).exactReplay, isFalse);
+      final sourceId = source['id'] as String;
+      expect(targets.containsKey(sourceId), isFalse, reason: sourceId);
+      targets[sourceId] = target['id'] as String;
       final world = pair['world'] as int;
       counts.update(world, (n) => n + 1, ifAbsent: () => 1);
     }
     expect(counts[5], greaterThan(0));
-    expect(counts[7] ?? 0, 0);
+    // B153 adds verified W7 pairs; the particular no-pair fixture above
+    // still has none. Do not require an entire world to lack transfers.
+    expect(counts[7], greaterThan(0));
+    expect(targets[_noPair], isNull);
+    expect(targets['w6_checkpoint_table_best_five'], isNull);
+    expect(targets['w9_m_ratio_table_window_transfer'], isNull);
+    expect(targets['w10_checkpoint_lever_line'], isNull);
+    expect(targets['w11_checkpoint_plan_line'], 'w11_sb_3bet_value');
+    expect(targets['w12_checkpoint_process_line'], 'w12_good_fold_bad_result');
     debugPrint('B152 potential transfer pairs per world: $counts');
   });
 
