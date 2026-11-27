@@ -48,7 +48,21 @@ void main() {
         }
       }
     }
-    expect(seen, unorderedEquals(act0ActionReasonPilotsV1.keys));
+    // W5 and W8 prefix their authored task IDs with the lesson ID, but
+    // these four pilot map keys still use the unprefixed IDs.
+    const unboundPilotIds = {
+      'flush_draw',
+      'combo_draw',
+      'draw_deep',
+      'draw_shallow',
+    };
+    expect(seen, hasLength(8));
+    expect(
+      seen,
+      unorderedEquals(
+        act0ActionReasonPilotsV1.keys.toSet().difference(unboundPilotIds),
+      ),
+    );
   });
 
   for (final (action, reason, message, isCorrect) in [
