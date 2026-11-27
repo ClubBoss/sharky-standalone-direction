@@ -364,5 +364,131 @@
     "detail": "wrong: a decision to call every raise because you have top pair / only a play for the one river you most want → commit top pair to calling raises based on its rank / plan for the desired river card and leave the others unplanned",
     "reason": "Top pair must compare call price and equity against possible flushes, while the plan must account for other legal river cards as well as the desired one.",
     "package": "B134"
+  },
+  {
+    "task": "mistake_known_blocker",
+    "detail": "wrong: river · keep all four queens available → river · keep four queens available",
+    "reason": "All four queens are unseen; excluding Ks and Kh leaves 8 KQ combos, so this note is not the mistake.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_board_four_to_straight",
+    "detail": "correct: bad for your showdown share → 7s",
+    "reason": "7s completes every modeled opponent straight; reference 2c 79.55% → 1.14%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_board_four_to_straight",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 3c / 4c",
+    "reason": "Both blanks 79.55% = reference; both preserve call and neither is the requested fold turn.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_counterfeit_two_pair",
+    "detail": "correct: bad for your showdown share → kh",
+    "reason": "Kh pairs the board, opponent overpairs overtake Hero's two pair; 2c 81.82% → 9.09%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_counterfeit_two_pair",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 4c / 3c",
+    "reason": "Both 81.82% = reference; both preserve call, not the requested fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_dead_draw",
+    "detail": "correct: unchanged showdown share → none of these",
+    "reason": "All opponent hands have four jacks; reference 3c and both offered cards give 0%, so no profitable call exists.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_dead_draw",
+    "detail": "wrong: good for your showdown share / bad for your showdown share → 2d / qc",
+    "reason": "2d and Qc each leave 0% versus quads; neither makes calling profitable.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_completes",
+    "detail": "correct: good for your showdown share → qh",
+    "reason": "Qh completes ace-high flush versus sets; reference 2c 15.91% → 77.27%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_completes",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 7c",
+    "reason": "Both leave draw uncompleted, 15.91%; neither changes reference fold into call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_pairs_board",
+    "detail": "correct: bad for your showdown share → 3h",
+    "reason": "3h gives each set a full house despite Hero's flush; Qh 77.27% → 0%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_heart_pairs_board",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 2h / 4h",
+    "reason": "Each makes the same flush versus sets, 77.27% = reference; both remain calls.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_overcard_beats_pair",
+    "detail": "correct: bad for your showdown share → ah",
+    "reason": "Ah pairs every opponent ace, overtaking QQ; 2c 88.64% → 4.55%, call → fold.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_overcard_beats_pair",
+    "detail": "wrong: unchanged showdown share / good for your showdown share → 7c / 4c",
+    "reason": "7c 85.61% and 4c 88.64% remain above 33⅓%; neither changes the call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_redraw_good",
+    "detail": "correct: good for your showdown share → 5s",
+    "reason": "5s makes full house which modeled draws cannot beat; 2h 22.73% → 100%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_redraw_good",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 6h / 3h",
+    "reason": "Both complete opponents' flushes; 22.73% = reference, so both remain folds.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_remove_high_draw",
+    "detail": "correct: good for your showdown share → 9h",
+    "reason": "9h makes Hero's flush and removes Ah9h from the range; As 25.00% → 84.09%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_remove_high_draw",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → ad / ac",
+    "reason": "Ad and Ac both leave 25.00% against the legal range, so both remain folds.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_straight_completes",
+    "detail": "correct: good for your showdown share → td",
+    "reason": "Td completes Hero's 6–T straight, giving 96.97% versus 2d 18.18%; fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_straight_completes",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
+    "reason": "Neither completes the straight; each leaves 18.18%, so folds remain correct.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_turn_makes_set",
+    "detail": "correct: good for your showdown share → 5c",
+    "reason": "5c makes a set that stays ahead on every modeled river; 2c 4.55% → 100%, fold → call.",
+    "package": "B145"
+  },
+  {
+    "task": "turn_turn_makes_set",
+    "detail": "wrong: unchanged showdown share / bad for your showdown share → 4c / 3c",
+    "reason": "Both improve share to 13.64% (including straight outs) but it is still below 33⅓%; neither is the requested call turn.",
+    "package": "B145"
   }
 ]
