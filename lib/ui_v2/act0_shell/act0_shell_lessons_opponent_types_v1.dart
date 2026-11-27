@@ -1,9 +1,8 @@
 part of 'act0_shell_state_v1.dart';
 
-// B146c: accepted opponent-types pilot; keep paired task order and source copy.
-// Split into three-task lessons for G1.17 and G1.19; G1.18 is world-wide.
+// B146c: preserve the accepted spec order and consecutive paired comparisons.
 final _opponentTypesLessonsV1 = [
-  _act0PilotLessonV1("opponent_types_pilot", "Opponent Types: Same Spot, Different Read", [
+  _opponentTypesLessonV1("opponent_types_pilot", "Opponent Types: Same Spot, Different Read", [
     _wave6AuthoredTaskV1(
       id: "opponent_types_p01_loose_passive",
       lesson: "opponent_types_pilot",
@@ -218,128 +217,132 @@ final _opponentTypesLessonsV1 = [
       explanation:
           "P = 5.5 (BTN) + 0.5 (SB) + 5.5 (BB) = 11.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (32+0/2)/46 = 16/23; EV(check) = 8 BB. 4 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×4)−4] = 156/23 BB. 8 BB: 32/46 folds, 14/46 calls, caller W/T/L=0/0/14; EV = (32/46)×11.5 + (14/46)×[(0)×(11.5+2×8)−8] = 128/23 BB. Best Check beats Bet 4 BB by 28/23 BB (1.21739 BB).",
     ),
-    _wave6AuthoredTaskV1(
-      id: "opponent_types_p02_loose_passive",
-      lesson: "opponent_types_pilot",
-      lessonTitle: "Opponent Types: Same Spot, Different Read",
-      title: "Which option earns the most chips in this model?",
-      phase: Act0LessonPhaseV1.drill,
-      step: Act0LessonStepKindV1.practice,
-      xp: 10,
-      guidedDecision: false,
-      caption:
-          "Loose-passive: this player tends to call down with marginal pairs. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.",
-      question: "Which option earns the most chips in this model?",
-      teach: "",
-      choices: const [
-        (
-          "check",
-          "Check",
-          Act0FeedbackQualityV1.suboptimal,
-          "Check gives up extra value from weaker queens and nines.",
-        ),
-        (
-          "bet_5",
-          "Bet 5 BB",
-          Act0FeedbackQualityV1.suboptimal,
-          "Bet 5 BB earns value, but the same range pays 10 BB.",
-        ),
-        (
-          "bet_10",
-          "Bet 10 BB",
-          Act0FeedbackQualityV1.correct,
-          "Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.",
-        ),
-      ],
-      table: _day7TableV1(
-        hero: "btn",
-        actor: "btn",
-        hand: "Qh Jd",
-        board: _act0LessonCardsV1("Qs 9c 6h 4d 2s"),
-        street: PokerStreet.river,
-        stacks: const {
-          "utg": 100,
-          "hj": 100,
-          "co": 100,
-          "btn": 100,
-          "sb": 100,
-          "bb": 100,
-        },
-        folded: const {"utg", "hj", "co", "sb"},
-        entries: const [
-          Act0ContributionV1(
-            PokerStreet.preflop,
-            "sb",
-            Act0ContributionKindV1.blind,
-            0.5,
+    _opponentTypesSizingTaskV1(
+      _wave6AuthoredTaskV1(
+        id: "opponent_types_p02_loose_passive",
+        lesson: "opponent_types_pilot",
+        lessonTitle: "Opponent Types: Same Spot, Different Read",
+        title: "Which option earns the most chips in this model?",
+        phase: Act0LessonPhaseV1.drill,
+        step: Act0LessonStepKindV1.practice,
+        xp: 10,
+        guidedDecision: false,
+        caption:
+            "Loose-passive: this player tends to call down with marginal pairs. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.",
+        question: "Which option earns the most chips in this model?",
+        teach: "",
+        choices: const [
+          (
+            "check",
+            "Check",
+            Act0FeedbackQualityV1.suboptimal,
+            "Check gives up extra value from weaker queens and nines.",
           ),
-          Act0ContributionV1(
-            PokerStreet.preflop,
-            "bb",
-            Act0ContributionKindV1.blind,
-            1,
+          (
+            "bet_5",
+            "Bet 5 BB",
+            Act0FeedbackQualityV1.suboptimal,
+            "Bet 5 BB earns value, but the same range pays 10 BB.",
           ),
-          Act0ContributionV1(
-            PokerStreet.preflop,
-            "btn",
-            Act0ContributionKindV1.wager,
-            2.5,
-          ),
-          Act0ContributionV1(
-            PokerStreet.preflop,
-            "bb",
-            Act0ContributionKindV1.wager,
-            1.5,
-          ),
-          Act0ContributionV1(
-            PokerStreet.flop,
-            "btn",
-            Act0ContributionKindV1.wager,
-            2,
-          ),
-          Act0ContributionV1(
-            PokerStreet.flop,
-            "bb",
-            Act0ContributionKindV1.wager,
-            2,
-          ),
-          Act0ContributionV1(
-            PokerStreet.turn,
-            "btn",
-            Act0ContributionKindV1.wager,
-            3,
-          ),
-          Act0ContributionV1(
-            PokerStreet.turn,
-            "bb",
-            Act0ContributionKindV1.wager,
-            3,
+          (
+            "bet_10",
+            "Bet 10 BB",
+            Act0FeedbackQualityV1.correct,
+            "Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.",
           ),
         ],
-        history: const [
-          Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
-          Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
-          Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-          Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-          Act0ActionTrailItemV1(label: "preflop: CO folds"),
-          Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
-          Act0ActionTrailItemV1(label: "preflop: SB folds"),
-          Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
-          Act0ActionTrailItemV1(label: "flop: BB checks"),
-          Act0ActionTrailItemV1(label: "flop: BTN bets 2 BB"),
-          Act0ActionTrailItemV1(label: "flop: BB calls 2 BB more"),
-          Act0ActionTrailItemV1(label: "turn: BB checks"),
-          Act0ActionTrailItemV1(label: "turn: BTN bets 3 BB"),
-          Act0ActionTrailItemV1(label: "turn: BB calls 3 BB more"),
-          Act0ActionTrailItemV1(label: "river: BB checks"),
-        ],
-        bets: const {},
-      ).copyWith(showDecisionPremise: true),
-      explanation:
-          "P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28; EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×5)−5] = 206/19 BB. 10 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28; EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×10)−10] = 226/19 BB. Best Bet 10 BB beats Bet 5 BB by 20/19 BB (1.05263 BB).",
+        table: _day7TableV1(
+          hero: "btn",
+          actor: "btn",
+          hand: "Qh Jd",
+          board: _act0LessonCardsV1("Qs 9c 6h 4d 2s"),
+          street: PokerStreet.river,
+          stacks: const {
+            "utg": 100,
+            "hj": 100,
+            "co": 100,
+            "btn": 100,
+            "sb": 100,
+            "bb": 100,
+          },
+          folded: const {"utg", "hj", "co", "sb"},
+          entries: const [
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              "sb",
+              Act0ContributionKindV1.blind,
+              0.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              "bb",
+              Act0ContributionKindV1.blind,
+              1,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              "btn",
+              Act0ContributionKindV1.wager,
+              2.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.preflop,
+              "bb",
+              Act0ContributionKindV1.wager,
+              1.5,
+            ),
+            Act0ContributionV1(
+              PokerStreet.flop,
+              "btn",
+              Act0ContributionKindV1.wager,
+              2,
+            ),
+            Act0ContributionV1(
+              PokerStreet.flop,
+              "bb",
+              Act0ContributionKindV1.wager,
+              2,
+            ),
+            Act0ContributionV1(
+              PokerStreet.turn,
+              "btn",
+              Act0ContributionKindV1.wager,
+              3,
+            ),
+            Act0ContributionV1(
+              PokerStreet.turn,
+              "bb",
+              Act0ContributionKindV1.wager,
+              3,
+            ),
+          ],
+          history: const [
+            Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
+            Act0ActionTrailItemV1(label: "preflop: UTG folds"),
+            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+            Act0ActionTrailItemV1(label: "preflop: CO folds"),
+            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+            Act0ActionTrailItemV1(label: "preflop: SB folds"),
+            Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
+            Act0ActionTrailItemV1(label: "flop: BB checks"),
+            Act0ActionTrailItemV1(label: "flop: BTN bets 2 BB"),
+            Act0ActionTrailItemV1(label: "flop: BB calls 2 BB more"),
+            Act0ActionTrailItemV1(label: "turn: BB checks"),
+            Act0ActionTrailItemV1(label: "turn: BTN bets 3 BB"),
+            Act0ActionTrailItemV1(label: "turn: BB calls 3 BB more"),
+            Act0ActionTrailItemV1(label: "river: BB checks"),
+          ],
+          bets: const {},
+        ).copyWith(showDecisionPremise: true),
+        explanation:
+            "P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28; EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×5)−5] = 206/19 BB. 10 BB: 4/76 folds, 72/76 calls, caller W/T/L=44/0/28; EV = (4/76)×15.5 + (72/76)×[(11/18)×(15.5+2×10)−10] = 226/19 BB. Best Bet 10 BB beats Bet 5 BB by 20/19 BB (1.05263 BB).",
+      ),
+      5,
+      10,
     ),
   ]),
-  _act0PilotLessonV1(
+  _opponentTypesLessonV1(
     "opponent_types_pilot_2",
     "Opponent Types: Same Spot, Different Read (Part 2)",
     [
@@ -463,132 +466,136 @@ final _opponentTypesLessonsV1 = [
         explanation:
             "P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (48+0/2)/76 = 12/19; EV(check) = 186/19 BB. 5 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28; EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×5)−5] = 151/19 BB. 10 BB: 48/76 folds, 28/76 calls, caller W/T/L=0/0/28; EV = (48/76)×15.5 + (28/76)×[(0)×(15.5+2×10)−10] = 116/19 BB. Best Check beats Bet 5 BB by 35/19 BB (1.84211 BB).",
       ),
-      _wave6AuthoredTaskV1(
-        id: "opponent_types_p03_loose_passive",
-        lesson: "opponent_types_pilot_2",
-        lessonTitle: "Opponent Types: Same Spot, Different Read (Part 2)",
-        title: "Which option earns the most chips in this model?",
-        phase: Act0LessonPhaseV1.drill,
-        step: Act0LessonStepKindV1.practice,
-        xp: 10,
-        guidedDecision: false,
-        caption:
-            "Loose-passive: this player tends to stick with top pair even against larger river bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76; against 9 BB, BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.",
-        question: "Which option earns the most chips in this model?",
-        teach: "",
-        choices: const [
-          (
-            "check",
-            "Check",
-            Act0FeedbackQualityV1.suboptimal,
-            "Checking gives up value from weaker tens and sevens.",
-          ),
-          (
-            "bet_4",
-            "Bet 4 BB",
-            Act0FeedbackQualityV1.suboptimal,
-            "Bet 4 BB earns value but the larger bet gets the same calls.",
-          ),
-          (
-            "bet_9",
-            "Bet 9 BB",
-            Act0FeedbackQualityV1.correct,
-            "Bet 9 BB. Weaker tens and sevens still pay, so the larger bet earns more than betting 4 BB.",
-          ),
-        ],
-        table: _day7TableV1(
-          hero: "btn",
-          actor: "btn",
-          hand: "Ad Th",
-          board: _act0LessonCardsV1("Tc 7s 5h 3c 2d"),
-          street: PokerStreet.river,
-          stacks: const {
-            "utg": 100,
-            "hj": 100,
-            "co": 100,
-            "btn": 100,
-            "sb": 100,
-            "bb": 100,
-          },
-          folded: const {"utg", "hj", "co", "sb"},
-          entries: const [
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              "sb",
-              Act0ContributionKindV1.blind,
-              0.5,
+      _opponentTypesSizingTaskV1(
+        _wave6AuthoredTaskV1(
+          id: "opponent_types_p03_loose_passive",
+          lesson: "opponent_types_pilot_2",
+          lessonTitle: "Opponent Types: Same Spot, Different Read (Part 2)",
+          title: "Which option earns the most chips in this model?",
+          phase: Act0LessonPhaseV1.drill,
+          step: Act0LessonStepKindV1.practice,
+          xp: 10,
+          guidedDecision: false,
+          caption:
+              "Loose-passive: this player tends to stick with top pair even against larger river bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76; against 9 BB, BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.",
+          question: "Which option earns the most chips in this model?",
+          teach: "",
+          choices: const [
+            (
+              "check",
+              "Check",
+              Act0FeedbackQualityV1.suboptimal,
+              "Checking gives up value from weaker tens and sevens.",
             ),
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              "bb",
-              Act0ContributionKindV1.blind,
-              1,
+            (
+              "bet_4",
+              "Bet 4 BB",
+              Act0FeedbackQualityV1.suboptimal,
+              "Bet 4 BB earns value but the larger bet gets the same calls.",
             ),
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              "btn",
-              Act0ContributionKindV1.wager,
-              2.5,
-            ),
-            Act0ContributionV1(
-              PokerStreet.preflop,
-              "bb",
-              Act0ContributionKindV1.wager,
-              1.5,
-            ),
-            Act0ContributionV1(
-              PokerStreet.flop,
-              "btn",
-              Act0ContributionKindV1.wager,
-              3,
-            ),
-            Act0ContributionV1(
-              PokerStreet.flop,
-              "bb",
-              Act0ContributionKindV1.wager,
-              3,
-            ),
-            Act0ContributionV1(
-              PokerStreet.turn,
-              "btn",
-              Act0ContributionKindV1.wager,
-              2,
-            ),
-            Act0ContributionV1(
-              PokerStreet.turn,
-              "bb",
-              Act0ContributionKindV1.wager,
-              2,
+            (
+              "bet_9",
+              "Bet 9 BB",
+              Act0FeedbackQualityV1.correct,
+              "Bet 9 BB. Weaker tens and sevens still pay, so the larger bet earns more than betting 4 BB.",
             ),
           ],
-          history: const [
-            Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
-            Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
-            Act0ActionTrailItemV1(label: "preflop: UTG folds"),
-            Act0ActionTrailItemV1(label: "preflop: HJ folds"),
-            Act0ActionTrailItemV1(label: "preflop: CO folds"),
-            Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
-            Act0ActionTrailItemV1(label: "preflop: SB folds"),
-            Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
-            Act0ActionTrailItemV1(label: "flop: BB checks"),
-            Act0ActionTrailItemV1(label: "flop: BTN bets 3 BB"),
-            Act0ActionTrailItemV1(label: "flop: BB calls 3 BB more"),
-            Act0ActionTrailItemV1(label: "turn: BB checks"),
-            Act0ActionTrailItemV1(label: "turn: BTN bets 2 BB"),
-            Act0ActionTrailItemV1(label: "turn: BB calls 2 BB more"),
-            Act0ActionTrailItemV1(label: "river: BB checks"),
-          ],
-          bets: const {},
-        ).copyWith(showDecisionPremise: true),
-        explanation:
-            "P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×4)−4] = 448/27 BB. 9 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×9)−9] = 181/9 BB. Best Bet 9 BB beats Bet 4 BB by 95/27 BB (3.51852 BB).",
+          table: _day7TableV1(
+            hero: "btn",
+            actor: "btn",
+            hand: "Ad Th",
+            board: _act0LessonCardsV1("Tc 7s 5h 3c 2d"),
+            street: PokerStreet.river,
+            stacks: const {
+              "utg": 100,
+              "hj": 100,
+              "co": 100,
+              "btn": 100,
+              "sb": 100,
+              "bb": 100,
+            },
+            folded: const {"utg", "hj", "co", "sb"},
+            entries: const [
+              Act0ContributionV1(
+                PokerStreet.preflop,
+                "sb",
+                Act0ContributionKindV1.blind,
+                0.5,
+              ),
+              Act0ContributionV1(
+                PokerStreet.preflop,
+                "bb",
+                Act0ContributionKindV1.blind,
+                1,
+              ),
+              Act0ContributionV1(
+                PokerStreet.preflop,
+                "btn",
+                Act0ContributionKindV1.wager,
+                2.5,
+              ),
+              Act0ContributionV1(
+                PokerStreet.preflop,
+                "bb",
+                Act0ContributionKindV1.wager,
+                1.5,
+              ),
+              Act0ContributionV1(
+                PokerStreet.flop,
+                "btn",
+                Act0ContributionKindV1.wager,
+                3,
+              ),
+              Act0ContributionV1(
+                PokerStreet.flop,
+                "bb",
+                Act0ContributionKindV1.wager,
+                3,
+              ),
+              Act0ContributionV1(
+                PokerStreet.turn,
+                "btn",
+                Act0ContributionKindV1.wager,
+                2,
+              ),
+              Act0ContributionV1(
+                PokerStreet.turn,
+                "bb",
+                Act0ContributionKindV1.wager,
+                2,
+              ),
+            ],
+            history: const [
+              Act0ActionTrailItemV1(label: "preflop: SB posts 0.5 BB"),
+              Act0ActionTrailItemV1(label: "preflop: BB posts 1 BB"),
+              Act0ActionTrailItemV1(label: "preflop: UTG folds"),
+              Act0ActionTrailItemV1(label: "preflop: HJ folds"),
+              Act0ActionTrailItemV1(label: "preflop: CO folds"),
+              Act0ActionTrailItemV1(label: "preflop: BTN raises to 2.5 BB"),
+              Act0ActionTrailItemV1(label: "preflop: SB folds"),
+              Act0ActionTrailItemV1(label: "preflop: BB calls 1.5 BB more"),
+              Act0ActionTrailItemV1(label: "flop: BB checks"),
+              Act0ActionTrailItemV1(label: "flop: BTN bets 3 BB"),
+              Act0ActionTrailItemV1(label: "flop: BB calls 3 BB more"),
+              Act0ActionTrailItemV1(label: "turn: BB checks"),
+              Act0ActionTrailItemV1(label: "turn: BTN bets 2 BB"),
+              Act0ActionTrailItemV1(label: "turn: BB calls 2 BB more"),
+              Act0ActionTrailItemV1(label: "river: BB checks"),
+            ],
+            bets: const {},
+          ).copyWith(showDecisionPremise: true),
+          explanation:
+              "P = 7.5 (BTN) + 0.5 (SB) + 7.5 (BB) = 15.5 BB; no wager faced, to_call=0 and price not applicable. Check equity = (48+0/2)/54 = 8/9; EV(check) = 124/9 BB. 4 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×4)−4] = 448/27 BB. 9 BB: 4/54 folds, 50/54 calls, caller W/T/L=44/0/6; EV = (4/54)×15.5 + (50/54)×[(22/25)×(15.5+2×9)−9] = 181/9 BB. Best Bet 9 BB beats Bet 4 BB by 95/27 BB (3.51852 BB).",
+        ),
+        4,
+        9,
       ),
       _wave6AuthoredTaskV1(
         id: "opponent_types_p03_tight_aggressive",
         lesson: "opponent_types_pilot_2",
         lessonTitle: "Opponent Types: Same Spot, Different Read (Part 2)",
         title: "Which option earns the most chips in this model?",
-        phase: Act0LessonPhaseV1.drill,
+        phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         guidedDecision: false,
@@ -705,7 +712,7 @@ final _opponentTypesLessonsV1 = [
       ),
     ],
   ),
-  _act0PilotLessonV1(
+  _opponentTypesLessonV1(
     "opponent_types_pilot_3",
     "Opponent Types: Same Spot, Different Read (Part 3)",
     [
@@ -818,7 +825,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 4 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 14.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 14.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -945,7 +954,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 4 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 14.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 14.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -1071,7 +1082,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 5 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 18.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 18.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -1091,7 +1104,7 @@ final _opponentTypesLessonsV1 = [
       ),
     ],
   ),
-  _act0PilotLessonV1(
+  _opponentTypesLessonV1(
     "opponent_types_pilot_4",
     "Opponent Types: Same Spot, Different Read (Part 4)",
     [
@@ -1203,7 +1216,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BTN checks"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 5 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 18.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 18.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -1342,7 +1357,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BB calls 3 BB more"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 6 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 16.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 16.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -1481,7 +1498,9 @@ final _opponentTypesLessonsV1 = [
             Act0ActionTrailItemV1(label: "turn: BB calls 3 BB more"),
             Act0ActionTrailItemV1(label: "river: BB checks"),
             Act0ActionTrailItemV1(label: "river: BTN bets 6 BB"),
-            Act0ActionTrailItemV1(label: "river: BB raises to 16.5 BB"),
+            Act0ActionTrailItemV1(
+              label: "river: BB raises to 16.5 BB (all-in)",
+            ),
           ],
           bets: const {
             "btn": Act0SeatBetStateV1(
@@ -1502,3 +1521,77 @@ final _opponentTypesLessonsV1 = [
     ],
   ),
 ];
+
+// Style definitions belong to the guided teaching headings, not the pinned
+// decision captions or accepted teaching bodies.
+Act0LessonCardV1 _opponentTypesLessonV1(
+  String id,
+  String title,
+  List<Act0LessonTaskV1> tasks,
+) => _act0PilotLessonV1(id, title, [
+  for (final task in tasks) _opponentTypesTeachingHeadingV1(task),
+]);
+
+Act0LessonTaskV1 _opponentTypesTeachingHeadingV1(Act0LessonTaskV1 task) {
+  final heading = switch (task.taskId) {
+    'opponent_types_p01_loose_passive' =>
+      'Loose-passive means playing many starting hands and usually calling rather than raising.',
+    'opponent_types_p01_tight_passive' =>
+      'Tight-passive means playing few starting hands and usually checking or calling rather than raising. '
+          'Tight-aggressive means playing few starting hands but often betting or raising when involved.',
+    'opponent_types_p04_loose_aggressive' =>
+      'Loose-aggressive means playing many starting hands and often betting or raising.',
+    _ => null,
+  };
+  if (heading == null) return task;
+  final step = task.runner.teachingSteps.single;
+  return Act0LessonTaskV1(
+    taskId: task.taskId,
+    title: task.title,
+    phase: task.phase,
+    rewardXp: task.rewardXp,
+    stepKind: task.stepKind,
+    guidedDecision: task.guidedDecision,
+    runner: task.runner.copyWith(
+      teachingSteps: [Act0TeachingStepV1(title: heading, body: step.body)],
+    ),
+  );
+}
+
+// The existing sizing surface presents the same three authored options, with
+// Check as the zero-chip choice. IDs, labels, grading and feedback stay intact.
+Act0LessonTaskV1 _opponentTypesSizingTaskV1(
+  Act0LessonTaskV1 task,
+  int small,
+  int large,
+) {
+  final pot = task.runner.table.handContributions!
+      .amounts(
+        seatIds: task.runner.table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: task.runner.table.heroSeat.seatId,
+      )
+      .potBb;
+  return Act0LessonTaskV1(
+    taskId: task.taskId,
+    title: task.title,
+    phase: task.phase,
+    rewardXp: task.rewardXp,
+    stepKind: task.stepKind,
+    guidedDecision: task.guidedDecision,
+    runner: task.runner.copyWith(
+      sizingConfig: Act0SizingConfigV1(
+        mode: Act0SizingUiModeV1.presetsOnly,
+        showGuidance: false,
+        presets: [
+          const Act0SizingPresetV1(id: 'check', label: 'Check', potFraction: 0),
+          for (final size in [small, large])
+            Act0SizingPresetV1(
+              id: 'bet_$size',
+              label: 'Bet $size BB',
+              potFraction: size / pot,
+            ),
+        ],
+      ),
+    ),
+  );
+}
