@@ -23,7 +23,7 @@ final _world25Pilot = _act0PilotWorldV1(
         choices: const [
           (
             "answer",
-            "Remove board cards and your hole cards",
+            "Remove board cards and your private cards",
             Act0FeedbackQualityV1.correct,
             "A hand containing a known card cannot be in BB’s range.",
           ),
@@ -98,7 +98,7 @@ final _world25Pilot = _act0PilotWorldV1(
             "bet_3",
             "Bet 3 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 3 BB. The two weaker king classes still pay, and that extra volume beats the bigger bet. BB folds those kings to 6 BB.",
+            "Bet 3 BB because BB calls with more weaker kings. Bet 6 BB loses those calls, so the extra chips per call do not compensate.",
           ),
           (
             "bet_6",
@@ -353,7 +353,7 @@ final _world25Pilot = _act0PilotWorldV1(
             "bet_5",
             "Bet 5 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 5 BB. The ace removes both listed nut flushes, and the smaller bluff already folds both king classes. BB calls with flushes at 19 BB too.",
+            "Bet 5 BB because the ace removes both listed nut flushes and BB folds both king classes. Bet 19 BB folds sets too, but costs more against the remaining flushes.",
           ),
           (
             "bet_19",
@@ -446,13 +446,14 @@ final _world25Pilot = _act0PilotWorldV1(
         id: "w25_2_transfer_without_heart",
         lesson: "nut_blocker_and_unblocker",
         lessonTitle: "Nut blocker and unblocker",
-        title: "Which action earns the most chips in this model?",
+        title: "Without the heart blocker, which action earns the most chips?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h AhQh AhJh KQ KJ 99. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh 99 and folds the rest.  At 19 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh and folds the rest.",
-        question: "Which action earns the most chips in this model?",
+        question:
+            "Without the heart blocker, which action earns the most chips?",
         teach: "",
         choices: const [
           (
@@ -596,10 +597,10 @@ final _world25Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove combinations that beat you. Apply the price to that conditional range.",
+            "Chip EV means expected net chips per decision. When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove value combinations. Apply the price to that conditional range.",
         question: "What can make a same-rank bluff catcher worse?",
         teach:
-            "When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove combinations that beat you. Apply the price to that conditional range.",
+            "Chip EV means expected net chips per decision. When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove value combinations. Apply the price to that conditional range.",
         choices: const [
           (
             "answer",
@@ -796,7 +797,7 @@ final _world25Pilot = _act0PilotWorldV1(
             "call",
             "Call 7 BB",
             Act0FeedbackQualityV1.suboptimal,
-            "Calling pays the same amount against a range where sets account for most of the legal bets.",
+            "Calling 7 BB loses chips because sets account for most legal bets. Fold instead.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -933,16 +934,16 @@ final _world25Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Board texture tells you which strong hands to count. On a paired board count boats and quads; on a connected board identify the actual straight ranks before looking at your cards.",
+            "Board texture tells you which strong hands to count. A paired board means two or more board cards share a rank; count full houses and four of a kind. On a connected board identify the actual straight ranks before looking at your cards.",
         question: "What is the useful first step on a connected board?",
         teach:
-            "Board texture tells you which strong hands to count. On a paired board count boats and quads; on a connected board identify the actual straight ranks before looking at your cards.",
+            "Board texture tells you which strong hands to count. A paired board means two or more board cards share a rank; count full houses and four of a kind. On a connected board identify the actual straight ranks before looking at your cards.",
         choices: const [
           (
             "answer",
             "List the holdings that actually make the target straight",
             Act0FeedbackQualityV1.correct,
-            "That tells you which hole cards remove the hands you care about.",
+            "That tells you which private cards remove the hands you care about.",
           ),
           (
             "alternative",
@@ -1275,7 +1276,7 @@ final _world25Pilot = _act0PilotWorldV1(
             "bet_9",
             "Bet 9 BB",
             Act0FeedbackQualityV1.correct,
-            "Bet 9 BB. Weaker flushes, sets and the listed kings all pay, which is worth more than the sparse larger calls. BB folds the kings to 27 BB.",
+            "Bet 9 BB because BB calls with weaker flushes, sets and kings. Bet 27 BB loses the king calls; its larger payments do not make up for them.",
           ),
           (
             "bet_27",
@@ -1455,10 +1456,10 @@ final _world25Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Range equity averages showdown shares across legal pairings. Apply both sides’ card removal before weighting the matchup, especially when a change to one hand class also changes how often another class is possible.",
+            "Range equity averages showdown shares across legal pairings. A hand class is a group of hands with a common rank or suit pattern. Apply both sides’ card removal before weighting how often the classes can occur together.",
         question: "What is the unit of comparison?",
         teach:
-            "Range equity averages showdown shares across legal pairings. Apply both sides’ card removal before weighting the matchup, especially when a change to one hand class also changes how often another class is possible.",
+            "Range equity averages showdown shares across legal pairings. A hand class is a group of hands with a common rank or suit pattern. Apply both sides’ card removal before weighting how often the classes can occur together.",
         choices: const [
           (
             "answer",
@@ -1579,7 +1580,7 @@ final _world25Pilot = _act0PilotWorldV1(
             "fold",
             "Fold",
             Act0FeedbackQualityV1.wrong,
-            "Folding passes up the price against the surviving worse made hands.",
+            "Folding gives up chip profit because enough worse made hands survive. Call 8 BB.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -1732,15 +1733,15 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_1_teach",
         lesson: "chip_to_prize",
         lessonTitle: "Chip to prize",
-        title: "How do you compare an all-in call and a fold on the bubble?",
+        title: "How do you compare an all-in call and a fold near a payout?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "ICM converts a stack distribution into finish probabilities by allocating places in proportion to remaining chips. A static ICM decision compares payoffs after each branch of the hand.",
-        question: "How do you compare an all-in call and a fold on the bubble?",
+            "ICM (Independent Chip Model) is a way to estimate prize value from stacks and payouts by assigning finish probabilities in proportion to remaining chips. The bubble is when one more elimination unlocks the next payout for survivors. Compare the prize value of each call or fold outcome.",
+        question: "How do you compare an all-in call and a fold near a payout?",
         teach:
-            "ICM converts a stack distribution into finish probabilities by allocating places in proportion to remaining chips. A static ICM decision compares payoffs after each branch of the hand.",
+            "ICM (Independent Chip Model) is a way to estimate prize value from stacks and payouts by assigning finish probabilities in proportion to remaining chips. The bubble is when one more elimination unlocks the next payout for survivors. Compare the prize value of each call or fold outcome.",
         choices: const [
           (
             "answer",
@@ -1811,7 +1812,7 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
+            "Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
         question: "Which response has the higher modeled prize EV?",
         teach:
             "Track who survives after folding, winning or losing. Apply the prize schedule to each stack vector.",
@@ -1915,7 +1916,7 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
+            "Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
         question: "Which response has the higher modeled prize EV?",
         teach: "",
         choices: const [
@@ -2057,10 +2058,10 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "In a short-stack spot compare first-in shoves, small opens with a planned response, and reshoves facing an open. Include dead blinds and antes, who can call, and the next price.",
+            "Antes are the compulsory extra contributions before a hand; each ante adds to the money available to win. Compare first-in all-ins, small opens with a planned response, and all-in reraises facing an open. Include the blinds, antes, who can call, and the next price.",
         question: "What makes an action a rejam?",
         teach:
-            "In a short-stack spot compare first-in shoves, small opens with a planned response, and reshoves facing an open. Include dead blinds and antes, who can call, and the next price.",
+            "Antes are the compulsory extra contributions before a hand; each ante adds to the money available to win. Compare first-in all-ins, small opens with a planned response, and all-in reraises facing an open. Include the blinds, antes, who can call, and the next price.",
         choices: const [
           (
             "answer",
@@ -2083,7 +2084,7 @@ final _world26Pilot = _act0PilotWorldV1(
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "The three sequences are distinct by the action that precedes the shove.",
+            "The three sequences are distinct by the action that precedes the all-in.",
       ),
       _wave6AuthoredTaskV1(
         id: "w26_2_read_bba_budget",
@@ -2094,7 +2095,7 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "In a six-max MTT, the blinds are 0.5/1 BB and the big blind posts a separate 1 BB ante. You begin the orbit with 10 BB and assume no extra bets.",
+            "M-ratio means your stack divided by the forced contributions you pay per orbit. In a six-max MTT, the blinds are 0.5/1 BB and the big blind posts a separate 1 BB ante. You begin the orbit with 10 BB and assume no extra bets.",
         question: "What is your initial M-ratio in this model?",
         teach: "",
         choices: const [
@@ -2130,16 +2131,16 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. Jam: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six jams cost 2. Fold returns zero.",
+            "You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. All-in: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six all-in reraises cost 2. Fold returns zero.",
         question: "Which line earns most in the worksheet?",
         teach:
             "For each allowed line, multiply each net result by the number of matching cases and take the mean.",
         choices: const [
           (
             "answer",
-            "Open jam",
+            "Open all-in",
             Act0FeedbackQualityV1.correct,
-            "The folds and winning calls more than pay for the losses.",
+            "The 10 BB all-in earns 1.75 BB on average; raising to 2 BB then folding to a reraise loses 0.2 BB.",
           ),
           (
             "alternative",
@@ -2149,26 +2150,26 @@ final _world26Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Minraise/fold",
+            "Raise to 2 BB, then fold to a reraise",
             Act0FeedbackQualityV1.wrong,
             "The modeled six reshoves make opening and folding to all of them negative.",
           ),
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "Jam=(4×2.5+3×12.5−3×10)/10=1.75 BB. Minraise/fold=(4×2.5−6×2)/10=−0.2 BB. Fold=0. Terminal payoffs are inputs rather than predictions about a particular range.",
+            "All-in=(4×2.5+3×12.5−3×10)/10=1.75 BB. Minraise/fold=(4×2.5−6×2)/10=−0.2 BB. Fold=0. Terminal payoffs are inputs rather than predictions about a particular range.",
       ),
       _wave6AuthoredTaskV1(
         id: "w26_2_transfer_twenty_bb_minraise",
         lesson: "short_stack_action_tree",
         lessonTitle: "Short stack action tree",
-        title: "What do you do facing the jam?",
+        title: "What do you do facing the all-in?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "You started with 20 BB, minraised to 2 BB and face a covering jam. The pot with the effective jam is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.",
-        question: "What do you do facing the jam?",
+            "You started with 20 BB, minraised to 2 BB and face a covering all-in. The pot with the effective all-in is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.",
+        question: "What do you do facing the all-in?",
         teach: "",
         choices: const [
           (
@@ -2179,7 +2180,7 @@ final _world26Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Call the jam",
+            "Call the all-in",
             Act0FeedbackQualityV1.wrong,
             "Including your last 18 BB makes the final pot 41.5 BB. Four wins per ten are insufficient.",
           ),
@@ -2187,7 +2188,7 @@ final _world26Pilot = _act0PilotWorldV1(
             "other",
             "Count your original raise as part of today’s call",
             Act0FeedbackQualityV1.wrong,
-            "Those chips are already in the pot when the jam arrives.",
+            "Those chips are already in the pot when the all-in arrives.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -2199,13 +2200,13 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_2_day7_plan_the_call",
         lesson: "short_stack_action_tree",
         lessonTitle: "Short stack action tree",
-        title: "Which response to the jam is correct?",
+        title: "Which response to the all-in is correct?",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
             "You start with 20 BB, minraise to 2 BB and face the same 23.5 BB pot before calling. This fixture gives six wins and four losses in ten equal-weight showdowns, with no prize pressure.",
-        question: "Which response to the jam is correct?",
+        question: "Which response to the all-in is correct?",
         teach: "",
         choices: const [
           (
@@ -2224,7 +2225,7 @@ final _world26Pilot = _act0PilotWorldV1(
             "other",
             "Reraise",
             Act0FeedbackQualityV1.wrong,
-            "The jam already covers your remaining stack.",
+            "The all-in already covers your remaining stack.",
           ),
         ],
         table: _w9TextStudyTableV1,
@@ -2243,11 +2244,11 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Tournament stage describes the current objective and constraints. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.",
+            "A tournament stage is a period of play with distinct stack depths and payout pressures. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.",
         question:
             "What should you compare when switching from a slow event to a turbo?",
         teach:
-            "Tournament stage describes the current objective and constraints. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.",
+            "A tournament stage is a period of play with distinct stack depths and payout pressures. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.",
         choices: const [
           (
             "answer",
@@ -2348,32 +2349,32 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_3_transfer_addon_terms",
         lesson: "tournament_structure",
         lessonTitle: "Tournament structure",
-        title: "Which judgment fits the incremental model?",
+        title: "What is the net gain from buying the add-on now?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
             "In this worksheet an add-on costs 15 units. It changes your modeled gross prize EV from 46 to 65 units. The original entry fee was paid earlier.",
-        question: "Which judgment fits the incremental model?",
+        question: "What is the net gain from buying the add-on now?",
         teach: "",
         choices: const [
           (
             "answer",
-            "Buy the add-on",
+            "4 units: buy the add-on",
             Act0FeedbackQualityV1.correct,
-            "The additional stack adds 19 units of prize EV at a cost of 15.",
+            "65 minus 46 gives 19 extra prize units; subtract the 15-unit cost for a net gain of 4.",
           ),
           (
             "alternative",
-            "Decline because the old entry fee was large",
+            "19 units: buy without deducting the add-on cost",
             Act0FeedbackQualityV1.wrong,
-            "Past entry costs are sunk for the add-on decision.",
+            "The 19-unit increase is gross, not net. Deduct the new 15-unit cost, not the sunk entry fee.",
           ),
           (
             "other",
-            "Count 65 as the add-on’s gain",
+            "50 units: count the whole new stack’s value less the cost",
             Act0FeedbackQualityV1.wrong,
-            "The original stack already had prize value.",
+            "65 minus 15 ignores the 46 units of prize value the original stack already had.",
           ),
         ],
         family: Act0TaskFamilyV1.transfer,
@@ -2436,7 +2437,7 @@ final _world26Pilot = _act0PilotWorldV1(
             "answer",
             "Which players you cover and how the payout and call incentives differ",
             Act0FeedbackQualityV1.correct,
-            "The same shove can face very different defenses against a medium and a very short stack.",
+            "The same all-in can face very different defenses against a medium and a very short stack.",
           ),
           (
             "alternative",
@@ -2448,7 +2449,7 @@ final _world26Pilot = _act0PilotWorldV1(
             "other",
             "That covered players should fold to pressure",
             Act0FeedbackQualityV1.wrong,
-            "Pot odds and the value of staying alive vary.",
+            "The price of calling and the value of staying alive vary.",
           ),
         ],
         table: _w9TextStudyTableV1,
@@ -2459,30 +2460,30 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_4_read_leverage_target",
         lesson: "leverage_and_future_hands",
         lessonTitle: "Leverage and future hands",
-        title: "Which node offers more immediate fold equity in the sample?",
+        title: "How much more often does one opponent fold in the sample?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "Bubble study sample: as chip leader you cover both opponents. In matched simulated shove nodes, a medium stack folds in 8 of 10 and a short stack folds in 4 of 10. Same pot and shove risk in the isolated comparison.",
-        question: "Which node offers more immediate fold equity in the sample?",
+            "Bubble study sample: as chip leader you cover both opponents. In matched simulated all-in scenarios, a medium stack folds in 8 of 10 and a short stack folds in 4 of 10. Same pot and all-in risk in the isolated comparison.",
+        question: "How much more often does one opponent fold in the sample?",
         teach: "",
         choices: const [
           (
             "answer",
-            "The medium stack’s defense",
+            "4 extra folds in 10 against the medium stack",
             Act0FeedbackQualityV1.correct,
-            "The sample has four more fold events per ten against that stack.",
+            "The medium stack folds 8 times and the short stack 4 times, a gap of 4 in 10.",
           ),
           (
             "alternative",
-            "The short stack’s defense",
+            "4 extra folds in 10 against the short stack",
             Act0FeedbackQualityV1.wrong,
             "It calls more often in this model.",
           ),
           (
             "other",
-            "Covered stacks offer equal fold equity",
+            "0 extra folds against either stack",
             Act0FeedbackQualityV1.wrong,
             "Being covered is only one input.",
           ),
@@ -2572,14 +2573,14 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_4_day7_equilibrium_claim",
         lesson: "leverage_and_future_hands",
         lessonTitle: "Leverage and future hands",
-        title: "What must be done before copying the shove/call equilibrium?",
+        title: "What must be done before copying the all-in/call equilibrium?",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
             "Two final-table studies use the same stack vector, but one pays just first place and the other has a flat prize schedule across several places. Each asks for equilibrium responses.",
         question:
-            "What must be done before copying the shove/call equilibrium?",
+            "What must be done before copying the all-in/call equilibrium?",
         teach: "",
         choices: const [
           (
@@ -2611,15 +2612,16 @@ final _world26Pilot = _act0PilotWorldV1(
         id: "w26_5_teach",
         lesson: "bounty_and_satellite",
         lessonTitle: "Bounty and satellite",
-        title: "When does a knockout bounty belong in a call comparison?",
+        title: "When does an elimination reward belong in a call comparison?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "Bounties add a reward for covered eliminations. Satellites instead value a qualifying seat. Convert all relevant outcomes into compatible prize units before comparing actions.",
-        question: "When does a knockout bounty belong in a call comparison?",
+            "A bounty is a reward for an eligible elimination. A satellite is a tournament that awards qualifying seats instead of ordinary prize money. Convert relevant outcomes into compatible prize units before comparing actions.",
+        question:
+            "When does an elimination reward belong in a call comparison?",
         teach:
-            "Bounties add a reward for covered eliminations. Satellites instead value a qualifying seat. Convert all relevant outcomes into compatible prize units before comparing actions.",
+            "A bounty is a reward for an eligible elimination. A satellite is a tournament that awards qualifying seats instead of ordinary prize money. Convert relevant outcomes into compatible prize units before comparing actions.",
         choices: const [
           (
             "answer",
@@ -2688,7 +2690,7 @@ final _world26Pilot = _act0PilotWorldV1(
         step: Act0LessonStepKindV1.practice,
         xp: 10,
         caption:
-            "Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river shove: three winning samples qualify, one losing sample busts.",
+            "Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river all-in: three winning samples qualify, one losing sample busts.",
         question: "Which choice maximizes qualification?",
         teach:
             "First list the possible call outcomes, then ask whether earning extra chips changes what you receive in a winning branch.",
@@ -2790,20 +2792,20 @@ final _world26Pilot = _act0PilotWorldV1(
             "Enumerate the two possible bounty eligibility states; the prompt specifies the inactive one.",
       ),
     ]),
-    _act0PilotLessonV1("shove_timing_checkpoint", "Shove timing checkpoint", [
+    _act0PilotLessonV1("shove_timing_checkpoint", "All-in timing checkpoint", [
       _wave6AuthoredTaskV1(
         id: "w26_6_teach",
         lesson: "shove_timing_checkpoint",
-        lessonTitle: "Shove timing checkpoint",
-        title: "What can make the delayed shove earn more?",
+        lessonTitle: "All-in timing checkpoint",
+        title: "What can make the delayed all-in earn more?",
         phase: Act0LessonPhaseV1.theory,
         step: Act0LessonStepKindV1.learn,
         xp: 7,
         caption:
-            "A stop-and-go calls preflop from out of position and then shoves the flop. Compare it with the preflop shove using the changed pot, remaining stack, flop fold distribution and payout.",
-        question: "What can make the delayed shove earn more?",
+            "A stop-and-go calls preflop from out of position and then moves all-in on the flop. Compare it with the preflop all-in using the changed pot, remaining stack, flop fold distribution and payout.",
+        question: "What can make the delayed all-in earn more?",
         teach:
-            "A stop-and-go calls preflop from out of position and then shoves the flop. Compare it with the preflop shove using the changed pot, remaining stack, flop fold distribution and payout.",
+            "A stop-and-go calls preflop from out of position and then moves all-in on the flop. Compare it with the preflop all-in using the changed pot, remaining stack, flop fold distribution and payout.",
         choices: const [
           (
             "answer",
@@ -2819,7 +2821,7 @@ final _world26Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "The opponent tends to miss the flop, making a shove profitable",
+            "The opponent tends to miss the flop, making an all-in profitable",
             Act0FeedbackQualityV1.wrong,
             "Flop equity and response vary.",
           ),
@@ -2830,7 +2832,7 @@ final _world26Pilot = _act0PilotWorldV1(
       _wave6AuthoredTaskV1(
         id: "w26_6_read_short_stack_stopgo",
         lesson: "shove_timing_checkpoint",
-        lessonTitle: "Shove timing checkpoint",
+        lessonTitle: "All-in timing checkpoint",
         title: "After a flat call, how much can you lead on the flop?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
@@ -2865,7 +2867,7 @@ final _world26Pilot = _act0PilotWorldV1(
       _wave6AuthoredTaskV1(
         id: "w26_6_guided_compare_reshove",
         lesson: "shove_timing_checkpoint",
-        lessonTitle: "Shove timing checkpoint",
+        lessonTitle: "All-in timing checkpoint",
         title: "Which option earns more chip EV in this model?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
@@ -2890,7 +2892,7 @@ final _world26Pilot = _act0PilotWorldV1(
           ),
           (
             "other",
-            "Apply a first-in shove range without checking the opener",
+            "Apply a first-in all-in range without checking the opener",
             Act0FeedbackQualityV1.wrong,
             "There is already a player with a selected opening range.",
           ),
@@ -2902,7 +2904,7 @@ final _world26Pilot = _act0PilotWorldV1(
       _wave6AuthoredTaskV1(
         id: "w26_6_transfer_checkout_payjump",
         lesson: "shove_timing_checkpoint",
-        lessonTitle: "Shove timing checkpoint",
+        lessonTitle: "All-in timing checkpoint",
         title: "What should you do in the stated payout model?",
         phase: Act0LessonPhaseV1.drill,
         step: Act0LessonStepKindV1.practice,
@@ -2938,13 +2940,13 @@ final _world26Pilot = _act0PilotWorldV1(
       _wave6AuthoredTaskV1(
         id: "w26_6_day7_stopgo_counter",
         lesson: "shove_timing_checkpoint",
-        lessonTitle: "Shove timing checkpoint",
+        lessonTitle: "All-in timing checkpoint",
         title: "Which line is best?",
         phase: Act0LessonPhaseV1.review,
         step: Act0LessonStepKindV1.review,
         xp: 16,
         caption:
-            "A short-stack study compares two complete trees from the same decision. Jam payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop shove payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.",
+            "A short-stack study compares two complete trees from the same decision. Preflop all-in payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop all-in payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.",
         question: "Which line is best?",
         teach: "",
         choices: const [
@@ -2956,20 +2958,20 @@ final _world26Pilot = _act0PilotWorldV1(
           ),
           (
             "alternative",
-            "Jam",
+            "All-in preflop",
             Act0FeedbackQualityV1.wrong,
             "The losing calls cost one chip more across the roster than the wins and folds earn.",
           ),
           (
             "other",
-            "Flat and shove",
+            "Call, then move all-in",
             Act0FeedbackQualityV1.wrong,
             "The additional fold replaces a larger win, and the losses remain.",
           ),
         ],
         table: _w9TextStudyTableV1,
         explanation:
-            "Jam=(3+3+11−9−9)/5=−0.2. Flat/shove=(3+3+3−9−9)/5=−1.8. Fold=0.",
+            "All-in=(3+3+11−9−9)/5=−0.2. Call then all-in=(3+3+3−9−9)/5=−1.8. Fold=0.",
       ),
     ]),
   ],

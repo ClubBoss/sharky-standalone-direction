@@ -10,11 +10,11 @@ TEACH: What do you do before counting possible BB calls? A blocker is a known ca
 Q: What do you do before counting possible BB calls?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] Remove board cards and your hole cards — Correct. A hand containing a known card cannot be in BB’s range.
+  + [correct] Remove board cards and your private cards — Correct. A hand containing a known card cannot be in BB’s range.
   - [wrong] Remove the highest ranks first — Look again. A rank alone still has multiple cards.
-    BETTER ANSWER: Remove board cards and your hole cards
+    BETTER ANSWER: Remove board cards and your private cards
   - [wrong] Remove hands sharing your kicker rank — Look again. Only direct card conflicts remove a combination.
-    BETTER ANSWER: Remove board cards and your hole cards
+    BETTER ANSWER: Remove board cards and your private cards
 
 TASK w25_1_read_one_pair_removal [drill] How many combinations remain?
 CAPTION: Board Kc 9d 4s 3h 2c. Your hand contains Kh. Consider BB’s K-Q combinations with all suits allowed and neither player holding a known queen.
@@ -37,7 +37,7 @@ EFFECTIVE: BB 94.5
 REASONING: principle combos_and_blockers · alt bet_6 · edge moreValueFromWorse 0.36 BB · stack_matters false · assumption BB has one equally weighted legal combination from KQ KJ KT 55 33 76s JTs. Checking goes to showdown. At 3 BB BB calls KQ KJ KT 55 33 and folds the rest.  At 6 BB BB calls KQ 55 33 and folds the rest.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer 8h 8d stack 94.5 BB | SB folded stack 99.5 BB | BB stack 94.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks
-  + [correct] Bet 3 BB — Correct. Bet 3 BB. The two weaker king classes still pay, and that extra volume beats the bigger bet. BB folds those kings to 6 BB.
+  + [correct] Bet 3 BB — Correct. Bet 3 BB because BB calls with more weaker kings. Bet 6 BB loses those calls, so the extra chips per call do not compensate.
     FEEDBACK TABLE: River | You 8h 8d | Board Ks 8c 5d 3s 2h | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
   + [acceptable] Bet 6 BB — Playable. Also playable. Bet 3 BB earns slightly more in this model. At 6 BB the remaining kings and sets pay more each, but K-J and K-T drop out.
     BETTER ANSWER: Bet 3 BB
@@ -106,7 +106,7 @@ EFFECTIVE: BB 94.5
 REASONING: principle folds_better · alt bet_19 · edge cheaperSameResult 0.20968 BB · stack_matters false · assumption BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h AhQh AhJh KQ KJ 99. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh 99 and folds the rest.  At 19 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh and folds the rest.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah 5d stack 94.5 BB | SB folded stack 99.5 BB | BB stack 94.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks
-  + [correct] Bet 5 BB — Correct. Bet 5 BB. The ace removes both listed nut flushes, and the smaller bluff already folds both king classes. BB calls with flushes at 19 BB too.
+  + [correct] Bet 5 BB — Correct. Bet 5 BB because the ace removes both listed nut flushes and BB folds both king classes. Bet 19 BB folds sets too, but costs more against the remaining flushes.
     FEEDBACK TABLE: River | You Ah 5d | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
   + [acceptable] Bet 19 BB — Playable. Also playable. Bet 5 BB earns slightly more in this model. The 19 BB bet pushes out sets too, but pays too much extra to the remaining flushes.
     BETTER ANSWER: Bet 5 BB
@@ -115,9 +115,9 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds 
     BETTER ANSWER: Bet 5 BB
     FEEDBACK TABLE: River | You Ah 5d | Board Kh 9h 4h 7c 2s | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts high card
 
-TASK w25_2_transfer_without_heart [drill] Which action earns the most chips in this model?
+TASK w25_2_transfer_without_heart [drill] Without the heart blocker, which action earns the most chips?
 CAPTION: BB has one equally weighted legal combination from QhJh JhTh Th8h 8h6h AhQh AhJh KQ KJ 99. Checking goes to showdown. At 5 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh 99 and folds the rest.  At 19 BB BB calls QhJh JhTh Th8h 8h6h AhQh AhJh and folds the rest.
-Q: Which action earns the most chips in this model?
+Q: Without the heart blocker, which action earns the most chips?
 HINT [hidden]: (none)
 TABLE: River | You Ac 5d | Board Kh 9h 4h 7c 2d | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Facts high card
 EFFECTIVE: BB 94.5
@@ -149,8 +149,8 @@ REASONING: principle folds_better · alt alternative · edge processRule · stac
 ===== WORLD 25 · LESSON bluff_catcher_unblocking · Bluff catcher unblocking =====
 
 TASK w25_3_teach [theory] What can make a same-rank bluff catcher worse?
-CAPTION: When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove combinations that beat you. Apply the price to that conditional range.
-TEACH: What can make a same-rank bluff catcher worse? When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove combinations that beat you. Apply the price to that conditional range.
+CAPTION: Chip EV means expected net chips per decision. When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove value combinations. Apply the price to that conditional range.
+TEACH: What can make a same-rank bluff catcher worse? Chip EV means expected net chips per decision. When a river hand beats only bluffs, preserve combinations the opponent can bluff and remove value combinations. Apply the price to that conditional range.
 Q: What can make a same-rank bluff catcher worse?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -196,7 +196,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB bets 7 BB
   + [correct] Fold — Correct. Fold. Your queen removes both queen-high heart misses, leaving too few bluffs for this price. BB bets mostly sets, so a 7 BB call loses chips.
     FEEDBACK TABLE: River | You Kd Qh | Board Ks 8h 4h 7c 2s | Pot 18.5 BB | To call 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
-  - [suboptimal] Call 7 BB — Look again. Calling pays the same amount against a range where sets account for most of the legal bets.
+  - [suboptimal] Call 7 BB — Look again. Calling 7 BB loses chips because sets account for most legal bets. Fold instead.
     BETTER ANSWER: Fold
     FEEDBACK TABLE: River | You Kd Qh | Board Ks 8h 4h 7c 2s | Pot 18.5 BB | To call 7 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
 
@@ -216,12 +216,12 @@ REASONING: principle price_vs_equity · alt alternative · edge processRule · s
 ===== WORLD 25 · LESSON paired_and_connected_removal · Paired and connected removal =====
 
 TASK w25_4_teach [theory] What is the useful first step on a connected board?
-CAPTION: Board texture tells you which strong hands to count. On a paired board count boats and quads; on a connected board identify the actual straight ranks before looking at your cards.
-TEACH: What is the useful first step on a connected board? Board texture tells you which strong hands to count. On a paired board count boats and quads; on a connected board identify the actual straight ranks before looking at your cards.
+CAPTION: Board texture tells you which strong hands to count. A paired board means two or more board cards share a rank; count full houses and four of a kind. On a connected board identify the actual straight ranks before looking at your cards.
+TEACH: What is the useful first step on a connected board? Board texture tells you which strong hands to count. A paired board means two or more board cards share a rank; count full houses and four of a kind. On a connected board identify the actual straight ranks before looking at your cards.
 Q: What is the useful first step on a connected board?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] List the holdings that actually make the target straight — Correct. That tells you which hole cards remove the hands you care about.
+  + [correct] List the holdings that actually make the target straight — Correct. That tells you which private cards remove the hands you care about.
   - [wrong] Start by counting the suited connector classes — Look again. Many will not complete the relevant straight.
     BETTER ANSWER: List the holdings that actually make the target straight
   - [wrong] Treat an overcard as a nut blocker — Look again. Find the nut construction first.
@@ -312,7 +312,7 @@ EFFECTIVE: BB 84
 REASONING: principle range_vs_board · alt bet_27 · edge moreValueFromWorse 0.9 BB · stack_matters false · assumption BB has one equally weighted legal combination from JhTh Th8h 8h6h 99 KK KQ KJ. Checking goes to showdown. At 9 BB BB calls JhTh Th8h 8h6h 99 KK KQ KJ and folds the rest.  At 27 BB BB calls JhTh Th8h 8h6h 99 KK and folds the rest.
 SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ah Qh stack 84 BB | SB folded stack 99.5 BB | BB stack 84 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB raises to 10 BB · preflop: BTN calls 7.5 BB more · flop: BB checks · flop: BTN bets 6 BB · flop: BB calls 6 BB more · turn: BB checks · turn: BTN checks · river: BB checks
-  + [correct] Bet 9 BB — Correct. Bet 9 BB. Weaker flushes, sets and the listed kings all pay, which is worth more than the sparse larger calls. BB folds the kings to 27 BB.
+  + [correct] Bet 9 BB — Correct. Bet 9 BB because BB calls with weaker flushes, sets and kings. Bet 27 BB loses the king calls; its larger payments do not make up for them.
     FEEDBACK TABLE: River | You Ah Qh | Board Kh 9h 4h 7c 2s | Pot 32.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts flush
   + [acceptable] Bet 27 BB — Playable. Also playable. Bet 9 BB earns slightly more in this model. The bigger wager gains more per call, but the kings all leave.
     BETTER ANSWER: Bet 9 BB
@@ -349,8 +349,8 @@ REASONING: principle range_vs_board · alt alternative · edge processRule · st
 ===== WORLD 25 · LESSON conditional_range_share · Conditional range share =====
 
 TASK w25_6_teach [theory] What is the unit of comparison?
-CAPTION: Range equity averages showdown shares across legal pairings. Apply both sides’ card removal before weighting the matchup, especially when a change to one hand class also changes how often another class is possible.
-TEACH: What is the unit of comparison? Range equity averages showdown shares across legal pairings. Apply both sides’ card removal before weighting the matchup, especially when a change to one hand class also changes how often another class is possible.
+CAPTION: Range equity averages showdown shares across legal pairings. A hand class is a group of hands with a common rank or suit pattern. Apply both sides’ card removal before weighting how often the classes can occur together.
+TEACH: What is the unit of comparison? Range equity averages showdown shares across legal pairings. A hand class is a group of hands with a common rank or suit pattern. Apply both sides’ card removal before weighting how often the classes can occur together.
 Q: What is the unit of comparison?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -395,7 +395,7 @@ SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 4 BB · flop: BB calls 4 BB more · turn: BB checks · turn: BTN bets 4 BB · turn: BB calls 4 BB more · river: BB bets 8 BB
   + [correct] Call 8 BB — Correct. Call. Nines and sevens paired with a five still make up enough of the betting range once you count the surviving straights and flushes. BB bets enough worse hands that folding loses value.
     FEEDBACK TABLE: River | You Jh Jd | Board Js 8c 5c 4s 2c | Pot 29.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
-  - [wrong] Fold — Look again. Folding passes up the price against the surviving worse made hands.
+  - [wrong] Fold — Look again. Folding gives up chip profit because enough worse made hands survive. Call 8 BB.
     BETTER ANSWER: Call 8 BB
     FEEDBACK TABLE: River | You Jh Jd | Board Js 8c 5c 4s 2c | Pot 29.5 BB | To call 8 BB | Seat BTN | Active btn | Decision btn | Card focus hero_0, hero_1, board_0, board_1, board_2, board_3, board_4 | Facts set, pocket pair
 
@@ -414,10 +414,10 @@ REASONING: principle range_vs_board · alt alternative · edge processRule · st
 
 ===== WORLD 26 · LESSON chip_to_prize · Chip to prize =====
 
-TASK w26_1_teach [theory] How do you compare an all-in call and a fold on the bubble?
-CAPTION: ICM converts a stack distribution into finish probabilities by allocating places in proportion to remaining chips. A static ICM decision compares payoffs after each branch of the hand.
-TEACH: How do you compare an all-in call and a fold on the bubble? ICM converts a stack distribution into finish probabilities by allocating places in proportion to remaining chips. A static ICM decision compares payoffs after each branch of the hand.
-Q: How do you compare an all-in call and a fold on the bubble?
+TASK w26_1_teach [theory] How do you compare an all-in call and a fold near a payout?
+CAPTION: ICM (Independent Chip Model) is a way to estimate prize value from stacks and payouts by assigning finish probabilities in proportion to remaining chips. The bubble is when one more elimination unlocks the next payout for survivors. Compare the prize value of each call or fold outcome.
+TEACH: How do you compare an all-in call and a fold near a payout? ICM (Independent Chip Model) is a way to estimate prize value from stacks and payouts by assigning finish probabilities in proportion to remaining chips. The bubble is when one more elimination unlocks the next payout for survivors. Compare the prize value of each call or fold outcome.
+Q: How do you compare an all-in call and a fold near a payout?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] Weight the resulting prize equity of each branch — Correct. Changing the stack vector changes the prize distribution even when the chip gain looks favorable.
@@ -438,13 +438,13 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: 43.6
 
 TASK w26_1_guided_positive_chips_negative_prize [drill] Which response has the higher modeled prize EV?
-CAPTION: Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
+CAPTION: Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
 TEACH: Which response has the higher modeled prize EV? Track who survives after folding, winning or losing. Apply the prize schedule to each stack vector.
 Q: Which response has the higher modeled prize EV?
 HINT [hidden]: (none)
 TABLE: River | You Kh Qd | Board Ks 9c 4h 3d 2s | Pot 36 BB | To call 24.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 24.5
-REASONING: principle risk_premium · alt call · edge riskPremium · stack_matters true · assumption Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
+REASONING: principle risk_premium · alt call · edge riskPremium · stack_matters true · assumption Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
 SEATS: BTN dealer Kh Qd stack 24.5 BB | SB folded stack 4.5 BB | BB stack 45 BB bet 24.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB bets 24.5 BB
   + [correct] Fold — Correct. Fold. The modeled call gains chips on average but loses prize value because the small blind is still alive. BB bets enough misses for chip profit, not enough for prize profit.
@@ -452,12 +452,12 @@ TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: BTN raises
     BETTER ANSWER: Fold
 
 TASK w26_1_transfer_winner_take_all [drill] Which response has the higher modeled prize EV?
-CAPTION: Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
+CAPTION: Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
 Q: Which response has the higher modeled prize EV?
 HINT [hidden]: (none)
 TABLE: River | You Kd Jh | Board Kh 8c 5d 4s 2c | Pot 36 BB | To call 24.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
 EFFECTIVE: BB 24.5
-REASONING: principle risk_premium · alt fold · edge riskPremium · stack_matters true · assumption Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
+REASONING: principle risk_premium · alt fold · edge riskPremium · stack_matters true · assumption Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.
 SEATS: BTN dealer Kd Jh stack 24.5 BB | SB folded stack 4.5 BB | BB stack 45 BB bet 24.5 BB
 TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB bets 24.5 BB
   + [correct] Call 24.5 BB — Correct. Call. Winner-take-all ICM values your chips linearly. The surviving misses beat the chip-price threshold because BB bets enough missed draws; folding gives up chip and prize value.
@@ -482,8 +482,8 @@ REASONING: principle risk_premium · alt alternative · edge processRule · stac
 ===== WORLD 26 · LESSON short_stack_action_tree · Short stack action tree =====
 
 TASK w26_2_teach [theory] What makes an action a rejam?
-CAPTION: In a short-stack spot compare first-in shoves, small opens with a planned response, and reshoves facing an open. Include dead blinds and antes, who can call, and the next price.
-TEACH: What makes an action a rejam? In a short-stack spot compare first-in shoves, small opens with a planned response, and reshoves facing an open. Include dead blinds and antes, who can call, and the next price.
+CAPTION: Antes are the compulsory extra contributions before a hand; each ante adds to the money available to win. Compare first-in all-ins, small opens with a planned response, and all-in reraises facing an open. Include the blinds, antes, who can call, and the next price.
+TEACH: What makes an action a rejam? Antes are the compulsory extra contributions before a hand; each ante adds to the money available to win. Compare first-in all-ins, small opens with a planned response, and all-in reraises facing an open. Include the blinds, antes, who can call, and the next price.
 Q: What makes an action a rejam?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -494,7 +494,7 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: An all-in reraise over an open
 
 TASK w26_2_read_bba_budget [drill] What is your initial M-ratio in this model?
-CAPTION: In a six-max MTT, the blinds are 0.5/1 BB and the big blind posts a separate 1 BB ante. You begin the orbit with 10 BB and assume no extra bets.
+CAPTION: M-ratio means your stack divided by the forced contributions you pay per orbit. In a six-max MTT, the blinds are 0.5/1 BB and the big blind posts a separate 1 BB ante. You begin the orbit with 10 BB and assume no extra bets.
 Q: What is your initial M-ratio in this model?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -505,48 +505,48 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: 4
 
 TASK w26_2_guided_compare_ten_bb [drill] Which line earns most in the worksheet?
-CAPTION: You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. Jam: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six jams cost 2. Fold returns zero.
+CAPTION: You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. All-in: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six all-in reraises cost 2. Fold returns zero.
 TEACH: Which line earns most in the worksheet? For each allowed line, multiply each net result by the number of matching cases and take the mean.
 Q: Which line earns most in the worksheet?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-REASONING: principle m_zone_shove · alt alternative · edge processRule · stack_matters false · assumption You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. Jam: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six jams cost 2. Fold returns zero.
-  + [correct] Open jam — Correct. The folds and winning calls more than pay for the losses.
+REASONING: principle m_zone_shove · alt alternative · edge processRule · stack_matters false · assumption You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. All-in: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six all-in reraises cost 2. Fold returns zero.
+  + [correct] Open all-in — Correct. The 10 BB all-in earns 1.75 BB on average; raising to 2 BB then folding to a reraise loses 0.2 BB.
   - [wrong] Fold — Look again. Folding gives up a positive weighted chip return.
-    BETTER ANSWER: Open jam
-  - [wrong] Minraise/fold — Look again. The modeled six reshoves make opening and folding to all of them negative.
-    BETTER ANSWER: Open jam
+    BETTER ANSWER: Open all-in
+  - [wrong] Raise to 2 BB, then fold to a reraise — Look again. The modeled six reshoves make opening and folding to all of them negative.
+    BETTER ANSWER: Open all-in
 
-TASK w26_2_transfer_twenty_bb_minraise [drill] What do you do facing the jam?
-CAPTION: You started with 20 BB, minraised to 2 BB and face a covering jam. The pot with the effective jam is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.
-Q: What do you do facing the jam?
+TASK w26_2_transfer_twenty_bb_minraise [drill] What do you do facing the all-in?
+CAPTION: You started with 20 BB, minraised to 2 BB and face a covering all-in. The pot with the effective all-in is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.
+Q: What do you do facing the all-in?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-REASONING: principle m_zone_shove · alt alternative · edge processRule · stack_matters false · assumption You started with 20 BB, minraised to 2 BB and face a covering jam. The pot with the effective jam is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.
+REASONING: principle m_zone_shove · alt alternative · edge processRule · stack_matters false · assumption You started with 20 BB, minraised to 2 BB and face a covering all-in. The pot with the effective all-in is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.
   + [correct] Fold after the minraise — Correct. Four wins in ten fall below the price on the remaining call.
-  - [wrong] Call the jam — Look again. Including your last 18 BB makes the final pot 41.5 BB. Four wins per ten are insufficient.
+  - [wrong] Call the all-in — Look again. Including your last 18 BB makes the final pot 41.5 BB. Four wins per ten are insufficient.
     BETTER ANSWER: Fold after the minraise
-  - [wrong] Count your original raise as part of today’s call — Look again. Those chips are already in the pot when the jam arrives.
+  - [wrong] Count your original raise as part of today’s call — Look again. Those chips are already in the pot when the all-in arrives.
     BETTER ANSWER: Fold after the minraise
 
-TASK w26_2_day7_plan_the_call [review] Which response to the jam is correct?
+TASK w26_2_day7_plan_the_call [review] Which response to the all-in is correct?
 ENTRY: drill
 CAPTION: You start with 20 BB, minraise to 2 BB and face the same 23.5 BB pot before calling. This fixture gives six wins and four losses in ten equal-weight showdowns, with no prize pressure.
-Q: Which response to the jam is correct?
+Q: Which response to the all-in is correct?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
 REASONING: principle m_zone_shove · alt alternative · edge processRule · stack_matters false · assumption You start with 20 BB, minraise to 2 BB and face the same 23.5 BB pot before calling. This fixture gives six wins and four losses in ten equal-weight showdowns, with no prize pressure.
   + [correct] Call the last 18 BB — Correct. Six wins in ten clear the matched-pot price.
   - [wrong] Fold to preserve the minraise — Look again. The initial 2 BB is sunk and the call gains chips from here.
     BETTER ANSWER: Call the last 18 BB
-  - [wrong] Reraise — Look again. The jam already covers your remaining stack.
+  - [wrong] Reraise — Look again. The all-in already covers your remaining stack.
     BETTER ANSWER: Call the last 18 BB
 
 ===== WORLD 26 · LESSON tournament_structure · Tournament structure =====
 
 TASK w26_3_teach [theory] What should you compare when switching from a slow event to a turbo?
-CAPTION: Tournament stage describes the current objective and constraints. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.
-TEACH: What should you compare when switching from a slow event to a turbo? Tournament stage describes the current objective and constraints. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.
+CAPTION: A tournament stage is a period of play with distinct stack depths and payout pressures. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.
+TEACH: What should you compare when switching from a slow event to a turbo? A tournament stage is a period of play with distinct stack depths and payout pressures. Effective depth, payout distance, field distribution and event rules can matter more than elapsed time.
 Q: What should you compare when switching from a slow event to a turbo?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
@@ -580,17 +580,17 @@ REASONING: principle process_over_outcome · alt alternative · edge processRule
   - [wrong] Treat the add-on as the same purchase — Look again. It changes an existing stack and needs its own incremental calculation.
     BETTER ANSWER: Decline the 50-unit entry
 
-TASK w26_3_transfer_addon_terms [drill] Which judgment fits the incremental model?
+TASK w26_3_transfer_addon_terms [drill] What is the net gain from buying the add-on now?
 CAPTION: In this worksheet an add-on costs 15 units. It changes your modeled gross prize EV from 46 to 65 units. The original entry fee was paid earlier.
-Q: Which judgment fits the incremental model?
+Q: What is the net gain from buying the add-on now?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
 REASONING: principle process_over_outcome · alt alternative · edge processRule · stack_matters false · assumption In this worksheet an add-on costs 15 units. It changes your modeled gross prize EV from 46 to 65 units. The original entry fee was paid earlier.
-  + [correct] Buy the add-on — Correct. The additional stack adds 19 units of prize EV at a cost of 15.
-  - [wrong] Decline because the old entry fee was large — Look again. Past entry costs are sunk for the add-on decision.
-    BETTER ANSWER: Buy the add-on
-  - [wrong] Count 65 as the add-on’s gain — Look again. The original stack already had prize value.
-    BETTER ANSWER: Buy the add-on
+  + [correct] 4 units: buy the add-on — Correct. 65 minus 46 gives 19 extra prize units; subtract the 15-unit cost for a net gain of 4.
+  - [wrong] 19 units: buy without deducting the add-on cost — Look again. The 19-unit increase is gross, not net. Deduct the new 15-unit cost, not the sunk entry fee.
+    BETTER ANSWER: 4 units: buy the add-on
+  - [wrong] 50 units: count the whole new stack’s value less the cost — Look again. 65 minus 15 ignores the 46 units of prize value the original stack already had.
+    BETTER ANSWER: 4 units: buy the add-on
 
 TASK w26_3_day7_draw_and_hand_for_hand [review] What should your first adjustment be?
 ENTRY: drill
@@ -613,22 +613,22 @@ TEACH: What do you need to know before using chip-leader leverage? A stack’s u
 Q: What do you need to know before using chip-leader leverage?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] Which players you cover and how the payout and call incentives differ — Correct. The same shove can face very different defenses against a medium and a very short stack.
+  + [correct] Which players you cover and how the payout and call incentives differ — Correct. The same all-in can face very different defenses against a medium and a very short stack.
   - [wrong] Your chip rank alone — Look again. The player behind you can have different price and survival incentives.
     BETTER ANSWER: Which players you cover and how the payout and call incentives differ
-  - [wrong] That covered players should fold to pressure — Look again. Pot odds and the value of staying alive vary.
+  - [wrong] That covered players should fold to pressure — Look again. The price of calling and the value of staying alive vary.
     BETTER ANSWER: Which players you cover and how the payout and call incentives differ
 
-TASK w26_4_read_leverage_target [drill] Which node offers more immediate fold equity in the sample?
-CAPTION: Bubble study sample: as chip leader you cover both opponents. In matched simulated shove nodes, a medium stack folds in 8 of 10 and a short stack folds in 4 of 10. Same pot and shove risk in the isolated comparison.
-Q: Which node offers more immediate fold equity in the sample?
+TASK w26_4_read_leverage_target [drill] How much more often does one opponent fold in the sample?
+CAPTION: Bubble study sample: as chip leader you cover both opponents. In matched simulated all-in scenarios, a medium stack folds in 8 of 10 and a short stack folds in 4 of 10. Same pot and all-in risk in the isolated comparison.
+Q: How much more often does one opponent fold in the sample?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-  + [correct] The medium stack’s defense — Correct. The sample has four more fold events per ten against that stack.
-  - [wrong] The short stack’s defense — Look again. It calls more often in this model.
-    BETTER ANSWER: The medium stack’s defense
-  - [wrong] Covered stacks offer equal fold equity — Look again. Being covered is only one input.
-    BETTER ANSWER: The medium stack’s defense
+  + [correct] 4 extra folds in 10 against the medium stack — Correct. The medium stack folds 8 times and the short stack 4 times, a gap of 4 in 10.
+  - [wrong] 4 extra folds in 10 against the short stack — Look again. It calls more often in this model.
+    BETTER ANSWER: 4 extra folds in 10 against the medium stack
+  - [wrong] 0 extra folds against either stack — Look again. Being covered is only one input.
+    BETTER ANSWER: 4 extra folds in 10 against the medium stack
 
 TASK w26_4_guided_medium_leverage [drill] In which loss branch do you retain a playable stack, assuming no other active players?
 CAPTION: You are the medium stack. In the first candidate spot the only defender is a shorter stack you cover; in the second it is the leader, who covers you. Both will call and win in the branch you are comparing.
@@ -655,10 +655,10 @@ REASONING: principle stack_depth_changes_play · alt alternative · edge process
   - [wrong] A proportional chip chop — Look again. It allocates prizes without simulating play.
     BETTER ANSWER: Future game simulation with the respective seat orders
 
-TASK w26_4_day7_equilibrium_claim [review] What must be done before copying the shove/call equilibrium?
+TASK w26_4_day7_equilibrium_claim [review] What must be done before copying the all-in/call equilibrium?
 ENTRY: drill
 CAPTION: Two final-table studies use the same stack vector, but one pays just first place and the other has a flat prize schedule across several places. Each asks for equilibrium responses.
-Q: What must be done before copying the shove/call equilibrium?
+Q: What must be done before copying the all-in/call equilibrium?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
 REASONING: principle stack_depth_changes_play · alt alternative · edge processRule · stack_matters false · assumption Two final-table studies use the same stack vector, but one pays just first place and the other has a flat prize schedule across several places. Each asks for equilibrium responses.
@@ -670,10 +670,10 @@ REASONING: principle stack_depth_changes_play · alt alternative · edge process
 
 ===== WORLD 26 · LESSON bounty_and_satellite · Bounty and satellite =====
 
-TASK w26_5_teach [theory] When does a knockout bounty belong in a call comparison?
-CAPTION: Bounties add a reward for covered eliminations. Satellites instead value a qualifying seat. Convert all relevant outcomes into compatible prize units before comparing actions.
-TEACH: When does a knockout bounty belong in a call comparison? Bounties add a reward for covered eliminations. Satellites instead value a qualifying seat. Convert all relevant outcomes into compatible prize units before comparing actions.
-Q: When does a knockout bounty belong in a call comparison?
+TASK w26_5_teach [theory] When does an elimination reward belong in a call comparison?
+CAPTION: A bounty is a reward for an eligible elimination. A satellite is a tournament that awards qualifying seats instead of ordinary prize money. Convert relevant outcomes into compatible prize units before comparing actions.
+TEACH: When does an elimination reward belong in a call comparison? A bounty is a reward for an eligible elimination. A satellite is a tournament that awards qualifying seats instead of ordinary prize money. Convert relevant outcomes into compatible prize units before comparing actions.
+Q: When does an elimination reward belong in a call comparison?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] On branches where you actually eliminate the target and receive it — Correct. Weight those branches and combine with the regular prize payoff in the same units.
@@ -694,12 +694,12 @@ TABLE: Facts no applicable hand facts
     BETTER ANSWER: 10 units in both
 
 TASK w26_5_guided_satellite_seat_lock [drill] Which choice maximizes qualification?
-CAPTION: Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river shove: three winning samples qualify, one losing sample busts.
+CAPTION: Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river all-in: three winning samples qualify, one losing sample busts.
 TEACH: Which choice maximizes qualification? First list the possible call outcomes, then ask whether earning extra chips changes what you receive in a winning branch.
 Q: Which choice maximizes qualification?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-REASONING: principle risk_premium · alt alternative · edge processRule · stack_matters false · assumption Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river shove: three winning samples qualify, one losing sample busts.
+REASONING: principle risk_premium · alt alternative · edge processRule · stack_matters false · assumption Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river all-in: three winning samples qualify, one losing sample busts.
   + [correct] Fold — Correct. The safe branch gets the same seat with certainty.
   - [wrong] Call — Look again. The winning branches add chips without improving the prize, and the losing one eliminates you.
     BETTER ANSWER: Fold
@@ -731,18 +731,18 @@ REASONING: principle risk_premium · alt alternative · edge processRule · stac
   - [wrong] Widen calls based on the event’s bounty label — Look again. The phase determines whether that reward is available.
     BETTER ANSWER: Add zero immediate bounty to the current elimination branch
 
-===== WORLD 26 · LESSON shove_timing_checkpoint · Shove timing checkpoint =====
+===== WORLD 26 · LESSON shove_timing_checkpoint · All-in timing checkpoint =====
 
-TASK w26_6_teach [theory] What can make the delayed shove earn more?
-CAPTION: A stop-and-go calls preflop from out of position and then shoves the flop. Compare it with the preflop shove using the changed pot, remaining stack, flop fold distribution and payout.
-TEACH: What can make the delayed shove earn more? A stop-and-go calls preflop from out of position and then shoves the flop. Compare it with the preflop shove using the changed pot, remaining stack, flop fold distribution and payout.
-Q: What can make the delayed shove earn more?
+TASK w26_6_teach [theory] What can make the delayed all-in earn more?
+CAPTION: A stop-and-go calls preflop from out of position and then moves all-in on the flop. Compare it with the preflop all-in using the changed pot, remaining stack, flop fold distribution and payout.
+TEACH: What can make the delayed all-in earn more? A stop-and-go calls preflop from out of position and then moves all-in on the flop. Compare it with the preflop all-in using the changed pot, remaining stack, flop fold distribution and payout.
+Q: What can make the delayed all-in earn more?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
   + [correct] The opponent folds enough flop branches that would have called preflop — Correct. Count those branches against the losses and already committed chips.
   - [wrong] You can recover your preflop call on a loss — Look again. The preflop investment remains committed.
     BETTER ANSWER: The opponent folds enough flop branches that would have called preflop
-  - [wrong] The opponent tends to miss the flop, making a shove profitable — Look again. Flop equity and response vary.
+  - [wrong] The opponent tends to miss the flop, making an all-in profitable — Look again. Flop equity and response vary.
     BETTER ANSWER: The opponent folds enough flop branches that would have called preflop
 
 TASK w26_6_read_short_stack_stopgo [drill] After a flat call, how much can you lead on the flop?
@@ -766,7 +766,7 @@ REASONING: principle stack_depth_changes_play · alt alternative · edge process
   + [correct] Reshove — Correct. The five folds and two wins pay more than the three losses cost.
   - [wrong] Fold — Look again. It gives up the modeled gain from the open and dead money.
     BETTER ANSWER: Reshove
-  - [wrong] Apply a first-in shove range without checking the opener — Look again. There is already a player with a selected opening range.
+  - [wrong] Apply a first-in all-in range without checking the opener — Look again. There is already a player with a selected opening range.
     BETTER ANSWER: Reshove
 
 TASK w26_6_transfer_checkout_payjump [drill] What should you do in the stated payout model?
@@ -783,15 +783,15 @@ REASONING: principle stack_depth_changes_play · alt alternative · edge process
 
 TASK w26_6_day7_stopgo_counter [review] Which line is best?
 ENTRY: drill
-CAPTION: A short-stack study compares two complete trees from the same decision. Jam payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop shove payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.
+CAPTION: A short-stack study compares two complete trees from the same decision. Preflop all-in payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop all-in payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.
 Q: Which line is best?
 HINT [hidden]: (none)
 TABLE: Facts no applicable hand facts
-REASONING: principle stack_depth_changes_play · alt alternative · edge processRule · stack_matters false · assumption A short-stack study compares two complete trees from the same decision. Jam payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop shove payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.
+REASONING: principle stack_depth_changes_play · alt alternative · edge processRule · stack_matters false · assumption A short-stack study compares two complete trees from the same decision. Preflop all-in payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop all-in payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.
   + [correct] Fold — Correct. Both all-in plans lose in these assigned branches.
-  - [wrong] Jam — Look again. The losing calls cost one chip more across the roster than the wins and folds earn.
+  - [wrong] All-in preflop — Look again. The losing calls cost one chip more across the roster than the wins and folds earn.
     BETTER ANSWER: Fold
-  - [wrong] Flat and shove — Look again. The additional fold replaces a larger win, and the losses remain.
+  - [wrong] Call, then move all-in — Look again. The additional fold replaces a larger win, and the losses remain.
     BETTER ANSWER: Fold
 
 ===== REPAIR-ONLY TASKS =====

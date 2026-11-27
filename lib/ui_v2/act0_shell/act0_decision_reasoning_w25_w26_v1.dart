@@ -228,7 +228,7 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     opponentRead:
         "The covering BB’s range contains sets and misses. The short SB folded and affects the payouts.",
     preChoiceAssumption:
-        "Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
+        "Three players remain. Prizes from first to third are 50/30/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 99 44 JTs 76s, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
     stackNote:
         "The BTN can be eliminated while BB survives a losing call branch; changing who covers changes the tree.",
   ),
@@ -242,7 +242,7 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     opponentRead:
         "The covering BB’s range contains sets and misses. The short SB folded and affects the payouts.",
     preChoiceAssumption:
-        "Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and shoves an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
+        "Three players remain. Prizes from first to third are 80/0/0 prize units. BB covers BTN and moves all-in for an effective 24.5 BB with the legal combinations of 88 55 QJs QTs, equally weighted. The uncalled excess is not shown. Maximize static ICM prize EV with no future-hand or deal effects.",
     stackNote:
         "The BTN can be eliminated while BB survives a losing call branch; changing who covers changes the tree.",
   ),
@@ -264,7 +264,7 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     stackMatters: false,
     preChoiceAssumption:
-        "You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. Jam: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six jams cost 2. Fold returns zero.",
+        "You are BTN with 10 BB, blinds and ante total 2.5 BB, and effective stacks cover you. This worksheet compares terminal net-BB outcomes in ten equally weighted scenarios. All-in: four folds win 2.5, three called wins gain 12.5, three called losses cost 10. Minraise/fold: four folds win 2.5 and six all-in reraises cost 2. Fold returns zero.",
   ),
   "w26_2_transfer_twenty_bb_minraise": Act0DecisionReasoningV1(
     taskId: "w26_2_transfer_twenty_bb_minraise",
@@ -274,7 +274,7 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     stackMatters: false,
     preChoiceAssumption:
-        "You started with 20 BB, minraised to 2 BB and face a covering jam. The pot with the effective jam is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.",
+        "You started with 20 BB, minraised to 2 BB and face a covering all-in. The pot with the effective all-in is 23.5 BB. In the finite showdown model four outcomes are wins and six are losses with equal weight. Prize pressure is omitted.",
   ),
   "w26_2_day7_plan_the_call": Act0DecisionReasoningV1(
     taskId: "w26_2_day7_plan_the_call",
@@ -354,7 +354,7 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     stackMatters: false,
     preChoiceAssumption:
-        "Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river shove: three winning samples qualify, one losing sample busts.",
+        "Four players remain for three identical seats. The worksheet explicitly gives a guaranteed seat if you fold, and two outcomes if you call a covering river all-in: three winning samples qualify, one losing sample busts.",
   ),
   "w26_5_transfer_bounty_reversal": Act0DecisionReasoningV1(
     taskId: "w26_5_transfer_bounty_reversal",
@@ -404,6 +404,6 @@ const act0DecisionReasoningW25W26V1 = <String, Act0DecisionReasoningV1>{
     edgeMechanism: Act0EdgeMechanismV1.processRule,
     stackMatters: false,
     preChoiceAssumption:
-        "A short-stack study compares two complete trees from the same decision. Jam payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop shove payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.",
+        "A short-stack study compares two complete trees from the same decision. Preflop all-in payoffs over five equal-weight cases are 3, 3, 11, −9 and −9 BB. Flat then flop all-in payoffs are 3, 3, 3, −9 and −9 BB. Fold yields zero.",
   ),
 };
