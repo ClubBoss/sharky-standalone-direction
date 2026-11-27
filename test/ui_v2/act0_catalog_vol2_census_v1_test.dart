@@ -109,7 +109,34 @@ Map<String, Act0LessonTaskV1> _vol2Tasks() => {
 
 Future<_Census> _collectCensus(WidgetTester tester) async {
   final allRows = reasoningCatalogRowsV1;
-  final pilot = allRows.where((row) => _worlds.contains(row.world.worldNumber));
+  // Aggregate all four lesson IDs into the same strict pilot census bucket.
+  const opponentLesson = 'opponent_types_pilot';
+  const opponentLessonIds = {
+    opponentLesson,
+    'opponent_types_pilot_2',
+    'opponent_types_pilot_3',
+    'opponent_types_pilot_4',
+  };
+  final opponentRows = allRows
+      .where((row) => opponentLessonIds.contains(row.lesson.lessonId))
+      .toList();
+  if (act0OpponentStylesEnabledV1) {
+    expect(opponentRows, hasLength(12));
+    for (final id in opponentLessonIds) {
+      expect(
+        opponentRows.where((row) => row.lesson.lessonId == id),
+        hasLength(3),
+      );
+    }
+  } else {
+    expect(opponentRows, isEmpty);
+  }
+  final opponentTaskIds = opponentRows.map((row) => row.task.taskId).toSet();
+  final pilot = allRows.where(
+    (row) =>
+        _worlds.contains(row.world.worldNumber) ||
+        opponentTaskIds.contains(row.task.taskId),
+  );
   expect(
     catalogTasks
         .where((row) => _worlds.contains(row.world.worldNumber))
@@ -129,10 +156,17 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
   };
   final findings = {
     for (final world in _worlds) 'W$world': SplayTreeMap<String, Set<String>>(),
+    if (act0OpponentStylesEnabledV1)
+      opponentLesson: SplayTreeMap<String, Set<String>>(),
   };
   void add(int world, String rule, String task, String detail) {
-    if (!_worlds.contains(world)) return;
-    findings['W$world']!.putIfAbsent(rule, () => {}).add('$task|$detail');
+    final key =
+        opponentTaskIds.contains(task) ||
+            opponentLessonIds.any((id) => task == '@lesson:$id')
+        ? opponentLesson
+        : 'W$world';
+    if (!findings.containsKey(key)) return;
+    findings[key]!.putIfAbsent(rule, () => {}).add('$task|$detail');
   }
 
   void taskFinding(String rule, String task, String detail) =>
@@ -202,6 +236,13 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
     taskFinding(parts[0], parts[1], parts.skip(2).join('|'));
   }
   final quality = runCatalogQualityAudit();
+  final qualityWithoutOpponent = act0OpponentStylesEnabledV1
+      ? runCatalogQualityAudit(
+          rows: catalogTasks
+              .where((row) => !opponentTaskIds.contains(row.task.taskId))
+              .toList(),
+        ).findings
+      : const <String>{};
   for (final key in quality.findings) {
     final parts = key.split('|');
     final rule = parts[0];
@@ -212,7 +253,27 @@ Future<_Census> _collectCensus(WidgetTester tester) async {
         rule == '19.lesson_length_corridor') {
       add(lessonWorld[owner]!, rule, '@lesson:$owner', parts.skip(2).join('|'));
     } else if (rule == '11.btn_share_per_world') {
-      add(worldNumber[owner]!, rule, '@world:$owner', parts.skip(2).join('|'));
+      if (act0OpponentStylesEnabledV1 &&
+          owner == 'world_10' &&
+          !qualityWithoutOpponent.contains(key)) {
+        findings[opponentLesson]!
+            .putIfAbsent(rule, () => {})
+            .add('@world:$owner');
+      } else {
+        add(
+          worldNumber[owner]!,
+          rule,
+          '@world:$owner',
+          parts.skip(2).join('|'),
+        );
+      }
+    } else if (rule == '18.same_format_streak' &&
+        act0OpponentStylesEnabledV1 &&
+        owner == 'world_10' &&
+        !qualityWithoutOpponent.contains(key)) {
+      findings[opponentLesson]!
+          .putIfAbsent(rule, () => {})
+          .add(parts.skip(1).join('|'));
     } else if (taskWorld.containsKey(owner)) {
       taskFinding(rule, owner, parts.skip(2).join('|'));
     } else if (parts.length > 2 && taskWorld.containsKey(parts[2])) {
@@ -649,6 +710,11 @@ void main() {
       final file = File(_baselinePath);
       final baseline = _readBaseline(file);
       final current = await _collectCensus(tester);
+      if (act0OpponentStylesEnabledV1) {
+        // New pilot must earn zero findings; never seed its debt into Vol2.
+        final opponent = current.remove('opponent_types_pilot');
+        expect(opponent, isEmpty, reason: 'Opponent styles census: $opponent');
+      }
       final update = Platform.environment['G1_UPDATE_SNAPSHOT'] == '1';
       // The empty placeholder can be seeded once. After that, even an explicit
       // update may only remove findings, never admit new debt.

@@ -758,6 +758,8 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
     this.numberEntryV1 = const bool.fromEnvironment('numberEntryV1'),
     this.goalRouteV1 = const bool.fromEnvironment('goalRouteV1'),
     this.warmupV1 = const bool.fromEnvironment('warmupV1'),
+    this.opponentStylesV1 =
+        kDebugMode && const bool.fromEnvironment('opponentStylesV1'),
     this.returnRefreshV1 = const bool.fromEnvironment('returnRefreshV1'),
     this.enableBetaMetrics = act0BetaMetricsEnabledV1,
     this.debugHarnessEntry,
@@ -781,6 +783,7 @@ class Act0ShellPreviewScreenV1 extends StatefulWidget {
   final bool numberEntryV1;
   final bool goalRouteV1;
   final bool warmupV1;
+  final bool opponentStylesV1;
   final bool returnRefreshV1;
   final bool enableBetaMetrics;
   final Act0ShellDebugHarnessEntryV1? debugHarnessEntry;
@@ -1386,6 +1389,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       widget._state?.forLearners(nineSeatPreview: _nineSeatPreviewEnabledV1) ??
       Act0ShellStateV1.learnerCatalog(
         nineSeatPreview: _nineSeatPreviewEnabledV1,
+        opponentStylesV1: widget.opponentStylesV1,
       );
 
   bool _runnerAllowedByNineSeatGateV1(Act0RunnerStateV1 runner) =>

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:yaml/yaml.dart';
 import 'package:poker_analyzer/models/poker_street.dart';
@@ -44,6 +45,13 @@ const _qualityBaselinePath =
     'test/fixtures/act0_catalog_quality_baseline_v1.json';
 
 const _json = JsonEncoder.withIndent('  ');
+
+const _opponentLessonIds = [
+  'opponent_types_pilot',
+  'opponent_types_pilot_2',
+  'opponent_types_pilot_3',
+  'opponent_types_pilot_4',
+];
 
 final _praiseAtStart = RegExp(
   r'^(?:(?:almost (?:got it|there|right)|clean execution|'
@@ -900,6 +908,215 @@ TASK w13_4_teach [theory] Equity realization
     }
     expect(current, fixture.readAsStringSync());
   }, skip: !act0CurriculumPilotEnabledV1);
+
+  test('opponent styles flag off preserves the numbered route and XP', () {
+    final off = Act0ShellStateV1.catalog(opponentStylesV1: false);
+    final on = Act0ShellStateV1.catalog(opponentStylesV1: true);
+    final lessons = _opponentLessonIds.map(on.lessonById).toList();
+    final tasks = lessons.expand((lesson) => lesson.taskList).toList();
+    expect(
+      off.worlds
+          .expand((world) => world.lessons)
+          .map((lesson) => lesson.lessonId),
+      isNot(anyElement(isIn(_opponentLessonIds))),
+    );
+    final learner = Act0ShellStateV1.learnerCatalog(opponentStylesV1: true);
+    for (final lesson in lessons) {
+      expect(lesson.taskList, hasLength(3));
+      expect(
+        learner.lessonById(lesson.lessonId).taskList.map((task) => task.taskId),
+        orderedEquals(lesson.taskList.map((task) => task.taskId)),
+      );
+    }
+    expect(tasks, hasLength(12));
+    for (final (index, world) in off.worlds.indexed) {
+      final enabled = on.worlds[index];
+      if (world.worldNumber == 10) {
+        expect(
+          enabled.lessons,
+          orderedEquals([
+            for (final lesson in world.lessons) ...[
+              if (lesson.lessonId == 'player_adjustment_checkpoint') ...lessons,
+              lesson,
+            ],
+          ]),
+        );
+        expect(enabled.lessons.last.lessonId, 'player_adjustment_checkpoint');
+      } else {
+        expect(enabled, same(world));
+      }
+    }
+    final route = [
+      for (final world in Act0ShellStateV1.learnerCatalog(
+        opponentStylesV1: false,
+      ).worlds.where((world) => world.worldNumber <= 12))
+        for (final lesson in world.lessons)
+          for (final task in lesson.courseTaskList)
+            [world.worldId, lesson.lessonId, task.taskId, task.rewardXp],
+    ];
+    expect(
+      sha256.convert(utf8.encode(jsonEncode(route))).toString(),
+      '6cfeebdc6f2ab96c9811ddac244d52ff156cd94f1cba2a6e02f4ec694786106d',
+    );
+    for (var index = 0; index < tasks.length; index += 2) {
+      final first = tasks[index];
+      final second = tasks[index + 1];
+      expect(
+        first.runner.table.handContributions!.entries.map(
+          (entry) => (entry.street, entry.seatId, entry.kind, entry.amountBb),
+        ),
+        orderedEquals(
+          second.runner.table.handContributions!.entries.map(
+            (entry) => (entry.street, entry.seatId, entry.kind, entry.amountBb),
+          ),
+        ),
+      );
+      expect(
+        first.runner.options
+            .singleWhere((o) => o.quality == Act0FeedbackQualityV1.correct)
+            .id,
+        isNot(
+          second.runner.options
+              .singleWhere((o) => o.quality == Act0FeedbackQualityV1.correct)
+              .id,
+        ),
+      );
+      expect(first.guidedDecision, index == 0 || index == 6);
+      expect(second.guidedDecision, first.guidedDecision);
+    }
+  });
+
+  test('Opponent styles catalog preserves the accepted spec', () {
+    final spec =
+        loadYaml(
+              File(
+                'docs/specs/opponent_types_pilot_spec_v1.yaml',
+              ).readAsStringSync(),
+            )
+            as YamlMap;
+    final catalog = Act0ShellStateV1.catalog(opponentStylesV1: true);
+    final lessons = _opponentLessonIds.map(catalog.lessonById).toList();
+    for (final (i, lesson) in lessons.indexed) {
+      expect(
+        lesson.title,
+        i == 0 ? spec['title'] : '${spec['title']} (Part ${i + 1})',
+      );
+      expect(lesson.taskList, hasLength(3));
+    }
+    final authoredTasks = lessons.expand((lesson) => lesson.taskList).toList();
+    final tasks = spec['tasks'] as YamlList;
+    expect(
+      authoredTasks.map((task) => task.taskId),
+      orderedEquals(tasks.map((task) => task['id'])),
+    );
+    for (final (i, task) in authoredTasks.indexed) {
+      final source = tasks[i] as YamlMap;
+      final r = task.runner;
+      final facts = CatalogPokerFacts(r.table);
+      final reason = act0DecisionReasoningV1[task.taskId]!;
+      expect(r.caption, source['caption'], reason: task.taskId);
+      expect(r.question, source['question']);
+      expect(r.teachingSteps.map((step) => step.body).join(), source['teach']);
+      expect(r.feedbackReason, source['why_correct']);
+      expect(facts.hero, (source['hero']['cards'] as String).split(' '));
+      expect(facts.board, (source['board'] as String).split(' '));
+      final ledger = r.table.handContributions!;
+      final amounts = ledger.amounts(
+        seatIds: r.table.seats.map((seat) => seat.seatId).toSet(),
+        actorSeatId: r.table.heroSeat.seatId,
+      );
+      expect(amounts.potBb, source['pot_with_bet']);
+      expect(amounts.toCallBb, source['to_call']);
+      final call = amounts.toCallBb!;
+      expect(
+        call == 0
+            ? amounts.potBb
+            : amounts.potBb - ledger.entries.last.amountBb,
+        source['pot_before_bet'],
+      );
+      expect(
+        call == 0 ? null : (1000 * call / (amounts.potBb + call)).round() / 10,
+        source['price_pct'],
+      );
+      expect(r.table.heroSeat.seatLabel, source['hero']['seat']);
+      expect(ledger.startingStackBbBySeat, {
+        for (final entry in (source['stacks_start'] as YamlMap).entries)
+          (entry.key as String).toLowerCase(): entry.value,
+      });
+      expect(
+        r.options.map((o) => (o.id, o.label, o.quality.name, o.feedbackReason)),
+        orderedEquals(
+          (source['options'] as YamlList).map(
+            (o) => (o['id'], o['label'], o['grade'], o['feedback']),
+          ),
+        ),
+      );
+      expect(reason.principleId, source['principle_id']);
+      expect(reason.bestAlternativeOptionId, source['best_alternative']);
+      expect(reason.opponentRead, source['opponent_read']);
+      expect(reason.preChoiceAssumption, source['pre_choice_assumption']);
+      expect(reason.stackMatters, source['stack_matters']);
+      expect(reason.stackNote, source['stack_reason']);
+      expect(reason.edgeBb, source['edge_vs_alternative']['edge_bb']);
+      String snakeCase(String value) => value.replaceAllMapped(
+        RegExp('[A-Z]'),
+        (match) => '_${match[0]!.toLowerCase()}',
+      );
+      expect(
+        snakeCase(reason.edgeMechanism.name),
+        source['edge_vs_alternative']['mechanism'],
+      );
+      expect(reason.kind.name, source['decision_kind']);
+      expect(
+        {
+          for (final entry in reason.suboptimalKinds.entries)
+            entry.key: snakeCase(entry.value.name),
+        },
+        {
+          for (final option in source['options'] as YamlList)
+            if (option['suboptimal_kind'] != null)
+              option['id']: option['suboptimal_kind'],
+        },
+      );
+      expect(task.guidedDecision, source['learning_role'] == 'guided');
+    }
+  });
+
+  test('Opponent types pilot catalog snapshot', () {
+    final catalog = Act0ShellStateV1.catalog(opponentStylesV1: true);
+    final world = catalog.worldById('world_10');
+    final rows = [
+      for (final lesson in _opponentLessonIds.map(catalog.lessonById))
+        for (final task in lesson.taskList)
+          (
+            world: world,
+            lesson: lesson,
+            task: task,
+            lessonIndex: world.lessons.indexOf(lesson),
+          ),
+    ];
+    expect(rows, hasLength(12));
+    final quality = runCatalogQualityAudit(rows: rows);
+    expect(
+      quality.findings.where(
+        (finding) =>
+            finding.startsWith('17.single_format_lesson|') ||
+            finding.startsWith('19.lesson_length_corridor|'),
+      ),
+      isEmpty,
+      reason: 'Each STYLES lesson must satisfy the unchanged G1 lesson guards.',
+    );
+    final current =
+        renderCatalogTaskSectionV1(rows).join('\n').trimRight() + '\n';
+    final fixture = File(
+      'test/fixtures/act0_catalog_snapshot_opponent_types_v1.txt',
+    );
+    if (Platform.environment['G1_UPDATE_SNAPSHOT'] == '1') {
+      fixture.writeAsStringSync(current);
+      return;
+    }
+    expect(current, fixture.readAsStringSync());
+  });
 
   test('W23–W24 pilot catalog snapshot', () {
     final fixture = File('test/fixtures/act0_catalog_snapshot_w23_w24_v1.txt');

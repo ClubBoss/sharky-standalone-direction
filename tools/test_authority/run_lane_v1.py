@@ -200,6 +200,19 @@ TIER_A_COMMANDS = [
         ],
     },
     {
+        # Independently opt into B146c; never admit new findings into Vol2 debt.
+        "name": "Opponent styles pilot G1 census",
+        "shard_with": "repair intent",
+        "cmd": [
+            "flutter", "test",
+            "--dart-define=SHARKY_W13_PLUS_PILOT=true",
+            "--dart-define=opponentStylesV1=true",
+            "test/ui_v2/act0_catalog_vol2_census_v1_test.dart",
+            "--plain-name", "W13–W24 pilot G1 census ratchets findings",
+            "-r", "compact",
+        ],
+    },
+    {
         # E41 (2026-11-27): without the pilot define these snapshot tests are skipped, so the
         # W13–W24 fixtures silently drifted from 23.11 until the lead found it. Separate process.
         "name": "Vol2 pilot catalog snapshots",

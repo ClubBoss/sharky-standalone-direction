@@ -8,6 +8,7 @@ import 'act0_decision_reasoning_w17_w18_v1.dart';
 import 'act0_decision_reasoning_w19_w20_v1.dart';
 import 'act0_decision_reasoning_w21_w22_v1.dart';
 import 'act0_decision_reasoning_w23_w24_v1.dart';
+import 'act0_decision_reasoning_opponent_types_v1.dart';
 import 'act0_curriculum_pilot_v1.dart';
 import 'act0_decision_reasoning_w1_w3_v1.dart';
 import 'act0_decision_reasoning_w4_w6_v1.dart';
@@ -88,6 +89,8 @@ const act0PrinciplesV1 = <String, int>{
   'session_plan': 11,
   'bankroll_rule': 11,
   'tilt_reset': 12,
+  'value_vs_frequent_caller': 10,
+  'respect_rare_raise': 10,
   if (act0CurriculumPilotEnabledV1) ...{
     "range_advantage": 13,
     "nut_advantage": 13,
@@ -167,6 +170,7 @@ const act0DecisionReasoningV1 = <String, Act0DecisionReasoningV1>{
   ...act0DecisionReasoningW4W6V1,
   ...act0DecisionReasoningW7W9V1,
   ...act0DecisionReasoningW10W12V1,
+  ...act0DecisionReasoningOpponentTypesV1,
   if (act0NineSeatDebugEnabledV1) ...act0DecisionReasoningNineMaxV1,
   if (act0CurriculumPilotEnabledV1) ...{
     ...act0DecisionReasoningW13W14V1,

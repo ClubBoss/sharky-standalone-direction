@@ -130,6 +130,15 @@ void main() {
       );
     });
 
+    test('opponentStylesV1', () {
+      expect(widget.opponentStylesV1, isFalse);
+      expect(act0OpponentStylesEnabledV1, isFalse);
+      _expectExpression(
+        _shellDefault(shell, 'opponentStylesV1'),
+        "kDebugMode && const bool.fromEnvironment('opponentStylesV1')",
+      );
+    });
+
     test('warmupV1', () {
       expect(widget.warmupV1, isFalse);
       _expectExpression(

@@ -1,0 +1,206 @@
+===== WORLD 10 · LESSON opponent_types_pilot · Opponent Types: Same Spot, Different Read =====
+
+TASK opponent_types_p01_loose_passive [drill] Which option earns the most chips in this model?
+CAPTION: Loose-passive: this player tends to call river bets with weaker pairs, even fairly large bets. BB has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ KT K9 88 44 87; against 8 BB, BB calls KQ KT K9 88 44 87. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+TEACH: Loose-passive means playing many starting hands and usually calling rather than raising. Compare the hands that pay with the hands that beat you.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 94.5
+REASONING: principle value_vs_frequent_caller · alt bet_4 · edge moreValueFromWorse 1.21739 BB · stack_matters false · assumption Loose-passive: this player tends to call river bets with weaker pairs, even fairly large bets. BB has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ KT K9 88 44 87; against 8 BB, BB calls KQ KT K9 88 44 87. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Jh stack 94.5 BB | SB folded stack 99.5 BB | BB stack 94.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks
+  - [suboptimal] Check — Look again. Check misses value from weaker kings and eights.
+    BETTER ANSWER: Bet 8 BB
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 4 BB — Look again. Bet 4 BB gets calls, but the same weaker hands also pay 8 BB.
+    BETTER ANSWER: Bet 8 BB
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] Bet 8 BB — Correct. Bet 8 BB. Weaker kings and eights tend to pay; the same calls earn more than betting 4 BB.
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK opponent_types_p01_tight_passive [drill] Which option earns the most chips in this model?
+CAPTION: Tight-passive: this player tends to check and give up weaker pairs against river bets. BB has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ 88 44; against 8 BB, BB calls KQ 88 44. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+TEACH: Tight-passive means playing few starting hands and usually checking or calling rather than raising. Tight-aggressive means playing few starting hands but often betting or raising when involved. Compare the hands that pay with the hands that beat you.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 94.5
+REASONING: principle value_vs_frequent_caller · alt bet_4 · edge cheaperSameResult 1.21739 BB · stack_matters false · assumption Tight-passive: this player tends to check and give up weaker pairs against river bets. BB has checked the river (pot 11.5 BB, nothing to call). In this study model, BB can have any legal combo of KQ KT K9 88 44 87 76s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KQ 88 44; against 8 BB, BB calls KQ 88 44. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ks Jh stack 94.5 BB | SB folded stack 99.5 BB | BB stack 94.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks
+  + [correct] Check — Correct. Check. The weaker pairs tend to fold while the stronger hands pay; betting 4 BB would lose extra chips.
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 4 BB — Look again. Betting 4 BB risks extra chips against stronger hands without getting weaker calls in this model.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 8 BB — Look again. Betting 8 BB loses even more when stronger hands continue.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Ks Jh | Board Kc 8d 4s 3h 2c | Pot 11.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK opponent_types_p02_loose_passive [drill] Which option earns the most chips in this model?
+CAPTION: Loose-passive: this player tends to call down with marginal pairs. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 92.5
+REASONING: principle value_vs_frequent_caller · alt bet_5 · edge moreValueFromWorse 1.05263 BB · stack_matters false · assumption Loose-passive: this player tends to call down with marginal pairs. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98; against 10 BB, BB calls AQ KQ QT Q8 Q7 Q5 99 96 98. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jd stack 92.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB more · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB more · river: BB checks
+SIZES: Check 0.0 | Bet 5 BB 0.3225806451612903 | Bet 10 BB 0.6451612903225806
+  - [suboptimal] Check — Look again. Check gives up extra value from weaker queens and nines.
+    BETTER ANSWER: Bet 10 BB
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 5 BB — Look again. Bet 5 BB earns value, but the same range pays 10 BB.
+    BETTER ANSWER: Bet 10 BB
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] Bet 10 BB — Correct. Bet 10 BB. The weaker queens and nines that pay the smaller bet also pay this size in the model.
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+===== WORLD 10 · LESSON opponent_types_pilot_2 · Opponent Types: Same Spot, Different Read (Part 2) =====
+
+TASK opponent_types_p02_tight_aggressive [drill] Which option earns the most chips in this model?
+CAPTION: Tight-aggressive: this player tends to release marginal pairs when facing a river bet after checking. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ 99 96; against 10 BB, BB calls AQ KQ 99 96. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 92.5
+REASONING: principle value_vs_frequent_caller · alt bet_5 · edge cheaperSameResult 1.84211 BB · stack_matters false · assumption Tight-aggressive: this player tends to release marginal pairs when facing a river bet after checking. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of AQ KQ QT Q8 Q7 Q5 99 96 98 87s, all equally weighted. A check ends the hand. Against 5 BB, BB calls AQ KQ 99 96; against 10 BB, BB calls AQ KQ 99 96. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Qh Jd stack 92.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 2 BB · flop: BB calls 2 BB more · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB more · river: BB checks
+  + [correct] Check — Correct. Check. A bet of 5 BB would run into stronger queens or better while weaker pairs tend to fold.
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 5 BB — Look again. Betting 5 BB gets calls from hands that beat you in this model.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 10 BB — Look again. Betting 10 BB increases the loss against the same stronger hands.
+    BETTER ANSWER: Check
+    FEEDBACK TABLE: River | You Qh Jd | Board Qs 9c 6h 4d 2s | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK opponent_types_p03_loose_passive [drill] Which option earns the most chips in this model?
+CAPTION: Loose-passive: this player tends to stick with top pair even against larger river bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76; against 9 BB, BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 92.5
+REASONING: principle value_vs_frequent_caller · alt bet_4 · edge moreValueFromWorse 3.51852 BB · stack_matters false · assumption Loose-passive: this player tends to stick with top pair even against larger river bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55 76; against 9 BB, BB calls KT QT JT T9 77 55 76. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Th stack 92.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN bets 2 BB · turn: BB calls 2 BB more · river: BB checks
+SIZES: Check 0.0 | Bet 4 BB 0.25806451612903225 | Bet 9 BB 0.5806451612903226
+  - [suboptimal] Check — Look again. Checking gives up value from weaker tens and sevens.
+    BETTER ANSWER: Bet 9 BB
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 4 BB — Look again. Bet 4 BB earns value but the larger bet gets the same calls.
+    BETTER ANSWER: Bet 9 BB
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] Bet 9 BB — Correct. Bet 9 BB. Weaker tens and sevens still pay, so the larger bet earns more than betting 4 BB.
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+TASK opponent_types_p03_tight_aggressive [review] Which option earns the most chips in this model?
+ENTRY: drill
+CAPTION: Tight-aggressive: this player tends to defend top pair against a modest river bet but release weaker kickers against larger bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55; against 9 BB, BB calls KT 77 55. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+Q: Which option earns the most chips in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 92.5
+REASONING: principle value_vs_frequent_caller · alt bet_9 · edge moreValueFromWorse 1.59259 BB · stack_matters false · assumption Tight-aggressive: this player tends to defend top pair against a modest river bet but release weaker kickers against larger bets. BB has checked the river (pot 15.5 BB, nothing to call). In this study model, BB can have any legal combo of KT QT JT T9 77 55 76 86s, all equally weighted. A check ends the hand. Against 4 BB, BB calls KT QT JT T9 77 55; against 9 BB, BB calls KT 77 55. Other listed hands fold; no raises are modeled. This is a simplified range model, not a guarantee about a real player.
+SEATS: UTG folded stack 100 BB | HJ folded stack 100 BB | CO folded stack 100 BB | BTN dealer Ad Th stack 92.5 BB | SB folded stack 99.5 BB | BB stack 92.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN bets 2 BB · turn: BB calls 2 BB more · river: BB checks
+  - [suboptimal] Check — Look again. Checking misses calls from weaker tens at the modest size.
+    BETTER ANSWER: Bet 4 BB
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  + [correct] Bet 4 BB — Correct. Bet 4 BB. More weaker tens pay at this size than at 9 BB, earning more overall.
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+  - [suboptimal] Bet 9 BB — Look again. Bet 9 BB loses too many weaker-ten calls; sets remain in the continuing range.
+    BETTER ANSWER: Bet 4 BB
+    FEEDBACK TABLE: River | You Ad Th | Board Tc 7s 5h 3c 2d | Pot 15.5 BB | Seat BTN | Active btn | Decision btn | Card focus board_0, board_1, board_2, board_3, board_4 | Facts one pair, top pair
+
+===== WORLD 10 · LESSON opponent_types_pilot_3 · Opponent Types: Same Spot, Different Read (Part 3) =====
+
+TASK opponent_types_p04_tight_passive [drill] Call the extra chips or fold in this model?
+CAPTION: Tight-passive: this player rarely check-raises with anything weaker than two pair; occasional bluffs are possible. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 8s7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.
+TEACH: Call the extra chips or fold in this model? Compare the equity of your hand against the raising range with the call price.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ah Jc | Board Js 9d 5h 3s 2c | Pot 30 BB | To call 10.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 14.5
+POTS: main 40.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt call · edge equityBelowPrice 6.45 BB · stack_matters true · assumption Tight-passive: this player rarely check-raises with anything weaker than two pair; occasional bluffs are possible. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 8s7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 20 BB | HJ folded stack 20 BB | CO folded stack 20 BB | BTN dealer Ah Jc stack 10.5 BB bet 4 BB | SB folded stack 19.5 BB | BB stack 0 BB allIn 14.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks · river: BTN bets 4 BB · river: BB raises to 14.5 BB (all-in)
+  - [wrong] Call 10.5 BB — Look again. Calling needs more winning combinations than the rare bluff provides.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. Fold. Sets dominate this modeled raise; calling costs more than the rare bluff can repay.
+
+TASK opponent_types_p04_loose_aggressive [drill] Call the extra chips or fold in this model?
+CAPTION: Loose-aggressive: this player tends to check-raise both strong hands and many missed draws. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 87s 76s T8s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.
+TEACH: Loose-aggressive means playing many starting hands and often betting or raising. Compare the equity of your hand against the raising range with the call price.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ah Jc | Board Js 9d 5h 3s 2c | Pot 30 BB | To call 10.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 14.5
+POTS: main 40.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt fold · edge priceBeatsEquity 12.64286 BB · stack_matters true · assumption Loose-aggressive: this player tends to check-raise both strong hands and many missed draws. BB checks, then raises all-in to 14.5 BB total after your 4 BB bet. For this study model, the raising range is 99 55 33 87s 76s T8s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 30 BB; calling 10.5 BB costs 25.9% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 20 BB | HJ folded stack 20 BB | CO folded stack 20 BB | BTN dealer Ah Jc stack 10.5 BB bet 4 BB | SB folded stack 19.5 BB | BB stack 0 BB allIn 14.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN checks · river: BB checks · river: BTN bets 4 BB · river: BB raises to 14.5 BB (all-in)
+  + [correct] Call 10.5 BB — Correct. Call. The missed draws in this raising range give you enough wins at this price; folding gives that up.
+  - [wrong] Fold — Look again. Folding gives up a profitable call against the modeled missed draws.
+    BETTER ANSWER: Call 10.5 BB
+
+TASK opponent_types_p05_tight_aggressive [drill] Call the extra chips or fold in this model?
+CAPTION: Tight-aggressive: this player tends to make large river check-raises mostly with strong value hands, with a few missed draws. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the raising range is TT 77 KT AdJd, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot. Calling ends betting.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ks Qh | Board Kd Td 7c 4s 2h | Pot 37 BB | To call 13.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 18.5
+POTS: main 50.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt call · edge equityBelowPrice 9.61538 BB · stack_matters true · assumption Tight-aggressive: this player tends to make large river check-raises mostly with strong value hands, with a few missed draws. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the raising range is TT 77 KT AdJd, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 25 BB | HJ folded stack 25 BB | CO folded stack 25 BB | BTN dealer Ks Qh stack 13.5 BB bet 5 BB | SB folded stack 24.5 BB | BB stack 0 BB allIn 18.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 4 BB · flop: BB calls 4 BB more · turn: BB checks · turn: BTN checks · river: BB checks · river: BTN bets 5 BB · river: BB raises to 18.5 BB (all-in)
+  - [wrong] Call 13.5 BB — Look again. Calling loses too much against the value-heavy raising range.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. Fold. The occasional missed draw does not supply enough winning combinations for a call at this price.
+
+===== WORLD 10 · LESSON opponent_types_pilot_4 · Opponent Types: Same Spot, Different Read (Part 4) =====
+
+TASK opponent_types_p05_very_loose_aggressive [drill] Call the extra chips or fold in this model?
+CAPTION: Very loose-aggressive: this player tends to make large river check-raises with many missed draws as well as strong hands. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the raising range is TT 77 KT AJ QJ J9s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot. Calling ends betting.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ks Qh | Board Kd Td 7c 4s 2h | Pot 37 BB | To call 13.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 18.5
+POTS: main 50.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt fold · edge priceBeatsEquity 23.22727 BB · stack_matters true · assumption Very loose-aggressive: this player tends to make large river check-raises with many missed draws as well as strong hands. BB checks, then raises all-in to 18.5 BB total after your 5 BB bet. For this study model, the raising range is TT 77 KT AJ QJ J9s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 37 BB; calling 13.5 BB costs 26.7% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 25 BB | HJ folded stack 25 BB | CO folded stack 25 BB | BTN dealer Ks Qh stack 13.5 BB bet 5 BB | SB folded stack 24.5 BB | BB stack 0 BB allIn 18.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 4 BB · flop: BB calls 4 BB more · turn: BB checks · turn: BTN checks · river: BB checks · river: BTN bets 5 BB · river: BB raises to 18.5 BB (all-in)
+  + [correct] Call 13.5 BB — Correct. Call. The extra missed hands give you enough wins to make calling better than folding at the stated price.
+  - [wrong] Fold — Look again. Folding sacrifices a profitable call against the broader modeled raising range.
+    BETTER ANSWER: Call 13.5 BB
+
+TASK opponent_types_p06_loose_passive [drill] Call the extra chips or fold in this model?
+CAPTION: Loose-passive: this player tends to call with weaker hands and rarely check-raises without strong value. An occasional bluff is possible. BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is 88 66 98 Js7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends betting.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ac 9h | Board 9s 8d 6c 4h 2s | Pot 40 BB | To call 10.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 16.5
+POTS: main 50.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt call · edge equityBelowPrice 6.61538 BB · stack_matters true · assumption Loose-passive: this player tends to call with weaker hands and rarely check-raises without strong value. An occasional bluff is possible. BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is 88 66 98 Js7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 25 BB | HJ folded stack 25 BB | CO folded stack 25 BB | BTN dealer Ac 9h stack 10.5 BB bet 6 BB | SB folded stack 24.5 BB | BB stack 0 BB allIn 16.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB more · river: BB checks · river: BTN bets 6 BB · river: BB raises to 16.5 BB (all-in)
+  - [wrong] Call 10.5 BB — Look again. Calling pays off the stronger part of this rare raise too often.
+    BETTER ANSWER: Fold
+  + [correct] Fold — Correct. Fold. The raising range is much stronger than the calling range; its rare missed draw cannot justify the call.
+
+TASK opponent_types_p06_loose_aggressive [drill] Call the extra chips or fold in this model?
+CAPTION: Loose-aggressive: this player tends to turn missed draws into river check-raises more often. BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is 88 66 98 J7s JT Q7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends betting.
+Q: Call the extra chips or fold in this model?
+HINT [hidden]: (none)
+TABLE: River | You Ac 9h | Board 9s 8d 6c 4h 2s | Pot 40 BB | To call 10.5 BB | Seat BTN | Active btn | Decision btn | Facts one pair, top pair
+EFFECTIVE: BB 16.5
+POTS: main 50.5 (BB, BTN)
+REASONING: principle respect_rare_raise · alt fold · edge priceBeatsEquity 23.16667 BB · stack_matters true · assumption Loose-aggressive: this player tends to turn missed draws into river check-raises more often. BB checks, then raises all-in to 16.5 BB total after your 6 BB bet. For this study model, the raising range is 88 66 98 J7s JT Q7s, with each legal combo equally weighted. The model includes only the stated possibilities, not a certain read of BB’s cards. The pot is 40 BB; calling 10.5 BB costs 20.8% of the final pot. Calling ends betting.
+SEATS: UTG folded stack 25 BB | HJ folded stack 25 BB | CO folded stack 25 BB | BTN dealer Ac 9h stack 10.5 BB bet 6 BB | SB folded stack 24.5 BB | BB stack 0 BB allIn 16.5 BB
+TRAIL: preflop: SB posts 0.5 BB · preflop: BB posts 1 BB · preflop: UTG folds · preflop: HJ folds · preflop: CO folds · preflop: BTN raises to 2.5 BB · preflop: SB folds · preflop: BB calls 1.5 BB more · flop: BB checks · flop: BTN bets 3 BB · flop: BB calls 3 BB more · turn: BB checks · turn: BTN bets 3 BB · turn: BB calls 3 BB more · river: BB checks · river: BTN bets 6 BB · river: BB raises to 16.5 BB (all-in)
+  + [correct] Call 10.5 BB — Correct. Call. More missed draws enter the raise, creating enough winning combinations at this price; folding loses value.
+  - [wrong] Fold — Look again. Folding gives up a profitable call against the wider raising range.
+    BETTER ANSWER: Call 10.5 BB
