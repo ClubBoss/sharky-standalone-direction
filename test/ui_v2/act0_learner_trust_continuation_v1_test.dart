@@ -180,6 +180,16 @@ void main() {
         await tap('act0_shell_feedback_continue_cta');
       }
       await tap('act0_shell_placement_start_recommended');
+      expect(
+        find.textContaining('Poker can involve real-money losses.'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining(
+          'If play stops feeling under control, stop and take a break.',
+        ),
+        findsOneWidget,
+      );
       for (var i = 0; i < 5; i++) {
         if (find
             .byKey(const Key('act0_shell_welcome_demo_spot'))

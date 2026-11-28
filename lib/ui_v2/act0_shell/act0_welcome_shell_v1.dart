@@ -80,7 +80,10 @@ class _Act0WelcomeShellV1State extends State<Act0WelcomeShellV1> {
         step: 1,
         title: 'Sharky Poker',
         line: _copyV1(
-          en: 'Practice reading the table and learn why each choice matters.',
+          en:
+              'Practice reading the table and learn why each choice matters. '
+              'Poker can involve real-money losses. If play stops feeling '
+              'under control, stop and take a break.',
           ru: 'Учись читать стол и понимать, почему важен каждый выбор.',
         ),
         onClose: widget.replayMode ? widget.onClose : null,
