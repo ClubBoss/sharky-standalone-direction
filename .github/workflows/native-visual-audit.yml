@@ -17,13 +17,13 @@ jobs:
     outputs:
       candidate_sha: ${{ inputs.candidate_sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
       - name: Validate 54-row manifest and emit deterministic shards
         run: python3 tools/sharky_native_visual_audit_v1.py --preflight --emit-shards output/native_audit_shards
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: native-audit-shards-${{ inputs.candidate_sha }}
           path: output/native_audit_shards
@@ -34,7 +34,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
@@ -47,7 +47,7 @@ jobs:
         run: flutter pub get
       - name: Build one audit-enabled Runner.app
         run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: native-audit-runner-${{ inputs.candidate_sha }}
           path: |
@@ -68,7 +68,7 @@ jobs:
           - shard: compact-normal
           - shard: large-normal
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
@@ -92,7 +92,7 @@ jobs:
           --candidate-sha ${{ inputs.candidate_sha }}
       - name: Upload resumable shard evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-audit-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }}
           path: output/native_audit_shard
@@ -105,7 +105,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
@@ -123,7 +123,7 @@ jobs:
           --out output/native_visual_audit
       - name: Upload one unified native visual audit
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
           path: output/native_visual_audit

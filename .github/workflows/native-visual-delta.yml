@@ -21,7 +21,7 @@ jobs:
     outputs:
       candidate_sha: ${{ inputs.candidate_sha }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Require and validate the exact delta specification
         env:
           DELTA_SPEC_JSON: ${{ inputs.delta_spec_json }}
@@ -30,7 +30,7 @@ jobs:
           mkdir -p output
           printf '%s' "$DELTA_SPEC_JSON" > output/delta_spec.json
           python3 tools/native_visual_delta_v1.py --spec output/delta_spec.json --emit-shards output/delta_shards
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: native-delta-spec-${{ inputs.candidate_sha }}
           path: output
@@ -41,7 +41,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
@@ -52,7 +52,7 @@ jobs:
           cache: true
       - run: flutter pub get
       - run: python3 tools/sharky_native_visual_audit_v1.py --build-runner --app-out output/Runner.app
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: native-delta-runner-${{ inputs.candidate_sha }}
           path: |-
@@ -69,7 +69,7 @@ jobs:
       matrix:
         shard: [canonical-none, canonical-text_scale_1_4, compact-none, large-none]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           ref: ${{ inputs.candidate_sha }}
           fetch-depth: 1
@@ -86,7 +86,7 @@ jobs:
           --spec output/delta_spec.json --capture-shard output/delta_shards/${{ matrix.shard }}.json
           --app output/Runner.app --out output/delta_shard --candidate-sha ${{ inputs.candidate_sha }}
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-delta-shard-${{ matrix.shard }}-${{ inputs.candidate_sha }}
           path: output/delta_shard
@@ -98,7 +98,7 @@ jobs:
     needs: [preflight, build, capture]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: actions/download-artifact@v4
         with:
           name: native-delta-spec-${{ inputs.candidate_sha }}
@@ -112,7 +112,7 @@ jobs:
           python3 tools/native_visual_delta_v1.py
           --spec output/delta_spec.json --aggregate-shards output/shards
           --out output/native_visual_delta --candidate-sha ${{ inputs.candidate_sha }}
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-native-visual-delta-${{ inputs.candidate_sha }}
           path: output/native_visual_delta

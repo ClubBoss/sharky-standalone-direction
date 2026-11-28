@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
 
@@ -133,7 +133,7 @@ jobs:
 
       - name: Upload UI preview
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: ui-preview
           path: build/ui_preview.html
@@ -175,7 +175,7 @@ jobs:
           fi
 
       - name: Upload content artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: content-artifacts
           path: |
@@ -199,7 +199,7 @@ jobs:
 
       - name: Upload snapshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: snapshots
           path: ci/snapshots/**

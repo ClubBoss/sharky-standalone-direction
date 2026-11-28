@@ -21,7 +21,7 @@ jobs:
       matrix:
         shard: [canonical-normal, large-normal]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Download preserved Runner and partial shard
         env:
           GH_TOKEN: ${{ github.token }}
@@ -39,7 +39,7 @@ jobs:
           --shard ${{ matrix.shard }}
           --candidate-sha ${{ inputs.candidate_sha }}
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-audit-recovery-${{ matrix.shard }}-${{ inputs.candidate_sha }}
           path: output/recovered
@@ -51,7 +51,7 @@ jobs:
     needs: recover
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Download preserved and recovered shards
         env:
           GH_TOKEN: ${{ github.token }}
@@ -65,7 +65,7 @@ jobs:
           path: output/shards
           merge-multiple: false
       - run: python3 tools/sharky_native_visual_audit_v1.py --aggregate-shards output/shards --candidate-sha ${{ inputs.candidate_sha }} --out output/native_visual_audit
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-native-visual-audit-${{ inputs.candidate_sha }}
           path: output/native_visual_audit
