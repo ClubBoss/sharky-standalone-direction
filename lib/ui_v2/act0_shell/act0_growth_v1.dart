@@ -79,7 +79,11 @@ class Act0StoreReviewV1 {
           now.millisecondsSinceEpoch - lastRequest < cooldown.inMilliseconds) {
         return;
       }
-      if (!canPresent()) return;
+      if (!canPresent() ||
+          Act0LocalDataDeletionV1.blocked ||
+          dataGeneration != Act0LocalDataDeletionV1.generation) {
+        return;
+      }
       final called = await act0GrowthChannelV1.invokeMethod<bool>(
         'requestReview',
       );

@@ -27,11 +27,20 @@ class _Paths extends PathProviderPlatform {
 class _Disk extends SharedPreferencesStorePlatform {
   _Disk(this.values);
   final Map<String, Object> values;
+  Completer<void>? getAllStarted;
+  Completer<void>? getAllRelease;
   int? cutAt;
   int removals = 0;
   bool lie = false;
   @override
-  Future<Map<String, Object>> getAll() async => Map.of(values);
+  Future<Map<String, Object>> getAll() async {
+    final started = getAllStarted;
+    if (started != null && !started.isCompleted) started.complete();
+    final release = getAllRelease;
+    if (release != null) await release.future;
+    return Map.of(values);
+  }
+
   @override
   Future<bool> setValue(String type, String key, Object value) async {
     values[key] = value;
@@ -160,6 +169,38 @@ void main() {
       final prefs = await SharedPreferences.getInstance();
       await prefs.reload();
       expect(prefs.getKeys(), isEmpty);
+    },
+  );
+
+  test(
+    'deletion starting while preferences load prevents review presentation',
+    () async {
+      final readStarted = Completer<void>();
+      final readRelease = Completer<void>();
+      SharedPreferencesStorePlatform.instance = _Disk({})
+        ..getAllStarted = readStarted
+        ..getAllRelease = readRelease;
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      var nativeCalls = 0;
+      messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
+        nativeCalls++;
+        return true;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(act0GrowthChannelV1, null),
+      );
+
+      final request = Act0StoreReviewV1().requestAfterMilestone(
+        now: DateTime.utc(2026, 11, 28),
+        canPresent: () => true,
+      );
+      await readStarted.future;
+      Act0LocalDataDeletionV1.blockOldWriters();
+      readRelease.complete();
+      await request;
+
+      expect(nativeCalls, 0);
     },
   );
 
