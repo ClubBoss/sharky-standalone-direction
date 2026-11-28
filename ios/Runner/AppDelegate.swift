@@ -125,6 +125,8 @@ private extension AppDelegate {
       let schedule = arguments?["schedule"] as? String ?? "none"
       let body = arguments?["body"] as? String
       switch call.method {
+      case "getEnabled":
+        result(defaults.bool(forKey: Self.practiceReminderOptIn))
       case "permissionDenied":
         UNUserNotificationCenter.current().getNotificationSettings { settings in
           let denied = settings.authorizationStatus == .denied ||
