@@ -315,6 +315,8 @@ extension _PreviewPlacementV1 on _Act0ShellPreviewScreenV1State {
     if (!retake) {
       _completedTaskIds.clear();
       _completedLessonIds.clear();
+      _completedWorldIds.clear();
+      _retainedAccessWorldIds.clear();
       _dailyCompletedLessonIds.clear();
     }
     if (fromZero) {

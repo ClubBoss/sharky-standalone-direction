@@ -687,7 +687,11 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
     _diagnosticLearningEntryV1 = null;
     _diagnosticLearningReturnV1 = null;
     final state = _catalogStateV1;
-    final zeroProgressWorlds = _progressWorldsWithTaskIds(state, <String>{});
+    final zeroProgressWorlds = _progressWorldsWithTaskIds(
+      state,
+      <String>{},
+      retainedAccessWorldIds: const <String>{},
+    );
     final zeroWorld = zeroProgressWorlds.firstWhere(
       (world) => world.status == Act0WorldStateV1.current && world.isSelectable,
       orElse: () => zeroProgressWorlds.first,
@@ -702,6 +706,8 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _selectedTaskId = zeroTask.taskId;
       _learnPopupTaskId = null;
       _completedLessonIds = <String>{};
+      _completedWorldIds = <String>{};
+      _retainedAccessWorldIds = <String>{};
       _completedTaskIds = <String>{};
       _lastShortSessionDayV1 = '';
       _returningAfterBreakV1 = false;

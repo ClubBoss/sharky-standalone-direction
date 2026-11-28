@@ -239,9 +239,9 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
       recommendedFocusTitle: focusTitle,
       recommendedFocusBody: focusBody,
       recommendedFocusCtaLabel: focusCtaLabel,
-      worldsClearedCount: _progressedWorlds(
-        state,
-      ).where((w) => w.status == Act0WorldStateV1.completed).length,
+      // Route closure can include Placement skips. Only the durable earned
+      // marker is allowed to support a cleared-world claim in the profile.
+      worldsClearedCount: _completedWorldIds.length,
       worldsActiveCount: _progressedWorlds(
         state,
       ).where((w) => w.status == Act0WorldStateV1.current).length,

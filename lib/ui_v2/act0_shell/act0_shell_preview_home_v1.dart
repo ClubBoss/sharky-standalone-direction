@@ -176,6 +176,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
     Act0ShellStateV1 state,
     Set<String> completedTaskIds, {
     int? w1RulesBestScore,
+    Set<String>? retainedAccessWorldIds,
   }) => [
     ...act0ProgressWorldsV1(
       state.worlds,
@@ -184,6 +185,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       passedW1RulesCheck:
           (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
           Act0W1RulesResultV1.passingScore,
+      retainedAccessWorldIds: retainedAccessWorldIds ?? _retainedAccessWorldIds,
       worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
       practiceBlockedLessonIds: {
         for (final world in state.worlds)
@@ -206,6 +208,15 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
 
   List<Act0WorldCardV1> _progressedWorlds(Act0ShellStateV1 state) =>
       _progressWorlds(state);
+
+  Act0WorldCardV1? _worldWithAddedLessonV1(List<Act0WorldCardV1> worlds) =>
+      worlds
+          .where(
+            (world) =>
+                _completedWorldIds.contains(world.worldId) &&
+                world.status == Act0WorldStateV1.current,
+          )
+          .firstOrNull;
 
   Act0GoalRouteViewModelV1<Act0WorldCardV1> _goalRouteViewModelV1(
     List<Act0WorldCardV1> worlds,
