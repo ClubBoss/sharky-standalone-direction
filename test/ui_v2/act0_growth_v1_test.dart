@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -44,6 +43,7 @@ void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
   final messenger =
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  final ios = TargetPlatformVariant.only(TargetPlatform.iOS);
   const shareChannel = MethodChannel('dev.fluttercommunity.plus/share');
 
   setUp(() => SharedPreferences.setMockInitialValues({}));
@@ -65,8 +65,6 @@ void main() {
   testWidgets('cold Home link survives first start through AppRoot', (
     tester,
   ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-    addTearDown(() => debugDefaultTargetPlatformOverride = null);
     messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
       expect(call.method, 'takeLink');
       return 'sharky://open/v1/home';
@@ -83,13 +81,11 @@ void main() {
     await tester.tap(back);
     await tester.pumpAndSettle();
     expect(selectedTabLabel(tester), 'Home');
-  });
+  }, variant: ios);
 
   testWidgets('cold Learn link and warm fallback use the existing shell tabs', (
     tester,
   ) async {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
-    addTearDown(() => debugDefaultTargetPlatformOverride = null);
     messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
       expect(call.method, 'takeLink');
       return 'sharky://open/v1/learn';
@@ -129,7 +125,7 @@ void main() {
     await tester.pumpAndSettle();
     await dialog;
     expect(selectedTabLabel(tester), 'Home');
-  });
+  }, variant: ios);
 
   testWidgets(
     'summary previews the exact public payload before native sharing',
