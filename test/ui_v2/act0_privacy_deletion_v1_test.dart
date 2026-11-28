@@ -536,15 +536,17 @@ void main() {
   );
 
   testWidgets(
-    'Settings restores the saved iOS reminder opt-in after app restart',
+    'Settings restores opt-in and reports revoked iOS permission truthfully',
     (tester) async {
       const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
       final messenger = tester.binding.defaultBinaryMessenger;
+      final calls = <String>[];
       messenger.setMockMethodCallHandler(channel, (call) async {
+        calls.add(call.method);
         return switch (call.method) {
           'getEnabled' => true,
           'getTime' => [18, 0],
-          'permissionDenied' => false,
+          'permissionDenied' => true,
           _ => false,
         };
       });
@@ -567,8 +569,52 @@ void main() {
         const Key('act0_academy_settings_practice_reminder'),
       );
       expect(tester.widget<Switch>(reminder).value, isTrue);
+      expect(
+        find.text('Allow Sharky Poker notifications in iPhone Settings.'),
+        findsOneWidget,
+      );
+      expect(calls, containsAll(<String>['getEnabled', 'permissionDenied']));
+      expect(calls, isNot(contains('setEnabled')));
     },
     variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+  );
+
+  test(
+    'a failed opt-in read keeps cache and the queue remains usable',
+    () async {
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      const channel = MethodChannel('com.clubboss.sharky/practice_reminder_v1');
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        if (call.method == 'getEnabled') {
+          throw PlatformException(code: 'unavailable');
+        }
+        if (call.method == 'setEnabled') {
+          return call.arguments['enabled'] as bool;
+        }
+        return false;
+      });
+      addTearDown(() => messenger.setMockMethodCallHandler(channel, null));
+      Act0PracticeReminderV1.enabled.value = false;
+      addTearDown(() => Act0PracticeReminderV1.enabled.value = false);
+
+      await expectLater(
+        Act0PracticeReminderV1.refreshEnabled(),
+        throwsA(isA<PlatformException>()),
+      );
+      expect(Act0PracticeReminderV1.enabled.value, isFalse);
+
+      expect(await Act0PracticeReminderV1.setEnabled(true), isTrue);
+      expect(Act0PracticeReminderV1.enabled.value, isTrue);
+
+      await expectLater(
+        Act0PracticeReminderV1.refreshEnabled(),
+        throwsA(isA<PlatformException>()),
+      );
+      expect(Act0PracticeReminderV1.enabled.value, isTrue);
+    },
   );
 
   test(

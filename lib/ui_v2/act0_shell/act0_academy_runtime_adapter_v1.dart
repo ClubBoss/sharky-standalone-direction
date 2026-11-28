@@ -376,7 +376,8 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
       try {
         await Act0PracticeReminderV1.refreshEnabled();
       } catch (_) {
-        // The platform may be unavailable; fail closed with the toggle off.
+        // The platform may be unavailable. Keep the cached value; it defaults
+        // off in a cold Flutter process, while an in-process opt-in stays true.
       }
       try {
         await Act0PracticeReminderV1.refreshTime();
