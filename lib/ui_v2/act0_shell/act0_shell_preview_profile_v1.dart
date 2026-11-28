@@ -239,9 +239,11 @@ extension _PreviewProfileV1 on _Act0ShellPreviewScreenV1State {
       recommendedFocusTitle: focusTitle,
       recommendedFocusBody: focusBody,
       recommendedFocusCtaLabel: focusCtaLabel,
-      worldsClearedCount: _progressedWorlds(
-        state,
-      ).where((w) => w.status == Act0WorldStateV1.completed).length,
+      worldsClearedCount: <String>{
+        ..._completedWorldIds,
+        for (final world in _progressedWorlds(state))
+          if (world.status == Act0WorldStateV1.completed) world.worldId,
+      }.length,
       worldsActiveCount: _progressedWorlds(
         state,
       ).where((w) => w.status == Act0WorldStateV1.current).length,

@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_durable_learning_time_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_multi_repair_queue_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
@@ -519,4 +520,153 @@ void main() {
     expect(stored['studyObservations'], isEmpty);
     expect(stored['durableRetentionHistory'], isEmpty);
   });
+
+  testWidgets(
+    'a newly added lesson stays visible without revoking completed-world access',
+    (tester) async {
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      final catalog = Act0ShellStateV1.sample;
+      final completedWorld = catalog.worldById('world_1');
+      final addedLesson = completedWorld.lessons[7];
+      final nextWorld = catalog.worldById('world_2');
+      final completedTasks = <String>{
+        for (final lesson in completedWorld.lessons)
+          for (final task in lesson.courseTaskList) task.taskId,
+      };
+      final completedLessons = <String>{
+        for (final lesson in completedWorld.lessons) lesson.lessonId,
+      };
+      final earnedXp = completedWorld.lessons
+          .expand((lesson) => lesson.courseTaskList)
+          .fold<int>(0, (sum, task) => sum + task.rewardXp);
+      final nextLesson = nextWorld.lessons.first;
+      final nextTask = nextLesson.courseTaskList.first;
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'intake_completed_v1': true,
+        'act0_welcome_completed_v1': true,
+        progressKey: jsonEncode(<String, Object>{
+          'schemaVersion': 17,
+          'completedTaskIds': completedTasks.toList(),
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': completedLessons.toList(),
+          'selectedWorldId': nextWorld.worldId,
+          'selectedLessonId': nextLesson.lessonId,
+          'selectedTaskId': nextTask.taskId,
+          'earnedXp': earnedXp,
+          'reviewMistakeHistory': <Object>[],
+          'reviewResolutionReceipts': <Object>[],
+          'learningEvidenceHistory': <Object>[],
+        }),
+      });
+
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      dynamic shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      shell.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 100));
+      final prefs = await SharedPreferences.getInstance();
+      final beforeUpdate =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(beforeUpdate['completedWorldIds'], contains('world_1'));
+
+      final afterUpdate = Map<String, dynamic>.from(beforeUpdate);
+      afterUpdate.remove('completedWorldIds');
+      afterUpdate['completedTaskIds'] =
+          (beforeUpdate['completedTaskIds'] as List)
+              .where(
+                (id) => !addedLesson.courseTaskList.any(
+                  (task) => task.taskId == id,
+                ),
+              )
+              .toList();
+      afterUpdate['completedLessonIds'] =
+          (beforeUpdate['completedLessonIds'] as List)
+              .where((id) => id != addedLesson.lessonId)
+              .toList();
+      final retainedTaskCount =
+          (afterUpdate['completedTaskIds'] as List).length;
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'intake_completed_v1': true,
+        'act0_welcome_completed_v1': true,
+        progressKey: jsonEncode(afterUpdate),
+      });
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+
+      expect(find.text(addedLesson.title), findsWidgets);
+      expect(
+        find.text(
+          '${completedWorld.lessons.length - 1} of '
+          '${completedWorld.lessons.length} lessons complete',
+        ),
+        findsWidgets,
+      );
+      await tester.tap(
+        find.byKey(const Key('act0_academy_home_leaf_cta')).hitTestable(),
+      );
+      await tester.pumpAndSettle();
+      final runner = tester.widget<Act0LessonRunnerShellV1>(
+        find.byType(Act0LessonRunnerShellV1),
+      );
+      expect(runner.selectedLessonId, addedLesson.lessonId);
+      expect(runner.selectedTaskId, addedLesson.courseTaskList.first.taskId);
+
+      await tester.tap(
+        find.byKey(const Key('act0_shell_runner_back')).hitTestable(),
+      );
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Learn').last);
+      await tester.pumpAndSettle();
+      await tester.tap(
+        find.byKey(const Key('act0_shell_levels_menu_button')).hitTestable(),
+      );
+      await tester.pumpAndSettle();
+      final nextWorldNode = find.byKey(
+        Key('act0_shell_world_${nextWorld.worldNumber}'),
+      );
+      await tester.scrollUntilVisible(
+        nextWorldNode,
+        240,
+        scrollable: find.descendant(
+          of: find.byKey(const Key('act0_shell_worlds_content_scroll')),
+          matching: find.byType(Scrollable),
+        ),
+      );
+      await Scrollable.ensureVisible(
+        tester.element(nextWorldNode),
+        alignment: 0.5,
+        duration: Duration.zero,
+      );
+      await tester.pump();
+      await tester.tap(nextWorldNode.hitTestable());
+      await tester.pumpAndSettle();
+      shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      expect(shell.debugSelectedWorldIdV1(), nextWorld.worldId);
+
+      await tester.tap(find.text('You').last);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('$retainedTaskCount tasks completed'),
+        findsOneWidget,
+        reason: 'Previously earned course progress must remain visible.',
+      );
+
+      shell.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 100));
+      final restored =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(restored['earnedXp'], earnedXp);
+      expect(
+        (restored['completedLessonIds'] as List).toSet(),
+        containsAll(completedLessons.difference({addedLesson.lessonId})),
+      );
+      expect(restored['completedWorldIds'], contains('world_1'));
+    },
+  );
 }

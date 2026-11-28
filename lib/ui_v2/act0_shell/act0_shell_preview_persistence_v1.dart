@@ -189,6 +189,36 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         completedLessonIds.add(lesson.lessonId);
       }
     }
+    final completedWorldIds = parsed.completedWorldIds
+        .where(validWorldIds.contains)
+        .toSet();
+    for (final world in state.worlds) {
+      if (world.lessons.isNotEmpty &&
+          world.lessons.every(
+            (lesson) =>
+                act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds),
+          )) {
+        completedWorldIds.add(world.worldId);
+      }
+    }
+    // A legacy save may first meet this field in the same release that adds a
+    // lesson. Reaching a later numbered world proves every earlier transition
+    // was already earned, except W1 when its separate rules check did so.
+    final legacySelectedWorld = state.worlds
+        .where((world) => world.worldId == parsed.selectedWorldId)
+        .firstOrNull;
+    if (legacySelectedWorld != null && legacySelectedWorld.worldNumber > 1) {
+      for (final world in state.worlds.where(
+        (world) =>
+            world.worldNumber > 0 &&
+            world.worldNumber < legacySelectedWorld.worldNumber,
+      )) {
+        final passedW1Instead =
+            world.worldNumber == 1 &&
+            parsed.w1RulesBestScore >= Act0W1RulesResultV1.passingScore;
+        if (!passedW1Instead) completedWorldIds.add(world.worldId);
+      }
+    }
     final closedTaskIds = <String>{...completedTaskIds, ...skippedTaskIds};
 
     _routePracticeV1 =
@@ -238,6 +268,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       state,
       closedTaskIds,
       w1RulesBestScore: parsed.w1RulesBestScore,
+      retainedAccessWorldIds: completedWorldIds,
     );
     final persistedWorld = _worldById(
       worldsAfterProgress,
@@ -331,6 +362,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
         ..addAll(parsed.openedSpacedReviewTaskIds);
       _pendingReviewKindV1 = null;
       _completedLessonIds = completedLessonIds;
+      _completedWorldIds = completedWorldIds;
       _skippedTaskIds
         ..clear()
         ..addAll(skippedTaskIds);
@@ -1173,6 +1205,15 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       return;
     }
     _rememberLessonRunnerV1();
+    for (final world in _catalogStateV1.worlds) {
+      if (world.lessons.isNotEmpty &&
+          world.lessons.every(
+            (lesson) =>
+                act0LessonCompleteWithTaskIdsV1(lesson, _completedTaskIds),
+          )) {
+        _completedWorldIds.add(world.worldId);
+      }
+    }
     _ensureDailyCountDayV1();
     final today = _todayDateString();
     final dailyDone = _dailyCompletedRepCount >= 3;
@@ -1197,6 +1238,7 @@ extension _PreviewPersistenceV1 on _Act0ShellPreviewScreenV1State {
       tasksWithDeferredXp: _tasksWithDeferredXpV1,
       skippedTaskIds: _skippedTaskIds,
       completedLessonIds: _completedLessonIds,
+      completedWorldIds: _completedWorldIds,
       selectedWorldId: returnSelection?.worldId ?? _selectedWorldId,
       selectedLessonId: returnSelection?.lessonId ?? _selectedLessonId,
       selectedTaskId: returnSelection?.taskId ?? _selectedTaskId,

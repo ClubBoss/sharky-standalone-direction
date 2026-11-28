@@ -203,6 +203,7 @@ extension _PreviewDebugSurfacesV1 on _Act0ShellPreviewScreenV1State {
     _selectedTaskId = lesson.taskList.first.taskId;
     _debugFreshLearnerV1 = true;
     _completedLessonIds.clear();
+    _completedWorldIds.clear();
     _completedTaskIds.clear();
     _skippedTaskIds.clear();
     _visibleSkippedTaskIds.clear();

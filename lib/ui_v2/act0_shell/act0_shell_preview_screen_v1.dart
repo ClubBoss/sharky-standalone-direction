@@ -1010,6 +1010,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   late String _selectedTaskId;
   String? _learnPopupTaskId;
   late Set<String> _completedLessonIds;
+  late Set<String> _completedWorldIds;
   late Set<String> _completedTaskIds;
   final Set<String> _tasksWithDeferredXpV1 = <String>{};
   final Set<String> _skippedTaskIds = <String>{};
@@ -1539,6 +1540,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       for (final world in state.worlds)
         for (final lesson in world.lessons)
           if (lesson.state == Act0LessonStateV1.completed) lesson.lessonId,
+    };
+    _completedWorldIds = {
+      for (final world in state.worlds)
+        if (world.status == Act0WorldStateV1.completed) world.worldId,
     };
     _completedTaskIds = {
       for (final world in state.worlds)
@@ -2587,11 +2592,15 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
         ? _goalRouteViewModelV1(worlds)
         : null;
     _normalizeSelection(worlds);
-    final selectedWorld = _worldById(worlds, _selectedWorldId);
-    final selectedLesson = _lessonById(
-      selectedWorld.lessons,
-      _selectedLessonId,
-    );
+    final persistedSelectedWorld = _worldById(worlds, _selectedWorldId);
+    final addedLessonWorld = _worldWithAddedLessonV1(worlds);
+    final selectedWorld =
+        _tab == Act0ShellTabV1.home && addedLessonWorld != null
+        ? addedLessonWorld
+        : persistedSelectedWorld;
+    final selectedLesson = selectedWorld.worldId == _selectedWorldId
+        ? _lessonById(selectedWorld.lessons, _selectedLessonId)
+        : _firstPlayableLesson(selectedWorld);
     final requiredPractice = selectedWorld.isSelectable
         ? _requiredRoutePracticeV1(selectedWorld, _pathClosedTaskIds)
         : null;
@@ -6258,6 +6267,7 @@ class _Act0PersistedProgressV1 {
     this.tasksWithDeferredXp = const {},
     required this.skippedTaskIds,
     required this.completedLessonIds,
+    this.completedWorldIds = const {},
     required this.selectedWorldId,
     required this.selectedLessonId,
     required this.selectedTaskId,
@@ -6319,6 +6329,7 @@ class _Act0PersistedProgressV1 {
   final Set<String> tasksWithDeferredXp;
   final Set<String> skippedTaskIds;
   final Set<String> completedLessonIds;
+  final Set<String> completedWorldIds;
   final String selectedWorldId;
   final String selectedLessonId;
   final String selectedTaskId;
@@ -6377,6 +6388,7 @@ class _Act0PersistedProgressV1 {
     final sortedTaskIds = completedTaskIds.toList(growable: false)..sort();
     final sortedSkippedTaskIds = skippedTaskIds.toList(growable: false)..sort();
     final sortedLessonIds = completedLessonIds.toList(growable: false)..sort();
+    final sortedWorldIds = completedWorldIds.toList(growable: false)..sort();
     final sortedSkillKeys = profileSkillValues.keys.toList(growable: false)
       ..sort();
     final sortedRetentionMemory = retentionMemory.toList(growable: false)
@@ -6394,6 +6406,7 @@ class _Act0PersistedProgressV1 {
         'openedSpacedReviewTaskIds': openedSpacedReviewTaskIds.toList()..sort(),
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
+      'completedWorldIds': sortedWorldIds,
       'selectedWorldId': selectedWorldId,
       'selectedLessonId': selectedLessonId,
       'selectedTaskId': selectedTaskId,
@@ -6560,6 +6573,15 @@ class _Act0PersistedProgressV1 {
     final completedTaskIds = _stringSet(map['completedTaskIds']);
     final skippedTaskIds = _stringSet(map['skippedTaskIds']);
     final completedLessonIds = _stringSet(map['completedLessonIds']);
+    final completedWorldIdsRaw = map['completedWorldIds'];
+    if (map.containsKey('completedWorldIds') &&
+        (completedWorldIdsRaw is! List ||
+            completedWorldIdsRaw.any(
+              (id) => id is! String || id.trim().isEmpty,
+            ))) {
+      return null;
+    }
+    final completedWorldIds = _stringSet(completedWorldIdsRaw);
     final selectedWorldId = (map['selectedWorldId'] ?? '').toString();
     final selectedLessonId = (map['selectedLessonId'] ?? '').toString();
     final selectedTaskId = (map['selectedTaskId'] ?? '').toString();
@@ -6702,6 +6724,7 @@ class _Act0PersistedProgressV1 {
       ).intersection(completedTaskIds),
       skippedTaskIds: skippedTaskIds,
       completedLessonIds: completedLessonIds,
+      completedWorldIds: completedWorldIds,
       selectedWorldId: selectedWorldId,
       selectedLessonId: selectedLessonId,
       selectedTaskId: selectedTaskId,

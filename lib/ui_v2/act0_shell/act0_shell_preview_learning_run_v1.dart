@@ -702,6 +702,7 @@ extension _PreviewLearningRunV1 on _Act0ShellPreviewScreenV1State {
       _selectedTaskId = zeroTask.taskId;
       _learnPopupTaskId = null;
       _completedLessonIds = <String>{};
+      _completedWorldIds = <String>{};
       _completedTaskIds = <String>{};
       _lastShortSessionDayV1 = '';
       _returningAfterBreakV1 = false;

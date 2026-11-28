@@ -17,6 +17,7 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   required Set<String> pathClosedTaskIds,
   required Set<String> earnedTaskIds,
   bool passedW1RulesCheck = false,
+  Set<String> retainedAccessWorldIds = const <String>{},
   Set<String> worldsWithOpenMistakes = const <String>{},
   Set<String> practiceBlockedLessonIds = const {},
 }) {
@@ -40,7 +41,8 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
     }
     previousWorldComplete =
         progressed.status == Act0WorldStateV1.completed ||
-        progressed.status == Act0WorldStateV1.passedByRulesCheck;
+        progressed.status == Act0WorldStateV1.passedByRulesCheck ||
+        retainedAccessWorldIds.contains(world.worldId);
   }
   return worlds;
 }
