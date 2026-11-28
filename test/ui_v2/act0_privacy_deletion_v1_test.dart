@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -8,6 +9,7 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 import 'package:poker_analyzer/ui_v2/app_root.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_settings_leaf_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_beta_metrics_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_growth_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_local_data_deletion_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_practice_reminder_v1.dart';
@@ -127,6 +129,37 @@ void main() {
       expect(fresh.returnedDay2, isFalse);
       expect(fresh.returnedDay7, isFalse);
       expect(fresh.answers, everyElement(isNull));
+    },
+  );
+
+  test(
+    'an in-flight StoreKit callback cannot restore a preference after deletion',
+    () async {
+      final messenger =
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+      final nativeStarted = Completer<void>();
+      final nativeResult = Completer<bool>();
+      messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
+        expect(call.method, 'requestReview');
+        nativeStarted.complete();
+        return nativeResult.future;
+      });
+      addTearDown(
+        () => messenger.setMockMethodCallHandler(act0GrowthChannelV1, null),
+      );
+
+      final request = Act0StoreReviewV1().requestAfterMilestone(
+        now: DateTime.utc(2026, 11, 28),
+        canPresent: () => true,
+      );
+      await nativeStarted.future;
+      await Act0LocalDataDeletionV1.erase();
+      nativeResult.complete(true);
+      await request;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.reload();
+      expect(prefs.getKeys(), isEmpty);
     },
   );
 

@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'act0_growth_links_v1.dart';
+import 'act0_local_data_deletion_v1.dart';
 
 const act0GrowthChannelV1 = MethodChannel('com.clubboss.sharky/growth_v1');
 
@@ -68,7 +69,8 @@ class Act0StoreReviewV1 {
     required DateTime now,
     required bool Function() canPresent,
   }) async {
-    if (_checking || !canPresent()) return;
+    if (_checking || Act0LocalDataDeletionV1.blocked || !canPresent()) return;
+    final dataGeneration = Act0LocalDataDeletionV1.generation;
     _checking = true;
     try {
       final preferences = await SharedPreferences.getInstance();
@@ -81,7 +83,9 @@ class Act0StoreReviewV1 {
       final called = await act0GrowthChannelV1.invokeMethod<bool>(
         'requestReview',
       );
-      if (called == true) {
+      if (called == true &&
+          !Act0LocalDataDeletionV1.blocked &&
+          dataGeneration == Act0LocalDataDeletionV1.generation) {
         await preferences.setInt(_lastRequestKey, now.millisecondsSinceEpoch);
       }
     } catch (_) {
