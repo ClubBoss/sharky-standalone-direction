@@ -65,6 +65,27 @@ void main() {
           expect(find.text('What improved'), findsNothing);
           expect(find.textContaining('You learned'), findsNothing);
           expect(find.textContaining('You can now'), findsNothing);
+          if (world == 12) {
+            expect(find.text('Volume I complete.'), findsOneWidget);
+            expect(
+              find.textContaining('You practiced judging process'),
+              findsOneWidget,
+            );
+            final visibleCopy = tester
+                .widgetList<Text>(find.byType(Text))
+                .map((text) => text.data ?? '')
+                .join(' ')
+                .toLowerCase();
+            for (final unsupportedClaim in [
+              'profit',
+              'professional',
+              'mastery',
+              'mastered',
+              'expert',
+            ]) {
+              expect(visibleCopy, isNot(contains(unsupportedClaim)));
+            }
+          }
           expect(tester.takeException(), isNull);
         },
       );
