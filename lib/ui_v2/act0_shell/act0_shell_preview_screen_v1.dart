@@ -4131,6 +4131,17 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
                                       // side effects.
                                       return;
                                     }
+                                    if (_activeRepairTaskId ==
+                                            playSelectedTask.taskId &&
+                                        playRunner.options.isNotEmpty) {
+                                      // A completed theory task can still own
+                                      // the exact decision needed by Review.
+                                      // Finishing its repair preamble opens
+                                      // that decision instead of advancing the
+                                      // learner past the saved repair target.
+                                      _phase = Act0LessonPhaseV1.drill;
+                                      return;
+                                    }
                                     _recordCompletedStudyV1(playSelectedTask);
                                     _emitActionTheoryCompletedTelemetryV1(
                                       playSelectedTask,
