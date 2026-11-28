@@ -139,6 +139,9 @@ class _Act0BetaMetricsDialogStateV1 extends State<Act0BetaMetricsDialogV1> {
                     'First lesson: ${learning.firstLessonCompleted ? 'Complete' : 'Incomplete'}',
                   ),
                   Text(
+                    'World 1 entry: ${learning.worldOneEntryObserved ? 'Observed' : 'Not observed'}',
+                  ),
+                  Text(
                     'World 1: ${learning.worldOneCompleted ? 'Complete' : 'Incomplete'}',
                   ),
                   Text('Corrected mistakes: ${learning.correctedMistakes}'),

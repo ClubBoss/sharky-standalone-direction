@@ -66,6 +66,7 @@ void main() {
       correctedMistakes: 0,
     );
     expect(started.firstLessonCompleted, isFalse);
+    expect(started.worldOneEntryObserved, isTrue);
     expect(started.worldOneCompleted, isFalse);
     final finished = Act0BetaLearningMetricsV1.fromProgress(
       firstWorld: w1,
@@ -73,8 +74,79 @@ void main() {
       correctedMistakes: 3,
     );
     expect(finished.firstLessonCompleted, isTrue);
+    expect(finished.worldOneEntryObserved, isTrue);
     expect(finished.worldOneCompleted, isTrue);
     expect(finished.correctedMistakes, 3);
+  });
+
+  test('W1 completion cohort requires durable W1 learning activity', () {
+    final worlds = Act0ShellStateV1.sample.worlds;
+    final w1 = worlds.firstWhere((world) => world.worldId == 'world_1');
+    final w2 = worlds.firstWhere((world) => world.worldId == 'world_2');
+    final firstW1TaskId = w1.lessons.first.courseTaskList.first.taskId;
+
+    Act0BetaLearningMetricsV1 metrics({
+      required int rulesScore,
+      required String currentLessonId,
+      Set<String> completedTaskIds = const {},
+    }) => Act0BetaLearningMetricsV1.fromProgress(
+      firstWorld: w1,
+      courseWorlds: worlds,
+      currentLessonId: currentLessonId,
+      rulesBestScore: rulesScore,
+      rulesCheckCompleted: true,
+      completedTaskIds: completedTaskIds,
+      correctedMistakes: 0,
+    );
+
+    // A fresh/default W1 cursor is not proof that the lesson was entered.
+    expect(
+      metrics(
+        rulesScore: 0,
+        currentLessonId: w1.lessons.first.lessonId,
+      ).worldOneEntryObserved,
+      isFalse,
+    );
+    // An 8/10 route selects W1 before any durable learning activity.
+    expect(
+      metrics(
+        rulesScore: 8,
+        currentLessonId: w1.lessons.first.lessonId,
+      ).worldOneEntryObserved,
+      isFalse,
+    );
+    // Completing the first ordinary W1 step makes the entry observable.
+    expect(
+      metrics(
+        rulesScore: 8,
+        currentLessonId: w1.lessons.first.lessonId,
+        completedTaskIds: {firstW1TaskId},
+      ).worldOneEntryObserved,
+      isTrue,
+    );
+    expect(
+      metrics(
+        rulesScore: 9,
+        currentLessonId: w2.lessons.first.lessonId,
+      ).worldOneEntryObserved,
+      isFalse,
+    );
+
+    final afterVoluntaryW1Entry = metrics(
+      rulesScore: 9,
+      currentLessonId: w2.lessons.first.lessonId,
+      completedTaskIds: {firstW1TaskId},
+    );
+    expect(afterVoluntaryW1Entry.worldOneEntryObserved, isTrue);
+    expect(afterVoluntaryW1Entry.worldOneCompleted, isFalse);
+
+    final afterRestart = metrics(
+      rulesScore: 9,
+      currentLessonId: w2.lessons.first.lessonId,
+      completedTaskIds: {firstW1TaskId},
+    );
+    expect(afterRestart.worldOneEntryObserved, isTrue);
+    expect(afterRestart.worldOneCompleted, isFalse);
   });
 
   test('only bounded return and survey data survive reload', () async {
@@ -343,6 +415,7 @@ void main() {
           'Sharky beta summary v1',
           'Beta day: 1',
           'First lesson: Complete',
+          'World 1 entry: Observed',
           'World 1: Incomplete',
           'Corrected mistakes: 1',
           'Day 2: pending',
@@ -369,6 +442,47 @@ void main() {
       );
     },
   );
+
+  testWidgets('persisted 8/10 W1 cursor is not reported as an observed entry', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({
+      'onboardingCompleted': true,
+      'act0_shell_progress_v1': jsonEncode({
+        'schemaVersion': 18,
+        'completedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'skippedTaskIds': <String>[],
+        'selectedWorldId': 'world_1',
+        'selectedLessonId': 'what_poker_is',
+        'selectedTaskId': 'what_poker_is_theory',
+        'earnedXp': 80,
+        'w1RulesBestScore': 8,
+      }),
+    });
+    await tester.binding.setSurfaceSize(const Size(393, 852));
+    addTearDown(() => tester.binding.setSurfaceSize(null));
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Act0ShellPreviewScreenV1(
+          initialTab: Act0ShellTabV1.profile,
+          showPlacementOnStart: false,
+          enableBetaMetrics: true,
+          clock: _Clock(),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byKey(const Key('act0_academy_you_leaf_settings')));
+    await tester.pumpAndSettle();
+    final entry = find.byKey(const Key('act0_settings_beta_activity'));
+    await tester.ensureVisible(entry);
+    await tester.tap(entry);
+    await tester.pumpAndSettle();
+
+    expect(find.text('World 1 entry: Not observed'), findsOneWidget);
+  });
 
   testWidgets(
     'Settings shows version and local support with Beta activity off',
@@ -490,6 +604,7 @@ void main() {
       }
       expect(find.text('Day 2: Returned'), findsOneWidget);
       expect(find.text('Day 7: Still open'), findsOneWidget);
+      expect(find.text('World 1 entry: Observed'), findsOneWidget);
       expect(find.text('Corrected mistakes: 0'), findsOneWidget);
 
       final yes = find.widgetWithText(ChoiceChip, 'Yes').first;
@@ -515,6 +630,7 @@ void main() {
       await tester.tap(find.text('Copy summary'));
       await settle();
       expect(clipboard, startsWith('Sharky beta summary v1\nBeta day: 1'));
+      expect(clipboard, contains('World 1 entry: Observed'));
       expect(clipboard, contains('Survey 1: yes'));
       expect(find.text('Summary copied.'), findsOneWidget);
 
