@@ -227,7 +227,14 @@ void main() {
         find.byKey(const Key('act0_first_lesson_reminder_no')),
         findsNothing,
       );
-      await _tap(tester, 'act0_shell_block_summary_home_cta');
+      await _tap(tester, 'act0_shell_block_summary_map_cta');
+      final homeTab = find.descendant(
+        of: find.byKey(const Key('act0_shell_bottom_nav')),
+        matching: find.text('Home'),
+      );
+      expect(homeTab, findsOneWidget);
+      await tester.tap(homeTab);
+      await tester.pumpAndSettle();
       expect(find.text('Today’s goal complete'), findsOneWidget);
       expect(find.byKey(const Key('act0_home_daily_practice')), findsNothing);
 
