@@ -43,6 +43,7 @@ codex_*.txt
 flutter_*.txt
 dart_analyze*.txt
 dartanalyze*.log
+/tools/an_before.txt
 fast_loop_out.txt
 *_diff.txt
 
