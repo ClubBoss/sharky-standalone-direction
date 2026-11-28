@@ -1,0 +1,48 @@
+{
+  "schema": "v9_pre_b100_widget_evidence_v1",
+  "candidate_sha": "4858396b4398ec12ac348bba5f40f8f26266c077",
+  "captured_at_utc": "2026-11-28T04:08:48Z",
+  "toolchain": {
+    "flutter": "3.35.0",
+    "dart": "3.9.0"
+  },
+  "viewport": {
+    "width": 393,
+    "height": 852,
+    "device_pixel_ratio": 1
+  },
+  "walkthrough": {
+    "command": "./tools/capture_act0_screens_v1.sh v9 walkthrough",
+    "result": "pass",
+    "duration_seconds": 264,
+    "worlds": 12,
+    "tasks": 498,
+    "screens": 270,
+    "repairs_ok": 12,
+    "overflow_errors": 0,
+    "exceptions": 0,
+    "xp_delta": 4247,
+    "w2_plus_seeded_prerequisite_credit": true
+  },
+  "recovery": {
+    "command": "flutter test test/ui_v2/act0_w1_long_session_v1_test.dart --dart-define=ACT0_LONG_SESSION_FULL_ROUTE=true --plain-name 'a fresh learner finishes W1-W12 with mistakes, retries and restarts' --reporter expanded",
+    "result": "pass",
+    "duration_seconds": 1120,
+    "fresh_learner": true,
+    "worlds": 12,
+    "verified_remounts": 12,
+    "preserved_fields": [
+      "completedTaskIds",
+      "earnedXp",
+      "selectedWorldId",
+      "selectedTaskId"
+    ]
+  },
+  "not_proven": [
+    "physical iPhone rendering",
+    "final skin acceptance",
+    "native haptics, keyboard, safe areas, touch, or lifecycle interruption",
+    "update or reinstall retention",
+    "Human acceptance"
+  ]
+}
