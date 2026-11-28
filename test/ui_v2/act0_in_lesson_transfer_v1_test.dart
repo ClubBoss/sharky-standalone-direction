@@ -465,6 +465,7 @@ void main() {
       final intent = (missed['openRepairIntents'] as List)
           .cast<Map>()
           .singleWhere((row) => row['sourceTaskId'] == source);
+      final sourceRepairOccurrenceId = intent['repairOccurrenceId'] as String;
       expect(intent['targetTaskId'], target);
       expect(intent['mappingType'], 'repair');
       expect(missed['earnedXp'], initialXp);
@@ -527,6 +528,13 @@ void main() {
       expect(alternate.reviewKind, Act0ReviewKindV1.alternateSameSignal);
       expect(completed['earnedXp'], afterExact['earnedXp']);
       expect(completed['completedTaskIds'], afterExact['completedTaskIds']);
+      expect(
+        (completed['openRepairIntents'] as List).cast<Map>().where(
+          (row) => row['repairOccurrenceId'] == sourceRepairOccurrenceId,
+        ),
+        isEmpty,
+        reason: 'The successful alternate closes this source occurrence.',
+      );
       expect(
         (completed['reviewMistakeHistory'] as List).cast<Map>().any(
           (row) => row['sourceTaskId'] == source,
