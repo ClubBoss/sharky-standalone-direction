@@ -9,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_retry_option_order_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -304,6 +305,108 @@ void main() {
     expect(contract!.targetTaskId, _noPair);
     expect(contract.mappingType, 'intentional_exact');
   });
+
+  test(
+    'B153 relation is pinned to approved identity, choice, and fingerprints',
+    () {
+      const sourceWorld = 'world_7';
+      const sourceLesson = 'w7_visible_cards_and_price';
+      const sourceTask = 'w7_clean_outs_lower_price';
+      const sourceChoice = 'choice_2';
+      const targetTask = 'w4_big_price_marginal_fold';
+      const pinnedSourceFingerprint =
+          '3264f4a4c4821a0cc7e64b79af4e0b1e856643069b0aaeb241271be873fad537';
+      final task = _task(sourceTask);
+      final wrongChoice = task.runner.options.singleWhere(
+        (choice) => choice.id == sourceChoice,
+      );
+      final approved = act0RepairGoalContractForSourceV1(
+        worldId: sourceWorld,
+        lessonId: sourceLesson,
+        taskId: sourceTask,
+        choiceId: sourceChoice,
+      );
+
+      expect(approved, isNotNull);
+      expect(approved!.targetTaskId, targetTask);
+      expect(approved.sourceFingerprint, pinnedSourceFingerprint);
+      expect(
+        act0RepairGoalContractForSourceV1(
+          worldId: sourceWorld,
+          lessonId: 'outs_and_equity_basics',
+          taskId: sourceTask,
+          choiceId: sourceChoice,
+        ),
+        isNull,
+      );
+      expect(
+        act0RepairGoalContractForSourceV1(
+          worldId: sourceWorld,
+          lessonId: sourceLesson,
+          taskId: sourceTask,
+          choiceId: 'choice_1',
+        )?.targetTaskId,
+        isNot(targetTask),
+      );
+
+      String? currentFingerprint({
+        required String worldId,
+        required String lessonId,
+        required String taskId,
+      }) => act0CurrentAuthoredSourceFingerprintForIdentityV1(
+        worldId: worldId,
+        lessonId: lessonId,
+        taskId: taskId,
+      );
+
+      final staleSource = buildAct0RepairIntentV1(
+        sourceWorldId: sourceWorld,
+        sourceLessonId: sourceLesson,
+        sourceTaskId: sourceTask,
+        runner: task.runner,
+        selectedOption: wrongChoice,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            ({required worldId, required lessonId, required taskId}) =>
+                worldId == sourceWorld &&
+                    lessonId == sourceLesson &&
+                    taskId == sourceTask
+                ? 'stale-source'
+                : currentFingerprint(
+                    worldId: worldId,
+                    lessonId: lessonId,
+                    taskId: taskId,
+                  ),
+      );
+      expect(staleSource, isNotNull);
+      expect(staleSource!.targetTaskId, sourceTask);
+      expect(staleSource.mappingType, 'unresolved_product_gap');
+      expect(staleSource.relationId, isEmpty);
+      expect(staleSource.sourceFingerprint, isEmpty);
+
+      final staleTarget = buildAct0RepairIntentV1(
+        sourceWorldId: sourceWorld,
+        sourceLessonId: sourceLesson,
+        sourceTaskId: sourceTask,
+        runner: task.runner,
+        selectedOption: wrongChoice,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            ({required worldId, required lessonId, required taskId}) =>
+                taskId == targetTask
+                ? 'stale-target'
+                : currentFingerprint(
+                    worldId: worldId,
+                    lessonId: lessonId,
+                    taskId: taskId,
+                  ),
+      );
+      expect(staleTarget, isNotNull);
+      expect(staleTarget!.targetTaskId, sourceTask);
+      expect(staleTarget.mappingType, 'unresolved_product_gap');
+      expect(staleTarget.targetFingerprint, isEmpty);
+    },
+  );
 
   test(
     'Day 7 review-only B153 target is contract-bound, not elapsed proof',
