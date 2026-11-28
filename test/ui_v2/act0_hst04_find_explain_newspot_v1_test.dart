@@ -170,9 +170,7 @@ void main() {
     expect(tester.widget<Text>(decision).data, 'Your choice: Call');
   });
 
-  testWidgets('Replay miss launches its resolved drill and returns to replay', (
-    tester,
-  ) async {
+  testWidgets('HST-04 find explain new spot regression', (tester) async {
     const worldId = 'world_1';
     const lessonId = 'what_poker_is';
     const sourceId = 'what_poker_is_find_hero';
@@ -204,11 +202,23 @@ void main() {
       recordedAtUtc: DateTime.utc(2026, 11, 24, 10),
       assistanceKind: Act0DecisionAssistanceV1.none,
     );
+    const completedTaskIds = ['what_poker_is_theory', sourceId, targetId];
+    const earnedXp = 15;
     final attempt = Act0ArchivedAttemptV1.fromRecordedDecision(
       evidence,
+      taskLabel: source.runner.question,
+      choiceLabel: 'Top',
       recordedTrail: const [
         Act0ActionTrailItemV1.note(label: 'Your choice: Top'),
       ],
+      actionReason: const Act0ActionReasonResultV1(
+        false,
+        Act0ReasonV1(
+          'The Button marks Hero; the top seat does not.',
+          Act0ReasonGradeV1.wrong,
+          Act0MisconceptionTagV1.range,
+        ),
+      ),
     )!;
     final history = Act0LearningEvidenceHistoryV1(records: [evidence]);
     final archive = const Act0AttemptArchiveV1.empty().add(attempt);
@@ -219,10 +229,10 @@ void main() {
         'schemaVersion': 20,
         // Only the other completed drill is eligible; the miss is a replay of
         // an already-completed source and must not resolve to itself.
-        'completedTaskIds': ['what_poker_is_theory', sourceId, targetId],
+        'completedTaskIds': completedTaskIds,
         'completedLessonIds': <String>[],
         'skippedTaskIds': <String>[],
-        'earnedXp': 15,
+        'earnedXp': earnedXp,
         'selectedWorldId': worldId,
         'selectedLessonId': lessonId,
         'selectedTaskId': targetId,
@@ -258,9 +268,22 @@ void main() {
     }
 
     await tap('act0_review_open_attempts');
+    final search = find.byKey(const Key('act0_attempt_archive_search'));
+    await tester.enterText(search, '  WHAT_POKER_IS_FIND_HERO  ');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
     await tap('act0_attempt_archive_entry_${attempt.id}');
+    expect(find.text('Your choice: Top'), findsOneWidget);
+    expect(
+      find.text(
+        'Reason: The Button marks Hero; the top seat does not. · '
+        'Range after visible cards',
+      ),
+      findsOneWidget,
+    );
     await tap('act0_attempt_archive_open_replay');
     await tap('act0_attempt_replay_next');
+    expect(find.text('Your choice: Top'), findsOneWidget);
     expect(find.text('Practise this spot'), findsOneWidget);
     final replay = find.byType(Act0AttemptReplayScreenV1);
     final runner = find.byType(Act0LessonRunnerShellV1);
@@ -299,6 +322,8 @@ void main() {
     expect(result.isRepaired, isTrue);
     expect(result.isIndependentCorrect, isFalse);
     expect(result.resultKind, act0RepairedResultKindV1);
-    expect(saved['earnedXp'], 15);
+    expect(saved['completedTaskIds'], unorderedEquals(completedTaskIds));
+    expect(saved['completedLessonIds'], isEmpty);
+    expect(saved['earnedXp'], earnedXp);
   });
 }
