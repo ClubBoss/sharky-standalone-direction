@@ -374,6 +374,11 @@ class _AcademySettingsRouteV1State extends State<_AcademySettingsRouteV1>
     try {
       await AppSettingsService.instance.load();
       try {
+        await Act0PracticeReminderV1.refreshEnabled();
+      } catch (_) {
+        // The platform may be unavailable; fail closed with the toggle off.
+      }
+      try {
         await Act0PracticeReminderV1.refreshTime();
       } catch (_) {
         // The platform may be unavailable; keep the default time.

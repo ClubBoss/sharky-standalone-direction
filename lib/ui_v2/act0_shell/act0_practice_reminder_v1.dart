@@ -38,6 +38,11 @@ abstract final class Act0PracticeReminderV1 {
   static Future<bool> setTime(TimeOfDay value) =>
       _enqueue('setTime', selectedTime: value);
 
+  /// Restore the native opt-in after a cold Flutter process start. This uses
+  /// the same serialized tail as writes, so a late read cannot overtake a
+  /// disable or reset already queued by the app.
+  static Future<bool> refreshEnabled() => _enqueue('getEnabled');
+
   static Future<void> refreshTime() async {
     if (!isSupported) return;
     final value = await _channel.invokeMethod<Object>('getTime');
