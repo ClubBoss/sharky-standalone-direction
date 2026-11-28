@@ -353,8 +353,9 @@ void main() {
       _record(correct: true, lesson: _new, order: 2),
     ]);
     expect(retry.answeredTasks, 1);
-    expect(retry.independentTasks, 1);
-    expect(retry.tasksToRevisit, 0);
+    expect(retry.independentTasks, 0);
+    expect(retry.helpedOrUnverifiedTasks, 1);
+    expect(retry.tasksToRevisit, 1);
     expect(
       skill([
         _record(correct: true, fingerprint: 'stale'),
