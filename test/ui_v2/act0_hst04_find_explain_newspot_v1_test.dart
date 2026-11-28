@@ -269,10 +269,18 @@ void main() {
 
     await tap('act0_review_open_attempts');
     final search = find.byKey(const Key('act0_attempt_archive_search'));
-    await tester.enterText(search, '  WHAT_POKER_IS_FIND_HERO  ');
+    final rowKey = 'act0_attempt_archive_entry_${attempt.id}';
+    await tester.enterText(search, 'no matching saved attempt');
+    await tester.pumpAndSettle();
+    expect(find.text('No matching attempts.'), findsOneWidget);
+    expect(find.byKey(Key(rowKey)), findsNothing);
+
+    // Search with the question the learner saw, not an internal task ID.
+    await tester.enterText(search, source.runner.question);
     await tester.testTextInput.receiveAction(TextInputAction.done);
     await tester.pumpAndSettle();
-    await tap('act0_attempt_archive_entry_${attempt.id}');
+    expect(find.byKey(Key(rowKey)), findsOneWidget);
+    await tap(rowKey);
     expect(find.text('Your choice: Top'), findsOneWidget);
     expect(
       find.text(
