@@ -65,6 +65,36 @@ class LaneDiagnosticsFixturesTest(unittest.TestCase):
         self.assertNotIn("--dart-define=SHARKY_W13_PLUS_PILOT=true", truth)
         self.assertIn("--dart-define=SHARKY_W13_PLUS_PILOT=true", census)
 
+    def test_tier_a_measured_weights_cover_and_balance_every_shard_owner(self):
+        primary_names = {
+            command["name"]
+            for command in run_lane_v1.TIER_A_COMMANDS
+            if "shard_with" not in command
+        }
+        self.assertEqual(primary_names, set(run_lane_v1.TIER_A_WEIGHTS))
+
+        owners = run_lane_v1._shard_owners(
+            list(primary_names),
+            3,
+            run_lane_v1.TIER_A_WEIGHTS,
+            default_weight=10,
+            pinned_shard_zero=run_lane_v1.TIER_A_SHARD0,
+        )
+        loads = [
+            sum(
+                run_lane_v1.TIER_A_WEIGHTS[name]
+                for name, owner in owners.items()
+                if owner == index
+            )
+            for index in range(3)
+        ]
+
+        self.assertLessEqual(max(loads) - min(loads), 15)
+        self.assertEqual(
+            owners["durable learner truth and assessment interaction (LDR-01)"],
+            0,
+        )
+
     def test_long_session_budgets_are_scoped_and_larger_overrides_still_apply(self):
         names = (
             "Long-session focused save and replay cases",

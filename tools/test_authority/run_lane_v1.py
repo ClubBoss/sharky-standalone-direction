@@ -436,22 +436,46 @@ def _run_world1_gate(name: str, cmd: list[str], timeout: int) -> dict[str, objec
         return result
 
 
-# Rough CI seconds per Tier A command, used only to balance parallel shards.
-# Unknown names count as 10s. A stale number only makes shards less even.
+# Rounded seconds from a serial Flutter 3.35 run on 2026-11-28, used only to
+# balance parallel shards. A grouped command includes every command whose
+# `shard_with` points to it. Unknown names still count as 10s for callers that
+# exercise the helper with synthetic commands.
 TIER_A_WEIGHTS = {
+    "poker W4 closed-flop actor and historical compatibility": 18,
+    "B101 skin swap rehearsal and default parity": 72,
+    "B111 designer skin pack CLI": 1,
+    "B111 designer skin pack contract": 1,
+    "poker face-up physical disclosure": 15,
+    "poker W6 full-house explanation": 17,
+    "Academy Placement Review widget-host remount default OFF": 28,
+    "Academy Placement Review widget-host remount preview ON": 26,
+    "flutter analyze": 32,
+    "feedback completeness guard": 1,
+    "canonical truth map guard": 20,
+    "runtime-bundle parity": 17,
+    "terminology/copy guard": 17,
+    "Wave 5 telemetry": 34,
+    "Long-session focused save and replay cases": 49,
+    "V9 walkthrough W1 capture and JSON smoke": 70,
+    "GRO clean W1 route, mocked share and review report": 54,
+    "W1-W3 long session across restarts": 173,
+    "W4-W7 long session across restarts": 137,
+    "W1-W4 skill map and evidence states": 46,
+    "POST.17 harder practice source parity (pilot on)": 27,
+    # Includes the two separately executed Vol2 pilot commands.
+    "repair intent": 148,
+    "durable learner truth and assessment interaction (LDR-01)": 58,
+    # Includes action-reason default OFF and pilot ON.
+    "repair outcome + queue": 68,
+    "source scope, showdown disclosure and replay chronology (Q0)": 24,
+    "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 20,
+    "poker hand-ranking truth (#334)": 16,
+    "Academy Review adapter default OFF": 16,
+    "Academy Review adapter ON": 47,
     "World 1 release gate": 55,
-    "durable learner truth and assessment interaction (LDR-01)": 53,
-    "flutter analyze": 49,
-    "Academy Placement Review widget-host remount preview ON": 39,
-    "Wave 5 telemetry": 38,
-    "Academy Placement Review widget-host remount default OFF": 29,
-    "repair intent": 35,
-    "Long-session focused save and replay cases": 75,
-    "W1-W3 long session across restarts": 290,
-    "W4-W7 long session across restarts": 250,
-    "poker W4 closed-flop actor and historical compatibility": 15,
-    "source scope, showdown disclosure and replay chronology (Q0)": 13,
-    "source task/choice identity and historical fingerprint (ASM-01/ASM-07)": 11,
+    "repair intent lifecycle (Academy Review default OFF)": 33,
+    "Academy Practice production-scale control (140%)": 18,
+    "Academy Practice defensive component text scale (160%)": 16,
 }
 # LDR-01 writes the OBS04 captures; the CI job sealing them runs shard 0.
 TIER_A_SHARD0 = ("durable learner truth and assessment interaction (LDR-01)",)
