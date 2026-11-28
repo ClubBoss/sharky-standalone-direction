@@ -16,6 +16,8 @@ from typing import Iterable
 
 SCHEMA = "SHARKY_DART_TEST_FILE_TIMINGS_V1"
 SUPPORTED_PROTOCOLS = {"0.1.1"}
+# JsonReporter normalizes Result.skipped to success and emits the flag separately.
+TEST_RESULTS = {"success", "failure", "error"}
 
 
 class TimingInputError(ValueError):
@@ -76,7 +78,7 @@ def parse_events(lines: Iterable[str]) -> dict[str, object]:
             if protocol is not None:
                 raise TimingInputError("multiple start events; provide exactly one test run")
             protocol_value = event.get("protocolVersion")
-            if protocol_value not in SUPPORTED_PROTOCOLS:
+            if not isinstance(protocol_value, str) or protocol_value not in SUPPORTED_PROTOCOLS:
                 raise TimingInputError(
                     f"unsupported Dart test JSON protocol {protocol_value!r}; "
                     f"supported: {', '.join(sorted(SUPPORTED_PROTOCOLS))}"
@@ -126,8 +128,11 @@ def parse_events(lines: Iterable[str]) -> dict[str, object]:
             if tests[test_id]["done_ms"] is not None:
                 raise TimingInputError(f"duplicate testDone for test {test_id}")
             result = event.get("result")
-            if not isinstance(result, str):
-                raise TimingInputError(f"testDone result missing for test {test_id}")
+            if not isinstance(result, str) or result not in TEST_RESULTS:
+                raise TimingInputError(
+                    f"testDone result {result!r} is invalid for test {test_id}; "
+                    f"expected one of {', '.join(sorted(TEST_RESULTS))}"
+                )
             skipped = event.get("skipped")
             if type(skipped) is not bool:
                 raise TimingInputError(f"testDone skipped flag missing for test {test_id}")
@@ -171,6 +176,8 @@ def parse_events(lines: Iterable[str]) -> dict[str, object]:
             status = "incomplete"
         elif any(test["result"] != "success" for test in terminal_tests):
             status = "fail"
+        elif not visible_tests:
+            status = "no_visible_tests"
         elif visible_tests and all(test["skipped"] for test in visible_tests):
             status = "skipped"
         else:
@@ -281,7 +288,7 @@ def render_text(report: dict[str, object]) -> str:
             f"overlap={str(run['has_overlapping_file_windows']).lower()}"
         ),
         "",
-        "seconds  status      tests  overlaps  path",
+        "seconds  status            tests  overlaps  path",
     ]
     for row in report["files"]:
         overlap_count = len(row["overlaps_with_suite_ids"])
@@ -291,7 +298,7 @@ def render_text(report: dict[str, object]) -> str:
         else:
             duration = _seconds(value)
         lines.append(
-            f"{duration:>7}  {row['status']:<10}  {row['visible_test_count']:>5}  "
+            f"{duration:>7}  {row['status']:<16}  {row['visible_test_count']:>5}  "
             f"{overlap_count:>8}  {row['path'] or '[path unavailable]'}"
         )
     lines.extend(["", *(f"NOTE: {warning}" for warning in report["warnings"])])

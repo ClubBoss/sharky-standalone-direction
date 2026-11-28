@@ -138,12 +138,47 @@ class JsonFileTimingsFixturesTest(unittest.TestCase):
         self.assertEqual(rows["pass_test.dart"]["status"], "pass")
         self.assertEqual(rows["fail_test.dart"]["status"], "fail")
 
+    def test_hidden_only_suite_is_not_reported_as_passing_visible_tests(self):
+        report = timings.parse_events(
+            events(
+                start(),
+                suite(1, "load_only_test.dart", 10),
+                test_start(2, 1, 10),
+                test_done(2, 1010, hidden=True),
+                {"type": "done", "time": 1020, "success": True},
+            )
+        )
+
+        row = report["files"][0]
+        self.assertEqual(row["status"], "no_visible_tests")
+        self.assertEqual(row["observed_window_seconds"], 1.0)
+        self.assertEqual(row["visible_test_count"], 0)
+        self.assertEqual(row["hidden_test_count"], 1)
+
     def test_rejects_mixed_runs_and_unknown_protocol(self):
         with self.assertRaisesRegex(timings.TimingInputError, "multiple start"):
             timings.parse_events(events(start(), start()))
         unsupported = start() | {"protocolVersion": "9.9.9"}
         with self.assertRaisesRegex(timings.TimingInputError, "unsupported"):
             timings.parse_events(events(unsupported))
+
+        for malformed in ({"unexpected": "object"}, ["unexpected", "list"]):
+            with self.subTest(protocol=malformed), self.assertRaisesRegex(
+                timings.TimingInputError, "unsupported"
+            ):
+                timings.parse_events(events(start() | {"protocolVersion": malformed}))
+
+    def test_rejects_unknown_test_result(self):
+        with self.assertRaisesRegex(timings.TimingInputError, "result.*invalid"):
+            timings.parse_events(
+                events(
+                    start(),
+                    suite(1, "unknown_result_test.dart", 0),
+                    test_start(2, 1, 0),
+                    test_done(2, 100, result="cancelled"),
+                    {"type": "done", "time": 110, "success": False},
+                )
+            )
 
     def test_cli_fails_closed_for_non_json_input(self):
         with tempfile.TemporaryDirectory() as temp_dir:
