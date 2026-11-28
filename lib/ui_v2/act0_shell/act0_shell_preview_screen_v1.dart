@@ -1203,6 +1203,12 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String debugSelectedLessonIdV1() => _selectedLessonId;
 
   @visibleForTesting
+  int debugProfileWorldsClearedCountV1() => _profileState(
+    _catalogStateV1.profile,
+    _progressSnapshot(_catalogStateV1),
+  ).worldsClearedCount;
+
+  @visibleForTesting
   String debugPhaseV1() => _phase.name;
 
   @visibleForTesting
@@ -3064,7 +3070,10 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
       ),
       Act0ShellNextStepV1.lesson => Act0AcademyHomeNextActionV1(
         title: _localizedLessonTitleV1(dailyLesson),
-        subtitle: _localizedLessonSubtitleV1(dailyLesson),
+        subtitle: addedLessonWorld?.worldId == nextWorld.worldId
+            ? '${_copyV1(en: 'New material', ru: 'Новый материал')} · '
+                  '${_localizedLessonSubtitleV1(dailyLesson)}'
+            : _localizedLessonSubtitleV1(dailyLesson),
         ctaLabel: 'Start lesson',
         onPressed: () => setState(() {
           final task = _firstIncompleteTask(dailyLesson);

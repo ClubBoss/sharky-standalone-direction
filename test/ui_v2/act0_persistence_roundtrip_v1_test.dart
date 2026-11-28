@@ -650,6 +650,11 @@ void main() {
     expect(stored['completedLessonIds'], isEmpty);
     expect(stored['retainedAccessWorldIds'], ['world_1', 'world_2']);
     expect(stored['earnedXp'], 0);
+    expect(
+      shell.debugProfileWorldsClearedCountV1(),
+      0,
+      reason: 'Placement-only route closure is not a profile world clear.',
+    );
   });
 
   testWidgets(
@@ -741,6 +746,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text(addedLesson.title), findsWidgets);
+      expect(find.textContaining('New material'), findsOneWidget);
       expect(
         find.text(
           '${completedWorld.lessons.length - 1} of '
@@ -796,6 +802,11 @@ void main() {
         find.text('$retainedTaskCount tasks completed'),
         findsOneWidget,
         reason: 'Previously earned course progress must remain visible.',
+      );
+      expect(
+        shell.debugProfileWorldsClearedCountV1(),
+        1,
+        reason: 'The previously earned world clear remains profile evidence.',
       );
 
       shell.debugPersistProgressV1();
