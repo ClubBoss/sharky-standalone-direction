@@ -335,11 +335,23 @@ class _LegacySurfaceRedirectV1 extends StatefulWidget {
 }
 
 class _LegacySurfaceRedirectV1State extends State<_LegacySurfaceRedirectV1> {
+  bool _removalScheduled = false;
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_removalScheduled) return;
+    final route = ModalRoute.of<void>(context);
+    final navigator = Navigator.maybeOf(context);
+    if (route == null || navigator == null) return;
+    _removalScheduled = true;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) Navigator.of(context).maybePop();
+      if (!mounted ||
+          !route.isActive ||
+          !identical(route.navigator, navigator)) {
+        return;
+      }
+      navigator.removeRoute(route);
     });
   }
 

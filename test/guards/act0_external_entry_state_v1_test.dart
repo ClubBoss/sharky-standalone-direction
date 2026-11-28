@@ -1,3 +1,4 @@
+import 'dart:async' show unawaited;
 import 'dart:convert';
 import 'dart:io';
 
@@ -42,6 +43,7 @@ void main() {
     WidgetTester tester, {
     String? pending,
     bool legacyPlacement = false,
+    GlobalKey<NavigatorState>? navigatorKey,
   }) async {
     tester.view.physicalSize = const Size(393, 852);
     tester.view.devicePixelRatio = 1;
@@ -56,7 +58,10 @@ void main() {
     });
     // AppRoot uses the production InkRipple theme and the real entry gate.
     await tester.pumpWidget(
-      AppRoot(debugLegacyPlacementOnStart: legacyPlacement),
+      AppRoot(
+        navigatorKey: navigatorKey,
+        debugLegacyPlacementOnStart: legacyPlacement,
+      ),
     );
     await tester.pumpAndSettle();
     expect(takes, 1);
@@ -383,6 +388,37 @@ void main() {
     },
     variant: ios,
   );
+
+  testWidgets('E35 legacy alias removes itself without popping a newer route', (
+    tester,
+  ) async {
+    final navigatorKey = GlobalKey<NavigatorState>();
+    await mount(tester, navigatorKey: navigatorKey);
+    final before = await answerFirstTask(tester);
+    final saved = await _savedProgress(tester);
+    final shellState = tester.state(shells);
+
+    await tester.binding.handlePushRoute('/home');
+    unawaited(
+      navigatorKey.currentState!.push<void>(
+        MaterialPageRoute<void>(
+          settings: const RouteSettings(name: '/newer-route'),
+          builder: (_) => const Scaffold(body: Text('Newer route')),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Newer route'), findsOneWidget);
+    navigatorKey.currentState!.pop();
+    await tester.pumpAndSettle();
+    expect(navigatorKey.currentState!.canPop(), isFalse);
+    expect(shells, findsOneWidget);
+    expect(tester.state(shells), same(shellState));
+    expectSameAnswer(tester, before);
+    expect(_learnerTruth(await _savedProgress(tester)), _learnerTruth(saved));
+    await unmount(tester);
+  }, variant: ios);
 
   test('E35 external ingress inventory ratchet', _checkExternalEntryInventory);
   test('E35 detector recognizes new handlers in old and new files', () {
