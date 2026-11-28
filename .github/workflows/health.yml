@@ -38,6 +38,9 @@ jobs:
           flutter --version
 
       - name: Pub get
+        # PR-safe Health does not run either package-dependent dashboard step.
+        # Keep resolution on main pushes, where those steps can run.
+        if: github.event_name != 'pull_request'
         run: dart pub get
 
       - name: Detect PR changes (git diff)
@@ -90,7 +93,8 @@ jobs:
       - name: SDK Self-Check
         run: |
           if [ -f tools/sdk_selfcheck.dart ]; then
-            dart run tools/sdk_selfcheck.dart
+            # SDK-only imports: direct execution must not trigger package resolution.
+            dart tools/sdk_selfcheck.dart
           else
             echo "SKIP: tools/sdk_selfcheck.dart not present"
           fi
