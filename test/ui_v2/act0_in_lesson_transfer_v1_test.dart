@@ -9,6 +9,7 @@ import 'package:poker_analyzer/ui_v2/act0_shell/act0_learning_evidence_contract_
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_lesson_runner_shell_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_progress_store_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_gap_adjudication_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_repair_intent_contract_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_retry_option_order_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_state_v1.dart';
@@ -286,6 +287,164 @@ void main() {
     },
   );
 
+  test('unconfirmed B153 pair remains fail-closed on its exact replay', () {
+    final lesson = _lesson(_noPair);
+    final world = _worlds.singleWhere((item) => item.lessons.contains(lesson));
+    final wrongChoice = _task(
+      _noPair,
+    ).runner.options.firstWhere((choice) => !choice.isCorrect);
+    final contract = act0RepairGoalContractForSourceV1(
+      worldId: world.worldId,
+      lessonId: lesson.lessonId,
+      taskId: _noPair,
+      choiceId: wrongChoice.id,
+    );
+
+    expect(act0VerifiedTransferTargetV1(_noPair), isNull);
+    expect(contract, isNotNull);
+    expect(contract!.targetTaskId, _noPair);
+    expect(contract.mappingType, 'intentional_exact');
+  });
+
+  test(
+    'B153 relation is pinned to approved identity, choice, and fingerprints',
+    () {
+      const sourceWorld = 'world_7';
+      const sourceLesson = 'w7_visible_cards_and_price';
+      const sourceTask = 'w7_clean_outs_lower_price';
+      const sourceChoice = 'choice_2';
+      const targetTask = 'w4_big_price_marginal_fold';
+      const pinnedSourceFingerprint =
+          '3264f4a4c4821a0cc7e64b79af4e0b1e856643069b0aaeb241271be873fad537';
+      final task = _task(sourceTask);
+      final wrongChoice = task.runner.options.singleWhere(
+        (choice) => choice.id == sourceChoice,
+      );
+      final approved = act0RepairGoalContractForSourceV1(
+        worldId: sourceWorld,
+        lessonId: sourceLesson,
+        taskId: sourceTask,
+        choiceId: sourceChoice,
+      );
+
+      expect(approved, isNotNull);
+      expect(approved!.targetTaskId, targetTask);
+      expect(approved.sourceFingerprint, pinnedSourceFingerprint);
+      expect(
+        act0RepairGoalContractForSourceV1(
+          worldId: sourceWorld,
+          lessonId: 'outs_and_equity_basics',
+          taskId: sourceTask,
+          choiceId: sourceChoice,
+        ),
+        isNull,
+      );
+      expect(
+        act0RepairGoalContractForSourceV1(
+          worldId: sourceWorld,
+          lessonId: sourceLesson,
+          taskId: sourceTask,
+          choiceId: 'choice_1',
+        )?.targetTaskId,
+        isNot(targetTask),
+      );
+
+      String? currentFingerprint({
+        required String worldId,
+        required String lessonId,
+        required String taskId,
+      }) => act0CurrentAuthoredSourceFingerprintForIdentityV1(
+        worldId: worldId,
+        lessonId: lessonId,
+        taskId: taskId,
+      );
+
+      final staleSource = buildAct0RepairIntentV1(
+        sourceWorldId: sourceWorld,
+        sourceLessonId: sourceLesson,
+        sourceTaskId: sourceTask,
+        runner: task.runner,
+        selectedOption: wrongChoice,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            ({required worldId, required lessonId, required taskId}) =>
+                worldId == sourceWorld &&
+                    lessonId == sourceLesson &&
+                    taskId == sourceTask
+                ? 'stale-source'
+                : currentFingerprint(
+                    worldId: worldId,
+                    lessonId: lessonId,
+                    taskId: taskId,
+                  ),
+      );
+      expect(staleSource, isNotNull);
+      expect(staleSource!.targetTaskId, sourceTask);
+      expect(staleSource.mappingType, 'unresolved_product_gap');
+      expect(staleSource.relationId, isEmpty);
+      expect(staleSource.sourceFingerprint, isEmpty);
+
+      final staleTarget = buildAct0RepairIntentV1(
+        sourceWorldId: sourceWorld,
+        sourceLessonId: sourceLesson,
+        sourceTaskId: sourceTask,
+        runner: task.runner,
+        selectedOption: wrongChoice,
+        mapSameSignalRep: act0FirstValueSameSignalRepMappingV1,
+        currentFingerprintForIdentity:
+            ({required worldId, required lessonId, required taskId}) =>
+                taskId == targetTask
+                ? 'stale-target'
+                : currentFingerprint(
+                    worldId: worldId,
+                    lessonId: lessonId,
+                    taskId: taskId,
+                  ),
+      );
+      expect(staleTarget, isNotNull);
+      expect(staleTarget!.targetTaskId, sourceTask);
+      expect(staleTarget.mappingType, 'unresolved_product_gap');
+      expect(staleTarget.targetFingerprint, isEmpty);
+    },
+  );
+
+  test(
+    'Day 7 review-only B153 target is contract-bound, not elapsed proof',
+    () {
+      const source = 'spaced_review_w8_effective_stack_basics_board_cards_v1';
+      const target = 'w7_effective_stack_30bb';
+      final task = act0ReviewOnlyTaskV1(
+        'world_8',
+        'effective_stack_basics',
+        source,
+      )!;
+      final wrongChoice = task.runner.options.firstWhere(
+        (choice) => !choice.isCorrect,
+      );
+      final contract = act0RepairGoalContractForSourceV1(
+        worldId: 'world_8',
+        lessonId: 'effective_stack_basics',
+        taskId: source,
+        choiceId: wrongChoice.id,
+      );
+
+      expect(act0VerifiedTransferTargetV1(source)?.taskId, target);
+      expect(contract, isNotNull);
+      expect(contract!.targetTaskId, target);
+      expect(contract.mappingType, 'repair');
+      expect(contract.evidenceClass, 'familiar_rehearsal');
+      expect(
+        contract.sourceFingerprint,
+        act0CurrentAuthoredSourceFingerprintForIdentityV1(
+          worldId: 'world_8',
+          lessonId: 'effective_stack_basics',
+          taskId: source,
+        ),
+      );
+      expect(contract.canClaimIndependentApplication, isFalse);
+    },
+  );
+
   test('B58 exact replay is never a verified transfer', () {
     final exact = act0RepairGapAdjudicationsV1.firstWhere(
       (row) =>
@@ -441,107 +600,126 @@ void main() {
     });
   }
 
-  testWidgets(
-    'W11 miss reaches its verified alternate through Review after restart',
-    (t) async {
-      const source = 'w11_checkpoint_plan_line';
-      const target = 'w11_sb_3bet_value';
-      expect(act0VerifiedTransferTargetV1(source)?.taskId, target);
-      expect(target, isNot(source));
-      expect(
-        act0FoundationRepairGoalForTaskV1(target),
-        act0FoundationRepairGoalForTaskV1(source),
-      );
+  Future<void> proveCourseTransfer(
+    WidgetTester t, {
+    required String source,
+    required String target,
+  }) async {
+    expect(act0VerifiedTransferTargetV1(source)?.taskId, target);
+    expect(target, isNot(source));
 
-      await _open(t, source);
-      await _finishTeaching(t);
-      final initial = await _saved(t);
-      final initialXp = initial['earnedXp'];
-      expect(initial['completedTaskIds'], contains(target));
-      expect(initial['completedTaskIds'], isNot(contains(source)));
+    await _open(t, source);
+    await _finishTeaching(t);
+    final initial = await _saved(t);
+    final initialXp = initial['earnedXp'];
+    expect(initial['completedTaskIds'], contains(target));
+    expect(initial['completedTaskIds'], isNot(contains(source)));
 
-      await _tap(t, 'act0_shell_option_call_2_bb');
-      final missed = await _saved(t);
-      final intent = (missed['openRepairIntents'] as List)
-          .cast<Map>()
-          .singleWhere((row) => row['sourceTaskId'] == source);
-      final sourceRepairOccurrenceId = intent['repairOccurrenceId'] as String;
-      expect(intent['targetTaskId'], target);
-      expect(intent['mappingType'], 'repair');
-      expect(missed['earnedXp'], initialXp);
-      expect(
-        (missed['reviewMistakeHistory'] as List).cast<Map>().any(
-          (row) => row['sourceTaskId'] == source,
-        ),
-        isTrue,
-      );
+    await _answerOnScreen(t, correct: false);
+    final missed = await _saved(t);
+    final intent = (missed['openRepairIntents'] as List)
+        .cast<Map>()
+        .singleWhere((row) => row['sourceTaskId'] == source);
+    final sourceRepairOccurrenceId = intent['repairOccurrenceId'] as String;
+    expect(intent['targetTaskId'], target);
+    expect(intent['mappingType'], 'repair');
+    expect(missed['earnedXp'], initialXp);
+    expect(
+      (missed['reviewMistakeHistory'] as List).cast<Map>().any(
+        (row) => row['sourceTaskId'] == source,
+      ),
+      isTrue,
+    );
 
-      await _tap(t, 'act0_shell_feedback_continue_cta');
-      expect(_runner(t).selectedTaskId, source);
-      await _answerOnScreen(t, correct: true);
-      final afterExact = await _saved(t);
-      final exactHistory = Act0LearningEvidenceHistoryV1.restore(
-        afterExact['learningEvidenceHistory'],
-        afterExact['learningEvidenceLineage'],
-      )!;
-      final exact = exactHistory.records.lastWhere(
-        (record) => record.taskId == source && record.isCorrect,
-      );
-      expect(exact.reviewKind, Act0ReviewKindV1.exactReplay);
-      expect(exact.isIndependentCorrect, isFalse);
-      expect(
-        (afterExact['openRepairIntents'] as List).cast<Map>().singleWhere(
-          (row) => row['sourceTaskId'] == source,
-        ),
-        intent,
-      );
+    await _tap(t, 'act0_shell_feedback_continue_cta');
+    expect(_runner(t).selectedTaskId, source);
+    await _answerOnScreen(t, correct: true);
+    final afterExact = await _saved(t);
+    final exactHistory = Act0LearningEvidenceHistoryV1.restore(
+      afterExact['learningEvidenceHistory'],
+      afterExact['learningEvidenceLineage'],
+    )!;
+    final exact = exactHistory.records.lastWhere(
+      (record) => record.taskId == source && record.isCorrect,
+    );
+    expect(exact.reviewKind, Act0ReviewKindV1.exactReplay);
+    expect(exact.isIndependentCorrect, isFalse);
+    expect(
+      (afterExact['openRepairIntents'] as List).cast<Map>().singleWhere(
+        (row) => row['sourceTaskId'] == source,
+      ),
+      intent,
+    );
 
-      await _tap(t, 'act0_shell_runner_back');
-      await t.tap(find.text('Review').last);
-      await t.pumpAndSettle();
-      await _tap(t, 'act0_academy_review_leaf_repair_cta');
-      expect(_runner(t).selectedTaskId, target);
-      final interrupted = await _saved(t);
+    await _tap(t, 'act0_shell_runner_back');
+    await t.tap(find.text('Review').last);
+    await t.pumpAndSettle();
+    await _tap(t, 'act0_academy_review_leaf_repair_cta');
+    expect(_runner(t).selectedTaskId, target);
+    final interrupted = await _saved(t);
 
-      await _remountReview(t);
-      final restored = await _saved(t);
-      expect(restored['earnedXp'], interrupted['earnedXp']);
-      expect(restored['completedTaskIds'], interrupted['completedTaskIds']);
-      expect(
-        restored['reviewMistakeHistory'],
-        interrupted['reviewMistakeHistory'],
-      );
-      expect(restored['openRepairIntents'], interrupted['openRepairIntents']);
+    await _remountReview(t);
+    final restored = await _saved(t);
+    expect(restored['earnedXp'], interrupted['earnedXp']);
+    expect(restored['completedTaskIds'], interrupted['completedTaskIds']);
+    expect(
+      restored['reviewMistakeHistory'],
+      interrupted['reviewMistakeHistory'],
+    );
+    expect(restored['openRepairIntents'], interrupted['openRepairIntents']);
 
-      await _tap(t, 'act0_academy_review_leaf_repair_cta');
-      expect(_runner(t).selectedTaskId, target);
-      await _finishTeaching(t);
-      await _answerOnScreen(t, correct: true);
-      final completed = await _saved(t);
-      final completedHistory = Act0LearningEvidenceHistoryV1.restore(
-        completed['learningEvidenceHistory'],
-        completed['learningEvidenceLineage'],
-      )!;
-      final alternate = completedHistory.records.lastWhere(
-        (record) => record.taskId == target && record.isCorrect,
-      );
-      expect(alternate.reviewKind, Act0ReviewKindV1.alternateSameSignal);
-      expect(completed['earnedXp'], afterExact['earnedXp']);
-      expect(completed['completedTaskIds'], afterExact['completedTaskIds']);
-      expect(
-        (completed['openRepairIntents'] as List).cast<Map>().where(
-          (row) => row['repairOccurrenceId'] == sourceRepairOccurrenceId,
-        ),
-        isEmpty,
-        reason: 'The successful alternate closes this source occurrence.',
-      );
-      expect(
-        (completed['reviewMistakeHistory'] as List).cast<Map>().any(
-          (row) => row['sourceTaskId'] == source,
-        ),
-        isTrue,
-        reason: 'The original miss remains in durable history after repair.',
-      );
-    },
-  );
+    await _tap(t, 'act0_academy_review_leaf_repair_cta');
+    expect(_runner(t).selectedTaskId, target);
+    await _finishTeaching(t);
+    await _answerOnScreen(t, correct: true);
+    final completed = await _saved(t);
+    final completedHistory = Act0LearningEvidenceHistoryV1.restore(
+      completed['learningEvidenceHistory'],
+      completed['learningEvidenceLineage'],
+    )!;
+    final alternate = completedHistory.records.lastWhere(
+      (record) => record.taskId == target && record.isCorrect,
+    );
+    expect(alternate.reviewKind, Act0ReviewKindV1.alternateSameSignal);
+    expect(completed['earnedXp'], afterExact['earnedXp']);
+    expect(completed['completedTaskIds'], afterExact['completedTaskIds']);
+    expect(
+      (completed['openRepairIntents'] as List).cast<Map>().where(
+        (row) => row['repairOccurrenceId'] == sourceRepairOccurrenceId,
+      ),
+      isEmpty,
+      reason: 'The successful alternate closes this source occurrence.',
+    );
+    expect(
+      (completed['reviewMistakeHistory'] as List).cast<Map>().any(
+        (row) => row['sourceTaskId'] == source,
+      ),
+      isTrue,
+      reason: 'The original miss remains in durable history after repair.',
+    );
+  }
+
+  for (final (source, target, routeClass) in [
+    (
+      'w7_clean_outs_lower_price',
+      'w4_big_price_marginal_fold',
+      'cross-world target',
+    ),
+    (
+      'w7_effective_stack_100bb',
+      'w7_effective_stack_30bb',
+      'same-lesson target',
+    ),
+    ('w9_checkpoint_review', 'w9_cash_vs_tournament', 'review-phase source'),
+    (
+      'w11_checkpoint_plan_line',
+      'w11_sb_3bet_value',
+      'different-lesson target',
+    ),
+  ]) {
+    testWidgets(
+      '$routeClass: $source reaches $target through Review after restart',
+      (t) => proveCourseTransfer(t, source: source, target: target),
+    );
+  }
 }

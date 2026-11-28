@@ -5936,6 +5936,125 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   ),
 ];
 
+// B153 adjudication is task-level evidence, so live routing stays narrower:
+// only these reviewed source-choice witnesses may create a relation. Keep this
+// registry separate from the exact-source authority above.
+const _b153VerifiedRepairGoalContractsV1 = <Act0RepairGoalContractV1>[
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_7",
+    sourceLessonId: "w7_visible_cards_and_price",
+    sourceTaskId: "w7_clean_outs_lower_price",
+    sourceChoiceId: "choice_2",
+    sourceCorrectChoiceId: "choice_1",
+    sourceFingerprint:
+        "3264f4a4c4821a0cc7e64b79af4e0b1e856643069b0aaeb241271be873fad537",
+    sourceQuestion: "BB is all-in. Suppose BB holds K♣ Q♠. Call or fold?",
+    sourceChoiceReason:
+        "Folding gives up nine winning hearts and three winning aces. Those 12 rivers give you more than the roughly 21% the 3 BB call needs.",
+    sourceChoiceLabel: "Fold",
+    sourceChoiceQuality: "wrong",
+    goalId: "b153/misread_bet_price",
+    misconceptionId: "misread_bet_price",
+    relationId:
+        "b153/w7_clean_outs_lower_price/choice_2/w4_big_price_marginal_fold",
+    targetWorldId: "world_4",
+    targetLessonId: "call_price",
+    targetTaskId: "w4_big_price_marginal_fold",
+    targetFingerprint:
+        "e54ce6425cb7b0ed9e442c8d782b500948d090232a38935dcaa4bd0ddd5a17ec",
+    targetCorrectChoiceId: "fold",
+    targetChoiceIds: <String>{"call", "fold", "wrong_threshold"},
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_9",
+    sourceLessonId: "tournament_pressure_checkpoint",
+    sourceTaskId: "w9_checkpoint_review",
+    sourceChoiceId: "fold",
+    sourceCorrectChoiceId: "call_19_bb",
+    sourceFingerprint:
+        "cf897da80bd5a7a0c9c5cafeaef820c91bc567ceb72378f16d3845ffb21b5e5f",
+    sourceQuestion: "Call or fold?",
+    sourceChoiceReason:
+        "A 2 BB rival creates pressure, but AA against QQ+/AK is a sufficiently strong opportunity; folding gives up substantial prize value, not merely a thin chip edge.",
+    sourceChoiceLabel: "Fold",
+    sourceChoiceQuality: "wrong",
+    goalId: "b153/misread_tournament_pressure",
+    misconceptionId: "misread_tournament_pressure",
+    relationId: "b153/w9_checkpoint_review/fold/w9_cash_vs_tournament",
+    targetWorldId: "world_9",
+    targetLessonId: "survival_pressure_basics",
+    targetTaskId: "w9_cash_vs_tournament",
+    targetFingerprint:
+        "1ef472afcb4e64017bb9a5e952991eadbd314ac7c18e5525bc3f97b2102a10d2",
+    targetCorrectChoiceId: "fold",
+    targetChoiceIds: <String>{"call_16_bb", "fold"},
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_8",
+    sourceLessonId: "effective_stack_basics",
+    sourceTaskId: "spaced_review_w8_effective_stack_basics_board_cards_v1",
+    sourceChoiceId: "choice_0",
+    sourceCorrectChoiceId: "choice_1",
+    sourceFingerprint:
+        "3c273566c8d384d2892361e87cb48d6831eb52d3030b9d14767d4fa1e06dc2e1",
+    sourceQuestion:
+        "How many more BB can these two players match against each other?",
+    sourceChoiceReason:
+        "BB has 68 BB, but CO can match only 36 BB. Using the larger stack overstates the amount the two can bet against each other.",
+    sourceChoiceLabel: "68 BB",
+    sourceChoiceQuality: "wrong",
+    goalId: "b153/misread_stack_depth_risk",
+    misconceptionId: "misread_stack_depth_risk",
+    relationId:
+        "b153/spaced_review_w8_effective_stack_basics_board_cards_v1/choice_0/w7_effective_stack_30bb",
+    targetWorldId: "world_8",
+    targetLessonId: "effective_stack_basics",
+    targetTaskId: "w7_effective_stack_30bb",
+    targetFingerprint:
+        "2e4617e4a34764bd10c44667bef7dea42fbbbe5fb37da6c83027c0b55bc03f4d",
+    targetCorrectChoiceId: "30",
+    targetChoiceIds: <String>{"115", "200", "30"},
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    requireCapturedGoalWitness: true,
+  ),
+  Act0RepairGoalContractV1(
+    sourceWorldId: "world_8",
+    sourceLessonId: "effective_stack_basics",
+    sourceTaskId: "spaced_review_w8_effective_stack_basics_board_cards_v1",
+    sourceChoiceId: "choice_2",
+    sourceCorrectChoiceId: "choice_1",
+    sourceFingerprint:
+        "3c273566c8d384d2892361e87cb48d6831eb52d3030b9d14767d4fa1e06dc2e1",
+    sourceQuestion:
+        "How many more BB can these two players match against each other?",
+    sourceChoiceReason:
+        "Adding 36 BB and 68 BB counts two separate stacks. Only the smaller stack caps what either player can match.",
+    sourceChoiceLabel: "104 BB",
+    sourceChoiceQuality: "wrong",
+    goalId: "b153/misread_stack_depth_risk",
+    misconceptionId: "misread_stack_depth_risk",
+    relationId:
+        "b153/spaced_review_w8_effective_stack_basics_board_cards_v1/choice_2/w7_effective_stack_30bb",
+    targetWorldId: "world_8",
+    targetLessonId: "effective_stack_basics",
+    targetTaskId: "w7_effective_stack_30bb",
+    targetFingerprint:
+        "2e4617e4a34764bd10c44667bef7dea42fbbbe5fb37da6c83027c0b55bc03f4d",
+    targetCorrectChoiceId: "30",
+    targetChoiceIds: <String>{"115", "200", "30"},
+    evidenceClass: "familiar_rehearsal",
+    mappingType: "repair",
+    requireCapturedGoalWitness: true,
+  ),
+];
+
 Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
   required String worldId,
   required String lessonId,
@@ -5959,6 +6078,15 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
       return row.hasValidatedTarget || row.isDiagnosticLearningEntry
           ? row
           : fallback ?? row;
+    }
+  }
+  for (final row in _b153VerifiedRepairGoalContractsV1) {
+    if (row.sourceWorldId == worldId &&
+        row.sourceLessonId == lessonId &&
+        row.sourceTaskId == taskId &&
+        row.sourceChoiceId == choiceId &&
+        row.diagnosticVariantId == diagnosticVariantId) {
+      return row;
     }
   }
   return fallback;
