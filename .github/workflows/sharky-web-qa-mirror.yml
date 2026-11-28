@@ -24,7 +24,7 @@ jobs:
       WRANGLER_VERSION: 4.121.0
     steps:
       - name: Checkout exact target SHA
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
           fetch-depth: 2
@@ -89,7 +89,7 @@ jobs:
 
       - name: Checkout Wave A baseline for matched-state evidence
         if: github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7.0.1
         with:
           ref: ${{ env.SHARKY_PR_BASE_SHA }}
           path: _wave_a_baseline
@@ -200,7 +200,7 @@ jobs:
 
       - name: Upload Wave A matched-state evidence
         if: always() && github.event_name == 'pull_request' && env.SHARKY_PR_VISUAL_EVIDENCE == '1'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: wave-a-matched-state-${{ env.TARGET_SHA }}
           path: output/wave_a_pr_evidence
@@ -377,7 +377,7 @@ jobs:
       - name: Upload SHARKY_EVIDENCE_V1
         if: (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status == 'PASS'
         id: evidence_upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-evidence-${{ env.TARGET_SHA }}
           path: output/sharky_evidence/sharky-evidence-${{ env.TARGET_SHA }}
@@ -415,7 +415,7 @@ jobs:
       - name: Upload raw Phone Lab failure proof
         if: always() && (github.event_name != 'pull_request' || env.SHARKY_PR_VISUAL_EVIDENCE == '1') && steps.phone_browser.outputs.status != '' && steps.phone_browser.outputs.status != 'PASS'
         id: browser_failure_upload
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-phone-lab-browser-proof-failure-${{ env.TARGET_SHA }}
           path: output/phone_lab_browser

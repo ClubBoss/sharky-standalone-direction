@@ -16,7 +16,7 @@ jobs:
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 1
           submodules: false
@@ -41,7 +41,7 @@ jobs:
 
       - name: Upload Tier2 failure artifact
         if: ${{ failure() }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: r5-tier2-checkpoint-log
           path: out/ci/r5_tier2_checkpoint.log

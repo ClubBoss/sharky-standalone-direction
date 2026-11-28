@@ -50,7 +50,7 @@ jobs:
       # Tier B runs in the parallel tier-b job on PR/push; same tests, less wall time.
       TEST_AUTHORITY_SKIP_TIER_B: ${{ (github.event_name == 'pull_request' || github.event_name == 'push') && '1' || '0' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
       - name: E41 flag-gated test lint
@@ -82,7 +82,7 @@ jobs:
         run: python3 tools/test_authority/obs04_receipt_verify.py verify --packet "$OBS04_RECEIPT_DIR" --expected-execution "$OBS04_RECEIPT_DIR/ci_expected_execution.json" --source-root .
       - name: Preserve OBS04 receipt
         if: always() && matrix.shard == 0
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: obs04-${{ github.run_id }}-${{ github.run_attempt }}
           path: build/test_authority/obs04/
@@ -99,7 +99,7 @@ jobs:
     env:
       TEST_AUTHORITY_SHARD: ${{ matrix.shard }}/2
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - uses: subosito/flutter-action@v2
         with:
           channel: stable

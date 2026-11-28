@@ -11,10 +11,10 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 70
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           path: qa-infra
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
         with:
           path: product
           ref: 4bf5f198930ff0bd7d5c41361a10a828b3fdd4cd
@@ -104,7 +104,7 @@ jobs:
           fi
           cd output/s12
           find . -type f ! -name evidence.sha256 -print0 | xargs -0 shasum -a 256 > evidence.sha256
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         if: always()
         with:
           name: s12-genuine-native-${{ github.run_id }}

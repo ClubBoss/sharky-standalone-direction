@@ -17,7 +17,7 @@ jobs:
     runs-on: macos-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Download preserved Runner only
         env:
           GH_TOKEN: ${{ github.token }}
@@ -31,7 +31,7 @@ jobs:
           --shard canonical-modifiers
           --candidate-sha ${{ inputs.candidate_sha }}
       - if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: native-audit-single-row-replacement-${{ inputs.candidate_sha }}
           path: output/replacement
@@ -43,7 +43,7 @@ jobs:
     needs: capture-one
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Download the protected 53-row evidence set
         env:
           GH_TOKEN: ${{ github.token }}
@@ -70,7 +70,7 @@ jobs:
           --aggregate-shards output/shards
           --candidate-sha ${{ inputs.candidate_sha }}
           --out output/native_visual_audit
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: sharky-native-visual-audit-repaired-${{ inputs.candidate_sha }}
           path: output/native_visual_audit

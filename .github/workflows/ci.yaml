@@ -19,7 +19,7 @@ jobs:
     if: ${{ (github.event_name == 'pull_request' && contains(join(github.event.pull_request.labels.*.name, ','), 'full-ci')) || (github.event_name == 'push' && contains(github.event.head_commit.message, '[full-ci]')) }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
 
       # Запускаем тесты только если есть релевантные изменения
       - name: Detect relevant changes
@@ -127,7 +127,7 @@ jobs:
           cat build/reports/packs_manifest.md
           echo "::endgroup::"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: packs_manifest
           path: |
@@ -169,7 +169,7 @@ jobs:
           fi
           echo "::endgroup::"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: l3_ab_111.md
           path: build/reports/l3_ab_111.md
@@ -188,13 +188,13 @@ jobs:
           cat build/reports/l3_report.md
           echo "::endgroup::"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7.0.2
         with:
           name: l3_report.md
           path: build/reports/l3_report.md
 
       - name: Upload L3 PackRun reports
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.2
         with:
           name: l3_packrun_reports
           path: |

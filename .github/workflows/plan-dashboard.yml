@@ -11,7 +11,7 @@ jobs:
   dashboard:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Dashboard matches the plan tables
         run: python3 tools/plan_dashboard_v1.py --check
       - name: Every pre-beta criterion has a block
