@@ -5950,6 +5950,14 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
                 ? _nineSeatRepairDefaults[(worldId, lessonId, taskId, choiceId)]
                 : null)
       : null;
+  final adjudicated = diagnosticVariantId.isEmpty
+      ? _b153AdjudicatedRepairGoalContractV1(
+          worldId: worldId,
+          lessonId: lessonId,
+          taskId: taskId,
+          choiceId: choiceId,
+        )
+      : null;
   for (final row in act0RepairGoalContractsV1) {
     if (row.sourceWorldId == worldId &&
         row.sourceLessonId == lessonId &&
@@ -5958,10 +5966,119 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
         row.diagnosticVariantId == diagnosticVariantId) {
       return row.hasValidatedTarget || row.isDiagnosticLearningEntry
           ? row
-          : fallback ?? row;
+          : adjudicated ?? fallback ?? row;
     }
   }
-  return fallback;
+  return adjudicated ?? fallback;
+}
+
+Act0RepairGoalContractV1? _b153AdjudicatedRepairGoalContractV1({
+  required String worldId,
+  required String lessonId,
+  required String taskId,
+  required String choiceId,
+}) {
+  final adjudication = act0RepairGapAdjudicationForSourceTaskV1(taskId);
+  final targetWorldId = adjudication?.targetWorldId;
+  final targetLessonId = adjudication?.targetLessonId;
+  final targetTaskId = adjudication?.targetTaskId;
+  if (adjudication == null ||
+      adjudication.outcome !=
+          Act0RepairGapOutcomeV1.alternateSameSignalTarget ||
+      adjudication.sourceWorldId != worldId ||
+      adjudication.sourceLessonId != lessonId ||
+      adjudication.sourceTaskId != taskId ||
+      adjudication.leaksOriginalAnswer ||
+      adjudication.requiresFutureKnowledge ||
+      targetWorldId == null ||
+      targetLessonId == null ||
+      targetTaskId == null ||
+      targetTaskId == taskId ||
+      !adjudication.candidateTargetIds.contains(targetTaskId)) {
+    return null;
+  }
+
+  final sourceTask = _b153RepairTaskV1(worldId, lessonId, taskId);
+  final targetTask = _b153RepairTaskV1(
+    targetWorldId,
+    targetLessonId,
+    targetTaskId,
+  );
+  if (sourceTask == null || targetTask == null) return null;
+  final sourceChoices = sourceTask.runner.options
+      .where((choice) => choice.id == choiceId && !choice.isCorrect)
+      .toList();
+  final sourceCorrect = sourceTask.runner.options
+      .where(act0RunnerOptionIsAuthoredCorrectV1)
+      .toList();
+  final targetCorrect = targetTask.runner.options
+      .where(act0RunnerOptionIsAuthoredCorrectV1)
+      .toList();
+  if (sourceChoices.length != 1 ||
+      sourceCorrect.length != 1 ||
+      targetCorrect.length != 1) {
+    return null;
+  }
+  final sourceFingerprint = act0AuthoredSourceFingerprintV1(
+    worldId: worldId,
+    lessonId: lessonId,
+    task: sourceTask,
+  );
+  final targetFingerprint = act0AuthoredSourceFingerprintV1(
+    worldId: targetWorldId,
+    lessonId: targetLessonId,
+    task: targetTask,
+  );
+  if (sourceFingerprint == null || targetFingerprint == null) return null;
+  final sourceChoice = sourceChoices.single;
+
+  return Act0RepairGoalContractV1(
+    sourceWorldId: worldId,
+    sourceLessonId: lessonId,
+    sourceTaskId: taskId,
+    sourceChoiceId: choiceId,
+    sourceCorrectChoiceId: sourceCorrect.single.id,
+    sourceFingerprint: sourceFingerprint,
+    sourceQuestion: sourceTask.runner.question,
+    sourceChoiceReason: sourceChoice.feedbackReason,
+    sourceChoiceLabel: sourceChoice.label,
+    sourceChoiceQuality: sourceChoice.quality.name,
+    goalId: 'b153/${adjudication.conceptErrorId}',
+    misconceptionId: adjudication.conceptErrorId,
+    relationId: 'b153/$taskId/$choiceId/$targetTaskId',
+    targetWorldId: targetWorldId,
+    targetLessonId: targetLessonId,
+    targetTaskId: targetTaskId,
+    targetFingerprint: targetFingerprint,
+    targetCorrectChoiceId: targetCorrect.single.id,
+    targetChoiceIds: targetTask.runner.options
+        .map((choice) => choice.id)
+        .toSet(),
+    evidenceClass: 'familiar_rehearsal',
+    mappingType: adjudication.mappingType,
+    requireCapturedGoalWitness: true,
+  );
+}
+
+Act0LessonTaskV1? _b153RepairTaskV1(
+  String worldId,
+  String lessonId,
+  String taskId,
+) {
+  lessonId = act0CanonicalLessonForTaskV1(worldId, lessonId, taskId);
+  final worlds = Act0ShellStateV1.sample.worlds
+      .where((world) => world.worldId == worldId)
+      .toList();
+  if (worlds.length != 1) return null;
+  final lessons = worlds.single.lessons
+      .where((lesson) => lesson.lessonId == lessonId)
+      .toList();
+  if (lessons.length != 1) return null;
+  final tasks = lessons.single.taskList
+      .where((task) => task.taskId == taskId)
+      .toList();
+  if (tasks.length > 1) return null;
+  return tasks.singleOrNull ?? act0ReviewOnlyTaskV1(worldId, lessonId, taskId);
 }
 
 const _exerciseGoalPrefix = 'exercise/';
