@@ -2100,6 +2100,55 @@ void main() {
     var w4PurposeDefinitionOffered = false;
     final w4ChoicesAfterDefinition = <String>{};
     final w4OfferedSequenceTrace = <Map<String, Object?>>[];
+    const c5SelfSuppliedQuestionOrOptionIds = <String>{
+      'hand_rankings_theory',
+      'positions_early_late',
+      'your_first_hand_showdown',
+      'what_poker_is_all_in_meaning',
+      'what_poker_is_win_ways',
+      'w4_purpose_intro',
+      'w4_purpose_recap',
+    };
+    const c5AssessedPrerequisites = <String, Set<String>>{
+      'positions_early_late': <String>{
+        'positions_theory',
+        'positions_late_seat',
+      },
+      'your_first_hand_showdown': <String>{
+        'hand_rankings_theory',
+        'your_first_hand_preflop',
+        'your_first_hand_flop',
+        'your_first_hand_turn',
+        'your_first_hand_river',
+      },
+      'what_poker_is_all_in_meaning': <String>{
+        'your_first_hand_showdown',
+        'what_poker_is_pot_stack',
+      },
+      'what_poker_is_win_ways': <String>{
+        'your_first_hand_showdown',
+        'what_poker_is_pot_stack',
+        'what_poker_is_all_in_meaning',
+      },
+    };
+    const c5AssessedStudyPrerequisites = <String, Set<String>>{
+      'positions_early_late': <String>{'positions_theory'},
+      'your_first_hand_showdown': <String>{
+        'hand_rankings_theory',
+        'your_first_hand_preflop',
+      },
+      'what_poker_is_all_in_meaning': <String>{'what_poker_is_pot_stack'},
+      'what_poker_is_win_ways': <String>{'what_poker_is_pot_stack'},
+    };
+    const c5AssessedVisiblePrompt = <String, String>{
+      'positions_early_late':
+          'Which seat has more players left to act behind it, UTG or BTN?',
+      'your_first_hand_showdown': 'Who wins, and which five cards win the pot?',
+      'what_poker_is_all_in_meaning': 'What does all-in mean here?',
+      'what_poker_is_win_ways':
+          'Which is a way to win the pot before showdown?',
+    };
+    final c5AssessedRouteProofs = <String>{};
 
     SharedPreferences.setMockInitialValues(<String, Object>{});
     tester.view.physicalSize = const Size(393, 852);
@@ -2367,6 +2416,36 @@ void main() {
       } else {
         await _foundationAdvanceToPrompt(tester);
         final taskId = _runner(tester).selectedTaskId;
+        if (taskId != null && c5AssessedPrerequisites.containsKey(taskId)) {
+          final prompt = _runner(tester);
+          final studyTaskIds = _rows(
+            saved,
+            'studyObservations',
+          ).map((row) => row['taskId']).whereType<String>().toSet();
+          expect(prompt.runner.phase, Act0LessonPhaseV1.drill);
+          expect(prompt.runner.selectedOptionId, isNull);
+          expect(
+            completed,
+            containsAll(c5AssessedPrerequisites[taskId]!),
+            reason:
+                '$taskId must be offered only after its existing source tasks.',
+          );
+          expect(
+            studyTaskIds,
+            containsAll(c5AssessedStudyPrerequisites[taskId]!),
+            reason:
+                '$taskId must follow the ordinary route recording that its '
+                'existing teaching was shown.',
+          );
+          expect(
+            find.textContaining(c5AssessedVisiblePrompt[taskId]!),
+            findsOneWidget,
+            reason:
+                '$taskId must expose the SELF-SUPPLIED source on the '
+                'unanswered learner surface.',
+          );
+          c5AssessedRouteProofs.add(taskId);
+        }
         final options = [
           for (final option in _runner(tester).runner.options)
             [option.id, option.label],
@@ -2477,6 +2556,18 @@ void main() {
       ),
       sizingLesson.courseTaskList.map((task) => task.taskId),
     );
+    expect(
+      visited.intersection(c5SelfSuppliedQuestionOrOptionIds),
+      c5SelfSuppliedQuestionOrOptionIds,
+    );
+    expect(
+      answeredIds.intersection(c5SelfSuppliedQuestionOrOptionIds),
+      c5AssessedPrerequisites.keys.toSet(),
+      reason:
+          'The other three B76 Q/OPTION rows are authored theory/review copy, '
+          'not runtime assessments.',
+    );
+    expect(c5AssessedRouteProofs, c5AssessedPrerequisites.keys.toSet());
     expect(w4PurposeDefinitionOffered, isTrue);
     expect(w4ChoicesAfterDefinition, {'w4_value_purpose', 'w4_bluff_purpose'});
     expect(
