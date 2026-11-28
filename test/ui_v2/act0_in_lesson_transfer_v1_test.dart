@@ -165,8 +165,21 @@ Future<void> _answerOnScreen(WidgetTester t, {required bool correct}) async {
 
 Future<void> _finishTeaching(WidgetTester t) async {
   for (var i = 0; i < 20; i++) {
-    if (_runner(t).runner.activeTeachingStep == null) return;
+    if (_runner(t).runner.activeTeachingStep == null ||
+        find
+            .byKey(const Key('act0_shell_feedback_continue_cta'))
+            .evaluate()
+            .isNotEmpty) {
+      return;
+    }
     await t.pump(const Duration(seconds: 1));
+    if (_runner(t).runner.activeTeachingStep == null ||
+        find
+            .byKey(const Key('act0_shell_feedback_continue_cta'))
+            .evaluate()
+            .isNotEmpty) {
+      return;
+    }
     final key =
         find
             .byKey(const Key('act0_shell_theory_continue_cta'))
@@ -195,6 +208,25 @@ Future<Map<String, dynamic>> _saved(WidgetTester t) async {
         )
         as Map<String, dynamic>;
   }))!;
+}
+
+Future<void> _remountReview(WidgetTester t) async {
+  await t.pumpWidget(const SizedBox.shrink());
+  await t.pumpAndSettle();
+  await t.pumpWidget(
+    MaterialApp(
+      theme: act0WidgetTestThemeV1,
+      home: const Act0ShellPreviewScreenV1(
+        initialTab: Act0ShellTabV1.review,
+        showPlacementOnStart: false,
+      ),
+    ),
+  );
+  await t.pumpAndSettle();
+  await t.runAsync(
+    () async => Future<void>.delayed(const Duration(milliseconds: 50)),
+  );
+  await t.pumpAndSettle();
 }
 
 void main() {
@@ -408,4 +440,100 @@ void main() {
       }
     });
   }
+
+  testWidgets(
+    'W11 miss reaches its verified alternate through Review after restart',
+    (t) async {
+      const source = 'w11_checkpoint_plan_line';
+      const target = 'w11_sb_3bet_value';
+      expect(act0VerifiedTransferTargetV1(source)?.taskId, target);
+      expect(target, isNot(source));
+      expect(
+        act0FoundationRepairGoalForTaskV1(target),
+        act0FoundationRepairGoalForTaskV1(source),
+      );
+
+      await _open(t, source);
+      await _finishTeaching(t);
+      final initial = await _saved(t);
+      final initialXp = initial['earnedXp'];
+      expect(initial['completedTaskIds'], contains(target));
+      expect(initial['completedTaskIds'], isNot(contains(source)));
+
+      await _tap(t, 'act0_shell_option_call_2_bb');
+      final missed = await _saved(t);
+      final intent = (missed['openRepairIntents'] as List)
+          .cast<Map>()
+          .singleWhere((row) => row['sourceTaskId'] == source);
+      expect(intent['targetTaskId'], target);
+      expect(intent['mappingType'], 'repair');
+      expect(missed['earnedXp'], initialXp);
+      expect(
+        (missed['reviewMistakeHistory'] as List).cast<Map>().any(
+          (row) => row['sourceTaskId'] == source,
+        ),
+        isTrue,
+      );
+
+      await _tap(t, 'act0_shell_feedback_continue_cta');
+      expect(_runner(t).selectedTaskId, source);
+      await _answerOnScreen(t, correct: true);
+      final afterExact = await _saved(t);
+      final exactHistory = Act0LearningEvidenceHistoryV1.restore(
+        afterExact['learningEvidenceHistory'],
+        afterExact['learningEvidenceLineage'],
+      )!;
+      final exact = exactHistory.records.lastWhere(
+        (record) => record.taskId == source && record.isCorrect,
+      );
+      expect(exact.reviewKind, Act0ReviewKindV1.exactReplay);
+      expect(exact.isIndependentCorrect, isFalse);
+      expect(
+        (afterExact['openRepairIntents'] as List).cast<Map>().singleWhere(
+          (row) => row['sourceTaskId'] == source,
+        ),
+        intent,
+      );
+
+      await _tap(t, 'act0_shell_runner_back');
+      await t.tap(find.text('Review').last);
+      await t.pumpAndSettle();
+      await _tap(t, 'act0_academy_review_leaf_repair_cta');
+      expect(_runner(t).selectedTaskId, target);
+      final interrupted = await _saved(t);
+
+      await _remountReview(t);
+      final restored = await _saved(t);
+      expect(restored['earnedXp'], interrupted['earnedXp']);
+      expect(restored['completedTaskIds'], interrupted['completedTaskIds']);
+      expect(
+        restored['reviewMistakeHistory'],
+        interrupted['reviewMistakeHistory'],
+      );
+      expect(restored['openRepairIntents'], interrupted['openRepairIntents']);
+
+      await _tap(t, 'act0_academy_review_leaf_repair_cta');
+      expect(_runner(t).selectedTaskId, target);
+      await _finishTeaching(t);
+      await _answerOnScreen(t, correct: true);
+      final completed = await _saved(t);
+      final completedHistory = Act0LearningEvidenceHistoryV1.restore(
+        completed['learningEvidenceHistory'],
+        completed['learningEvidenceLineage'],
+      )!;
+      final alternate = completedHistory.records.lastWhere(
+        (record) => record.taskId == target && record.isCorrect,
+      );
+      expect(alternate.reviewKind, Act0ReviewKindV1.alternateSameSignal);
+      expect(completed['earnedXp'], afterExact['earnedXp']);
+      expect(completed['completedTaskIds'], afterExact['completedTaskIds']);
+      expect(
+        (completed['reviewMistakeHistory'] as List).cast<Map>().any(
+          (row) => row['sourceTaskId'] == source,
+        ),
+        isTrue,
+        reason: 'The original miss remains in durable history after repair.',
+      );
+    },
+  );
 }
