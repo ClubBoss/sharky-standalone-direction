@@ -27,5 +27,19 @@ The default per-command/file timeout is 120 seconds; override it with
 `TEST_AUTHORITY_TIMEOUT_SECONDS` or `--timeout-seconds`. `--smoke` is a limited
 diagnostic, not proof that the complete lane passed.
 
+Tier B summary durations are batch averages, not measured file durations. For
+optional local profiling, preserve the Dart test JSON event stream and inspect
+its observed per-file windows without changing the blocking lane:
+
+```sh
+flutter test --no-pub --reporter json test/path_a_test.dart test/path_b_test.dart > /tmp/test-events.jsonl
+python3 tools/test_authority/json_file_timings_v1.py /tmp/test-events.jsonl
+```
+
+The diagnostic includes load/scheduling time, marks incomplete data, and calls
+out concurrent file windows. Overlapping windows must not be summed as batch
+wall time. The tool accepts Dart test JSON protocol 0.1.1; a different protocol
+fails closed until its semantics are reviewed.
+
 The opt-in unpartitioned full suite remains available through the existing
 checkpoint policy, separately from a successful active A/B result.
