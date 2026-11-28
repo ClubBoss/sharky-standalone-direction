@@ -352,40 +352,35 @@ void main() {
   );
 
   final shells = find.byType(Act0ShellPreviewScreenV1, skipOffstage: false);
-  const legacyDefect =
-      'AppRoot onGenerateRoute constructs a second Act0 shell '
-      'instead of respecting the existing entry gate/runner (source-confirmed).';
+
+  testWidgets('E35 cold platform named route keeps one gated learner shell', (
+    tester,
+  ) async {
+    tester.binding.platformDispatcher.defaultRouteNameTestValue = '/home';
+    addTearDown(
+      tester.binding.platformDispatcher.clearDefaultRouteNameTestValue,
+    );
+    await mount(tester);
+    expect(shells, findsOneWidget);
+    expect(basics, findsOneWidget);
+    await unmount(tester);
+  }, variant: ios);
 
   testWidgets(
-    'E35 cold platform named route must keep one gated learner shell ($legacyDefect)',
-    (tester) async {
-      tester.binding.platformDispatcher.defaultRouteNameTestValue = '/home';
-      addTearDown(
-        tester.binding.platformDispatcher.clearDefaultRouteNameTestValue,
-      );
-      await mount(tester);
-      expect(shells, findsOneWidget);
-      expect(basics, findsOneWidget);
-      await unmount(tester);
-    },
-    skip: true,
-    variant: ios,
-  );
-
-  testWidgets(
-    'E35 warm platform named route must not replace active runner ($legacyDefect)',
+    'E35 warm platform named route preserves active runner and learner truth',
     (tester) async {
       await mount(tester);
       final before = await answerFirstTask(tester);
+      final saved = await _savedProgress(tester);
       final state = tester.state(shells);
       await tester.binding.handlePushRoute('/home');
       await tester.pumpAndSettle();
       expect(shells, findsOneWidget);
       expect(tester.state(shells), same(state));
       expectSameAnswer(tester, before);
+      expect(_learnerTruth(await _savedProgress(tester)), _learnerTruth(saved));
       await unmount(tester);
     },
-    skip: true,
     variant: ios,
   );
 
