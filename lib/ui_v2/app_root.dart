@@ -10,7 +10,6 @@ import 'package:poker_analyzer/navigation/deep_link_target_v1.dart';
 import 'package:poker_analyzer/services/progress_service.dart';
 import 'package:poker_analyzer/services/app_language_controller.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/academy_leaves/act0_academy_leaf_style_v1.dart';
-import 'package:poker_analyzer/ui_v2/act0_shell/act0_canonical_path_root_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
 import 'package:poker_analyzer/ui_v2/act0_shell/act0_telemetry_sink_v1.dart';
 import 'package:poker_analyzer/ui_v2/onboarding/onboarding_preferences_service.dart';
@@ -313,13 +312,51 @@ Locale? act0CommercialProofLocaleOverrideV1(Uri uri) {
 
 Route<dynamic>? buildLegacySurfaceRedirectRoute(RouteSettings settings) {
   if (!_allowLegacySurfaces && _legacySurfaceRoutes.contains(settings.name)) {
-    debugPrint('Legacy route blocked: ${settings.name}; redirecting to map.');
-    return MaterialPageRoute(
+    debugPrint(
+      'Legacy route blocked: ${settings.name}; keeping the existing app root.',
+    );
+    return PageRouteBuilder<void>(
       settings: settings,
-      builder: (_) => buildCanonicalPathRootV1(),
+      opaque: false,
+      transitionDuration: Duration.zero,
+      reverseTransitionDuration: Duration.zero,
+      pageBuilder: (_, _, _) => const _LegacySurfaceRedirectV1(),
     );
   }
   return null;
+}
+
+class _LegacySurfaceRedirectV1 extends StatefulWidget {
+  const _LegacySurfaceRedirectV1();
+
+  @override
+  State<_LegacySurfaceRedirectV1> createState() =>
+      _LegacySurfaceRedirectV1State();
+}
+
+class _LegacySurfaceRedirectV1State extends State<_LegacySurfaceRedirectV1> {
+  bool _removalScheduled = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_removalScheduled) return;
+    final route = ModalRoute.of<void>(context);
+    final navigator = Navigator.maybeOf(context);
+    if (route == null || navigator == null) return;
+    _removalScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted ||
+          !route.isActive ||
+          !identical(route.navigator, navigator)) {
+        return;
+      }
+      navigator.removeRoute(route);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) => const SizedBox.shrink();
 }
 
 class AppRoot extends StatefulWidget {

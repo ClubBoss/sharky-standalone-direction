@@ -1,31 +1,63 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_growth_v1.dart';
+import 'package:poker_analyzer/ui_v2/act0_shell/act0_shell_preview_screen_v1.dart';
+import 'package:poker_analyzer/ui_v2/app_root.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
-  test('Act0 shell owns the canonical home entry contract', () {
-    final canonicalRoot = File(
-      'lib/ui_v2/act0_shell/act0_canonical_path_root_v1.dart',
-    ).readAsStringSync();
-    final appRoot = File('lib/ui_v2/app_root.dart').readAsStringSync();
-    final previewCoreTest = File(
-      'test/ui_v2/act0_shell_preview_screen_v1_test.dart',
-    ).readAsStringSync();
+  TestWidgetsFlutterBinding.ensureInitialized();
+  final messenger =
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
+  const reminderChannel = MethodChannel(
+    'com.clubboss.sharky/practice_reminder_v1',
+  );
 
-    expect(canonicalRoot, contains('Act0ShellPreviewScreenV1'));
-    expect(canonicalRoot, contains('showPlacementOnStart: true'));
-    expect(canonicalRoot, isNot(contains('UiV2ProgressMapScreenV2')));
-    expect(appRoot, contains('builder: (_) => buildCanonicalPathRootV1()'));
-    expect(appRoot, contains('Act0ShellPreviewScreenV1'));
-    expect(
-      previewCoreTest,
-      contains('Canonical path root remains Act0 preview shell'),
-    );
-    expect(
-      previewCoreTest,
-      contains('Act0 sample state keeps canonical W1-W12 runtime identity'),
-    );
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    messenger.setMockMethodCallHandler(reminderChannel, (_) async => false);
   });
+  tearDown(() {
+    messenger.setMockMethodCallHandler(reminderChannel, null);
+    messenger.setMockMethodCallHandler(act0GrowthChannelV1, null);
+  });
+
+  testWidgets(
+    'Act0 shell owns the canonical cold /home entry contract',
+    (tester) async {
+      var pendingLinkTakes = 0;
+      messenger.setMockMethodCallHandler(act0GrowthChannelV1, (call) async {
+        expect(call.method, 'takeLink');
+        pendingLinkTakes++;
+        return null;
+      });
+      tester.binding.platformDispatcher.defaultRouteNameTestValue = '/home';
+      addTearDown(
+        tester.binding.platformDispatcher.clearDefaultRouteNameTestValue,
+      );
+      tester.view.physicalSize = const Size(393, 852);
+      tester.view.devicePixelRatio = 1;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
+      await tester.pumpWidget(const AppRoot());
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byType(Act0ShellPreviewScreenV1, skipOffstage: false),
+        findsOneWidget,
+      );
+      expect(
+        find.byKey(const Key('act0_shell_w1_start_basics')),
+        findsOneWidget,
+      );
+      expect(pendingLinkTakes, 1);
+    },
+    variant: TargetPlatformVariant.only(TargetPlatform.iOS),
+  );
 
   test('retired campaign map owner paths are not required by current route', () {
     expect(
