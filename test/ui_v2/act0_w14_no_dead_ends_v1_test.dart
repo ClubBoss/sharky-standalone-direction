@@ -118,12 +118,14 @@ void main() {
       final chosen = <Act0RunnerOptionV1>[];
       final decisions = <Act0CompletedDecisionV1>[];
       String? sizingPresetId;
+      // Reuse the unchanged app shell; the task key still resets every piece
+      // of runner-owned state between catalog entries.
       await tester.pumpWidget(
         MaterialApp(
-          key: ValueKey(task.taskId),
           home: Scaffold(
             body: StatefulBuilder(
               builder: (context, setState) => Act0LessonRunnerShellV1(
+                key: ValueKey(task.taskId),
                 runner: task.runner.copyWith(
                   phase: task.entryPhase,
                   teachingStepIndex: task.runner.teachingSteps.length,
@@ -151,7 +153,8 @@ void main() {
           ),
         ),
       );
-      await tester.pumpAndSettle();
+      // This helper always pumps the authored timers and finishes with its own
+      // bounded settle, so an extra pre-choreography settle is redundant.
       await pumpSourceChoreographyToDecisionV1(tester, task.runner.table);
       if (recap) {
         // A recap without choices finishes through its own primary button.
@@ -202,8 +205,9 @@ void main() {
         Finder? reachable;
         for (final candidate in candidates) {
           if (candidate.evaluate().isEmpty) continue;
+          // ensureVisible uses zero-duration scrolling here; hit testing sees
+          // the updated offset synchronously, before the eventual answer pump.
           await tester.ensureVisible(candidate.first);
-          await tester.pumpAndSettle();
           if (candidate.hitTestable().evaluate().isNotEmpty) {
             reachable = candidate.hitTestable().first;
             break;
@@ -221,7 +225,6 @@ void main() {
       }
       checked++;
       await tester.ensureVisible(target);
-      await tester.pumpAndSettle();
       await tester.tap(target, warnIfMissed: false);
       await tester.pumpAndSettle();
       if (task.runner.sizingConfig.isEnabled) {
