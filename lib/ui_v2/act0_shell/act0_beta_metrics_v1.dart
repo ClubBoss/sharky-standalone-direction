@@ -282,6 +282,7 @@ class Act0BetaMetricsStoreV1 {
 class Act0BetaLearningMetricsV1 {
   const Act0BetaLearningMetricsV1({
     required this.firstLessonCompleted,
+    required this.worldOneStarted,
     required this.worldOneCompleted,
     required this.correctedMistakes,
     this.completedRoutePracticeSteps = 0,
@@ -308,11 +309,29 @@ class Act0BetaLearningMetricsV1 {
         const Act0LearningEvidenceHistoryV1(),
   }) {
     final firstLesson = firstWorld.lessons.firstOrNull;
+    final worldOneLessonIds = {
+      for (final lesson in firstWorld.lessons) lesson.lessonId,
+    };
+    final worldOneTaskIds = {
+      for (final lesson in firstWorld.lessons)
+        for (final task in lesson.taskList) task.taskId,
+    };
     bool completed(Act0LessonCardV1 lesson) =>
         lesson.taskList.isNotEmpty &&
         act0LessonCompleteWithTaskIdsV1(lesson, completedTaskIds);
     return Act0BetaLearningMetricsV1(
       firstLessonCompleted: firstLesson != null && completed(firstLesson),
+      // Cohort membership comes only from route/progress already saved by the
+      // app. The rules check is placement evidence, not a W1 learning entry.
+      worldOneStarted:
+          worldOneLessonIds.contains(currentLessonId) ||
+          completedTaskIds.any(worldOneTaskIds.contains) ||
+          history.provenanceRecords.any(
+            (record) =>
+                record.worldId == firstWorld.worldId &&
+                !record.isPlacementAssessment &&
+                !record.isDiagnosticLearningEntry,
+          ),
       worldOneCompleted:
           firstLesson != null && firstWorld.lessons.every(completed),
       correctedMistakes: correctedMistakes,
@@ -331,7 +350,7 @@ class Act0BetaLearningMetricsV1 {
     );
   }
 
-  final bool firstLessonCompleted, worldOneCompleted;
+  final bool firstLessonCompleted, worldOneStarted, worldOneCompleted;
   final int correctedMistakes;
   final int completedRoutePracticeSteps;
   final String firstLessonId;
@@ -446,6 +465,7 @@ class Act0BetaLearningMetricsV1 {
       'Sharky beta summary v1',
       'Beta day: $day',
       'First lesson: ${firstLessonCompleted ? 'Complete' : 'Incomplete'}',
+      'World 1 started: ${worldOneStarted ? 'Yes' : 'No'}',
       'World 1: ${worldOneCompleted ? 'Complete' : 'Incomplete'}',
       'Corrected mistakes: $correctedMistakes',
       'Day 2: ${activity.day2At(now).name}',

@@ -66,6 +66,7 @@ void main() {
       correctedMistakes: 0,
     );
     expect(started.firstLessonCompleted, isFalse);
+    expect(started.worldOneStarted, isTrue);
     expect(started.worldOneCompleted, isFalse);
     final finished = Act0BetaLearningMetricsV1.fromProgress(
       firstWorld: w1,
@@ -73,9 +74,65 @@ void main() {
       correctedMistakes: 3,
     );
     expect(finished.firstLessonCompleted, isTrue);
+    expect(finished.worldOneStarted, isTrue);
     expect(finished.worldOneCompleted, isTrue);
     expect(finished.correctedMistakes, 3);
   });
+
+  test(
+    'W1 completion cohort follows actual W1 entry after the rules check',
+    () {
+      final worlds = Act0ShellStateV1.sample.worlds;
+      final w1 = worlds.firstWhere((world) => world.worldId == 'world_1');
+      final w2 = worlds.firstWhere((world) => world.worldId == 'world_2');
+      final firstW1TaskId = w1.lessons.first.courseTaskList.first.taskId;
+
+      Act0BetaLearningMetricsV1 metrics({
+        required int rulesScore,
+        required String currentLessonId,
+        Set<String> completedTaskIds = const {},
+      }) => Act0BetaLearningMetricsV1.fromProgress(
+        firstWorld: w1,
+        courseWorlds: worlds,
+        currentLessonId: currentLessonId,
+        rulesBestScore: rulesScore,
+        rulesCheckCompleted: true,
+        completedTaskIds: completedTaskIds,
+        correctedMistakes: 0,
+      );
+
+      expect(
+        metrics(
+          rulesScore: 8,
+          currentLessonId: w1.lessons.first.lessonId,
+        ).worldOneStarted,
+        isTrue,
+      );
+      expect(
+        metrics(
+          rulesScore: 9,
+          currentLessonId: w2.lessons.first.lessonId,
+        ).worldOneStarted,
+        isFalse,
+      );
+
+      final afterVoluntaryW1Entry = metrics(
+        rulesScore: 9,
+        currentLessonId: w2.lessons.first.lessonId,
+        completedTaskIds: {firstW1TaskId},
+      );
+      expect(afterVoluntaryW1Entry.worldOneStarted, isTrue);
+      expect(afterVoluntaryW1Entry.worldOneCompleted, isFalse);
+
+      final afterRestart = metrics(
+        rulesScore: 9,
+        currentLessonId: w2.lessons.first.lessonId,
+        completedTaskIds: {firstW1TaskId},
+      );
+      expect(afterRestart.worldOneStarted, isTrue);
+      expect(afterRestart.worldOneCompleted, isFalse);
+    },
+  );
 
   test('only bounded return and survey data survive reload', () async {
     SharedPreferences.setMockInitialValues({});
@@ -343,6 +400,7 @@ void main() {
           'Sharky beta summary v1',
           'Beta day: 1',
           'First lesson: Complete',
+          'World 1 started: Yes',
           'World 1: Incomplete',
           'Corrected mistakes: 1',
           'Day 2: pending',
@@ -490,6 +548,7 @@ void main() {
       }
       expect(find.text('Day 2: Returned'), findsOneWidget);
       expect(find.text('Day 7: Still open'), findsOneWidget);
+      expect(find.text('World 1 started: Yes'), findsOneWidget);
       expect(find.text('Corrected mistakes: 0'), findsOneWidget);
 
       final yes = find.widgetWithText(ChoiceChip, 'Yes').first;
@@ -515,6 +574,7 @@ void main() {
       await tester.tap(find.text('Copy summary'));
       await settle();
       expect(clipboard, startsWith('Sharky beta summary v1\nBeta day: 1'));
+      expect(clipboard, contains('World 1 started: Yes'));
       expect(clipboard, contains('Survey 1: yes'));
       expect(find.text('Summary copied.'), findsOneWidget);
 
