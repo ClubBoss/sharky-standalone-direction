@@ -5934,6 +5934,12 @@ const act0RepairGoalContractsV1 = <Act0RepairGoalContractV1>[
     targetChoiceIds: <String>{"hj", "utg", "sb"},
     requireCapturedGoalWitness: true,
   ),
+];
+
+// B153 adjudication is task-level evidence, so live routing stays narrower:
+// only these reviewed source-choice witnesses may create a relation. Keep this
+// registry separate from the exact-source authority above.
+const _b153VerifiedRepairGoalContractsV1 = <Act0RepairGoalContractV1>[
   Act0RepairGoalContractV1(
     sourceWorldId: "world_7",
     sourceLessonId: "w7_visible_cards_and_price",
@@ -6072,6 +6078,15 @@ Act0RepairGoalContractV1? act0RepairGoalContractForSourceV1({
       return row.hasValidatedTarget || row.isDiagnosticLearningEntry
           ? row
           : fallback ?? row;
+    }
+  }
+  for (final row in _b153VerifiedRepairGoalContractsV1) {
+    if (row.sourceWorldId == worldId &&
+        row.sourceLessonId == lessonId &&
+        row.sourceTaskId == taskId &&
+        row.sourceChoiceId == choiceId &&
+        row.diagnosticVariantId == diagnosticVariantId) {
+      return row;
     }
   }
   return fallback;
