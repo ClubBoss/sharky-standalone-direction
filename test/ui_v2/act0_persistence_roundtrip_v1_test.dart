@@ -519,6 +519,137 @@ void main() {
     expect(stored['learningEvidenceHistory'], isEmpty);
     expect(stored['studyObservations'], isEmpty);
     expect(stored['durableRetentionHistory'], isEmpty);
+    expect(stored['retainedAccessWorldIds'], ['world_1']);
+  });
+
+  testWidgets('legacy cursors cannot grant world completion or access', (
+    tester,
+  ) async {
+    final catalog = Act0ShellStateV1.sample;
+    for (final worldId in const ['world_2', 'world_12']) {
+      final selectedWorld = catalog.worldById(worldId);
+      final selectedLesson = selectedWorld.lessons.first;
+      final selectedTask = selectedLesson.courseTaskList.first;
+      SharedPreferences.setMockInitialValues(<String, Object>{
+        'intake_completed_v1': true,
+        'act0_welcome_completed_v1': true,
+        progressKey: jsonEncode(<String, Object>{
+          'schemaVersion': 17,
+          'completedTaskIds': <String>[],
+          'skippedTaskIds': <String>[],
+          'completedLessonIds': <String>[],
+          'selectedWorldId': worldId,
+          'selectedLessonId': selectedLesson.lessonId,
+          'selectedTaskId': selectedTask.taskId,
+          'earnedXp': 0,
+          'reviewMistakeHistory': <Object>[],
+          'reviewResolutionReceipts': <Object>[],
+          'learningEvidenceHistory': <Object>[],
+        }),
+      });
+
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      final dynamic shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+      expect(shell.debugSelectedWorldIdV1(), 'world_1');
+      shell.debugPersistProgressV1();
+      await tester.pump(const Duration(milliseconds: 100));
+      final prefs = await SharedPreferences.getInstance();
+      final stored =
+          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+      expect(stored['completedWorldIds'], isEmpty, reason: worldId);
+      expect(stored['retainedAccessWorldIds'], ['world_1'], reason: worldId);
+      expect(stored['earnedXp'], 0, reason: worldId);
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+    }
+  });
+
+  testWidgets('sparse retained world IDs fail closed on restore', (
+    tester,
+  ) async {
+    final catalog = Act0ShellStateV1.sample;
+    final selectedWorld = catalog.worldById('world_12');
+    final selectedLesson = selectedWorld.lessons.first;
+    final selectedTask = selectedLesson.courseTaskList.first;
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      progressKey: jsonEncode(<String, Object>{
+        'schemaVersion': 17,
+        'completedTaskIds': <String>[],
+        'skippedTaskIds': <String>[],
+        'completedLessonIds': <String>[],
+        'completedWorldIds': <String>['world_12'],
+        'retainedAccessWorldIds': <String>['world_1', 'world_12', 'world_999'],
+        'selectedWorldId': selectedWorld.worldId,
+        'selectedLessonId': selectedLesson.lessonId,
+        'selectedTaskId': selectedTask.taskId,
+        'earnedXp': 0,
+        'reviewMistakeHistory': <Object>[],
+        'reviewResolutionReceipts': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+      }),
+    });
+
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
+    final dynamic shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+    expect(shell.debugSelectedWorldIdV1(), 'world_1');
+    shell.debugPersistProgressV1();
+    await tester.pump(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    final stored =
+        jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+    expect(stored['completedWorldIds'], isEmpty);
+    expect(stored['retainedAccessWorldIds'], ['world_1']);
+    expect(stored['earnedXp'], 0);
+  });
+
+  testWidgets('Placement skips retain access without earning completion', (
+    tester,
+  ) async {
+    final catalog = Act0ShellStateV1.sample;
+    final firstWorld = catalog.worldById('world_1');
+    final nextWorld = catalog.worldById('world_2');
+    final nextLesson = nextWorld.lessons.first;
+    final nextTask = nextLesson.courseTaskList.first;
+    final placementSkippedTaskIds = <String>[
+      for (final lesson in firstWorld.lessons)
+        for (final task in lesson.courseTaskList) task.taskId,
+    ];
+    SharedPreferences.setMockInitialValues(<String, Object>{
+      'intake_completed_v1': true,
+      'act0_welcome_completed_v1': true,
+      progressKey: jsonEncode(<String, Object>{
+        'schemaVersion': 17,
+        'completedTaskIds': <String>[],
+        'skippedTaskIds': placementSkippedTaskIds,
+        'completedLessonIds': <String>[],
+        'selectedWorldId': nextWorld.worldId,
+        'selectedLessonId': nextLesson.lessonId,
+        'selectedTaskId': nextTask.taskId,
+        'earnedXp': 0,
+        'reviewMistakeHistory': <Object>[],
+        'reviewResolutionReceipts': <Object>[],
+        'learningEvidenceHistory': <Object>[],
+      }),
+    });
+
+    await tester.pumpWidget(host());
+    await tester.pumpAndSettle();
+    final dynamic shell = tester.state(find.byType(Act0ShellPreviewScreenV1));
+    expect(shell.debugSelectedWorldIdV1(), nextWorld.worldId);
+    shell.debugPersistProgressV1();
+    await tester.pump(const Duration(milliseconds: 100));
+    final prefs = await SharedPreferences.getInstance();
+    final stored =
+        jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
+    expect(stored['completedWorldIds'], isEmpty);
+    expect(stored['completedLessonIds'], isEmpty);
+    expect(stored['retainedAccessWorldIds'], ['world_1', 'world_2']);
+    expect(stored['earnedXp'], 0);
   });
 
   testWidgets(
@@ -543,6 +674,11 @@ void main() {
       final earnedXp = completedWorld.lessons
           .expand((lesson) => lesson.courseTaskList)
           .fold<int>(0, (sum, task) => sum + task.rewardXp);
+      final addedLessonXp = addedLesson.courseTaskList.fold<int>(
+        0,
+        (sum, task) => sum + task.rewardXp,
+      );
+      final retainedXp = earnedXp - addedLessonXp;
       final nextLesson = nextWorld.lessons.first;
       final nextTask = nextLesson.courseTaskList.first;
       SharedPreferences.setMockInitialValues(<String, Object>{
@@ -572,9 +708,12 @@ void main() {
       final beforeUpdate =
           jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
       expect(beforeUpdate['completedWorldIds'], contains('world_1'));
+      expect(
+        beforeUpdate['retainedAccessWorldIds'],
+        containsAll(<String>['world_1', 'world_2']),
+      );
 
       final afterUpdate = Map<String, dynamic>.from(beforeUpdate);
-      afterUpdate.remove('completedWorldIds');
       afterUpdate['completedTaskIds'] =
           (beforeUpdate['completedTaskIds'] as List)
               .where(
@@ -587,6 +726,7 @@ void main() {
           (beforeUpdate['completedLessonIds'] as List)
               .where((id) => id != addedLesson.lessonId)
               .toList();
+      afterUpdate['earnedXp'] = retainedXp;
       final retainedTaskCount =
           (afterUpdate['completedTaskIds'] as List).length;
       await tester.pumpWidget(const SizedBox.shrink());
@@ -596,6 +736,7 @@ void main() {
         'act0_welcome_completed_v1': true,
         progressKey: jsonEncode(afterUpdate),
       });
+      final updatedPrefs = await SharedPreferences.getInstance();
       await tester.pumpWidget(host());
       await tester.pumpAndSettle();
 
@@ -660,13 +801,28 @@ void main() {
       shell.debugPersistProgressV1();
       await tester.pump(const Duration(milliseconds: 100));
       final restored =
-          jsonDecode(prefs.getString(progressKey)!) as Map<String, dynamic>;
-      expect(restored['earnedXp'], earnedXp);
+          jsonDecode(updatedPrefs.getString(progressKey)!)
+              as Map<String, dynamic>;
+      expect(restored['earnedXp'], retainedXp);
       expect(
         (restored['completedLessonIds'] as List).toSet(),
         containsAll(completedLessons.difference({addedLesson.lessonId})),
       );
       expect(restored['completedWorldIds'], contains('world_1'));
+      expect(restored['retainedAccessWorldIds'], contains('world_2'));
+
+      await tester.pumpWidget(const SizedBox.shrink());
+      await tester.pumpAndSettle();
+      await tester.pumpWidget(host());
+      await tester.pumpAndSettle();
+      expect(find.text(addedLesson.title), findsWidgets);
+      expect(
+        find.text(
+          '${completedWorld.lessons.length - 1} of '
+          '${completedWorld.lessons.length} lessons complete',
+        ),
+        findsWidgets,
+      );
     },
   );
 }

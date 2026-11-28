@@ -22,13 +22,18 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
   Set<String> practiceBlockedLessonIds = const {},
 }) {
   var previousWorldComplete = true;
+  var previousWorldAccessible = true;
   var lockedWorldSeen = false;
   final worlds = <Act0WorldCardV1>[];
   for (final world in authoredWorlds) {
+    final retainedAccess =
+        previousWorldAccessible &&
+        retainedAccessWorldIds.contains(world.worldId);
+    final worldAvailable = previousWorldComplete || retainedAccess;
     final progressed = _progressWorldV1(
       world,
-      previousWorldComplete,
-      isImmediateLockedWorld: !previousWorldComplete && !lockedWorldSeen,
+      worldAvailable,
+      isImmediateLockedWorld: !worldAvailable && !lockedWorldSeen,
       completedTaskIds: pathClosedTaskIds,
       earnedTaskIds: earnedTaskIds,
       passedByRulesCheck: passedW1RulesCheck && world.worldId == 'world_1',
@@ -39,10 +44,10 @@ List<Act0WorldCardV1> act0ProgressWorldsV1(
     if (progressed.status == Act0WorldStateV1.locked) {
       lockedWorldSeen = true;
     }
+    previousWorldAccessible = progressed.isSelectable && !progressed.isLocked;
     previousWorldComplete =
         progressed.status == Act0WorldStateV1.completed ||
-        progressed.status == Act0WorldStateV1.passedByRulesCheck ||
-        retainedAccessWorldIds.contains(world.worldId);
+        progressed.status == Act0WorldStateV1.passedByRulesCheck;
   }
   return worlds;
 }

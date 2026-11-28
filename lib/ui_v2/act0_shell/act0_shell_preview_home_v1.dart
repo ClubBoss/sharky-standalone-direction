@@ -185,7 +185,7 @@ extension _PreviewHomeV1 on _Act0ShellPreviewScreenV1State {
       passedW1RulesCheck:
           (w1RulesBestScore ?? _w1RulesBestScoreV1) >=
           Act0W1RulesResultV1.passingScore,
-      retainedAccessWorldIds: retainedAccessWorldIds ?? _completedWorldIds,
+      retainedAccessWorldIds: retainedAccessWorldIds ?? _retainedAccessWorldIds,
       worldsWithOpenMistakes: _worldsWithOpenMistakesV1(state),
       practiceBlockedLessonIds: {
         for (final world in state.worlds)

@@ -157,6 +157,25 @@ void main() {
     expect(problems, isEmpty, reason: problems.take(40).join('\n'));
   });
 
+  test('retained world access is contiguous and fails closed when sparse', () {
+    List<Act0WorldCardV1> project(Set<String> retained) => act0ProgressWorldsV1(
+      _worlds,
+      pathClosedTaskIds: const <String>{},
+      earnedTaskIds: const <String>{},
+      retainedAccessWorldIds: retained,
+    );
+
+    final isolatedW3 = project(const {'world_3'});
+    expect(isolatedW3[0].isSelectable, isTrue);
+    expect(isolatedW3[1].isSelectable, isFalse);
+    expect(isolatedW3[2].isSelectable, isFalse);
+
+    final gapBeforeW4 = project(const {'world_2', 'world_4'});
+    expect(gapBeforeW4[1].isSelectable, isTrue);
+    expect(gapBeforeW4[2].isSelectable, isFalse);
+    expect(gapBeforeW4[3].isSelectable, isFalse);
+  });
+
   group('Q15 world checkpoint weak-spot gate', () {
     test(
       'checkpoint stays locked with Clear weak spots when world has open mistakes',

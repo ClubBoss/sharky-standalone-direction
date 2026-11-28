@@ -1011,6 +1011,7 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
   String? _learnPopupTaskId;
   late Set<String> _completedLessonIds;
   late Set<String> _completedWorldIds;
+  late Set<String> _retainedAccessWorldIds;
   late Set<String> _completedTaskIds;
   final Set<String> _tasksWithDeferredXpV1 = <String>{};
   final Set<String> _skippedTaskIds = <String>{};
@@ -1544,6 +1545,11 @@ class _Act0ShellPreviewScreenV1State extends State<Act0ShellPreviewScreenV1> {
     _completedWorldIds = {
       for (final world in state.worlds)
         if (world.status == Act0WorldStateV1.completed) world.worldId,
+    };
+    _retainedAccessWorldIds = {
+      for (final world in state.worlds)
+        if (world.worldNumber > 0 && world.isSelectable && !world.isLocked)
+          world.worldId,
     };
     _completedTaskIds = {
       for (final world in state.worlds)
@@ -6268,6 +6274,8 @@ class _Act0PersistedProgressV1 {
     required this.skippedTaskIds,
     required this.completedLessonIds,
     this.completedWorldIds = const {},
+    this.retainedAccessWorldIds = const {},
+    this.hasRetainedAccessWorldIdsField = false,
     required this.selectedWorldId,
     required this.selectedLessonId,
     required this.selectedTaskId,
@@ -6330,6 +6338,8 @@ class _Act0PersistedProgressV1 {
   final Set<String> skippedTaskIds;
   final Set<String> completedLessonIds;
   final Set<String> completedWorldIds;
+  final Set<String> retainedAccessWorldIds;
+  final bool hasRetainedAccessWorldIdsField;
   final String selectedWorldId;
   final String selectedLessonId;
   final String selectedTaskId;
@@ -6389,6 +6399,8 @@ class _Act0PersistedProgressV1 {
     final sortedSkippedTaskIds = skippedTaskIds.toList(growable: false)..sort();
     final sortedLessonIds = completedLessonIds.toList(growable: false)..sort();
     final sortedWorldIds = completedWorldIds.toList(growable: false)..sort();
+    final sortedAccessWorldIds = retainedAccessWorldIds.toList(growable: false)
+      ..sort();
     final sortedSkillKeys = profileSkillValues.keys.toList(growable: false)
       ..sort();
     final sortedRetentionMemory = retentionMemory.toList(growable: false)
@@ -6407,6 +6419,7 @@ class _Act0PersistedProgressV1 {
       'skippedTaskIds': sortedSkippedTaskIds,
       'completedLessonIds': sortedLessonIds,
       'completedWorldIds': sortedWorldIds,
+      'retainedAccessWorldIds': sortedAccessWorldIds,
       'selectedWorldId': selectedWorldId,
       'selectedLessonId': selectedLessonId,
       'selectedTaskId': selectedTaskId,
@@ -6582,6 +6595,15 @@ class _Act0PersistedProgressV1 {
       return null;
     }
     final completedWorldIds = _stringSet(completedWorldIdsRaw);
+    final retainedAccessWorldIdsRaw = map['retainedAccessWorldIds'];
+    if (map.containsKey('retainedAccessWorldIds') &&
+        (retainedAccessWorldIdsRaw is! List ||
+            retainedAccessWorldIdsRaw.any(
+              (id) => id is! String || id.trim().isEmpty,
+            ))) {
+      return null;
+    }
+    final retainedAccessWorldIds = _stringSet(retainedAccessWorldIdsRaw);
     final selectedWorldId = (map['selectedWorldId'] ?? '').toString();
     final selectedLessonId = (map['selectedLessonId'] ?? '').toString();
     final selectedTaskId = (map['selectedTaskId'] ?? '').toString();
@@ -6725,6 +6747,8 @@ class _Act0PersistedProgressV1 {
       skippedTaskIds: skippedTaskIds,
       completedLessonIds: completedLessonIds,
       completedWorldIds: completedWorldIds,
+      retainedAccessWorldIds: retainedAccessWorldIds,
+      hasRetainedAccessWorldIdsField: map.containsKey('retainedAccessWorldIds'),
       selectedWorldId: selectedWorldId,
       selectedLessonId: selectedLessonId,
       selectedTaskId: selectedTaskId,
